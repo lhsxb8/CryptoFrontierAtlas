@@ -34,7 +34,8 @@
       "Headline exponents omit constants in Theorem1 Eq8. The success guarantee uses the full theorem budget."
     ],
     "quantum_model": {
-      "query_model": "classically_known_pairs",
+      "query_model": "offline_public_cipher_evaluation",
+      "memory_model": "qraqm",
       "cost_level": "quantum_algorithm",
       "gate_set": "Source-native reversible S-box or abstract quantum algorithm operations; no physical gate estimate.",
       "routing": "Physical routing is not part of this algorithmic estimate.",

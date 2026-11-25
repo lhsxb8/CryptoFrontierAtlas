@@ -17,6 +17,8 @@ export default function HeaderTools() {
     'accepted-paper': { name: text.accepted, materials: text.acceptedMaterials },
     'lean-formalization': { name: text.lean, materials: text.leanMaterials },
     preprint: { name: text.preprint, materials: text.preprintMaterials },
+    'data-correction': { name: text.dataCorrection, materials: text.dataCorrectionMaterials },
+    'website-feedback': { name: text.websiteFeedback, materials: text.websiteFeedbackMaterials },
   };
   return <>
     <div className="atlas-header-tools">

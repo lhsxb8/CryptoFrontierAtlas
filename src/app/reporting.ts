@@ -4,7 +4,8 @@ import project from '../../project.config.json';
 export const REPOSITORY_URL: string | null = project.repository;
 export const SUBMISSION_GUIDE_URL = REPOSITORY_URL
   ? `${REPOSITORY_URL}/blob/main/docs/result-submissions.md` : './docs/result-submissions.md';
-export const submissionRoutes = ['accepted-paper', 'lean-formalization', 'preprint'] as const;
+export const researchRoutes = ['accepted-paper', 'lean-formalization', 'preprint'] as const;
+export const submissionRoutes = [...researchRoutes, 'data-correction', 'website-feedback'] as const;
 export type SubmissionRoute = typeof submissionRoutes[number];
 
 export function submissionUrl(route: SubmissionRoute): string | null {

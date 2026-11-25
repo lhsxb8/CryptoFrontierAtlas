@@ -112,11 +112,55 @@ software, data and third-party license materials.
 
 ## GitHub settings
 
-Enable branch protection or a ruleset requiring the **Public checks** job and PR
-review. Select GitHub Actions
-as the Pages source and restrict the `github-pages` environment to `main`.
+In the repository, open **Settings → Rules → Rulesets → New ruleset → New branch
+ruleset**. You need repository administration permission. Name it `protect-main`,
+set **Enforcement status** to **Active**, and target the default branch (or the
+exact branch name `main`). Keep the bypass list empty for routine work.
+
+Enable:
+
+- **Restrict deletions**.
+- **Block force pushes**.
+- **Require a pull request before merging**. Use **0 required approvals** for a
+  sole maintainer; require 1 when an independent reviewer is available. GitHub
+  does not count approval of one's own PR.
+- **Require status checks to pass**, selecting the existing **Public checks**
+  check from GitHub Actions, and **Require branches to be up to date before
+  merging**. If the check is not offered, run the existing CI workflow and select
+  its completed check; do not invent a check name.
+
+Save the ruleset. Do not enable **Restrict updates**: it would also prevent normal
+PR merges without bypass permission. Do not require **Deploy verified artifact**
+on PRs; deployment only runs after trusted `main` updates. Repository files and
+this guide do not activate protection on GitHub by themselves.
+
+The deploy key can still push work branches if it has write access. Open a PR
+from a work branch into `main`, wait for **Public checks**, and merge through the
+GitHub UI. A deploy key is not a GitHub API credential for changing rulesets.
+Verify protection with the saved rule summary and a normal PR, not a destructive
+force-push or branch-deletion experiment.
+
+See GitHub's [ruleset creation guide](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/creating-rulesets-for-a-repository)
+and [available rules](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets).
+
+For optional Pages hosting, select GitHub Actions as the Pages source and
+restrict the `github-pages` environment to `main`.
 
 Set the repository Actions variable `ATLAS_PAGES_ENABLED` to `true` when deployment
 is wanted. Trusted main-branch runs upload the checked artifact; a separate job
 deploys it. PR runs have no deployment step. Enable dependency alerts and private
 vulnerability reporting.
+
+After enabling Pages, run **Actions → Public checks and Pages → Run workflow**
+on `main`, or push a reviewed update to `main`. Confirm that both **Public checks**
+and **Deploy verified artifact** succeed; a green checks job alone does not mean
+the website was deployed. Verify the version and data revision in the live
+`atlas-release.json` and check the actual website. Keep the README website link
+and the repository's **About → Website** field aligned with the Pages URL.
+
+Dependabot checks npm and GitHub Actions weekly. Routine minor and patch version
+updates are grouped by ecosystem, with at most two open version-update PRs per
+ecosystem. Major upgrades remain separate and require review; there is no
+automatic merge. Security updates remain enabled independently of these
+version-update groups. Enable **Automatically delete head branches** in the
+repository settings to remove merged work branches.

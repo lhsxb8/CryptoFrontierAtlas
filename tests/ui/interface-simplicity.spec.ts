@@ -72,7 +72,7 @@ test('global dialogs omit redundant descriptions and expose version provenance o
       await expect(dialog).toContainText('CPA: chosen plaintext');
     }
     if (name === 'Report') {
-      await expect(dialog.getByRole('radio')).toHaveCount(3);
+      await expect(dialog.getByRole('radio')).toHaveCount(5);
       await expect(dialog.locator('.atlas-submission-materials')).toContainText('success');
       await expect(dialog).toContainText('GitHub reports are public');
     }

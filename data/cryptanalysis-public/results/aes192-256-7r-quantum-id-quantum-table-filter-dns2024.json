@@ -38,6 +38,7 @@
     ],
     "quantum_model": {
       "query_model": "coherent_secret_oracle",
+      "memory_model": "qraqm",
       "cost_level": "logical_circuit",
       "gate_set": "Abstract reversible S-box evaluations and unit-cost QRAQM access; elementary gate counts are not given.",
       "routing": "No hardware routing or physical layout is included in the abstract algorithm cost.",

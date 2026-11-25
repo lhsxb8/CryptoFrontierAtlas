@@ -1656,10 +1656,19 @@
       ],
       "properties": {
         "query_model": {
+          "description": "Target access: classical queries with quantum computation (Q1), coherent secret-key queries (Q2), or offline evaluation of a public function without a secret-key oracle.",
           "enum": [
             "classically_known_pairs",
             "coherent_secret_oracle",
             "offline_public_cipher_evaluation"
+          ]
+        },
+        "memory_model": {
+          "description": "Source-backed coherent memory access. qram retains the source's generic qRAM terminology; qraqm explicitly stores quantum data. no_qram is an affirmative source statement, not inferred from missing memory costs. Omit when unreviewed or unspecified.",
+          "enum": [
+            "qram",
+            "qraqm",
+            "no_qram"
           ]
         },
         "cost_level": {

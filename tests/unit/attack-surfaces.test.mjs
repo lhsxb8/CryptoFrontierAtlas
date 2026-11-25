@@ -149,7 +149,7 @@ test('all-surface markup has independent controls and structural sections with u
 test('a filtered single-surface page keeps its ordinary heading and nested method heading', () => {
   const side = records.filter(r => r.setting.attack_surface === 'side_channel');
   const html = render(ui.ResultSections, {...props, views: ui.resultFamilyViews(side)});
-  assert.match(html, /<h3 class="a-surface-heading">Side-channel<\/h3>/);
+  assert.match(html, /<h3 class="a-surface-heading">Side-channel analysis<\/h3>/);
   assert.match(html, /<h4 class="a-result-section-heading"/);
   assert.doesNotMatch(html, /role="tab|aria-label="Attack surface"|a-surface-nav/);
 });

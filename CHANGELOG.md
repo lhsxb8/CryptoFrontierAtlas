@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 1.0.1
+
+- Separate classical and quantum algorithmic results on the unified analysis page, without model tabs or Q1/Q2 subgroups.
+- Add source-backed query and memory-model tags to tables, result details and comparisons; preserve model-sensitive cost comparison.
+- Document the project's motivation, current coverage and Issue-first contribution policy.
+- Add lightweight data-correction and website-feedback forms and bilingual Report routes.
+- Document the protected-main workflow using the existing Public checks job.
+- Add a prominent website link and group routine dependency updates while keeping major upgrades separate.
+
 ## 1.0.0
 
 - Establish the initial application release and independent data revision tracking.

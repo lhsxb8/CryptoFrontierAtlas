@@ -118,6 +118,7 @@
         "/setting/attack_surface",
         "/setting/quantum_model",
         "/setting/quantum_model/query_model",
+        "/setting/quantum_model/memory_model",
         "/setting/quantum_model/cost_level",
         "/setting/quantum_model/gate_set",
         "/setting/quantum_model/routing",

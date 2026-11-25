@@ -32,3 +32,24 @@ export function surfaceResult({surface = 'algorithmic', method = 'differential',
   }
   return record;
 }
+
+export function quantumResult({queryModel = 'classically_known_pairs', memoryModel, ...options} = {}) {
+  const record = surfaceResult({id: `synthetic-quantum-${queryModel.replaceAll('_', '-')}`, ...options});
+  record.setting.computation = 'quantum';
+  record.setting.quantum_model = {
+    query_model: queryModel, ...(memoryModel ? {memory_model: memoryModel} : {}), cost_level: 'quantum_algorithm',
+    gate_set: 'Synthetic abstract algorithm; no gate estimate.', routing: 'Synthetic routing is unspecified.',
+    error_correction: 'Synthetic error correction is unspecified.', oracle_parallelism: 'Synthetic single-oracle accounting.',
+    solution_assumption: 'Synthetic fixture solution assumption, not a research claim.',
+  };
+  record.setting.oracle_access = [queryModel === 'coherent_secret_oracle' ? 'coherent_secret_key_permutation_queries'
+    : queryModel === 'offline_public_cipher_evaluation' ? 'offline_public_cipher_evaluation' : 'classical_chosen_plaintexts'];
+  if (queryModel === 'offline_public_cipher_evaluation' && !options.structural) {
+    record.setting.key_model = 'chosen_key_pair'; record.result_kind = 'collision_construction'; record.goal = 'key_collision';
+  }
+  for (const key of ['t_gates', 'clifford_gates', 't_depth', 'circuit_depth', 'logical_qubits']) record.resources[key] = {
+    status: options.structural ? 'not_applicable' : 'not_reported', reported: null, log2: null, unit: null,
+    qualifier: options.structural ? 'not_applicable' : 'unspecified', note: 'Synthetic fixture; no circuit-resource claim.',
+  };
+  return record;
+}

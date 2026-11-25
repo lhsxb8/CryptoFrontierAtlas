@@ -4,11 +4,20 @@ import type { AnalysisResult, AnalysisSource, CipherVariant } from './types';
 import { AttackTable, attackRows, attackBlocks, type AttackRow } from './AttackTable';
 import { StructuralTable } from './StructuralTable';
 import { countLabel } from './copy';
-import { attackSurfaces, isCostResult, methodLabel, methodLabels, publicationsForResult, RESULT_PAGE_SIZE, resultFilterKeys, surfaceLabels, type AttackSurface, type ResultFamilyView } from './model';
+import { isCostResult, methodLabel, methodLabels, publicationsForResult, RESULT_PAGE_SIZE, resultFilterKeys, type AttackSurface, type ResultFamilyView } from './model';
+
+const collections = [
+  { id: 'algorithmic', surface: 'algorithmic', label: 'Classical cryptanalysis' },
+  { id: 'quantum', surface: 'algorithmic', label: 'Quantum cryptanalysis' },
+  { id: 'side_channel', surface: 'side_channel', label: 'Side-channel analysis' },
+  { id: 'fault_injection', surface: 'fault_injection', label: 'Fault-injection analysis' },
+] as const;
+type ResultCollection = typeof collections[number]['id'];
 
 export interface ResultSection {
   id: string;
   surface: AttackSurface;
+  collection: ResultCollection;
   category: string;
   label: string;
   structural: boolean;
@@ -17,7 +26,7 @@ export interface ResultSection {
 
 const methodOrder = Object.keys(methodLabels);
 
-/** All surfaces share one page; methods and structural kinds stay inside their surface. */
+/** One page, no model tabs. Quantum algorithms share a collection, not a cost-ranking scope. */
 export function resultSections(views: ResultFamilyView[], query = ''): ResultSection[] {
   const sections = new Map<string, ResultSection>();
   for (const row of attackRows(views, query)) {
@@ -25,17 +34,22 @@ export function resultSections(views: ResultFamilyView[], query = ''): ResultSec
     const structural = !isCostResult(record);
     const method = record.display.method;
     const surface = record.setting.attack_surface;
+    const quantum = record.setting.computation === 'quantum';
+    const collection: ResultCollection = surface === 'algorithmic' && quantum ? 'quantum' : surface;
     const category = structural ? 'structural' : method;
-    const id = `${surface}-${category}`;
+    // Quantum-assisted physical attacks retain their surface and a separate table.
+    const physicalQuantum = surface !== 'algorithmic' && quantum;
+    const id = `${collection}-${physicalQuantum ? 'quantum-' : ''}${category}`;
     const section = sections.get(id) ?? {
-      id, surface, category, structural,
-      label: structural ? 'Structural properties & bounds' : methodLabel(method, surface), rows: [],
+      id, surface, collection, category, structural,
+      label: `${physicalQuantum ? 'Quantum · ' : ''}${structural ? 'Structural properties & bounds' : methodLabel(method, surface)}`, rows: [],
     };
     section.rows.push(row);
     sections.set(id, section);
   }
   const rank = (section: ResultSection) => section.structural ? methodOrder.length : methodOrder.indexOf(section.category);
-  return [...sections.values()].sort((a, b) => attackSurfaces.indexOf(a.surface) - attackSurfaces.indexOf(b.surface)
+  const collectionOrder = collections.map(collection => collection.id);
+  return [...sections.values()].sort((a, b) => collectionOrder.indexOf(a.collection) - collectionOrder.indexOf(b.collection)
     || rank(a) - rank(b) || a.label.localeCompare(b.label));
 }
 
@@ -51,7 +65,7 @@ function SectionTable({ section, sources, variant, params, selected, onToggle, r
   const page = Math.min(requestedPage, pageCount);
   const offset = (page - 1) * RESULT_PAGE_SIZE;
   const rows = blocks.slice(offset, offset + RESULT_PAGE_SIZE).flatMap(block => block.rows);
-  const label = `${surfaceLabels[section.surface]} · ${section.label}`;
+  const label = `${collections.find(collection => collection.id === section.collection)!.label} · ${section.label}`;
   const changePage = (next: number) => {
     setPage(next);
     document.getElementById(`result-section-${section.id}`)?.scrollIntoView({ block: 'start' });
@@ -71,7 +85,7 @@ function SectionTable({ section, sources, variant, params, selected, onToggle, r
 export function ResultSections({ views, ...props }: Omit<SectionTableProps, 'section'> & { views: ResultFamilyView[] }) {
   const [opened, setOpened] = useState<Set<string>>(new Set());
   const sections = resultSections(views, props.params.get('q') || '');
-  const surfaces = attackSurfaces.filter(surface => sections.some(section => section.surface === surface));
+  const visibleCollections = collections.filter(collection => sections.some(section => section.collection === collection.id));
   const pagingKey = [...resultFilterKeys.map(key => props.params.get(key)), props.params.get('sort')].join('|');
   const toggle = (id: string) => setOpened(current => {
     const next = new Set(current);
@@ -81,9 +95,9 @@ export function ResultSections({ views, ...props }: Omit<SectionTableProps, 'sec
   return <div className="a-result-sections">
     <div className="a-section-controls"><button className="a-text-button" disabled={sections.every(section => opened.has(section.id))} onClick={() => setOpened(new Set(sections.map(section => section.id)))}>Expand all</button>
       <button className="a-text-button" disabled={!sections.some(section => opened.has(section.id))} onClick={() => setOpened(new Set())}>Collapse all</button></div>
-    {surfaces.map(surface => <section key={surface} className="a-surface-results" data-attack-surface={surface} aria-label={surfaceLabels[surface]}>
-      <h3 className="a-surface-heading">{surfaceLabels[surface]}</h3>
-      {sections.filter(section => section.surface === surface).map(section => {
+    {visibleCollections.map(collection => <section key={collection.id} className="a-surface-results" data-attack-surface={collection.surface} data-result-collection={collection.id} aria-label={collection.label}>
+      <h3 className="a-surface-heading">{collection.label}</h3>
+      {sections.filter(section => section.collection === collection.id).map(section => {
       const open = opened.has(section.id);
       const paperCount = publicationsForResult({ evidence: section.rows.flatMap(row => row.view.records.flatMap(record => record.evidence)) }, props.sources).length;
       return <section key={section.id} className={`a-result-section${section.structural ? ' a-structural-section' : ''}`} data-section-id={section.id} data-method-category={section.category} id={`result-section-${section.id}`} aria-labelledby={`result-section-heading-${section.id}`}>

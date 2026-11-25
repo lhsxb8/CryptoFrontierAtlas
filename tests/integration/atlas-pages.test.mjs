@@ -155,7 +155,7 @@ test('exact-ID and citation searches find side-channel records directly', () => 
   for (const q of [side.id, sources[0].citation_label]) {
     const html = render(surfacePages.ResultsPage, {cipherId: 'aes', variantId: 'aes-128', searchParams: new URLSearchParams({q})});
     assert.ok(recordRow(html, side.id));
-    assert.match(html, /<h3 class="a-surface-heading">Side-channel<\/h3>/);
+    assert.match(html, /<h3 class="a-surface-heading">Side-channel analysis<\/h3>/);
     assert.doesNotMatch(html, /Matching results on other attack surfaces|attack_surface=/);
     const legacy = render(surfacePages.ResultsPage, {cipherId: 'aes', variantId: 'aes-128', searchParams: new URLSearchParams({q, attack_surface: 'algorithmic'})});
     assert.equal(legacy, html);
@@ -164,7 +164,7 @@ test('exact-ID and citation searches find side-channel records directly', () => 
 
 test('method-only links directly reach fault results without dropping other constraints', () => {
   const html = render(surfacePages.ResultsPage, {cipherId: 'aes', variantId: 'aes-128', searchParams: new URLSearchParams('method=fault')});
-  assert.match(html, /<h3 class="a-surface-heading">Fault injection<\/h3>/);
+  assert.match(html, /<h3 class="a-surface-heading">Fault-injection analysis<\/h3>/);
   assert.match(html, /data-section-id="fault_injection-fault"/);
   assert.doesNotMatch(html, /No matching results|Matching results on other attack surfaces|attack_surface=/);
   const constrained = render(surfacePages.ResultsPage, {cipherId: 'aes', variantId: 'aes-128', searchParams: new URLSearchParams('method=fault&rounds=999')});

@@ -1,9 +1,14 @@
-# Reporting research results
+# Reporting results and feedback
 
 Use **Report** in the Atlas header or choose a research-result template when
 opening a GitHub issue. Authors and third-party contributors can report new or
 missing results, corrections, source updates and additional verification evidence.
-For website bugs and general discussion, open a regular issue.
+For a focused correction or website suggestion, choose one of the lightweight
+feedback routes below. General discussion can also use a regular issue.
+
+Contributions start with an issue. Maintainers review and integrate accepted
+changes; unsolicited external PRs are generally not accepted. A maintainer may
+invite a scoped PR after discussion. See [Contributing](../CONTRIBUTING.md).
 
 ## Choose a route
 
@@ -12,6 +17,14 @@ For website bugs and general discussion, open a regular issue.
 | Accepted / published paper | Full text at an identified version; title, authors, venue and year; public acceptance or publication evidence when available. |
 | Lean formalization | Public source at a fixed commit, precise theorem correspondence, pinned environment, replay instructions and axiom dependencies. A paper is optional. |
 | Preprint | Public full text with a persistent identifier or link, and a version number or date. |
+| Data correction / missing result | Affected page, record or topic; the correction or omission; a supporting source or explanation. |
+| Website bug / feature suggestion | Relevant page or use case, reproduction steps or expected behavior; browser/device details are optional. |
+
+The three research routes use the scientific fields below. Data corrections and
+website feedback use their own shorter forms; they do not require attack costs,
+success probabilities or a paper. Maintainers may request more evidence when a
+correction changes a scientific claim. Security vulnerabilities follow
+[SECURITY.md](../SECURITY.md), not a public feedback form.
 
 Publication and verification are separate dimensions. A preprint may have a
 complete formal proof; a published paper may still await Atlas review. If public
@@ -33,7 +46,7 @@ maintainers normalize the fields and fingerprint the inspected source.
 | Contribution | The statement and whether it adds, corrects or verifies a result. Link affected Atlas IDs or previous reports. |
 | Target | Algorithm and instance, key/block sizes, exact round boundaries, final-round modifications and recovery scope. |
 | Goal | Distinguisher, full/partial key recovery, collision, preimage, property or theorem; specify the experiment when needed. |
-| Setting | Key control, oracle access, classical/quantum model, and applicable weak-key, leakage or fault assumptions. |
+| Setting | Key control, oracle access, classical/quantum model, quantum memory access when applicable, and weak-key, leakage or fault assumptions. Distinguish Q1, Q2 and offline public-function evaluation; distinguish qRAM, QRAQM and explicitly no qRAM. |
 | Parameters | Source-defined formulas, feasible domains and concrete assignments, or a table of discrete points. |
 | Costs | Time, data, memory and preprocessing, with native units, online/setup accounting and the common parameter assignment. |
 | Success | Primary event, probability/formula/bound, assumptions, repetition budget and theoretical or experimental basis. |
@@ -103,10 +116,14 @@ formalization and its license; the report records the exact inspected commit.
 3. **Ingestion:** normalize results into the existing contracts and run relevant validation.
 4. **Receipt:** link stable result IDs, the checked version, review scope and any unresolved fields.
 
-Use the issue states **received**, **in review**, **needs information** and
+For research intake, use the issue states **received**, **in review**, **needs information** and
 **ingested**. Close duplicate, out-of-scope or withdrawn submissions with a reason
 and related links. These states describe intake, not mathematical truth or
 publication status. An ingested result may still have a pending full-paper audit.
+
+For data corrections, close the issue with the affected stable IDs and the
+accepted change or a reasoned decision. For website feedback, link the fix or
+explain the outcome; it does not receive a scientific ingestion status.
 
 Ordinary reports need one substantive review. Consequential source conflicts or
 disputed scope/frontier decisions receive independent review. Record conflicting

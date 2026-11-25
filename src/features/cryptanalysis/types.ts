@@ -98,6 +98,7 @@ export interface AnalysisResult {
     attack_surface: AttackSurface;
     quantum_model?: {
       query_model: 'classically_known_pairs' | 'coherent_secret_oracle' | 'offline_public_cipher_evaluation';
+      memory_model?: 'qram' | 'qraqm' | 'no_qram';
       cost_level: 'logical_circuit' | 'quantum_algorithm';
       gate_set: string; routing: string; error_correction: string;
       oracle_parallelism: string; solution_assumption: string;

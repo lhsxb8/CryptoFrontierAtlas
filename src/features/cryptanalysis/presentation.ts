@@ -35,6 +35,8 @@ export const oracleLabels: Record<string, string> = {
   'correct-ciphertext-reference': 'Correct ciphertext reference', 'observable-encryption-correctness': 'Correct / incorrect outcome',
   'repeat-encryption-fixed-input': 'Repeated fixed input',
   coherent_secret_key_permutation_queries: 'Coherent secret-key queries',
+  classical_chosen_plaintexts: 'Classical CPA',
+  offline_public_cipher_evaluation: 'Offline public evaluation',
   'offline-coherent-public-cipher-evaluation': 'Offline coherent evaluation',
   'offline-public-cipher-evaluation': 'Offline public evaluation', 'offline-public-aes-evaluation': 'Offline public evaluation',
   'coherent-ddt-table-lookup': 'Coherent DDT lookup', 'local-reversible-aes-computation': 'Local reversible evaluation',
@@ -60,7 +62,6 @@ export function compactFaultText(value: string): string {
 export function settingSummary(record: AnalysisResult): string[] {
   const setting = record.setting;
   const labels: string[] = [keyModelLabels[setting.key_model]];
-  if (setting.computation === 'quantum') labels.push('Quantum');
   const access = [...new Set(setting.oracle_access.map(value => oracleLabels[value] ?? humanize(value)).filter(Boolean))];
   if (access.length) labels.push(access.join(' · '));
   if (setting.attack_surface === 'side_channel' && !access.some(label => /leakage/i.test(label))) labels.push('Side-channel leakage');
@@ -81,10 +82,6 @@ export function settingSummary(record: AnalysisResult): string[] {
     labels.push(compactFaultText(setting.fault_model.timing));
     labels.push(compactFaultText(setting.fault_model.location));
     if (setting.fault_model.feedback) labels.push('Binary correctness feedback');
-  }
-  if (setting.quantum_model) {
-    const query = { classically_known_pairs: 'Classical known pairs', coherent_secret_oracle: 'Coherent secret-key oracle', offline_public_cipher_evaluation: 'Offline public-cipher evaluation' };
-    labels.push(query[setting.quantum_model.query_model]);
   }
   const experiment = record.experiment;
   if (experiment?.construction.type === 'compression_function') labels.push(experiment.construction.name);

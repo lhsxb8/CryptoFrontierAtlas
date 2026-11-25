@@ -28,6 +28,25 @@ Retain optional coordinates such as preprocessing or quantum resources during
 comparison. Each comparison uses a complete source-supported assignment and
 matching settings.
 
+## Quantum models
+
+Keep `setting.computation` independent of `setting.attack_surface`. Algorithmic
+quantum results share a display section, while comparison still requires their
+complete settings to match. Quantum-assisted side-channel or fault attacks keep
+their physical attack surface.
+
+`setting.quantum_model.query_model` records target access: classical queries with
+quantum computation (Q1), coherent secret-key oracle access (Q2), or offline
+evaluation of a public function without a secret-key oracle. Quantum circuits or
+coherent memory access alone do not establish Q2.
+
+The optional `memory_model` is `qram`, `qraqm` or `no_qram`. Preserve the source's
+generic qRAM terminology unless it explicitly specifies quantum data in memory
+(QRAQM). Assign `no_qram` only with positive evidence; an absent field means
+unreviewed or unspecified, not zero quantum storage. Keep contents, access costs
+and resource units in the detailed assumptions and evidence. The UI reads these
+fields for colored tags, never title/ID substrings or guesses from memory costs.
+
 ## Publication classification
 
 When adding or restructuring fields, update the independent permissions in

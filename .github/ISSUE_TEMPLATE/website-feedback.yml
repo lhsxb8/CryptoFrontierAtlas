@@ -1,0 +1,38 @@
+name: Website bug / feature suggestion
+description: Report a website problem or suggest an improvement.
+title: "[Website] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share a website bug or a use case you would like supported. No research submission fields are needed.
+        See docs/result-submissions.md. Reports are public; remove credentials and private data from screenshots and logs.
+        For a security vulnerability, follow SECURITY.md instead of posting exploit details here.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Feedback type
+      options:
+        - Website bug
+        - Feature suggestion
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem or use case
+      description: Link the relevant page and explain the problem or the task you want to accomplish.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Reproduction steps or expected behavior
+      description: For a bug, provide steps and actual versus expected behavior. For a suggestion, describe the desired workflow.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Browser, device and screenshots
+      description: Optional details that help reproduce a layout or interaction problem. Share only public material.

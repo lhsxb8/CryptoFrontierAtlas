@@ -6,6 +6,7 @@ import {mkdtempSync, readFileSync, writeFileSync, rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {writePublicationFixture} from '../helpers/publication-fixtures.mjs';
+import {quantumResult} from '../helpers/attack-surface-fixtures.mjs';
 
 const require = createRequire(import.meta.url);
 const {createPublicationPolicy} = require('../../lib/node/cryptanalysis/publication-policy.cjs');
@@ -30,6 +31,27 @@ function rehash(output, name) {
     receipt.data_sha256 = digest(json(receipt.files));
   });
 }
+
+test('quantum memory fields round-trip through export and independent validation only with publication permission', async t => {
+  for (const memoryModel of ['qram', 'qraqm', 'no_qram']) await t.test(memoryModel, sub => {
+    const f = fixture(sub), quantum = quantumResult({memoryModel});
+    const addModel = record => {
+      record.setting.computation = 'quantum'; record.setting.quantum_model = quantum.setting.quantum_model;
+      for (const key of ['t_gates', 'clifford_gates', 't_depth', 'circuit_depth', 'logical_qubits']) record.resources[key] = quantum.resources[key];
+    };
+    addModel(f.record); f.write('results/' + f.record.id + '.json', f.record);
+    const entries = readFileSync(join(f.directory, 'entries/aes.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
+    for (const entry of entries) if (entry.record_id === null) addModel(entry);
+    f.write('entries/aes.jsonl', entries.map(JSON.stringify).join('\n') + '\n');
+    exportPublishedDataset(f.root);
+    const published = validatePublishedDataset(f.root).data;
+    assert.equal(published.results[0].setting.quantum_model.memory_model, memoryModel);
+    assert.equal(published.entries.find(e => e.record_id === null).setting.quantum_model.memory_model, memoryModel);
+    edit(f.policy, p => {p.documents.result.public = p.documents.result.public.filter(field => field !== '/setting/quantum_model/memory_model');});
+    assert.throws(() => exportPublishedDataset(f.root), /memory_model: unclassified publication field/);
+    assert.throws(() => validatePublishedDataset(f.root), /memory_model: unclassified publication field/);
+  });
+});
 
 test('schema-approved optional fields block publication even before data uses them', t => {
   const f = fixture(t); exportPublishedDataset(f.root);

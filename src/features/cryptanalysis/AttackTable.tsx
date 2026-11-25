@@ -12,6 +12,7 @@ import { goalLabels, humanize, isCostResult, MAX_COMPARISON_RECORDS, primaryCost
 import type { ResultFamilyView } from './model';
 import { attackName, readerText, recoveryScopeLabel, settingSummary } from './presentation';
 import { Conditions } from './Conditions';
+import { QuantumModelTags } from './QuantumModelTags';
 import { attackBlocks, attackRows, type AttackRow } from './attack-rows';
 import { useWideCosts } from './use-wide-costs';
 export { attackRows, attackBlocks, type AttackRow } from './attack-rows';
@@ -42,7 +43,7 @@ function SuccessOverview({ row }: { row: AttackRow }) {
 
 export function SettingValue({ record }: { record: AnalysisResult }) {
   return <div className="a-attack-setting">{settingSummary(record).map((label, index) => index === 0
-    ? <strong key={index}>{label}</strong> : <span key={index}><Formula expression={label} /></span>)}</div>;
+    ? <strong key={index}>{label}</strong> : <span key={index}><Formula expression={label} /></span>)}<QuantumModelTags record={record} /></div>;
 }
 
 function AttackDetails({ row, sources, params }: { row: AttackRow; sources: AnalysisSource[]; params: URLSearchParams }) {

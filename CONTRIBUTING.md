@@ -1,5 +1,19 @@
 # Contributing
 
+## Issues first
+
+Help maintain the atlas by opening an issue or using **Report** on the website.
+Use **Data correction / missing result** for a focused data update, and
+**Website bug / feature suggestion** for interface feedback. These forms do not
+require a complete research submission. For security vulnerabilities, follow
+[SECURITY.md](SECURITY.md) instead of disclosing details in a public issue.
+
+Maintainers check source provenance, assumptions and evidence before integrating
+updates. The project generally does not accept unsolicited external pull
+requests; discuss a change in an issue first. A maintainer may invite a scoped PR
+when direct code or data collaboration is appropriate. This policy keeps one
+reviewed integration path while welcoming contributions from the community.
+
 ## Research results
 
 Submit an issue using the accepted/published paper, Lean formalization or preprint
@@ -19,7 +33,7 @@ its [scope notice](data/cryptanalysis-public/README.md).
 Identify third-party material and its license. Submit only material you are
 authorized to share.
 
-## Application changes
+## Maintainer and invited application changes
 
 Use Node.js 24 and the root lockfile:
 
@@ -63,6 +77,15 @@ before publishing a website build.
 
 ## Pull requests
 
-Describe the change and the checks run. Keep structural migrations separate from
-scientific reinterpretation. Preserve existing record IDs and routes. Use a small
-module within the existing application when it covers the feature.
+Maintainer, invited-contributor and Dependabot PRs use the same checks. Link the
+relevant issue, describe the change and list the checks run. Keep structural
+migrations separate from scientific reinterpretation. Preserve existing record
+IDs and routes. Use a small module within the existing application when it
+covers the feature.
+
+Push changes to a work branch and merge through a PR after **Public checks**
+passes. Protect `main` against direct pushes, force pushes and deletion using the
+[release guide](docs/releasing.md#github-settings). A sole maintainer can require
+a PR with zero required approvals; enable independent approval when a second
+reviewer is available. External PRs are considered by prior agreement, not closed
+indiscriminately by a bot.

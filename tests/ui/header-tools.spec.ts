@@ -46,7 +46,7 @@ test('language changes preserve the route and persist through reload', async ({ 
   await page.reload();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('CryptoFrontierAtlas');
   await page.getByRole('button', { name: 'Report', exact: true }).click();
-  await expect(page.getByRole('dialog', { name: '提交研究结果', exact: true })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: '贡献与反馈', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: '语言', exact: true }).click();
   await page.getByRole('button', { name: 'English', exact: true }).click();
@@ -62,6 +62,8 @@ test('report routes use the configured repository or show the pending state', as
     ['Accepted / published paper', 'accepted-paper.yml'],
     ['Lean formalization', 'lean-formalization.yml'],
     ['Preprint', 'preprint.yml'],
+    ['Data correction / missing result', 'data-correction.yml'],
+    ['Website bug / feature suggestion', 'website-feedback.yml'],
   ]) {
     await dialog.getByRole('radio', { name: new RegExp('^' + name.replaceAll('/', '\\/')) }).check();
     if (!project.repository) {
@@ -79,7 +81,7 @@ test('report routes use the configured repository or show the pending state', as
     await expect(link).toBeInViewport();
   }
   await expect(dialog).toContainText('GitHub reports are public');
-  await expect(dialog.locator('.atlas-submission-materials')).toContainText('Public manuscript');
+  await expect(dialog.locator('.atlas-submission-materials')).toContainText('Page and reproduction steps');
   const box = await dialog.boundingBox();
   expect(box!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
   expect(box!.height).toBeLessThanOrEqual(page.viewportSize()!.height);
@@ -98,7 +100,7 @@ test('modal keyboard focus is contained and Help can open Report', async ({ page
   await dialog.locator('.atlas-dialog-body').evaluate(node => { node.scrollTop = node.scrollHeight; });
   await expect(dialog.getByRole('button', { name: 'Close dialog', exact: true })).toBeInViewport();
   await dialog.getByRole('button', { name: 'Report', exact: true }).click();
-  dialog = page.getByRole('dialog', { name: 'Contribute a result', exact: true });
+  dialog = page.getByRole('dialog', { name: 'Contribute & report', exact: true });
   await expect(dialog).toBeVisible();
   await expect(page.locator('dialog[open]')).toHaveCount(1);
   await dialog.getByRole('button', { name: 'Close dialog', exact: true }).click();
@@ -113,7 +115,7 @@ test('public home offers reporting routes without exposing result tables on the 
   await expect(page.locator('.atlas-portal-card')).toHaveCount(4);
   await expect(page.locator('main p')).toHaveCount(0);
   await page.getByRole('button', { name: 'Report', exact: true }).click();
-  await expect(page.getByRole('dialog').getByRole('radio')).toHaveCount(3);
+  await expect(page.getByRole('dialog').getByRole('radio')).toHaveCount(5);
   await expect(page.locator('a[href^="#/cryptanalysis/results/"]')).toHaveCount(0);
 });
 
@@ -127,7 +129,7 @@ test('published analysis evidence routes expose sources and preserve scientific 
   await expect(page.locator('.atlas-source-card').first()).toBeVisible();
   expect(await page.locator('main').getAttribute('lang')).toBe('en');
   await page.getByRole('button', {name:'Report', exact:true}).click();
-  await expect(page.getByRole('dialog').getByRole('radio')).toHaveCount(3);
+  await expect(page.getByRole('dialog').getByRole('radio')).toHaveCount(5);
 });
 
 test('language switching works without browser storage', async ({ page }) => {
@@ -151,8 +153,12 @@ test('compact layouts keep all three tools and both languages inside the viewpor
   await page.getByRole('button', { name: '简体中文', exact: true }).click();
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: 'Report', exact: true }).click();
-  await expect(page.getByRole('dialog').getByRole('radio')).toHaveCount(3);
+  await expect(page.getByRole('dialog').getByRole('radio')).toHaveCount(5);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+  for (const name of ['数据纠错／遗漏', '网站问题／功能建议']) {
+    await page.getByRole('dialog').getByRole('radio', {name, exact: true}).check();
+    await expect(page.getByRole('dialog').getByRole('radio', {name, exact: true})).toBeChecked();
+  }
   await expect(page.getByRole('button', { name: '关闭弹窗', exact: true })).toBeInViewport();
   if (project.repository) await expect(page.getByRole('link', { name: '前往 GitHub 填写', exact: true })).toBeInViewport();
   else await expect(page.getByRole('status')).toContainText('配置公开仓库地址');

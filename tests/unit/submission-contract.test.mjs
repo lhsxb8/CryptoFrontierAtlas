@@ -19,8 +19,9 @@ const pending = await reporting(null);
 const read = file => readFileSync(new URL('../../' + file, import.meta.url), 'utf8');
 const fields = ['collection', 'purpose', 'source', 'claims', 'scope', 'costs', 'success', 'evidence', 'related-work', 'disclosure'];
 
-test('all three configured reporting routes retain only their public template', () => {
-  assert.equal(configured.submissionRoutes.length, 3);
+test('all five configured reporting routes retain only their public template', () => {
+  assert.equal(configured.submissionRoutes.length, 5);
+  assert.deepEqual(configured.researchRoutes, ['accepted-paper', 'lean-formalization', 'preprint']);
   for (const route of configured.submissionRoutes) {
     const url = new URL(configured.submissionUrl(route));
     assert.equal(url.origin + url.pathname, configured.REPOSITORY_URL + '/issues/new');
@@ -37,7 +38,7 @@ test('an unconfigured project exposes a local guide and no invented repository',
 });
 
 test('intake forms require the common scientific evidence fields', () => {
-  for (const route of configured.submissionRoutes) {
+  for (const route of configured.researchRoutes) {
     const form = read('.github/ISSUE_TEMPLATE/' + route + '.yml');
     const blocks = form.split(/(?=^  - type: )/m);
     const entries = blocks.flatMap(block => {
@@ -60,4 +61,16 @@ test('intake forms require the common scientific evidence fields', () => {
   assert.match(lean, /native_decide/);
   assert.match(read('docs/result-submissions.md'), /Publication and verification are separate/);
   assert.match(read('.github/ISSUE_TEMPLATE/config.yml'), /blank_issues_enabled: true/);
+});
+
+test('lightweight feedback forms do not require a full research submission', () => {
+  for (const [route, required] of [['data-correction', ['location', 'correction', 'evidence']], ['website-feedback', ['kind', 'description', 'behavior']]]) {
+    const form = read('.github/ISSUE_TEMPLATE/' + route + '.yml');
+    const blocks = form.split(/(?=^  - type: )/m);
+    for (const id of required) assert(blocks.some(block => block.includes(`id: ${id}\n`) && /required: true/.test(block)), `${route}: ${id}`);
+    for (const id of ['source', 'claims', 'scope', 'costs', 'success', 'replay', 'trust']) assert(!form.includes(`id: ${id}\n`));
+    assert.match(form, /docs\/result-submissions\.md/);
+    assert.doesNotMatch(form, /(?:\.agents|\.local|\.cache)\//);
+  }
+  assert.match(read('.github/ISSUE_TEMPLATE/website-feedback.yml'), /SECURITY\.md/);
 });

@@ -1,5 +1,6 @@
 import type { AnalysisFamilyCatalog, AnalysisResult, AnalysisResultFamily, AnalysisSource, CipherFamily, CipherVariant } from './types';
 import { resultTaxonomy } from './taxonomy';
+import { quantumModelTags } from './quantum-model';
 export { publicationLabel } from '../../../lib/cryptanalysis/publication.mjs';
 import { publicationLabel } from '../../../lib/cryptanalysis/publication.mjs';
 
@@ -345,6 +346,7 @@ export function filterResults(records: readonly AnalysisResult[], variantId: str
       const haystack = [record.id, record.title, record.display.name, record.display.method, methodLabels[record.display.method], record.target.description, JSON.stringify(record.property || {}), JSON.stringify(record.experiment || {}), JSON.stringify(record.theorem || {}), JSON.stringify(record.target.round_domain || {}), ...record.target.variant_ids,
         goalLabels[record.goal], keyModelLabels[record.setting.key_model], computationLabels[record.setting.computation], surfaceLabels[record.setting.attack_surface], ...record.techniques,
         ...Object.values(record.setting.quantum_model || {}), ...Object.values(record.setting.fault_model || {}),
+        ...quantumModelTags(record).map(tag => tag.label),
         ...record.setting.oracle_access, record.setting.key_relation, record.setting.plaintext_model,
         record.setting.key_population, sourceText, familyText].join(' ').toLowerCase();
       if (!terms.every((term) => {

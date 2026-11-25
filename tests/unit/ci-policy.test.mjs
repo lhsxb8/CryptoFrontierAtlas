@@ -33,3 +33,27 @@ test('source-only release tags validate version and identity independently of Pa
   assert.match(workflow, /ATLAS_RELEASE_TAG:.*github\.ref_name/);
   assert.match(workflow, /name: Check publication identity\n\s+if: startsWith\(github.ref, 'refs\/tags\/v'\) \|\|/);
 });
+
+test('routine dependency updates are grouped without disabling security updates or grouping major upgrades', () => {
+  const dependabot = readFileSync(new URL('../../.github/dependabot.yml', import.meta.url), 'utf8');
+  const ecosystems = dependabot.split(/^  - package-ecosystem: /m).slice(1);
+  assert.equal(ecosystems.length, 2);
+  for (const ecosystem of ecosystems) {
+    assert.match(ecosystem, /^(npm|github-actions)\n/);
+    assert.match(ecosystem, /interval: weekly/);
+    assert.match(ecosystem, /open-pull-requests-limit: 2/);
+    assert.match(ecosystem, /applies-to: version-updates/);
+    assert.match(ecosystem, /patterns: \["\*"\]/);
+    assert.match(ecosystem, /update-types: \[minor, patch\]/);
+    assert.doesNotMatch(ecosystem, /ignore:|applies-to: security-updates|update-types:.*major/);
+  }
+});
+
+test('the README prominently links to the configured repository website and issue forms', () => {
+  const {repository} = JSON.parse(readFileSync(new URL('../../project.config.json', import.meta.url), 'utf8'));
+  const readme = readFileSync(new URL('../../README.md', import.meta.url), 'utf8');
+  const [owner, name] = new URL(repository).pathname.split('/').filter(Boolean);
+  const introduction = readme.split('## ')[0];
+  assert(introduction.includes(`**[Visit the Atlas](https://${owner}.github.io/${name}/)**`));
+  assert(introduction.includes(`[Report an issue](${repository}/issues/new/choose)`));
+});

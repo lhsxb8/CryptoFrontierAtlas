@@ -1,0 +1,35 @@
+name: Data correction / missing result
+description: Correct a record, flag a missing result or improve source information.
+title: "[Data] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help improve the atlas through an issue. A short, source-backed correction is enough; maintainers handle the data changes.
+        See docs/result-submissions.md. Reports are public: share only material you may disclose.
+  - type: textarea
+    id: location
+    attributes:
+      label: Affected page, record or topic
+      description: Link the Atlas page or record ID. For an omission, name the primitive, research question or paper.
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What is wrong or missing?
+      description: Describe the current issue and the proposed correction or addition.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Supporting source or explanation
+      description: Include the source version and page, table or theorem when applicable. For a typo or broken link, a concise explanation is enough.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Related issues, alternative interpretations or further verification are welcome.

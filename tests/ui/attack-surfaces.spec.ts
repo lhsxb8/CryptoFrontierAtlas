@@ -37,7 +37,7 @@ async function noOverflow(page: Page) {
 
 test('default browsing shows every surface without tabs and keeps methods and properties separate', async ({page}) => {
   await page.goto(base);
-  await expect(page.locator('.a-surface-heading')).toHaveText(['Algorithmic', 'Side-channel', 'Fault injection']);
+  await expect(page.locator('.a-surface-heading')).toHaveText(['Classical cryptanalysis', 'Side-channel analysis', 'Fault-injection analysis']);
   await expect(page.getByRole('navigation', {name: 'Attack surface', exact: true})).toHaveCount(0);
   await expect(page.getByRole('combobox', {name: 'Attack surface', exact: true})).toHaveCount(0);
   await expect(page.getByRole('tab', {name: /^(Algorithmic|Side-channel|Fault injection|All)$/})).toHaveCount(0);
@@ -59,7 +59,7 @@ test('filters span surfaces while expansion and comparison selections stay indep
   await page.goto(base + '?method=differential&ids=' + records[0].id);
   const methods = page.getByRole('combobox', {name: 'Attack method', exact: true});
   await expect(methods).toHaveValue('differential');
-  await expect(page.locator('.a-surface-heading')).toHaveText(['Algorithmic', 'Side-channel']);
+  await expect(page.locator('.a-surface-heading')).toHaveText(['Classical cryptanalysis', 'Side-channel analysis']);
   for (const method of ['mitm', 'collision', 'fault']) await expect(methods.locator(`option[value="${method}"]`)).toHaveCount(1);
   const algorithmic = page.locator('[data-section-id="algorithmic-differential"] .a-result-section-toggle');
   const leakage = page.locator('[data-section-id="side_channel-differential"] .a-result-section-toggle');
@@ -71,12 +71,12 @@ test('filters span surfaces while expansion and comparison selections stay indep
   await expect(leakage).toHaveAttribute('aria-expanded', 'true');
   await expect(page.locator('[data-section-id="algorithmic-differential"] [data-record-id="' + side.id + '"]')).toHaveCount(0);
   await page.getByRole('combobox', {name: 'Rounds', exact: true}).selectOption('10');
-  await expect(page.locator('.a-surface-heading')).toHaveText(['Side-channel']);
+  await expect(page.locator('.a-surface-heading')).toHaveText(['Side-channel analysis']);
   await expect(page.locator('[data-record-id="' + side.id + '"]')).toBeVisible();
   await expect(page.locator('.a-selection-bar')).toContainText('1/4 selected');
   await page.getByRole('button', {name: 'Clear filters', exact: true}).click();
   await expect(methods).toHaveValue('');
-  await expect(page.locator('.a-surface-heading')).toHaveText(['Algorithmic', 'Side-channel', 'Fault injection']);
+  await expect(page.locator('.a-surface-heading')).toHaveText(['Classical cryptanalysis', 'Side-channel analysis', 'Fault-injection analysis']);
   await expect(page.locator('.a-selection-bar')).toContainText('1/4 selected');
   const query = new URLSearchParams(new URL(page.url()).hash.split('?')[1]);
   expect(query.has('attack_surface')).toBe(false);
@@ -86,7 +86,7 @@ test('filters span surfaces while expansion and comparison selections stay indep
 
 test('exact-ID and citation searches immediately find side-channel records and retain clean return context', async ({page}) => {
   await page.goto(base + '?q=' + side.id);
-  await expect(page.locator('.a-surface-heading')).toHaveText(['Side-channel']);
+  await expect(page.locator('.a-surface-heading')).toHaveText(['Side-channel analysis']);
   await expect(page.getByRole('navigation', {name: 'Matching results on other attack surfaces'})).toHaveCount(0);
   await expand(page);
   const row = page.locator('[data-record-id="' + side.id + '"]');
@@ -98,9 +98,9 @@ test('exact-ID and citation searches immediately find side-channel records and r
   await expect(page.locator('.a-detail-topbar .a-back-link')).toHaveAttribute('href', '#/cryptanalysis/ciphers/aes/aes-128?q=' + side.id);
   await page.locator('.a-detail-topbar .a-back-link').click();
   await expect(page.getByRole('searchbox', {name: 'Search analysis results', exact: true})).toHaveValue(side.id);
-  await expect(page.locator('.a-surface-heading')).toHaveText(['Side-channel']);
+  await expect(page.locator('.a-surface-heading')).toHaveText(['Side-channel analysis']);
   await page.goto(base + '?q=Syn26');
-  await expect(page.locator('.a-surface-heading')).toHaveText(['Algorithmic', 'Side-channel', 'Fault injection']);
+  await expect(page.locator('.a-surface-heading')).toHaveText(['Classical cryptanalysis', 'Side-channel analysis', 'Fault-injection analysis']);
   await expand(page);
   await expect(page.locator('tr[data-record-id]')).toHaveCount(records.length);
   await noOverflow(page);
@@ -109,12 +109,12 @@ test('exact-ID and citation searches immediately find side-channel records and r
 test('legacy direct links and cross-surface comparisons retain context and reject cost ranking', async ({page}) => {
   for (const surface of ['algorithmic', 'side_channel', 'fault_injection', 'all', 'unknown']) {
     await page.goto(base + '?attack_surface=' + surface);
-    await expect(page.locator('.a-surface-heading')).toHaveText(['Algorithmic', 'Side-channel', 'Fault injection']);
+    await expect(page.locator('.a-surface-heading')).toHaveText(['Classical cryptanalysis', 'Side-channel analysis', 'Fault-injection analysis']);
     await expect(page.locator('a[href*="attack_surface="]')).toHaveCount(0);
     await expect(page.locator('.a-list-toolbar')).not.toContainText('active filter');
   }
   await page.goto(base + '?method=fault');
-  await expect(page.locator('.a-surface-heading')).toHaveText(['Fault injection']);
+  await expect(page.locator('.a-surface-heading')).toHaveText(['Fault-injection analysis']);
   await expect(page.locator('[data-section-id="fault_injection-fault"]')).toHaveCount(1);
   await expect(page.getByRole('combobox', {name: 'Attack method', exact: true})).toHaveValue('fault');
   await page.goto('/#/cryptanalysis/results/' + side.id + '?variant=aes-128&attack_surface=side_channel');
@@ -146,7 +146,7 @@ test('pagination is independent for equal methods on distinct surfaces', async (
   const leakage = page.locator('[data-section-id="side_channel-differential"]');
   await expect(algorithmic.locator('.a-attack-row')).toHaveCount(24);
   await expect(leakage.locator('.a-attack-row')).toHaveCount(24);
-  await algorithmic.getByRole('button', {name: /^Next Algorithmic/}).click();
+  await algorithmic.getByRole('button', {name: /^Next Classical/}).click();
   await expect(algorithmic.locator('.a-attack-row')).toHaveCount(1);
   await expect(leakage.locator('.a-attack-row')).toHaveCount(24);
   await leakage.getByRole('button', {name: /^Next Side-channel/}).click();
