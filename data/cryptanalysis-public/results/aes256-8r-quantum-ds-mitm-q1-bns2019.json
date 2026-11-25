@@ -1,0 +1,164 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes256-8r-quantum-ds-mitm-q1-bns2019",
+  "title": "Quantum DS-MITM · Q1",
+  "display": {
+    "name": "Quantum DS-MITM · Q1",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "bns2019-fig4-eight-full-rounds-k0-k8",
+    "description": "Eight full AES rounds with the Figure4 boundary, key-schedule consistency equations and initial/final key additions; source claims full secret-key recovery."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "classical_chosen_plaintexts"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed standard AES master key and its key schedule.",
+    "key_population": "General standard AES master keys",
+    "plaintext_model": "2^113 classical encryption queries for pairs plus 2^88 prequeried delta-sequence plaintext/ciphertext records.",
+    "computation": "quantum",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "No qRAM: stored classical records are scanned sequentially.",
+      "2^136.62 is the quantum search S-box cost; pair-generation classical work is separately included in the source procedure."
+    ],
+    "quantum_model": {
+      "query_model": "classically_known_pairs",
+      "cost_level": "quantum_algorithm",
+      "gate_set": "Source-native reversible S-box or abstract quantum algorithm operations; no physical gate estimate.",
+      "routing": "Physical routing is not part of this algorithmic estimate.",
+      "error_correction": "Physical error correction is not part of this algorithmic estimate.",
+      "oracle_parallelism": "The source total-work model is retained without additional parallel-oracle speedups.",
+      "solution_assumption": "A good middle-differential pair and solution-count precision hypotheses are used. The source accounts for ignored four-solution S-box branches and inner-search precision."
+    }
+  },
+  "techniques": [
+    "quantum-ds-mitm",
+    "nested-amplitude-amplification",
+    "delta-sequences",
+    "key-schedule-consistency"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{136.62}",
+      "log2": 136.62,
+      "unit": "reversible-sbox-evaluations",
+      "qualifier": "estimate",
+      "note": "Section6.4 includes 2^0.45 S-box-branch compensation and explicit nested-search precision overhead."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^{113}+2^{88}",
+      "log2": null,
+      "unit": "classical-chosen-plaintexts",
+      "qualifier": "estimate",
+      "note": "The Q1 conversion prequeries the additional 2^88 records."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^{48} pair records; 2^{88} classical query records; polynomial quantum workspace",
+      "log2": null,
+      "unit": "mixed-quantum-and-classical-storage",
+      "qualifier": "estimate",
+      "note": "No qRAM table is required; source does not give a complete concrete quantum workspace count."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^{113}",
+      "log2": 113,
+      "unit": "classical-chosen-plaintexts",
+      "qualifier": "estimate",
+      "note": "Pair preparation, not a reusable secret-key-independent setup."
+    },
+    "t_gates": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Algorithmic cryptanalysis estimate; this implementation metric is not supplied."
+    },
+    "clifford_gates": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Algorithmic cryptanalysis estimate; this implementation metric is not supplied."
+    },
+    "t_depth": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Algorithmic cryptanalysis estimate; this implementation metric is not supplied."
+    },
+    "circuit_depth": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Algorithmic cryptanalysis estimate; this implementation metric is not supplied."
+    },
+    "logical_qubits": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Algorithmic cryptanalysis estimate; this implementation metric is not supplied."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-master-key-recovery",
+    "value": null,
+    "description": "Local S-box-branch retention and precision errors are quantified; no combined original-key identification probability is stated at the full resource budget.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF pp.19,23,27–28: good-pair, false-positive, branch loss and precision arguments."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bns2019-quantum-security-aes",
+      "locator": "PDF pp.18–28 Section6/Figure4/Algorithm1, especially pp.23,26–28 costs and Q1 conversion.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/bound"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete named output probability is not quantified by the source."
+  ],
+  "related_problem_ids": []
+}

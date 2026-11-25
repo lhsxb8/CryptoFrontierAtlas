@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+  \node (p) at (0,0) {$P$};
+  \node[accent] (e1) at (2.4,0) {DES encryption\\$E_{K_1}$};
+  \node[box] (d) at (6,0) {DES decryption\\$D_{K_2}$};
+  \node[accent] (e2) at (9.6,0) {DES encryption\\$E_{K_3}$};
+  \node (c) at (12,0) {$C$};
+  \draw[wire] (p) -- (e1); \draw[wire] (e1) -- (d);
+  \draw[wire] (d) -- (e2); \draw[wire] (e2) -- (c);
+  \foreach \x/\key/\target in {2.4/1/e1,6/2/d,9.6/3/e2} {
+    \node (key\key) at (\x,1.5) {$K_{\key}$};
+    \draw[keywire] (key\key) -- (\target);
+    \node[note] at (\x,-1) {$16$ Feistel rounds};
+  }
+  \node[note] at (6,-1.6) {Each DES stage: IP $\to$ rounds $\to$ swap $\to$ IP$^{-1}$};
+  \node at (6,-2.25) {$C=E_{K_3}\!\left(D_{K_2}\!\left(E_{K_1}(P)\right)\right)$};
+  \node[note] at (6,-2.95) {$64$-bit blocks\quad $3\times56$ key bits\quad $3\times64$ bits including parity};
+\end{tikzpicture}

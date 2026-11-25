@@ -1,0 +1,253 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-6r-impossible-differential-ckklk2002",
+  "title": "CKK+02 6-round AES-128 Six-round impossible-differential recovery",
+  "display": {
+    "name": "Six-round impossible-differential recovery",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "ckklk2002-6r-final-no-mc",
+    "description": "128-bit block/128-bit key only; six nonlinear rounds, initial whitening, finalMC omitted. Repeat the64-bit last-subkey recovery for the other half; the full AES128 round key determines the master key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key oracle.",
+    "key_population": "general secret key",
+    "plaintext_model": "2^59.5 structures of2^32 plaintexts varying bytes(1,8,11,14) in source1-based coordinates; ciphertext row filtering, no decryption oracle.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Step4 checks inverseMC-projected C5differences, not four ordinary C5output zeros. Source p≈2^-30 and q≈2^-22 need the stated random-difference/independence models; fixed-pair AES differences are not uniformly distributed by default."
+    ]
+  },
+  "techniques": [
+    "impossible-differential",
+    "chosen-plaintext-structures"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^122",
+      "log2": 122,
+      "unit": "6-round-aes128-encryptions",
+      "qualifier": "estimate",
+      "note": "Section2.3 Step8 including repeated recovery of both halves. Native two-pass arithmetic2*(2^123.5+2^119)/6 has log2=121.97742751, consistent with rounded122 under the source model, not independently verified end-to-end work."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^91.5",
+      "log2": 91.5,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Source aggregate2^59.5*2^32."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "conditional-source-model-full-key-recovery-lower-bound",
+    "value": null,
+    "expression": "\\gtrsim\\max\\{0,1-2\\cdot2^{-34.5}\\}",
+    "basis": "derived_from_source",
+    "description": "Sections2.2–2.3 Steps6–8 give an author-rounded expected wrong96-bit-assignment count of about2^-34.5 per64-bit terminal-key pass. Markov's inequality and a union bound over the two complementary passes give the displayed conditional full-key lower-bound estimate. Backward expansion of the complete AES128 terminal key returns the master key. The approximation sign preserves the source rounding: this is not a rigorous numerical bound for actual fixed-query AES. The source uses effective≈2^28.5 useful pairs per tested terminal-half hypothesis in each pass, not certified integer counts. For explanatory integer N lower-bounding every such count across both passes, its unrounded conditional model is max(0,1-2^97(1-2^-22)^N); N is not a new tunable assignment or cost(N) family. Across-pair survival and q≈2^-22 are inherited source heuristics; no independence between different wrong assignments or the two passes is required. Step8 already prices both passes. This describes the intended impossible-relation model, not a repair of disputed literal ShiftRows/final-MixColumns coordinates or restricted-input probabilities. Useful-pair acquisition at2^91.5 queries and hard-budget tails remain unquantified. All original conflicts and five local components remain unchanged.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "PDF4–6 Sections2.2–2.3, Property1 and Steps1–8 rechecked. Step7 aggregates false assignments for one64-bit half; two complementary passes produce the complete AES128 round key. Derived a fixed-endpoint two-pass conditional lower-bound estimate from the author's rounded2^-34.5 expectation per pass. The primary has no free N or invented cost curve. Verified source-model attribution/derivation only; no validated literal actual-AES attack, useful-pair acquisition probability or fixed-runtime guarantee. All three conflicts, five local components and native costs remain unchanged."
+    },
+    "components": [
+      {
+        "metric": "true-key-excludes-intended-impossible-differential",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Property1: the true hypothesis cannot realize the intended four-round impossible relation. Existing ShiftRows coordinates and final-MC boundary disputes prevent this from certifying the literal printed procedure."
+      },
+      {
+        "metric": "ciphertext-pair-eight-zero-byte-sieve-source-model",
+        "value": 5.421010862427522e-20,
+        "basis": "author_model",
+        "expression": "2^{-64}",
+        "description": "PDF5 Step2: author model for eight zero ciphertext-difference bytes, producing an expected 2^58.5 pairs."
+      },
+      {
+        "metric": "step4-four-prohibited-patterns-source-model",
+        "value": 9.313225746154785e-10,
+        "basis": "author_model",
+        "expression": "2^{-30}",
+        "description": "PDF5 Step4: source p=4*2^-32 for the union of four prohibited patterns after partial decryption. This is a source approximation, with the existing coordinate/conditioning issues retained."
+      },
+      {
+        "metric": "step5-one-active-output-byte-source-model",
+        "value": 2.384185791015625e-7,
+        "basis": "author_model",
+        "expression": "\\approx 2^{-22}",
+        "description": "PDF4 Lemma1 and PDF6 Step5 use q≈4*2^-24. The existing conflict concerns applying an unrestricted-input model to the restricted pairs; no new validity theorem is asserted."
+      },
+      {
+        "metric": "fixed-wrong-initial32-bit-guess-survives-source-model",
+        "value": null,
+        "basis": "author_model",
+        "expression": "(1-2^{-22})^{2^{28.5}}",
+        "description": "PDF6 Steps6–7: source survival model for one fixed wrong 32-bit K0 guess conditional on a terminal hypothesis. Source multiplications by 2^32/2^64 produce expected wrong counts; their rounded 2^-98.5/2^-34.5 statements are not a whole-key failure probability."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-7a5120854d3243ec-2002",
+      "locator": "PDF p.3 AES128 scope; pp.5–6 Section2.3 Steps1–8; p.10 Table1/header discrepancy.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-7a5120854d3243ec-2002",
+      "locator": "Complete PDF1–11/printed39–49; Sections2–4 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "aes-paper-7a5120854d3243ec-2002",
+      "locator": "PDF3–6/printed41–44 Figures1–3 and Section2.3.",
+      "fields": [
+        "/field_conflicts",
+        "/target",
+        "/setting/assumptions"
+      ],
+      "interpretation": "Two independent source readings agree; distinguish literal print from the normalized structural relation."
+    },
+    {
+      "source_id": "aes-paper-7a5120854d3243ec-2002",
+      "locator": "PDF4–6/printed42–44 Lemma1 and Section2.3 Steps5–8.",
+      "fields": [
+        "/field_conflicts",
+        "/resources/time"
+      ],
+      "interpretation": "Native arithmetic retained; conditional distribution and expectation scopes do not supply actual success."
+    },
+    {
+      "source_id": "aes-paper-7a5120854d3243ec-2002",
+      "locator": "PDF4–6 / printed42–44 Lemma1, Property1, Section2.3 Steps1–8; preserve existing restricted-distribution, coordinates and query-model conflicts.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The exact six-round endpoint has no established numerical whole-key success. Local sieve probabilities and the printed fixed-wrong-guess survival model are retained as author models. Existing CP/header, ShiftRows/final-MC and restricted-input probability conflicts remain. Correct-key impossibility is an intended mathematical relation, not a proof that the disputed literal procedure recovers the key. The separate Crypton memory variant is not imported."
+    },
+    {
+      "source_id": "aes-paper-7a5120854d3243ec-2002",
+      "locator": "PDF4–6 / printed42–44, Sections2.2–2.3, Lemma1, Property1 and Steps1–8. Targeted success recheck2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Re-read PDF4–6 Sections2.2–2.3, Lemma1 and Steps1–8. Step7 gives the author-rounded expected wrong96-bit-assignment count per half-pass. Markov and union over the two already-priced complementary64-bit terminal-key passes give a conditional whole AES128 lower-bound estimate. Bind it to the fixed endpoint author-rounded2^-34.5 expectation per pass, not a free-N cost/success family. Source effective useful-pair counts≈2^28.5 apply per tested terminal-half hypothesis in each pass, not certified integer counts at the fixed query budget. Preserve all five components, conflicts and native costs; no repaired attack is inserted."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Source-reported result; attack execution and complete proof/forward-literature audit are separate."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/oracle_access",
+      "label": "Chosen-plaintext procedure versus table header",
+      "description": "Introduction/Section2.3 explicitly query chosen plaintext structures; conclusion Table1 header labels its data column Chosen Ciphertexts.",
+      "observations": [
+        {
+          "source_id": "aes-paper-7a5120854d3243ec-2002",
+          "locator": "PDF pp.1,5–6 Section2.3.",
+          "reported": "Chosen plaintext structures and encryptions."
+        },
+        {
+          "source_id": "aes-paper-7a5120854d3243ec-2002",
+          "locator": "PDF p.10 Table1 column header.",
+          "reported": "Chosen Ciphertexts."
+        }
+      ]
+    },
+    {
+      "field": "/setting/plaintext_model",
+      "label": "ShiftRows coordinates and final-MixColumns boundary",
+      "description": "Fig1 is row-major1-based. The printed(1,8,11,14) structure/Fig2–3 routing uses right-going ShiftRows; standard leftShiftRows sends it to columns0and2. In that literal standard-AES reading Step5 single-active-byte acceptance is zero, by full-rank3-by-2 MC restrictions. Column reflection normalizes the input to(1,6,11,16) AND prohibited output sets to anti-diagonals. The normalized four-round structural proof remains valid; this local mismatch is not a proof against all impossible attacks or a certified corrected attack cost.",
+      "observations": [
+        {
+          "source_id": "aes-paper-7a5120854d3243ec-2002",
+          "locator": "PDF3–5/printed41–43 Fig1–3, Property1 and Section2.3 Steps1/4/5.",
+          "reported": "Source structure(1,8,11,14) is routed into one MC input column in the diagrams."
+        },
+        {
+          "source_id": "aes-paper-7a5120854d3243ec-2002",
+          "locator": "PDF3–6/printed41–44; two independent reviewer coordinate/support derivations accepted2026-10-26.",
+          "reported": "Standard-left literal route has at most two active rows per column; normalize both input and output coordinates, and strip finalMC at the property boundary."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "Restricted-input probability and wrong-key expectation scope",
+      "description": "Lemma1 has1020weight-oneMCimages over uniform nonzero32-bit differences, but its arbitrary-restricted-input extension is not universal. Restriction d0=d1=1 admits none. Under independent uniform four key bytes, fixed AES input differences(1,1,1,1)/(1,2,3,4) give768/1072over2^32, not one exactq. With sourceq/independence, Step6 -98.57786473 is an expected K0count per wrongK6 and Step7 -34.57786473 a global96-bit assignment expectation; neither is whole-attack success.",
+      "observations": [
+        {
+          "source_id": "aes-paper-7a5120854d3243ec-2002",
+          "locator": "PDF4–6/printed42–44 Lemma1 and Section2.3 Steps5–8.",
+          "reported": "Uses q≈2^-22 and independence for key elimination, with approximate survivor counts."
+        },
+        {
+          "source_id": "aes-paper-7a5120854d3243ec-2002",
+          "locator": "PDF4 Lemma1; independent complete1020-image and AES-DDT checks accepted2026-10-26.",
+          "reported": "Reviewer conditional examples disprove universal restricted-input probability; they do not establish the selected-pair distribution or a repaired total."
+        }
+      ]
+    }
+  ]
+}

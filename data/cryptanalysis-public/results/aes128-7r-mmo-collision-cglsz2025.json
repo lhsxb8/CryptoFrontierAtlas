@@ -1,0 +1,144 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes128-7r-mmo-collision-cglsz2025",
+  "title": "SCIS MITM · AES-MMO collision",
+  "display": {
+    "name": "SCIS MITM · AES-MMO collision",
+    "method": "mitm"
+  },
+  "result_kind": "collision_construction",
+  "goal": "compression_collision",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "cglsz2025-seven-round-final-no-mc",
+    "description": "One-block full 128-bit collision in seven-round AES-MMO, under a predetermined 128-bit IV/public AES key; no IV freedom."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "offline_public_cipher_evaluation"
+    ],
+    "related_key_count": null,
+    "key_relation": "The source-defined public key or public round keys.",
+    "key_population": "General standard AES master keys",
+    "plaintext_model": "Two distinct 128-bit message blocks; one fixed shared IV.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "scis",
+    "partial-target-collision-conversion",
+    "neutral-word-generation"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{60}",
+      "log2": 60,
+      "unit": "round-reduced-aes-encryptions",
+      "qualifier": "estimate",
+      "note": "Section5 author-model expected work, including SCIS neutral-word generation."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No secret-key oracle data; message candidates are generated offline."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^{60}",
+      "log2": 60,
+      "unit": "collision-table-entries",
+      "qualifier": "estimate",
+      "note": "Tdp stores candidates indexed by full compression output; source does not specify entry width."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Setup is included in total work unless separately stated."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "find-one-block-full-output-collision-fixed-iv",
+    "value": null,
+    "description": "The source expects one collision after about 2^60 partial-target candidates; no fixed-budget whole-collision probability is stated. The experiment verifies partial-target generation, not the complete 2^60 collision search.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF pp.16–19 Eq4, Algorithm2 and partial-target experiment."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "cglsz2025-aes-hashing-owf",
+      "locator": "PDF p.7 Table1; pp.9,11 construction and fixed-IV definition; pp.15–19 Section4.5/Section5.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/experiment",
+        "/bound"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete named output probability is not quantified by the source."
+  ],
+  "related_problem_ids": [],
+  "experiment": {
+    "construction": {
+      "type": "compression_function",
+      "name": "AES-MMO",
+      "definition": "CF(h,m)=AES_h(m) xor m",
+      "output_bits": 128
+    },
+    "variables": [
+      {
+        "name": "h",
+        "control": "fixed",
+        "domain": "128-bit fixed public AES key",
+        "condition": "Predetermined initial value; no IV search is allowed."
+      },
+      {
+        "name": "m",
+        "control": "chosen",
+        "domain": "128-bit message",
+        "condition": "Two distinct message values under the same chaining value."
+      }
+    ],
+    "relation": "CF(h,m)=CF(h,m_prime) with m != m_prime",
+    "output": {
+      "scope": "full",
+      "bits": 128,
+      "mask": null
+    },
+    "parameters": [],
+    "distinctness": "m != m_prime; the same h is reused for both evaluations.",
+    "reference": "Ideal 128-bit compression output, birthday work approximately 2^64.",
+    "unresolved": []
+  }
+}

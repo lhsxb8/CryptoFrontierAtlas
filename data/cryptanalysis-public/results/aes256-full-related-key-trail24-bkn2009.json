@@ -1,0 +1,138 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-related-key-trail24-bkn2009",
+  "title": "Full AES-256 weak-pair related-key trail with 19 state and 5 schedule active S-boxes, BKN 2009",
+  "display": {
+    "name": "Differential, 24-active-S-box supporting trail",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "One specified full-round AES-256 related-key differential trail, with the first two rounds given in AppendixA p.247 and the remaining rounds inherited from Table2. It is not a minimum-S-box lower bound."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related-key-chosen-plaintext-encryption"
+    ],
+    "related_key_count": 2,
+    "target_selection": "conditional_weak_pair",
+    "key_relation": "Fixed master-key XOR relation K and K XOR DeltaK from Appendix A. Five active key-schedule S-box transitions restrict the pair.",
+    "key_population": "A qualifying weak related-key pair of estimated incidence 2^-35; discovering such a pair is excluded from this conditional configuration.",
+    "plaintext_model": "Chosen plaintext pairs with the exact Appendix A distinguisher input difference, written row by row: (0e, 0e, 0e, 0e); (07, 07, 07, 07); (07, 07, 07, 07); (09, 09, 09, 09). This is the fixed distinguisher trail, separate from the expanded checkerboard recovery structures.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The stated key pair satisfies the five key-schedule transitions of the source weak-pair trail.",
+      "The 19-state-S-box nominal probability product is conditional on that pair; neither it nor the weak-pair incidence is a completed-attack success probability."
+    ]
+  },
+  "techniques": [
+    "related-key-differential",
+    "local-collisions",
+    "explicit-byte-differences",
+    "weak-key-pair"
+  ],
+  "property": {
+    "statement": "The specified full14-round trail has 19 active state S-boxes with nominal transition product 2^-119 and five active key-schedule S-boxes with product 2^-35.",
+    "quantifier": "Existential author-reported fixed differential trail; no all-key statement, minimum-active-S-box theorem, or independent attack-success claim is asserted.",
+    "scope": "AppendixA related-key first-two-round variant plus shared rounds3–14, under the actual AES-256 key schedule.",
+    "parameters": [
+      {
+        "name": "state_active",
+        "reported": "19 = 14 + 5",
+        "meaning": "Fourteen state transitions have DDT count4, and five have DDT count2."
+      },
+      {
+        "name": "state_exponent",
+        "reported": "119 = 14*6 + 5*7",
+        "meaning": "Negative log2 of the nominal state transition product conditional on the weak key pair."
+      },
+      {
+        "name": "schedule_exponent",
+        "reported": "35 = 5*7",
+        "meaning": "Five active key-schedule transitions each have DDT count2; source weak-pair density estimate."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Original source trail, AppendixA constants and reported probability analysis checked. Independent finite test recomputes the AES S-box DDT, all state linear layers and final whitening, and the key-difference recurrence. It establishes local compatibility and arithmetic only; the full attack, global trail/TA distribution and numerical success remain unreproduced."
+    }
+  },
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A supporting fixed differential-trail property, not a completed costed attack."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A supporting fixed differential-trail property, not a completed costed attack."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A supporting fixed differential-trail property, not a completed costed attack."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A supporting fixed differential-trail property, not a completed costed attack."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "fixed-differential-trail-property",
+    "value": null,
+    "description": "Supporting specified-trail property; its S-box transition product is not a numerical completed-attack success probability."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "PDF12 / printed p.242 Section4.1; PDF17–19 / printed pp.247–249 AppendixA and Table2.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/property",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Source constants are preserved as one explicit supporting trail, separate from a completed recovery or a q-multicollision target."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This is one explicit supporting trail, not a globally optimal or minimum-active-S-box theorem.",
+    "Local DDT compatibility and linear-layer checks do not establish joint realizability, TA independence, or a completed attack.",
+    "Source-native nominal products and reported experiments are not promoted to independently proved end-to-end probabilities."
+  ],
+  "related_problem_ids": []
+}

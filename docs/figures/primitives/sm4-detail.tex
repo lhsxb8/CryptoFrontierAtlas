@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+  \node (in) at (1,1.3) {$X_{i+1}\oplus X_{i+2}\oplus X_{i+3}\oplus rk_i$};
+  \node[accent] (s) at (6,1.3) {$\tau$\\Four byte S-boxes};
+  \node[box] (l) at (9.2,1.3) {$L$};
+  \node[xor] (xor) at (11.2,1.3) {$+$};
+  \node (out) at (12.6,1.3) {$X_{i+4}$};
+  \draw[wire] (in) -- (s); \draw[wire] (s) -- (l); \draw[wire] (l) -- (xor); \draw[wire] (xor) -- (out);
+  \node (xi) at (11.2,2.7) {$X_i$}; \draw[wire] (xi) -- (xor);
+  \node[box,minimum width=12cm] at (6.4,-.6) {$L(B)=B\oplus(B\rotl2)\oplus(B\rotl10)\oplus(B\rotl18)\oplus(B\rotl24)$};
+  \node[phase] at (6.4,-1.8) {Key expansion uses a different linear map};
+  \node[box,minimum width=12cm] at (6.4,-3.1) {$K_0\|K_1\|K_2\|K_3=MK\oplus FK$\\$rk_i=K_{i+4}=K_i\oplus L'(\tau(K_{i+1}\oplus K_{i+2}\oplus K_{i+3}\oplus CK_i))$\\$L'(B)=B\oplus(B\rotl13)\oplus(B\rotl23)$};
+  \node[note] at (6.4,-4.35) {$i=0,\ldots,\AtlasPriorRounds$\quad $\oplus$: XOR\quad $\rotl$: $32$-bit left rotation\quad $FK,CK_i$: specified constants};
+\end{tikzpicture}

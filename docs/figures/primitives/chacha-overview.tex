@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+  \node[box,minimum width=2.4cm] (state) at (1.2,0) {$X$: $16\times32$ bits\\constants, key\\counter, nonce};
+  \node[accent,minimum width=3.1cm] (rounds) at (5.4,0) {Column round\\$\downarrow$\\Diagonal round};
+  \node[add] (sum) at (8.4,0) {$+$};
+  \node[box] (ser) at (10.3,0) {Serialize\\little-endian};
+  \draw[wire] (state) -- (rounds); \draw[wire] (rounds) -- (sum); \draw[wire] (sum) -- (ser);
+  \draw[wire] (state.north) -- (1.2,1.7) -| node[pos=.35,above,note] {Original $X$: add wordwise modulo $2^{32}$} (sum.north);
+  \node[note] at (5.4,-1.2) {Repeat $10$ times $=20$ rounds};
+  \node[xor] (enc) at (10.3,-2) {$+$};
+  \node (p) at (7.7,-2) {$P$}; \node (c) at (12,-2) {$C$};
+  \draw[wire] (ser) -- node[right,note] {keystream} (enc);
+  \draw[wire] (p) -- (enc); \draw[wire] (enc) -- (c);
+  \node[note,align=left] at (3,-2.4) {IETF layout: $256$-bit key\\$32$-bit counter $+$ $96$-bit nonce};
+\end{tikzpicture}

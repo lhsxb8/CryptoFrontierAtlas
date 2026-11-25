@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+  \node[phase] at (5.8,3) {Compression step $j=0,\ldots,\AtlasLastStep$};
+  \node (state) at (1,1.6) {$(a,b,c,d,e)$};
+  \node[accent,minimum width=7.4cm] (step) at (6.8,1.6) {$T=(a\rotl5)\boxplus f_j(b,c,d)\boxplus e\boxplus K_j\boxplus W_j$};
+  \draw[wire] (state) -- (step);
+  \node[box,minimum width=8cm] (update) at (6.8,0) {$(a,b,c,d,e)\gets(T,a,b\rotl30,c,d)$};
+  \draw[wire] (step) -- (update);
+  \node[box,minimum width=11.6cm] at (5.8,-1.6) {$W_j=(W_{j-3}\oplus W_{j-8}\oplus W_{j-14}\oplus W_{j-16})\rotl1,\quad16\le j<\AtlasSteps$\\$W_0,\ldots,W_{15}$: big-endian message words};
+  \node[note,text width=11.8cm] at (5.8,-2.9) {$f_j$: Ch for $0$--$19$, XOR for $20$--$39$, Maj for $40$--$59$, XOR for $60$--$79$.\\After all steps, add the five input chaining words modulo $2^{32}$.\\$\boxplus$: addition modulo $2^{32}$\quad $\oplus$: XOR\quad $\rotl$: left rotation};
+\end{tikzpicture}

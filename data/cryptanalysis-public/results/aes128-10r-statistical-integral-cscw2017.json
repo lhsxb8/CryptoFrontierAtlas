@@ -1,0 +1,153 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-10r-statistical-integral-cscw2017",
+  "title": "CSCW17 10-round AES-128 Statistical integral / 10-round known key",
+  "display": {
+    "name": "Statistical integral / Gilbert known-key model",
+    "method": "integral"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "10 nonlinear rounds including initial whitening; finalMC omitted (Section2.1). Public standard AES-128, with known master key and internal-state bidirectional construction."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "public_known_key_encryption_decryption",
+      "public_internal_state_construction"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One public known AES master key; no XOR-related unknown-key collection.",
+    "key_population": "general secret key",
+    "plaintext_model": "Generate N*Ns input/output pairs by working from middle states with N=Ns; test statistical properties on both ends.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The normal/chi-square error model assumes sufficiently large sample/projection parameters and independent output/structure statistics. Journal PDF9/printed763 footnote2 explicitly notes that strongly related projections can violate this iid condition. Mini-AES moderate-error experiments do not establish the full-AES negligible-error tails.",
+      "Outer offset witnesses are existential and shared across all checked pairs/groups on each side; they are searched witnesses of the relation, not claimed as recovered real keys, and no key-schedule consistency between the two witnesses is required. Repeated-filter error products and wrong-offset estimates use the source approximation."
+    ],
+    "reference_model": "Gilbert known-key (Gil-KK) AES-128 distinguisher: the relation asserts existence of two32-bit outer-round offset projections Delta-prime and Gamma-prime such that all grouped four-byte input-side and output-side statistical tests pass. The existential offsets need not equal the actual AES round subkeys and need not satisfy the AES key schedule. The verifier may use the public AES transformations and search/filter these offsets; this work is included in the reported construction-plus-verification cost. The generic side has adaptive forward/inverse uniform-random-permutation oracle access. This differs from the restricted classical-KK criterion with direct text-only verification."
+  },
+  "techniques": [
+    "statistical-integral",
+    "multi-structure",
+    "chi-square-test"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^55.84 encryptions + 2*(2^51.92+2^56+2^56+2^57.41+2^46.91+2^55.84) memory-accesses",
+      "log2": 59.6,
+      "unit": "source-mixed-encryption-memory-access-work",
+      "qualifier": "estimate",
+      "note": "Source exponent59.60 assumes one memory access equals one full encryption. Retain the native mixed sum; units are not normalized for comparison."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "N^2, N=2^27.92",
+      "log2": 55.84,
+      "unit": "constructed-plaintext-ciphertext-pairs",
+      "qualifier": "estimate",
+      "note": "N=Ns=2^27.92, group size ns=2^8."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2 * 4 * 2^55.84",
+      "log2": 58.84,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Two matrices withN^2 four-byte entries."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "value": 0.9999999929513212,
+    "metric": "source-cipher-identification",
+    "description": "Source Ps approximately1-2^-27.08; alpha0=2^-50,alpha1=2^-10.51,ns=2^8,4-byte filters across both sides."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-e9db95c2f7469e08-2017",
+      "locator": "PDF pp.4–6 Tables1–2/boundary/model; pp.9–10 statistical Eq8; pp.13–16 Section5.2/Algorithm3 and native time sum.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete registered proceedings read and AES claim inventory checked2026-10-26; bounded forward checks complete. Source claims and unresolved fields retain their original status."
+    },
+    {
+      "source_id": "cui-chen-mesnager-sun-wang2018-statistical-integral-journal",
+      "locator": "PDF9/printed763 footnote2 iid/moment typo; PDF10–13/764–767 statistical known-key model; PDF15/769 AES costs and17–18/771–772 secret-S-box attack.",
+      "fields": [
+        "/setting",
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Targeted journal-extension passages checked; AES costs unchanged. Conditional iid assumption explicit; no journal-only non-AES attack ingested."
+    },
+    {
+      "source_id": "grassi-rechberger2020-gilbert-known-key-journal",
+      "locator": "PDF4/printed1404 Table1; PDF9–11/1409–1411 model; PDF16/1416 existential offsets; PDF20/1420 CSCW17; PDF32–33/1432–1433 criterion distinction.",
+      "fields": [
+        "/setting",
+        "/display"
+      ],
+      "interpretation": "Later primary model treatment distinguishes classicalKK8r and GilbertKK10r without changing their source costs; offsets are shared relation witnesses, not recovered keys."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Full conference read-through and bounded forward-primary audit completed. Reported tails remain conditional on iid/normal approximations; mini-AES experiments do not certify full-AES negligible errors. The reciprocal final proof-line typo remains recorded."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "Chi-square scaling and moment derivation",
+      "description": "Proposition1 states decreasing finite-population moments D*f and2*D*f^2, f=(2^s-N)/(2^s-1), consistent with the scaled chi-square sentence, Corollary1 Eq8 and independently recomputed endpoints. The final proof line instead prints reciprocal factors f^-1 and f^-2. Adopt Proposition1/Eq8 as the source model and retain the inconsistent printed line as a typo; iid and normal-tail accuracy are separate model conditions.",
+      "observations": [
+        {
+          "source_id": "aes-paper-e9db95c2f7469e08-2017",
+          "locator": "PDF8/printed409 Proposition1; PDF9/410 Corollary1 Eq8.",
+          "reported": "Mean D*f, variance2*D*f^2 and Eq8 with decreasing finite-population correction."
+        },
+        {
+          "source_id": "aes-paper-e9db95c2f7469e08-2017",
+          "locator": "PDF9/printed410 Proposition1 proof, final moment display.",
+          "reported": "Final proof line instead prints reciprocal factors f^-1 and f^-2."
+        }
+      ]
+    }
+  ]
+}

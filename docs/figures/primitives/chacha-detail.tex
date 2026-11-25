@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+  \node[phase] at (6,2.5) {Quarter round on $(a,b,c,d)$};
+  \foreach \y/\rot/\a/\b/\c/\d in {1.4/16/a/b/d/a,.3/12/c/d/b/c,-.8/8/a/b/d/a,-1.9/7/c/d/b/c} {
+    \node[box,minimum width=3cm] (add\rot) at (2,\y) {$\a\gets\a\boxplus\b$};
+    \node[box,minimum width=3cm] (xor\rot) at (6,\y) {$\c\gets\c\oplus\d$};
+    \node[accent,minimum width=3cm] (rot\rot) at (10,\y) {$\c\gets\c\rotl\rot$};
+    \draw[wire] (add\rot) -- (xor\rot); \draw[wire] (xor\rot) -- (rot\rot);
+  }
+  \foreach \from/\to in {16/12,12/8,8/7} {
+    \draw[wire] (rot\from.east) -- ++(.45,0) -- ++(0,-.55) -| (add\to.west);
+  }
+  \node[note] at (6,-2.9) {$\boxplus$: addition modulo $2^{32}$\qquad $\oplus$: XOR\qquad $\rotl$: left rotation};
+\end{tikzpicture}

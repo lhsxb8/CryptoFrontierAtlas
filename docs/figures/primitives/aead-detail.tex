@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+  \node[phase] at (6,2) {Poly1305 message layout};
+  \node[accent,minimum width=2cm] (a) at (0, .7) {AAD};
+  \node[box,minimum width=1.7cm] (pa) at (2, .7) {pad16};
+  \node[accent,minimum width=2cm] (c) at (4, .7) {Ciphertext};
+  \node[box,minimum width=1.7cm] (pc) at (6, .7) {pad16};
+  \node[box,minimum width=2.5cm] (la) at (8.4, .7) {$\operatorname{LE}_{64}(|A|)$};
+  \node[box,minimum width=2.5cm] (lc) at (11.2, .7) {$\operatorname{LE}_{64}(|C|)$};
+  \node[note] at (6,-.2) {Concatenate left to right; $|A|$ and $|C|$ are lengths in bytes.};
+  \node[accent,minimum width=5cm] (mac) at (6,-1.4) {$T=\operatorname{Poly1305}_{r,s}(\text{framed message})$};
+  \draw[wire] (6,-.5) -- (mac);
+  \node[note] at (6,-2.5) {pad16 appends $(-\text{length})\bmod16$ zero bytes: no extra block when aligned.\\Clamp $r$ as specified in RFC 8439, Section 2.5.1; do not reuse the one-time key.};
+\end{tikzpicture}

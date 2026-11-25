@@ -1,0 +1,132 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-4r-functions-minier2005-birthday-distinguisher",
+  "title": "4-round AES-192: Birthday bottleneck distinguisher",
+  "display": {
+    "name": "Birthday bottleneck distinguisher",
+    "method": "collision"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "minier2005-inner-rounds-with-mixcolumns-standard-left-shiftrows",
+    "description": "AES-192 on 128-bit blocks. Consecutive inner rounds each include MixColumns; the round keys are fixed and unknown. The source explicitly specifies left-going ShiftRows."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "chosen_input_four_inner_round_permutation"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "Four fixed, unknown 128-bit round keys. The structural argument does not use their master-key dependencies, and therefore also applies to keys derived from any of the standard AES key lengths.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "About2^16 distinct c triplets and16 distinct y values for each, holding the other twelve input bytes fixed.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The four c-dependent byte parameters are modeled as a random32-bit function of c. Equality on16 sampled y values is assumed to give negligible false alarms."
+    ],
+    "reference_model": "Chosen-input access to four fixed-key inner rounds is compared with a uniformly random permutation on 128-bit blocks, using the same input structures and projected output tests."
+  },
+  "techniques": [
+    "collision-of-functions",
+    "birthday-collision-search"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "less than 2^20",
+      "log2": 20,
+      "unit": "minier2005-aes-encryption-equivalents",
+      "qualifier": "upper_bound",
+      "note": "Printed p.21 gives strictly less than2^20 reference AES executions, in the author's accounting. No calibration to a full standard AES implementation is applied.",
+      "relation": "<"
+    },
+    "data": {
+      "status": "reported",
+      "reported": "about 2^20",
+      "log2": 20,
+      "unit": "chosen-inner-round-input-blocks",
+      "qualifier": "estimate",
+      "note": "About 2^16 choices of c times sixteen y values; these are inputs to the four-round component."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "Lists of sixteen projected bytes for each selected c; peak not itemized",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The collision detector forms and compares the projected output lists. The paper does not state a complete peak-storage count."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The paper does not separately price setup for this endpoint."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "heuristic-internal-function-collision-probability",
+    "value": 0.5,
+    "description": "The author gives about one-half probability of finding a function collision by the birthday argument. This is not a numerically derived total distinguishing advantage or a measured software success frequency."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Printed pp.20–21 Section3.2",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-author",
+      "locator": "Printed pp.20–21 Section3.2",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Both complete PDF1–11/printed16–26; Sections3–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Primary-text claims are catalogued by target and scope. Full attacks, cost estimates and global success are not independently reproduced."
+  ],
+  "related_problem_ids": []
+}

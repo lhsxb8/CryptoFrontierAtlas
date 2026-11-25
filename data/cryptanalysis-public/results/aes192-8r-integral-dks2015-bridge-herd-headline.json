@@ -1,0 +1,122 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-integral-dks2015-bridge-herd-headline",
+  "title": "8-round AES-192: Key-bridge improvement of the herd attack",
+  "display": {
+    "name": "Key-bridge improvement of the herd attack",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "dks-whitening-final-round-without-mixcolumns",
+    "description": "Reduced 8-round AES-192 with whitening k_-1, final MixColumns omitted, and u_i=MC^-1(k_i)."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed standard AES schedule; no related-key oracle.",
+    "key_population": "General fixed key; no weak-key subset is specified.",
+    "plaintext_model": "Near-codebook chosen plaintexts of the FKL herd construction; original protocol reviewed separately.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Section5.2.1 reduces ten dominant partial-sum peaks to three; it does not obtain the full factor256 key-guess reduction.",
+      "The source gives an approximate running-time improvement; complete operation-by-operation calibration remains open."
+    ]
+  },
+  "techniques": [
+    "integral",
+    "partial-sums",
+    "key-bridging"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^186.3",
+      "log2": 186.3,
+      "unit": "dks-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Journal Section5.2.1 author estimate: about3-fold improvement over2^188."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No new data figure in Section5.2.1. Original FKL near-codebook CP endpoint remains separately sourced."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate resource budget for this scope."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately updated setup figure."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-master-key-recovery",
+    "value": null,
+    "description": "The journal does not quantify overall recovery success for this exact endpoint. Preserve its recovery scope and source-native resource budget; no probability is borrowed from another AES variant, tradeoff, or the2010 proceedings. Section5.2.1 only reduces the number of peak partial-sum costs from ten to three; no new data or success experiment is supplied. No generic wrong-key probability is copied from another attack.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition targeted success audit of endpoint-specific probability, candidate retention and resource passages; not a new full-paper/forward audit. Local models and expected survivor counts remain separate from aggregate recovery."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dks2015-single-key-journal",
+      "locator": "Printed p.413 Section5.2.1, ten peaks reduced to three",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/goal",
+        "/bound"
+      ],
+      "interpretation": "Full source version read and compared. Matching statements share one scoped record; changed claims and source-specific discrepancies retain their own identities."
+    },
+    {
+      "source_id": "dks2015-single-key-journal",
+      "locator": "PDF3–4/printed399–400 Table1/AES-IND claim; PDF12–13/408–409 expected differential and footnotes5–7; PDF17–18/413–414 Sections5.2.1–5.2.2; PDF19–22/415–418 Sections6.1–6.4/Table2.",
+      "fields": [
+        "/success"
+      ],
+      "interpretation": "The journal does not quantify overall recovery success for this exact endpoint. Preserve its recovery scope and source-native resource budget; no probability is borrowed from another AES variant, tradeoff, or the2010 proceedings. Section5.2.1 only reduces the number of peak partial-sum costs from ten to three; no new data or success experiment is supplied. No generic wrong-key probability is copied from another attack."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Local identity/counting tests cover components; full attack searches and success rates have not been reproduced.",
+    "Full exact-edition inventory checked; numerical attack execution is not claimed."
+  ],
+  "related_problem_ids": []
+}

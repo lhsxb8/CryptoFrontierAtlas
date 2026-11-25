@@ -1,0 +1,113 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-10r-rectangle-256-key-khp2007",
+  "title": "KHP07 10-round AES-192 / aes192-10r-rectangle-256-key-khp2007",
+  "display": {
+    "name": "Related-key rectangle / 256-key",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 10,
+    "full_round": false,
+    "round_convention": "khp07-10r-final-no-mc",
+    "description": "10 nonlinear AES rounds with the initial whitening addition and no final MixColumns. The recovered material is specified below.Output: whitening bytes 1,2,6,7,8,11,12,13 plus last-round K9 bytes 0,7,8,10,12,13; unknown key differences d,e,f are additionally enumerated. These are fourteen subkey bytes, not a recovered 192-bit master key."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": 256,
+    "target_selection": "designated_target",
+    "key_relation": "UnknownAES192Ka, companionKb differs inbytes1and9 bya.127candidateKc use delta-prime bytes8and12=a andbytes3and11=b forSbox output-difference candidatesb; correspondingKd=Kc xor delta, for256keys inall (Section4.2).",
+    "key_population": "general secret key",
+    "plaintext_model": "Chosen plaintexts aggregated across the 256 source-related keys; individual data points retain source average accounting.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "related-key-rectangle",
+    "256-key"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^182",
+      "log2": 182,
+      "unit": "10-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^125",
+      "log2": 125,
+      "unit": "related-key-chosen-plaintext-queries",
+      "qualifier": "estimate",
+      "note": "Source headline aggregate over the required related-key oracles, not a per-key codebook."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical resource budget is supplied for this endpoint."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "PDF p.12 footnote describes an optional table storing 2^64 input pairs; this is not a priced setup or a total-memory estimate."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "selected-subkey-identification",
+    "value": 0.99,
+    "description": "Author-reported probability 0.99 of identifying the stated subkey material, not full master-key recovery. The0.99claim uses sourcePoisson filtering assumptions; finite recomputation of that conditional model is not a measuredAES success rate."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-95ab248a25672b7a-2007",
+      "locator": "PDF pp.3–4 round convention; pp.6–13 Sections 4.1–4.3, algorithm output, time/data and success.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining algorithm/accounting passages checked; partial outputs and native units retained."
+    },
+    {
+      "source_id": "aes-paper-95ab248a25672b7a-2007",
+      "locator": "Complete PDF1–17/printed225–241, Sections3–7 and figures/references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete endpoint/support inventory; no extra numeric attack points inferred from internal rectangle probabilities."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This record prices the stated endpoint; it does not append an unreported master-key completion budget."
+  ],
+  "related_problem_ids": []
+}

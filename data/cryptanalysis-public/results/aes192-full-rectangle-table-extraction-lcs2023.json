@@ -1,0 +1,162 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-full-rectangle-table-extraction-lcs2023",
+  "title": "aes-192, 12 rounds: Related-key rectangle / table extraction [LCS+23]",
+  "display": {
+    "name": "Related-key rectangle / table extraction",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 12,
+    "full_round": true,
+    "round_convention": "source-lcsplus23-12r",
+    "description": "The source-defined 12-round AES construction, with standard key schedule and the source output-linear-layer convention."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": 4,
+    "target_selection": "designated_target",
+    "key_relation": "Four unknown keys defined through standard AES-192 schedule-state maps H_i: KB=H_1^-1(H_1(KA) XOR DeltaK1), KC=H_4^-1(H_4(KA) XOR NablaK4), KD=H_4^-1(H_4(KB) XOR NablaK4). H_i maps the master key to the192-bit state starting at round i. The specified differences and their schedule switch are from BK09; these are not generally fixed master-key XOR offsets.",
+    "key_population": "General unknown AES-192 key with the source-prescribed schedule-state related-key oracles; propagated unknown Table2 cells are not a reported weak-key fraction.",
+    "plaintext_model": "Four chosen-plaintext lists of 2^121 records each; 2^123 encryption queries in total.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The generic fixed-XOR rectangle illustration does not define the actual BK09/LCS23 schedule-derived key functions. Standard key-schedule propagation and the stated oracle functions are required."
+    ]
+  },
+  "techniques": [
+    "related-key-rectangle",
+    "subkey-preguessing",
+    "table-extraction"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^158",
+      "log2": 158,
+      "unit": "memory-accesses",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^123",
+      "log2": 123,
+      "unit": "related-key-chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Aggregate across all four keys, not per-key."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^150",
+      "log2": 150,
+      "unit": "stored-pair-records",
+      "qualifier": "estimate",
+      "note": "Source-native pair storage; record width is not specified in bytes or AES blocks."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^16 + 2^72 + 2^64",
+      "log2": null,
+      "unit": "source-native-subtable-construction-cost",
+      "qualifier": "estimate",
+      "note": "Table 3 gives three lower-order subtables; their native sum is retained, without an encryption conversion."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "complete-master-key-recovery",
+    "value": 0.99,
+    "description": "Source Ps approximately 0.99 with h=50 and s=16; the central rectangle probability is not this success probability."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-e3293f33760bd28f-2023",
+      "locator": "PDF p.3 Table 1; pp.5–6 related-key rectangle model; p.10 Table 2; pp.11–14 Section 4.2 and Table 3.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Checked primary abstract, result table and defining passages; native costs and goals retained."
+    },
+    {
+      "source_id": "aes-paper-e3293f33760bd28f-2023",
+      "locator": "Complete exact primary PDF1–16, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete reading and source inventory; later-literature gates and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "bk2009-related-key-conference",
+      "locator": "PDFp.13 Section6.1, Related Keys; PDFp.16 Section6.1, key-schedule/Feistel switch.",
+      "fields": [
+        "/setting/key_relation",
+        "/setting/key_population"
+      ],
+      "interpretation": "Original BK09 exact registered bytes independently rechecked. Bounded32-key schedule controls confirm the maps commute for the prescribed rectangle but induced master-key differences vary."
+    },
+    {
+      "source_id": "aes-paper-e3293f33760bd28f-2023",
+      "locator": "PDF11–14 Section4.2, Steps2(i)–2(j), Table3; two independent raw-source reviews.",
+      "fields": [
+        "/resources/time",
+        "/field_conflicts"
+      ],
+      "interpretation": "Local source-model/accounting obligation; not a replacement whole-attack budget or a claim of complete attack failure."
+    },
+    {
+      "source_id": "aes-paper-e3293f33760bd28f-2023",
+      "locator": "PDF11–14 Section4.2, Steps2(i)–2(j), Table3; two independent raw-source reviews. Independent raw-source review and finite component checks,2026-10-27.",
+      "fields": [
+        "/resources/time",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized original/recomputed observation retained under independent review; no silently substituted resource vector or whole-attack refutation."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Targeted primary-text extraction; complete result inventory and forward-literature checks remain."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "Final candidate search has a separate native cost",
+      "description": "Step2(i) retains2^(128-h)=2^78 counter candidates for each of2^8 outer byte guesses; Step2(j) searches9 remaining master-key bytes. If the stated completion and association of guesses hold, this adds up to2^158 full-AES key tests, distinct from table extraction2^158 memory accesses. The source does not sum these unlike units or derive the nine-byte completion association. Preserve source160/158 memory-access headlines, not a conversion to encryption equivalents.",
+      "observations": [
+        {
+          "source_id": "aes-paper-e3293f33760bd28f-2023",
+          "locator": "PDF11–14 Section4.2, Steps2(i)–2(j), Table3; two independent raw-source reviews.",
+          "reported": "Printed source statement and source-reported numerical budgets retained."
+        },
+        {
+          "source_id": "aes-paper-e3293f33760bd28f-2023",
+          "locator": "PDF11–14 Section4.2, Steps2(i)–2(j), Table3; two independent raw-source reviews. Independent raw-source review and finite component checks,2026-10-27.",
+          "reported": "Step2(i) retains2^(128-h)=2^78 counter candidates for each of2^8 outer byte guesses; Step2(j) searches9 remaining master-key bytes. If the stated completion and association of guesses hold, this adds up to2^158 full-AES key tests, distinct from table extraction2^158 memory accesses. The source does not sum these unlike units or derive the nine-byte completion association. Preserve source160/158 memory-access headlines, not a conversion to encryption equivalents."
+        }
+      ]
+    }
+  ]
+}

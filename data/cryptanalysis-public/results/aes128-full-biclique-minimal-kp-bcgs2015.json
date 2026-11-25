@@ -1,0 +1,114 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-biclique-minimal-kp-bcgs2015",
+  "title": "Full AES-128 biclique, minimal-kp, 2 known pair(s) [BCGS15]",
+  "display": {
+    "name": "Star-based independent biclique",
+    "method": "biclique"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "source-bcgs15-10r",
+    "description": "Standard full 10-round AES-128 with standard expanded master key and final-round convention. First-round star of dimension8; key indices in master-key bytes0,1; matching byte12 in state#11."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "known_plaintext_pairs"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its standard expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "2 known plaintext-ciphertext pair(s) under one key; no chosen-input or related-key oracle is required. Star starts at first round.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Author-reported exhaustive search is limited to the Section5 truncated independent balanced-biclique/star class; displayed structures have dimension8.",
+      "Key modifications have a common linear key state for complete key coverage; related-key differences are offline computations, not related-secret-key oracle access."
+    ],
+    "reference_model": "One unknown standard AES master key; full recovery is distinguished from merely enumerating its key-space group."
+  },
+  "techniques": [
+    "independent-biclique",
+    "star-initial-structure",
+    "matching-with-precomputation",
+    "minimal-kp"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^126.67",
+      "log2": 126.67,
+      "unit": "full-aes128-computations",
+      "qualifier": "estimate",
+      "note": "Table1 author-reported approximate total; source S-box-normalized cost including schedule, not measured AES runtime or a reproduced exact phase sum."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2",
+      "log2": 1,
+      "unit": "known-plaintext-pairs",
+      "qualifier": "exact",
+      "note": "Source pair count for this success convention; one pair drives MITM, additional pairs disambiguate false candidates."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "<=2^8",
+      "log2": 8,
+      "unit": "source-native-precomputed-storage-units",
+      "qualifier": "upper_bound",
+      "note": "Section4 upper-bounds storage by2^8subcipher-computation results; no complete-block/byte width is inferred."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Source per-group star/biclique/precomputation work participates in C_full; no separately transferable one-time total is priced. AES128 star and below-codebook describe approximately2^8.5full-AES computations per group, the star value as an upper bound; this is not an independent setup coordinate."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "complete-master-key-recovery",
+    "value": 1,
+    "description": "Table1 says success1; Section4 uses 2 known pairs and practically1unique-key success for the minimal-data convention. Key coverage is1; observation uniqueness is not an exact probability-one theorem."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-035841df12c7bfb3-2015",
+      "locator": "PDF pp.4,6–8, Table1, Sections3–4 and Figure3; pp.9–10 Section5.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Independent full15-page primary read; all own AES claims inventoried before reading the frozen baseline. Keep exact-version author estimates and source data model."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Optimality is author-reported only within tight truncated independent balanced bicliques and stars under Section5 restrictions, not among all AES attacks or all bicliques.",
+    "Source time is an approximate S-box-normalized analytic cost; one AES128/192/256 computation is200/224/276S-boxes including schedule (PDF p.9 footnote4). Native cost is not measured runtime.",
+    "Full-keyspace coverage and numerical unique-master-key identification are different. Minimal-data success1 is the source practically1 convention, not exact injectivity of the observations.",
+    "No author search, biclique attack, solver or circuit code was executed. Finite reviewer arithmetic checks only the reported accounting components."
+  ],
+  "related_problem_ids": []
+}

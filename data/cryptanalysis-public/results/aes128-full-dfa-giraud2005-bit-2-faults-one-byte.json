@@ -1,0 +1,148 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-dfa-giraud2005-bit-2-faults-one-byte",
+  "title": "AES-128 Bit faults: one-byte recovery (2 outputs) (Giraud, AES2004 proceedings published 2005)",
+  "display": {
+    "name": "Bit faults: one-byte recovery (2 outputs)",
+    "method": "fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full AES-128; identify one 8-bit pre-final state value, hence one last-round-subkey byte through the correct ciphertext. Other key bytes remain outside this endpoint."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "repeat-encryption-fixed-input",
+      "correct-ciphertext-reference",
+      "single-bit-state-fault-injection"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret AES master key; no related-key oracle.",
+    "key_population": "Keys of the stated AES implementation without a weak-key restriction; fault protections are outside the model.",
+    "plaintext_model": "Repeat encryptions of the same plaintext under the same key; retain its correct ciphertext as a reference. Counts of faulty ciphertexts exclude that reusable reference unless explicitly stated otherwise.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "The state entering the final round, not a key-schedule fault.",
+      "granularity": "Exactly one bit is flipped in one state byte per useful execution.",
+      "timing": "Immediately before SubBytes in the final round 10, at state M^9.",
+      "location": "All counted outputs concern the same selected or postselected state byte; there is no whole-state coverage budget.",
+      "value_control": "The flipped bit is unknown; candidates cover the eight possible one-bit differences.",
+      "sample_pairing": "Every faulty output is matched to the same fixed-input correct reference; useful faults, random-location ciphertexts and physical executions have distinct accounting.",
+      "evidence_scope": "analytical"
+    },
+    "assumptions": [
+      "The final AES round omits MixColumns; a single-bit state fault produces one nonzero output byte.",
+      "The reported outcome and data budget use the paper's candidate-filtering model; no numerical whole-key success rate is inferred from a byte-level statistic.",
+      "Appendix A uses random sets of thirteen wrong candidates among 255 values, with the correct value in every fourteen-element set. The printed probabilities belong to this set model, not a measured physical-fault distribution."
+    ]
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "single-bit-fault",
+    "candidate-filtering"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical whole-endpoint runtime is reported for this version and endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2",
+      "log2": 1,
+      "unit": "faulty-ciphertexts",
+      "qualifier": "exact",
+      "note": "All useful faults affect the same state byte, with unknown flipped bits; an additional correct ciphertext is reused."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The article describes counters or candidate lists without a numerical peak-memory budget."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing-time budget is reported. The Appendix A 8×2^8 equation tests per useful output are a component count, not a complete attack cost."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "random-candidate-set-model-single-byte-uniqueness",
+    "value": 0.5,
+    "description": "Approximately 50% in the paper's random-set calculation. It is a local-byte theoretical estimate, not empirical or full-key success. Appendix random13-wrong-subset arithmetic independently reproduces0.4979575678/0.9666623475. Exact AES bit-mask sampling is a different model; no replacement success scalar is assigned. JMR07 separately reports71% one-byte uniqueness in software with2 random, repeat-allowed single-bit faults; retain this as a different later empirical event, not as a revised evaluation of the original random-subset formula. No trial denominator is supplied.",
+    "basis": "author_model",
+    "components": [
+      {
+        "metric": "empirical-byte-recovery-two-random-single-bit-faults-jmr2007",
+        "value": 0.71,
+        "basis": "reported_experiment",
+        "expression": "\\approx0.71",
+        "description": "JMR07 author reprint PDF4 SectionIV-B.2/TableI straightforward-implementation row: software simulations report approximately71% unique recovery of ONE state/round-key byte after2 random single-bit faults, allowing repeated fault values. This concerns the original unprotected single-bit equation restated in SectionIII-A, not the scrambled/protected row. Trial denominator, success numerator, complete state/key sampling protocol and a uniform bit-mask law are not reported. It is a distinct later empirical model, not a replacement for Giraud's random13-false-subset estimate or a whole16-byte, master-key, physical-yield or native35-average/<50-budget success rate."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "Appendix A p.41 Eq.(33); Section 3 p.32",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Version-specific endpoint retaining its target, prior information, fault controls and native sample accounting."
+    },
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "Complete proceedingsPDF1–15/printed27–41 and earlyPS15-page reading rendition; Sections3–6, AppendixA and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "jmr2007-hardware-fault-author",
+      "locator": "PDF2 SectionIII-A/Eq1; PDF4 SectionIV-B.2/TableI straightforward-implementation row.",
+      "fields": [
+        "/success/components",
+        "/success/description"
+      ],
+      "interpretation": "Later empirical one-byte recovery at the matching2-fault local count. Preserve primary0.5 from Giraud AppendixA's different random13-subset model; do not reassign it, create a same-population conflict, borrow the protected row, or infer joint last-round-key success. Exact experiment denominator and uniform bit-mask law are absent."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Useful faulty ciphertext counts do not automatically include ineffective physical injections or calibration attempts.",
+    "The article does not supply a measured success frequency, runtime or peak memory for every target and parameter choice."
+  ],
+  "related_problem_ids": []
+}

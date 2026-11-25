@@ -1,0 +1,144 @@
+{
+  "schema_version": "0.10.0",
+  "related_problem_ids": [],
+  "id": "aes256-full-fault-bs2003-initial-key-prefix",
+  "title": "AES-256: Perfect bit reset: initial key prefix (Blömer–Seifert, FC2003)",
+  "display": {
+    "name": "Perfect bit reset: initial key prefix",
+    "method": "ineffective_fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "The initial128-bit master-key prefix of AES-256, not its complete master key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen-plaintext-encryption-with-fault-attempt",
+      "observable-encryption-correctness"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret master key; no related-key oracle.",
+    "key_population": "Arbitrary key of the stated AES instance in an implementation meeting the fault and feedback assumptions.",
+    "plaintext_model": "Repeated encryption of the all-zero128-bit plaintext.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "State bits immediately after a selected AddRoundKey operation.",
+      "granularity": "One selected state bit per fault-injection attempt.",
+      "timing": "After initial AddRoundKey, before first SubBytes.",
+      "location": "The attacker targets the required individual state-bit locations and can move between them.",
+      "value_control": "Force the selected bit to zero; a bit already equal to zero remains unchanged.",
+      "sample_pairing": "Each attempted injection yields a correct/incorrect outcome. Ciphertext-comparison feedback additionally needs a correct reference for the same input, outside the stated attempt count.",
+      "feedback": "Observable correct-versus-incorrect encryption outcome. Section1 permits alternatives: a device reset/error flag; comparison with a fault-free ciphertext; or detectable recomputation timing. Only the binary outcome is required, not the faulty ciphertext bytes.",
+      "evidence_scope": "analytical"
+    },
+    "assumptions": [
+      "Successful localization and the stipulated fault-value effect are model assumptions, not measured acquisition success rates.",
+      "The ciphertext-validity alternatives are interchangeable only as a binary observation; the source does not cost each feedback channel's calibration or reference executions separately.",
+      "Recovery target: The initial128-bit master-key prefix of AES-256, not its complete master key."
+    ]
+  },
+  "techniques": [
+    "ineffective-fault-analysis",
+    "bit-reset",
+    "correctness-feedback"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical complete-attack offline runtime is reported."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "128",
+      "log2": 7,
+      "unit": "fault-injection-encryption-attempts",
+      "qualifier": "exact",
+      "note": "One ideal reset attempt for each of the128 initial-key bits. The following key-completion stage is excluded."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical whole-attack peak-memory budget is supplied."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical preprocessing time is supplied."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "stated-target-recovery-probability",
+    "value": 1,
+    "description": "Deterministic recovery of the stated initial128 master-key bits in the exact perfect-bit-reset and reliable correctness-feedback model. For a zero state before AddRoundKey, resetting each selected post-addition bit changes the ciphertext iff that key bit is1; the remaining keyed rounds are permutations, so every observed bit decision is exact. This128-attempt endpoint stops at the prefix and makes no claim of full192/256-bit recovery. Success1 is an analytical model guarantee, not measured physical fault yield. Selected-bit localization, reset effect and reliable correctness feedback are conditions; any extra correct-reference/calibration cost remains unpriced. The existing standard-AES interpretation of the source byte/word index slips is unchanged.",
+    "basis": "source_proof",
+    "expression": "1",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Theoretical deterministic guarantees require the stated ideal model; local filters, characteristic products, expected counts and physical acquisition are separate. Costs, targets, settings, existing conflicts and full-audit gates are unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Section1 p.164; Section4 p.170, initial stage of Nk>Nb",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary-version result with explicit target, feedback model and native fault-attempt accounting; AES means128-bit blocks and the stated standard key size."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Complete PDF1–20/printed162–181; Sections4–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Proceedings PDF9 / printed170 Section4, perfect-reset bit test and both Nk<=Nb / Nk>Nb constructions; PDF2–3 Sections1/2 for feedback and AES word conventions.",
+      "fields": [
+        "/success"
+      ],
+      "interpretation": "Deterministic recovery of the stated initial128 master-key bits in the exact perfect-bit-reset and reliable correctness-feedback model. For a zero state before AddRoundKey, resetting each selected post-addition bit changes the ciphertext iff that key bit is1; the remaining keyed rounds are permutations, so every observed bit decision is exact. This128-attempt endpoint stops at the prefix and makes no claim of full192/256-bit recovery. Success1 is an analytical model guarantee, not measured physical fault yield. Selected-bit localization, reset effect and reliable correctness feedback are conditions; any extra correct-reference/calibration cost remains unpriced. The existing standard-AES interpretation of the source byte/word index slips is unchanged."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The paper supplies attack-model reasoning, not a physical experiment with measured chip-level success, time and calibration cost.",
+    "Attempts leaving the targeted value unchanged are informative and remain in the data budget."
+  ]
+}

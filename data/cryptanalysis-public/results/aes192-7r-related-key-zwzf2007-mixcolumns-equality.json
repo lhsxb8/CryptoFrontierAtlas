@@ -1,0 +1,159 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-related-key-zwzf2007-mixcolumns-equality",
+  "title": "7-round AES-192: MixColumns-equality differential",
+  "display": {
+    "name": "MixColumns-equality differential",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "zwzf2007-whitening-k0-final-round-without-mixcolumns",
+    "description": "Standard AES-192 under the paper's round numbering: initial whitening k0, rounds1 onward; last MixColumns omitted for 7-round recovery variants. Guess k7 bytes0,1,4,7,10,11,13,14 and w6 bytes1,4, then recover8 whitening bytes:144 bits of named subkey material. These are selected round-key values, not an independently priced complete192-bit master key."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related_key_chosen_plaintext_encryption"
+    ],
+    "related_key_count": 2,
+    "key_relation": "Two unknown AES-192 master keys K and K'=K XOR Delta, where Delta[0]=Delta[8]=a!=0 and the other22 bytes are0. Initial whitening is k0; round subkeys are k1,... .",
+    "key_population": "General unknown key pair with attacker-chosen nonzero a; b,c are actual key-dependent S-box output differences, not independently chosen subkeys.",
+    "plaintext_model": "Two pools of approximately2^36 inputs, total2^37 CP. For a wrong outer guess, the failed-equality filter retains fraction1-2^-8; the budget uses2^71 processed pairs.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source models pair filters and incorrect whitening-key eliminations probabilistically; those independence assumptions have not been proved for every AES key.",
+      "Named subkey bits may be dependent. No complete192-bit master-key recovery budget is supplied.",
+      "The source uses64 memory accesses per encryption equivalent; this is an accounting convention, not an independent implementation measurement.",
+      "b and c are computed from the guessed bytes. Data2^37 is the source's rounded acquisition estimate;2^71 is its elimination-pair budget."
+    ]
+  },
+  "techniques": [
+    "related-key",
+    "differential",
+    "mixcolumns-equality",
+    "wrong-key-elimination"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^145",
+      "log2": 145,
+      "unit": "zwzf2007-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Source2^71×2^80/2^6; selected-key stage only."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^37",
+      "log2": 37,
+      "unit": "related-key-chosen-plaintext-blocks-total",
+      "qualifier": "estimate",
+      "note": "Total plaintext-block encryption queries across exactly2 related keys, not a per-key budget."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^69 bytes",
+      "log2": 69,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Author-reported memory; do not reinterpret the exponent as128-bit blocks."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The shared Section4 precomputation is about2^62 encryptions; no complete additional setup total for this extension is separately supplied."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "source-model-unique-partial-subkey-lower-bound",
+    "value": null,
+    "description": "The144-bit output consists of80 outer guessed subkey bits and64 whitening bits. The source probability-one MixColumns equality preserves the correct tuple; it is not a rare right-pair occurrence. With the source assigned mean mprime=2^71, the wrong-whitening survival model and all2^80 outer guesses yield E_model W <= 2^144 exp(-128). The source-rounded2^37 query and2^145 processing budgets are unchanged. This is the paper mean-count model, not a lower-tail guarantee that a random fixed plaintext budget always supplies2^71 useful pairs. Derived first-moment lower bound within the source random-filter model for a unique correct complete stated partial-subkey output. It is not an author-printed aggregate percentage, an experimental rate, or a proved actual-AES success probability; no full master-key recovery is asserted. Correct-tuple retention plus P_model(W>=1)<=E_model W supplies the implication without independence between different wrong tuples or auxiliary trials. The repeated-filter uniformity/independence assumptions are inherited from the source; the source also substitutes mean retained-pair counts for random counts, which is not justified as an actual-cipher upper bound by this audit.",
+    "components": [
+      {
+        "metric": "conditioned-mixcolumns-two-byte-difference-equality",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Section6: under the stipulated first-round state difference and actual Table2 related-key schedule, the two designated bytes after MixColumns are equal with probability1. This is the AES-side identity, not recovery success."
+      },
+      {
+        "metric": "pair-violates-equality-under-wrong-guess-source-model",
+        "value": 0.99609375,
+        "basis": "author_model",
+        "expression": "1-2^{-8}",
+        "description": "Section6 source model: a fraction1-2^-8 of pairs violates the equality under a wrong terminal hypothesis and can be used to eliminate whitening guesses. This is a pair-selection fraction."
+      },
+      {
+        "metric": "one-fixed-wrong-whitening-candidate-survives-source-model",
+        "value": 2.572209372642415e-56,
+        "basis": "author_model",
+        "expression": "(1-2^{-64})^{2^{71}}",
+        "description": "Section6 source uniform-elimination model for ONE fixed wrong64-bit whitening guess after2^71 useful pairs. The source2^64 multiplier describes expected wrong survivors under a terminal hypothesis, not a probability that all144-bit output material is uniquely recovered."
+      }
+    ],
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Verified exact-edition source extraction, full stored-output and same-budget loop mapping, right-candidate retention and first-moment arithmetic. Independent source-first and endpoint review. This verifies the conditional model inference, not actual-cipher random-filter assumptions, mean-count substitution, attack reproduction or a new full-paper audit."
+    },
+    "basis": "derived_from_source",
+    "expression": "P_{\\mathrm{model}}\\ge 1-2^{144}e^{-128}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "Printed pp.25–26 Section6 and p.16 Table1",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal"
+      ],
+      "interpretation": "Complete original proceedings reviewed. Source-convention boundaries, total queries across the two keys, partial output and native accounting are kept explicit."
+    },
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "Proceedings PDF11–12 / printed25–26 Section6, MixColumns equality, filtering and2^71 useful-pair budget.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical144-bit named-subkey recovery success is supplied. The deterministic MixColumns equality, wrong-guess pair fraction and conditional whitening survival model are distinct events. The source rounded data2^37 and useful-pair budget2^71 remain as recorded; no new acquisition model or completion rate is imposed."
+    },
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "PDF11–12 / printed25–26, Section6 probability-one MixColumns equality, ten outer key bytes, eight whitening bytes and mprime=2^71.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Aggregate lower bound derived within the source model, retaining the existing exact output, conditions, resource assignment and all scientific conflicts. The inequality applies to the model, not to the real cipher without proving the source assumptions."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Independent local checks cover the AES key schedule and deterministic components. Full cryptanalytic searches, resource calibration and success rates have not been reproduced."
+  ],
+  "related_problem_ids": []
+}

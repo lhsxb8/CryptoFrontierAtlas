@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+  \node[box,minimum width=4.7cm] (in) at (0,0) {$P$: $\AtlasBlockBits$ bits};
+  \node[accent,minimum width=4.7cm] (rounds) at (0,-2) {$\AtlasRounds$ rounds\\AddRoundKey $\to$ S-box layer\\$\to$ bit permutation};
+  \node[box,minimum width=4.7cm] (last) at (0,-4.1) {Final key addition: $\oplus K_{\AtlasRoundKeys}$};
+  \node (out) at (0,-5.6) {$C$};
+  \draw[wire] (in) -- (rounds); \draw[wire] (rounds) -- (last); \draw[wire] (last) -- (out);
+  \node[note,text width=5.4cm] at (0,-6.6) {$\AtlasKeyBits$-bit key $\to$ $\AtlasRoundKeys$ round keys.\\The final key addition is not another SP round.};
+\end{tikzpicture}

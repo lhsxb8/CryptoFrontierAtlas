@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Public primitive and construction directory (no analysis results)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "categories", "specifications", "primitives", "instances"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "categories": {"type": "array", "minItems": 1, "items": {
+      "type": "object", "additionalProperties": false, "required": ["id", "en", "zh"],
+      "properties": {"id": {"$ref": "#/$defs/category"}, "en": {"$ref": "#/$defs/text"}, "zh": {"$ref": "#/$defs/text"}}
+    }},
+    "specifications": {"type": "array", "minItems": 1, "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "edition", "url", "status", "status_note", "checked_on"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "title": {"$ref": "#/$defs/text"}, "edition": {"$ref": "#/$defs/text"},
+        "url": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "status": {"enum": ["published", "withdrawn"]}, "status_note": {"$ref": "#/$defs/text"},
+        "checked_on": {"type": "string", "format": "date"}, "withdrawn_on": {"type": "string", "format": "date"}
+      },
+      "if": {"properties": {"status": {"const": "withdrawn"}}},
+      "then": {"properties": {"withdrawn_on": {}}, "required": ["withdrawn_on"]},
+      "else": {"properties": {"withdrawn_on": false}}
+    }},
+    "primitives": {"type": "array", "minItems": 1, "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "category", "aliases", "description", "specification_ids", "uses"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "name": {"$ref": "#/$defs/text"}, "category": {"$ref": "#/$defs/category"},
+        "aliases": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+        "description": {"$ref": "#/$defs/text"}, "specification_ids": {"$ref": "#/$defs/references"},
+        "uses": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
+      }
+    }},
+    "instances": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "family_id", "name", "specification_ids", "locator", "parameters"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "family_id": {"$ref": "#/$defs/id"}, "name": {"$ref": "#/$defs/text"},
+        "specification_ids": {"$ref": "#/$defs/references"}, "locator": {"$ref": "#/$defs/text"},
+        "note": {"$ref": "#/$defs/text"},
+        "parameters": {"oneOf": [
+          {"type": "object", "additionalProperties": false, "required": ["type", "key_bits", "block_bits", "rounds"], "properties": {
+            "type": {"const": "block_cipher"}, "key_bits": {"$ref": "#/$defs/positive"}, "block_bits": {"$ref": "#/$defs/positive"},
+            "rounds": {"$ref": "#/$defs/positive"}, "stages": {"$ref": "#/$defs/positive"}, "key_encoding_bits": {"$ref": "#/$defs/positive"}
+          }},
+          {"type": "object", "additionalProperties": false, "required": ["type", "key_bits", "nonce_bits", "counter_bits", "state_bits", "rounds", "keystream_block_bits"], "properties": {
+            "type": {"const": "stream_cipher"}, "key_bits": {"$ref": "#/$defs/positive"}, "nonce_bits": {"$ref": "#/$defs/positive"},
+            "counter_bits": {"$ref": "#/$defs/positive"}, "state_bits": {"$ref": "#/$defs/positive"},
+            "rounds": {"$ref": "#/$defs/positive"}, "keystream_block_bits": {"$ref": "#/$defs/positive"}
+          }},
+          {"type": "object", "additionalProperties": false, "required": ["type", "output_bits", "state_bits"], "properties": {
+            "type": {"const": "hash_function"}, "output_bits": {"$ref": "#/$defs/positive"}, "state_bits": {"$ref": "#/$defs/positive"},
+            "block_bits": {"$ref": "#/$defs/positive"}, "compression_steps": {"$ref": "#/$defs/positive"},
+            "rate_bits": {"$ref": "#/$defs/positive"}, "capacity_bits": {"$ref": "#/$defs/positive"}
+          }, "oneOf": [
+            {"properties": {"block_bits": {}, "compression_steps": {}, "rate_bits": false, "capacity_bits": false}, "required": ["block_bits", "compression_steps"]},
+            {"properties": {"rate_bits": {}, "capacity_bits": {}, "block_bits": false, "compression_steps": false}, "required": ["rate_bits", "capacity_bits"]}
+          ]},
+          {"type": "object", "additionalProperties": false, "required": ["type", "output", "state_bits", "rate_bits", "capacity_bits"], "properties": {
+            "type": {"const": "xof"}, "output": {"const": "variable"}, "state_bits": {"$ref": "#/$defs/positive"},
+            "rate_bits": {"$ref": "#/$defs/positive"}, "capacity_bits": {"$ref": "#/$defs/positive"}
+          }},
+          {"type": "object", "additionalProperties": false, "required": ["type", "state_bits", "rounds"], "properties": {
+            "type": {"const": "permutation"}, "state_bits": {"$ref": "#/$defs/positive"}, "rounds": {"$ref": "#/$defs/positive"}
+          }},
+          {"type": "object", "additionalProperties": false, "required": ["type", "key_bits", "nonce_bits", "tag_bits"], "properties": {
+            "type": {"const": "aead"}, "key_bits": {"$ref": "#/$defs/positive"}, "nonce_bits": {"$ref": "#/$defs/positive"},
+            "tag_bits": {"$ref": "#/$defs/positive"}, "state_bits": {"$ref": "#/$defs/positive"}, "rate_bits": {"$ref": "#/$defs/positive"}
+          }},
+          {"type": "object", "additionalProperties": false, "required": ["type", "key_bits", "block_bits", "tag_bits", "cipher_instance_id"], "properties": {
+            "type": {"const": "mac"}, "key_bits": {"$ref": "#/$defs/positive"}, "block_bits": {"$ref": "#/$defs/positive"},
+            "tag_bits": {"$ref": "#/$defs/positive"}, "cipher_instance_id": {"$ref": "#/$defs/id"}
+          }}
+        ]}
+      }
+    }}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "positive": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
+    "references": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "category": {"enum": ["block_cipher", "stream_cipher", "hash_function", "xof", "permutation", "aead", "mac"]}
+  }
+}

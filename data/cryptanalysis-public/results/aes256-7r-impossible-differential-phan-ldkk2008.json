@@ -1,0 +1,229 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-7r-impossible-differential-phan-ldkk2008",
+  "title": "7-round AES-256 impossible-differential key recovery, improved Phan construction",
+  "display": {
+    "name": "Impossible differential, Phan line",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "ldkk2008-rounds-0-to-6-initial-whitening-final-no-mixcolumns",
+    "description": "7 rounds of standard AES-256 with initial AddRoundKey and final MixColumns omitted. The source reports complete master-key recovery, using impossible-differential subkey elimination followed by key-schedule completion or trial encryption."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed unknown AES master key; no related-key oracle.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "chosen-plaintext structures with a varying inverse-shifted column and fixed other bytes; compatible pairs are selected after encryption",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Uses the four-round impossible differential of Proposition 1 with input/output extension and early rejection of wrong key guesses.",
+      "AES-256 cannot use the same 192-bit key-schedule savings. The dedicated row and Section 4.1 give 2^92 data. The conclusion compresses both key-size variants into one sentence; its 2^91.2 is not substituted for the dedicated AES-256 budget.",
+      "Section 2's textual AES-256 key-schedule description includes a rotation in the i=4 mod 8 branch; the canonical AES specification has an unrotated SubWord there. This source description discrepancy remains flagged for full-version checking; no alternative cipher is silently substituted."
+    ]
+  },
+  "techniques": [
+    "impossible-differential",
+    "early-abort",
+    "key-schedule-constraints",
+    "wrong-key-elimination",
+    "data-reuse"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^163",
+      "log2": 163,
+      "unit": "memory-accesses",
+      "qualifier": "estimate",
+      "note": "AES-256 cannot use the same 192-bit key-schedule savings. The dedicated row and Section 4.1 give 2^92 data. The conclusion compresses both key-size variants into one sentence; its 2^91.2 is not substituted for the dedicated AES-256 budget."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^92",
+      "log2": 92,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Dedicated Table 1 and final Section 4.1 both report 2^92 CP. Section 5 wording says about 2^91.2 for an attack applicable to both AES-192 and AES-256. The dedicated 92 value is retained with this local conflict, not silently replaced by 91.2."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate memory budget is explicitly supplied for this improved instance/endpoint. Older attack memory figures and other-instance storage are not inherited."
+    },
+    "preprocessing": {
+      "status": "qualitative",
+      "reported": "2^42-pair wrong-key-elimination table construction",
+      "log2": null,
+      "unit": "source-described-table-construction",
+      "qualifier": "unspecified",
+      "note": "Appendix A precomputes and sorts 2^42 candidate pairs into a difference-indexed table. This is a table size/iteration count, not a separately supplied total time in memory-access or full-encryption units."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "full-master-key-recovery",
+    "value": null,
+    "description": "The exact impossible relation retains the true hypothesis, and Steps1–6 with Section4.1 include exhaustive full-key completion. The source does not quantify identification of the originally designated master key among keys consistent with the native verification transcript. The earlier conditional1 also required correct original-key validation; that premise is not established merely by exact trial encryptions. Local true-key retention1 remains a separate component. The dedicated AES256 assignment remains2^92 chosen plaintexts and estimated2^163 memory accesses.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-08",
+      "scope": "B76 corrects the B48 derived primary1 after source-first independent review. Complete native enumeration and residual-key search establish inclusion, not a quantified original-key selection law. Expected/variable work is allowed; lack of a hard deadline is not the correction reason. All costs, local components, other conflicts and full-audit gates are preserved."
+    },
+    "components": [
+      {
+        "metric": "true-key-not-rejected-by-intended-impossible-relation",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF6 Proposition1 and the source elimination rule: a true hypothesis cannot satisfy both conditions of the impossible differential and is not discarded by that mathematical contradiction. This is a local retention relation, not a finite-budget uniqueness or residual-search success rate."
+      },
+      {
+        "metric": "ciphertext-pair-eight-zero-byte-sieve-source-model",
+        "value": 5.421010862427522e-20,
+        "basis": "derived_from_source",
+        "expression": "2^{-64}",
+        "description": "PDF6–7: Step2 retains ciphertext pairs with eight designated zero-difference bytes. Source 2^123 candidate pairs become an expected2^59 pairs at the original 2^92-data analysis; the local 64-bit sieve is not a post-reduction survivor count."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "p.281 Table 1; last paragraph of Section 4.1, p.287. pp.282-283 for round convention; pp.291-292 for elimination-table setup.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/resources",
+        "/techniques",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "AES-256 cannot use the same 192-bit key-schedule savings. The dedicated row and Section 4.1 give 2^92 data. The conclusion compresses both key-size variants into one sentence; its 2^91.2 is not substituted for the dedicated AES-256 budget."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "Full source PDF pp.1–15 / printed pp.279–293 read 2026-10-27; Table 1/PDF3 and defining Sections 4.1–4.2/PDF7–12 or Appendix B/PDF14–15.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Independent raw-first complete proceedings-edition audit. Whole-key success remains unknown; memory accesses are not converted to encryptions. The separate 2008/540 full-version PDF was not acquired."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF p.5 / printed p.283, AES-256 key-schedule i≡4(mod8) sentence; Sections4.1–4.2.",
+      "fields": [
+        "/setting"
+      ],
+      "interpretation": "The source description rotates SubWord in the AES-256 extra branch, unlike canonical AES. Preserve this localized description caveat; do not redefine the target cipher or infer that all attacks are invalid."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF p.3 / printed p.281 Table1; PDF p.9 / p.287 Section4.1; PDF p.12 / p.290 Section5.",
+      "fields": [
+        "/resources/data",
+        "/field_conflicts"
+      ],
+      "interpretation": "The specific92-bit data claim and compressed91.2-bit summary are both retained; this audit does not establish a new91.2 endpoint."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF p.3 / printed p.281 Table 1; PDF p.9 / printed p.287 final Section 4.1 paragraph",
+      "fields": [
+        "/resources/data",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized original/recomputed observation retained under independent review; no silently substituted resource vector or whole-attack refutation."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF p.12 / printed p.290 Section 5 first attack summary",
+      "fields": [
+        "/resources/data",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized original/recomputed observation retained under independent review; no silently substituted resource vector or whole-attack refutation."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "Proceedings PDF6–9 / printed284–287 Sections3.1/4.1 and Proposition1; AppendixA PDF13–14.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical finite-budget full-master-key success is established for this exact endpoint. The 2^-152.7 survival figure is explicitly referred to the earlier Phan full-data procedure and is not transferred to the reduced-data endpoint. AES256 has different schedule savings, so the AES192 known-byte consistency probability is not copied. The dedicated2^92 versus generic2^91.2 data-summary conflict remains."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF6-9 / printed284-287 Proposition1; Section3.1 Steps5-6; Section4.1 optimized elimination, exhaustive completion and dedicated AES256 D2^92/T2^163 assignment. Targeted success review2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "This primary source-derived correctness model uses the explicitly completed master-key algorithm, not only local true-key retention or the predecessor's per-wrong-key survival estimate. It conditions on complete enumeration and correct trial-encryption validation; native cost estimates are not hard runtime ceilings."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "Proceedings PDF3 Table1; PDF6–9 / printed284–287 Proposition1, Section3.1 Steps1–6 and Section4.1; PDF13–14 AppendixA. Targeted success-event review2026-11-08.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Supersedes the B48 primary probability-one interpretation, not its exact retention or explicit master-key-completion evidence. Completed compatible-candidate enumeration does not quantify return of the originally designated key without an established uniqueness/selection premise. No failure rate, extra oracle query, ideal identity verifier or hard-runtime condition is introduced. The published source attack is not declared invalid."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "AES-256 cannot use the same 192-bit key-schedule savings. The dedicated row and Section 4.1 give 2^92 data. The conclusion compresses both key-size variants into one sentence; its 2^91.2 is not substituted for the dedicated AES-256 budget.",
+    "The 15-page proceedings edition has been fully read and its AES contributions inventoried. The separate full online edition 2008/540 remains access-pending; independent attack reproduction was not attempted."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/data",
+      "label": "dedicated-aes256-row-versus-general-summary",
+      "description": "The AES-256-specific table and body say 2^92; the generalized conclusion can be read as 2^91.2 for both key sizes. The prior dedicated-row 92 value is retained, but its summary discrepancy remains explicit and blocks unqualified comparison.",
+      "observations": [
+        {
+          "source_id": "ldkk2008-impossible-differential-conference",
+          "locator": "PDF p.3 / printed p.281 Table 1; PDF p.9 / printed p.287 final Section 4.1 paragraph",
+          "reported": "AES-256 7-round data 2^92 chosen plaintexts."
+        },
+        {
+          "source_id": "ldkk2008-impossible-differential-conference",
+          "locator": "PDF p.12 / printed p.290 Section 5 first attack summary",
+          "reported": "First attack applicable to AES-192 and AES-256, data about 2^91.2; time 2^139.2 encryptions or 2^163 MA respectively."
+        }
+      ]
+    }
+  ]
+}

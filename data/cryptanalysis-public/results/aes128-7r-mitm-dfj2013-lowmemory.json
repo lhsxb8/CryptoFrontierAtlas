@@ -1,0 +1,140 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-7r-mitm-dfj2013-lowmemory",
+  "title": "Seven-round AES-128 single-key MITM key recovery, low-memory tradeoff",
+  "display": {
+    "name": "MITM, low-memory tradeoff",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "dfj2013-zero-based-rounds-0-to-6-final-no-mixcolumns",
+    "description": "Seven-round AES-128 under the author's zero-based round numbering, rounds 0 through 6, with the real AES key schedule and the reduced cipher's final MixColumns omitted."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One unknown secret key; no related-key oracle is assumed.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "chosen-plaintext structures under one secret key",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Chosen-plaintext structures and the source's truncated-differential analysis.",
+      "Precomputed multiset tables and the source's AES-encryption-equivalent cost model."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "differential-enumeration",
+    "multiset-tables"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^99",
+      "log2": 99,
+      "unit": "aes128-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported AES-encryption-equivalent time; the optimized tradeoff's preprocessing is not separately itemized, so this is not asserted to be an independently checked total offline-plus-online budget. Section3.3quotes key-testing work rather than establishing an oracle-inclusive total: the D105endpoint exceeds itsT99quote, unlike the simple Section3.2accounting."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^105",
+      "log2": 105,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Chosen plaintexts used by the Section 3.3 data-memory tradeoff; not known plaintexts or decryption queries."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^90",
+      "log2": 90,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Multiset-table storage measured in 128-bit AES blocks, following Section 2.1 and Section 3.3."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Precomputed tables are required, but a separate preprocessing budget for this optimized tradeoff is not extracted; missing does not mean zero."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "key-recovery-success",
+    "value": null,
+    "description": "The efficient attack uses2^105 chosen plaintexts to expect one conforming pair at time2^99 and memory2^90. Section3.4 explicitly recovers the final two round keys by extracting table parameters and repeating smaller DS checks at negligible extra work. The missing success ingredient is the finite-data pair-acquisition and joint output law, not absence of a completion construction.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Exact Sections3.3–3.4 assignment checked independently. The two-last-subkey completion is positively evidenced; expected one useful pair is not converted into certainty or1-exp(-1). The2^97-data/2^98-memory parallel-table row remains separate. Primary success stays unquantified; no new full-paper audit."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF pp.4-5, Section 2.1, round conventions and resource units; p.8, Table 1, AES-128 7-round row with data 2^105; p.12, Section 3.3, first efficient attack; p.13, Section 3.4, key recovery.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The authors report time 2^99, data 2^105 chosen plaintexts and memory 2^90 AES blocks before the additional multiple-table data reduction. Section 3.4 supplies complete secret-key recovery. This is an attack construction, not a security lower bound; unreported numerical success and separate preprocessing remain null."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF pp.1–17 complete read; p.5native units; pp.10–13 seven-round costs and completion; pp.14–16 schedule-dependent extensions.",
+      "fields": [
+        "/assessment",
+        "/limitations"
+      ],
+      "interpretation": "Raw-first independent full inventory, original-PDF SHA recheck, bounded official version/successor checks. Existing quoted resource tuple and stableIDpreserved; no author code executed."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF8 Table1; PDF10–13 Sections3.2–3.4 and complete-key completion paragraph.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Targeted success audit: expected counts and conditional correctness are retained without inventing an end-to-end probability or a Poisson independence assumption."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "Author PDF11–13 Section3.3, Figure4,2^105-data/2^99-time/2^90-memory assignment and separate parallel-table tradeoff; PDF13 Section3.4 complete two-last-subkey recovery.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "The paper supplies an explicit budget-compatible key-completion construction. It does not give a numerical probability that the finite plaintext structures contain a suitable pair or a joint completed-key success rate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The attack, multiset tables and reported costs have not been independently executed or reproduced.",
+    "Unknown numerical success and separate preprocessing prevent automatic frontier comparison, including with the companion AES-128 tradeoff.",
+    "Complete17-page author-edition audit and bounded official version/successor checks completed2026-10-27 through literature cutoff2026-10-10. This records checked scope, not exhaustive absence of later corrections."
+  ],
+  "related_problem_ids": []
+}

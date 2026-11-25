@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+  \node (p) at (2.2,1.2) {$P$};
+  \node[xor] (initial) at (2.2,.4) {$+$};
+  \node[accent,minimum width=3.7cm] (rounds) at (2.2,-1) {SubBytes $\to$ ShiftRows\\MixColumns $\to$ AddRoundKey};
+  \node[note] at (2.2,-1.9) {Rounds $1,\ldots,\AtlasPriorRounds$};
+  \node[box,minimum width=3.7cm] (final) at (2.2,-3) {SubBytes $\to$ ShiftRows\\AddRoundKey};
+  \node[note] at (2.2,-3.9) {Round $\AtlasRounds$: no MixColumns};
+  \node (c) at (2.2,-4.65) {$C$};
+  \draw[wire] (p) -- (initial); \draw[wire] (initial) -- (rounds);
+  \draw[wire] (rounds.south) -- (2.2,-1.65);
+  \draw[wire] (2.2,-2.1) -- (final); \draw[wire] (final.south) -- (2.2,-3.65);
+  \draw[wire] (2.2,-4.1) -- (c);
+  \node[box,minimum width=1cm,font=\sffamily\scriptsize] (schedule) at (-1,1) {$K$\\Key expansion};
+  \draw[draw=atlasTeal,dashed] (schedule.south) -- (-1,-3);
+  \draw[keywire] (-1,.4) -- node[above,note] {$K_0$} (initial);
+  \draw[keywire] (-1,-1) -- node[above,note] {$K_i$} (rounds);
+  \draw[keywire] (-1,-3) -- node[above,note] {$K_{\AtlasRounds}$} (final);
+  \node[note] at (1.5,-5.35) {$128$-bit state\quad $\AtlasKeyBits$-bit key};
+\end{tikzpicture}

@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+  \foreach \x in {0,...,4} \foreach \y in {0,...,4} {
+    \draw[draw=atlasLine,fill=atlasFill] (.36*\x,1-.36*\y) rectangle ++(.36,-.36);
+  }
+  \node[note] at (.9,-1.3) {$A[x,y]$: $64$-bit lanes\\$5\times5\times64=1600$ bits};
+  \node[accent,minimum width=5cm] (round) at (6.3,0) {$\theta\ \to\ \rho\ \to\ \pi\ \to\ \chi\ \to\ \iota$};
+  \node (out) at (11,0) {$A'$};
+  \draw[wire] (1.8,0) -- (round); \draw[wire] (round) -- (out);
+  \node[note] at (6.3,1.2) {$i_r=\AtlasRoundStart,\ldots,23$};
+  \draw[decorate,decoration={brace,mirror,amplitude=4pt},draw=atlasTeal] (3.8,-.8) -- (8.8,-.8);
+  \node[note] at (6.3,-1.35) {Repeat $\AtlasRounds$ rounds};
+  \node[note] at (6,-2.25) {Keccak-$p[1600,n]$: round indices $24-n$ through $23$; no key or message padding.};
+\end{tikzpicture}

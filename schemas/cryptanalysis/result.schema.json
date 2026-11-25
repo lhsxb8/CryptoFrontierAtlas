@@ -1,0 +1,2202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Symmetric cryptanalysis result, compatible versions 0.10.0 and 0.11.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "display",
+    "result_kind",
+    "goal",
+    "target",
+    "setting",
+    "techniques",
+    "resources",
+    "success",
+    "bound",
+    "evidence",
+    "assessment",
+    "limitations",
+    "related_problem_ids"
+  ],
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "0.10.0",
+        "0.11.0"
+      ]
+    },
+    "id": {
+      "$ref": "#/$defs/id"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10
+    },
+    "display": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "method"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 96,
+          "pattern": "^\\S(?:[\\s\\S]*\\S)?$"
+        },
+        "method": {
+          "enum": [
+            "mitm",
+            "differential",
+            "linear",
+            "differential_linear",
+            "boomerang",
+            "integral",
+            "collision",
+            "biclique",
+            "rebound",
+            "wide_trail",
+            "quantum_search",
+            "fault",
+            "safe_error",
+            "ineffective_fault",
+            "algebraic",
+            "exhaustive_search"
+          ]
+        }
+      }
+    },
+    "result_kind": {
+      "enum": [
+        "key_recovery_attack",
+        "key_space_reduction",
+        "collision_construction",
+        "structural_bound",
+        "structural_property",
+        "distinguisher",
+        "preimage_attack",
+        "multicollision_construction",
+        "theorem"
+      ]
+    },
+    "goal": {
+      "enum": [
+        "key_recovery",
+        "partial_key_recovery",
+        "candidate_reduction",
+        "key_collision",
+        "minimum_active_sboxes",
+        "structural_property",
+        "distinguishing",
+        "compression_preimage",
+        "compression_collision",
+        "compression_pseudocollision",
+        "differential_q_multicollision",
+        "characteristic_probability_bound",
+        "pairwise_independence_bound"
+      ]
+    },
+    "experiment": {
+      "$ref": "#/$defs/experiment"
+    },
+    "theorem": {
+      "$ref": "#/$defs/theorem"
+    },
+    "property": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "quantifier",
+        "scope",
+        "parameters",
+        "validation"
+      ],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 20
+        },
+        "quantifier": {
+          "type": "string",
+          "minLength": 20
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 20
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "reported",
+              "meaning"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 3
+              },
+              "reported": {
+                "type": "string",
+                "minLength": 1
+              },
+              "meaning": {
+                "type": "string",
+                "minLength": 10
+              }
+            }
+          }
+        },
+        "validation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "basis",
+            "description"
+          ],
+          "properties": {
+            "basis": {
+              "enum": [
+                "analytical",
+                "analytical_and_reported_experiment"
+              ]
+            },
+            "description": {
+              "type": "string",
+              "minLength": 20
+            }
+          }
+        }
+      }
+    },
+    "candidate_space": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "material",
+        "material_bits",
+        "observations"
+      ],
+      "properties": {
+        "material": {
+          "type": "string",
+          "minLength": 15
+        },
+        "material_bits": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "observations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "statistic",
+              "sample_count",
+              "count"
+            ],
+            "properties": {
+              "statistic": {
+                "enum": [
+                  "heuristic_mean",
+                  "sample_mean",
+                  "sample_maximum",
+                  "observed_values",
+                  "reported_estimate",
+                  "enumerated_mean",
+                  "enumerated_range"
+                ]
+              },
+              "sample_count": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "minimum": 1
+              },
+              "count": {
+                "$ref": "#/$defs/resource",
+                "type": "object",
+                "properties": {
+                  "unit": {
+                    "const": "key-candidates"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "variant_ids",
+        "rounds",
+        "full_round",
+        "round_convention",
+        "description"
+      ],
+      "properties": {
+        "variant_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "rounds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "description": "Source-convention fixed round count, or null for an explicitly quantified theorem round domain."
+        },
+        "full_round": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "round_domain": {
+          "$ref": "#/$defs/round_domain"
+        },
+        "round_convention": {
+          "type": "string",
+          "minLength": 3
+        },
+        "description": {
+          "type": "string",
+          "minLength": 20
+        }
+      }
+    },
+    "setting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key_model",
+        "oracle_access",
+        "related_key_count",
+        "key_relation",
+        "key_population",
+        "plaintext_model",
+        "computation",
+        "attack_surface",
+        "assumptions"
+      ],
+      "properties": {
+        "key_model": {
+          "enum": [
+            "single_secret_key",
+            "related_secret_keys",
+            "chosen_key_pair",
+            "fixed_round_keys",
+            "known_key"
+          ]
+        },
+        "oracle_access": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "related_key_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "key_budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "reported",
+            "log2",
+            "unit",
+            "distinct_key_count",
+            "note"
+          ],
+          "properties": {
+            "reported": {
+              "type": "string",
+              "minLength": 1
+            },
+            "log2": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "unit": {
+              "enum": [
+                "tested_related_key_pairs",
+                "distinct_related_keys",
+                "related_subkey_oracles"
+              ]
+            },
+            "distinct_key_count": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 2
+            },
+            "note": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "target_selection": {
+          "enum": [
+            "designated_target",
+            "any_from_pool",
+            "conditional_weak_pair",
+            "attacker_selected_pair",
+            "fixed_known_key"
+          ]
+        },
+        "reference_model": {
+          "type": "string",
+          "minLength": 20
+        },
+        "key_relation": {
+          "type": "string"
+        },
+        "prior_key_knowledge": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "bits",
+            "material",
+            "cost_accounting"
+          ],
+          "properties": {
+            "bits": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "material": {
+              "type": "string",
+              "minLength": 10
+            },
+            "cost_accounting": {
+              "type": "string",
+              "minLength": 15
+            }
+          }
+        },
+        "key_population": {
+          "type": "string",
+          "minLength": 3
+        },
+        "plaintext_model": {
+          "type": "string",
+          "minLength": 3
+        },
+        "computation": {
+          "enum": [
+            "classical",
+            "quantum"
+          ]
+        },
+        "attack_surface": {
+          "enum": [
+            "algorithmic",
+            "fault_injection",
+            "side_channel"
+          ]
+        },
+        "quantum_model": {
+          "$ref": "#/$defs/quantum_model"
+        },
+        "fault_model": {
+          "$ref": "#/$defs/fault_model"
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      }
+    },
+    "techniques": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "resources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "time",
+        "data",
+        "memory",
+        "preprocessing"
+      ],
+      "properties": {
+        "time": {
+          "$ref": "#/$defs/resource"
+        },
+        "data": {
+          "$ref": "#/$defs/resource"
+        },
+        "memory": {
+          "$ref": "#/$defs/resource"
+        },
+        "preprocessing": {
+          "$ref": "#/$defs/resource"
+        },
+        "t_gates": {
+          "$ref": "#/$defs/resource"
+        },
+        "clifford_gates": {
+          "$ref": "#/$defs/resource"
+        },
+        "t_depth": {
+          "$ref": "#/$defs/resource"
+        },
+        "circuit_depth": {
+          "$ref": "#/$defs/resource"
+        },
+        "logical_qubits": {
+          "$ref": "#/$defs/resource"
+        }
+      }
+    },
+    "success": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "metric",
+        "value",
+        "description"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "reported",
+            "not_reported",
+            "not_applicable"
+          ]
+        },
+        "relation": {
+          "enum": [
+            "=",
+            ">",
+            ">=",
+            "<",
+            "<="
+          ]
+        },
+        "metric": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10
+        },
+        "basis": {
+          "$ref": "#/$defs/probability_basis"
+        },
+        "expression": {
+          "type": "string",
+          "minLength": 1
+        },
+        "components": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/probability_component"
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "reviewed_on",
+            "scope"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "verified",
+                "not_quantified",
+                "not_stated",
+                "pending"
+              ]
+            },
+            "reviewed_on": {
+              "type": "string",
+              "format": "date"
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "not_reported",
+                  "not_applicable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "relation": {}
+            },
+            "required": [
+              "relation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "const": "reported"
+              },
+              "value": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "bound": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "metric",
+            "relation",
+            "value",
+            "quantifier",
+            "scope"
+          ],
+          "properties": {
+            "metric": {
+              "const": "active_sboxes"
+            },
+            "relation": {
+              "const": ">="
+            },
+            "value": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quantifier": {
+              "type": "string",
+              "minLength": 10
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 20
+            }
+          }
+        }
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "locator",
+          "fields",
+          "interpretation"
+        ],
+        "properties": {
+          "source_id": {
+            "$ref": "#/$defs/id"
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 8
+          },
+          "fields": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^/"
+            }
+          },
+          "interpretation": {
+            "type": "string",
+            "minLength": 10
+          }
+        }
+      }
+    },
+    "field_conflicts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field",
+          "label",
+          "description",
+          "observations"
+        ],
+        "properties": {
+          "field": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 3
+          },
+          "description": {
+            "type": "string",
+            "minLength": 15
+          },
+          "observations": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "source_id",
+                "locator",
+                "reported"
+              ],
+              "properties": {
+                "source_id": {
+                  "$ref": "#/$defs/id"
+                },
+                "locator": {
+                  "type": "string",
+                  "minLength": 8
+                },
+                "reported": {
+                  "type": "string",
+                  "minLength": 5
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_status",
+        "primary_text",
+        "reproduction",
+        "reviewed_on",
+        "frontier_status"
+      ],
+      "properties": {
+        "claim_status": {
+          "enum": [
+            "author_reported",
+            "source_conflict"
+          ]
+        },
+        "primary_text": {
+          "const": "checked"
+        },
+        "reproduction": {
+          "enum": [
+            "not_attempted",
+            "collision_witness_only"
+          ]
+        },
+        "reviewed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "frontier_status": {
+          "const": "not_assessed"
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 10
+      }
+    },
+    "related_problem_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^cryptofrontieratlas:"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "#/$defs/registered_goal"
+    },
+    {
+      "if": {
+        "required": [
+          "schema_version"
+        ],
+        "properties": {
+          "schema_version": {
+            "const": "0.10.0"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/legacy_result"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "target": {
+            "type": "object",
+            "required": [
+              "round_domain"
+            ],
+            "properties": {
+              "round_domain": {}
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "result_kind": {
+            "const": "theorem"
+          },
+          "target": {
+            "type": "object",
+            "properties": {
+              "rounds": {
+                "type": "null"
+              },
+              "full_round": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "target": {
+            "type": "object",
+            "properties": {
+              "rounds": {
+                "type": "number"
+              },
+              "full_round": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_kind": {
+            "const": "theorem"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "bound": {
+            "type": "null"
+          },
+          "success": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "not_applicable"
+              }
+            }
+          },
+          "resources": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "const": "not_applicable"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_kind": {
+            "const": "structural_property"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "property"
+        ],
+        "properties": {
+          "property": {},
+          "goal": {
+            "const": "structural_property"
+          },
+          "bound": {
+            "type": "null"
+          },
+          "success": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "not_applicable"
+              }
+            }
+          },
+          "resources": {
+            "type": "object",
+            "properties": {
+              "time": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "not_applicable"
+                  }
+                }
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "not_applicable"
+                  }
+                }
+              },
+              "memory": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "not_applicable"
+                  }
+                }
+              },
+              "preprocessing": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "not_applicable"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "property": false,
+          "goal": {
+            "not": {
+              "const": "structural_property"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "field_conflicts": {}
+        },
+        "required": [
+          "field_conflicts"
+        ]
+      },
+      "then": {
+        "properties": {
+          "assessment": {
+            "type": "object",
+            "properties": {
+              "claim_status": {
+                "const": "source_conflict"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_kind": {
+            "const": "key_space_reduction"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "candidate_space"
+        ],
+        "properties": {
+          "candidate_space": {},
+          "goal": {
+            "const": "candidate_reduction"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "goal": {
+            "not": {
+              "const": "candidate_reduction"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "setting": {
+            "type": "object",
+            "properties": {
+              "computation": {
+                "const": "quantum"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "setting": {
+            "type": "object",
+            "properties": {
+              "quantum_model": {}
+            },
+            "required": [
+              "quantum_model"
+            ]
+          },
+          "resources": {
+            "type": "object",
+            "properties": {
+              "t_gates": {},
+              "clifford_gates": {},
+              "t_depth": {},
+              "circuit_depth": {},
+              "logical_qubits": {}
+            },
+            "required": [
+              "t_gates",
+              "clifford_gates",
+              "t_depth",
+              "circuit_depth",
+              "logical_qubits"
+            ]
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "setting": {
+            "type": "object",
+            "properties": {
+              "quantum_model": false
+            }
+          },
+          "resources": {
+            "type": "object",
+            "properties": {
+              "t_gates": false,
+              "clifford_gates": false,
+              "t_depth": false,
+              "circuit_depth": false,
+              "logical_qubits": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "setting": {
+            "type": "object",
+            "properties": {
+              "attack_surface": {
+                "const": "fault_injection"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "setting": {
+            "type": "object",
+            "properties": {
+              "fault_model": {}
+            },
+            "required": [
+              "fault_model"
+            ]
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "setting": {
+            "type": "object",
+            "properties": {
+              "fault_model": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "display": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "const": "quantum_search"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "setting": {
+            "type": "object",
+            "properties": {
+              "computation": {
+                "const": "quantum"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "display": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "enum": [
+                  "fault",
+                  "safe_error",
+                  "ineffective_fault"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "setting": {
+            "type": "object",
+            "properties": {
+              "attack_surface": {
+                "const": "fault_injection"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "display": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "enum": [
+                  "safe_error",
+                  "ineffective_fault"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "setting": {
+            "type": "object",
+            "properties": {
+              "fault_model": {
+                "type": "object",
+                "properties": {
+                  "feedback": {}
+                },
+                "required": [
+                  "feedback"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_kind": {
+            "const": "structural_bound"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "display": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "const": "wide_trail"
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "if": {
+          "properties": {
+            "result_kind": {
+              "not": {
+                "const": "theorem"
+              }
+            }
+          }
+        },
+        "then": {
+          "properties": {
+            "display": {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "not": {
+                    "const": "wide_trail"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "round_domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "definition",
+        "variable",
+        "domain",
+        "minimum",
+        "maximum",
+        "step"
+      ],
+      "properties": {
+        "scope": {
+          "enum": [
+            "registered_instance",
+            "round_function_extension"
+          ]
+        },
+        "definition": {
+          "type": "string",
+          "minLength": 20
+        },
+        "variable": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 3
+        },
+        "minimum": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "maximum": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "step": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      }
+    },
+    "model_parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "meaning",
+        "domain",
+        "value"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
+        },
+        "meaning": {
+          "type": "string",
+          "minLength": 5
+        },
+        "domain": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "experiment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "construction",
+        "variables",
+        "relation",
+        "output",
+        "parameters",
+        "distinctness",
+        "reference",
+        "unresolved"
+      ],
+      "properties": {
+        "construction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "name",
+            "definition",
+            "output_bits"
+          ],
+          "properties": {
+            "type": {
+              "enum": [
+                "block_cipher",
+                "compression_function"
+              ]
+            },
+            "name": {
+              "type": "string",
+              "minLength": 3
+            },
+            "definition": {
+              "type": "string",
+              "minLength": 10
+            },
+            "output_bits": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "variables": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "control",
+              "domain",
+              "condition"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "control": {
+                "enum": [
+                  "fixed",
+                  "chosen",
+                  "random",
+                  "related",
+                  "derived",
+                  "not_reported"
+                ]
+              },
+              "domain": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              },
+              "condition": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "relation": {
+          "type": "string",
+          "minLength": 5
+        },
+        "output": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "scope",
+            "bits",
+            "mask"
+          ],
+          "properties": {
+            "scope": {
+              "enum": [
+                "full",
+                "partial",
+                "unspecified"
+              ]
+            },
+            "bits": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "mask": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1
+            }
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/model_parameter"
+          }
+        },
+        "distinctness": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 5
+        },
+        "reference": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 5
+        },
+        "unresolved": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      }
+    },
+    "theorem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "quantifier",
+        "metric",
+        "relation",
+        "expression",
+        "parameters",
+        "assumptions"
+      ],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 20
+        },
+        "quantifier": {
+          "type": "string",
+          "minLength": 10
+        },
+        "metric": {
+          "type": "string",
+          "minLength": 3
+        },
+        "relation": {
+          "enum": [
+            "=",
+            "<",
+            "<=",
+            ">",
+            ">="
+          ]
+        },
+        "expression": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/model_parameter"
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 5
+          }
+        }
+      }
+    },
+    "probability_basis": {
+      "enum": [
+        "author_statement",
+        "author_model",
+        "source_proof",
+        "derived_from_source",
+        "reported_experiment"
+      ]
+    },
+    "probability_component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric",
+        "value",
+        "basis",
+        "description"
+      ],
+      "properties": {
+        "metric": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "relation": {
+          "enum": [
+            "=",
+            ">",
+            ">=",
+            "<",
+            "<="
+          ]
+        },
+        "expression": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis": {
+          "$ref": "#/$defs/probability_basis"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expression": {}
+            },
+            "required": [
+              "expression"
+            ]
+          }
+        }
+      ]
+    },
+    "quantum_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query_model",
+        "cost_level",
+        "gate_set",
+        "routing",
+        "error_correction",
+        "oracle_parallelism",
+        "solution_assumption"
+      ],
+      "properties": {
+        "query_model": {
+          "enum": [
+            "classically_known_pairs",
+            "coherent_secret_oracle",
+            "offline_public_cipher_evaluation"
+          ]
+        },
+        "cost_level": {
+          "enum": [
+            "logical_circuit",
+            "quantum_algorithm"
+          ]
+        },
+        "gate_set": {
+          "type": "string",
+          "minLength": 10
+        },
+        "routing": {
+          "type": "string",
+          "minLength": 10
+        },
+        "error_correction": {
+          "type": "string",
+          "minLength": 10
+        },
+        "oracle_parallelism": {
+          "type": "string",
+          "minLength": 10
+        },
+        "solution_assumption": {
+          "type": "string",
+          "minLength": 10
+        }
+      }
+    },
+    "fault_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target",
+        "granularity",
+        "timing",
+        "location",
+        "value_control",
+        "sample_pairing",
+        "evidence_scope"
+      ],
+      "properties": {
+        "target": {
+          "type": "string",
+          "minLength": 10
+        },
+        "granularity": {
+          "type": "string",
+          "minLength": 10
+        },
+        "timing": {
+          "type": "string",
+          "minLength": 10
+        },
+        "location": {
+          "type": "string",
+          "minLength": 10
+        },
+        "value_control": {
+          "type": "string",
+          "minLength": 10
+        },
+        "sample_pairing": {
+          "type": "string",
+          "minLength": 10
+        },
+        "feedback": {
+          "type": "string",
+          "minLength": 20
+        },
+        "evidence_scope": {
+          "enum": [
+            "analytical",
+            "software_example",
+            "software_experiment",
+            "hardware_proposal",
+            "physical_experiment"
+          ]
+        }
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reported",
+        "log2",
+        "unit",
+        "qualifier",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "reported",
+            "qualitative",
+            "not_reported",
+            "not_applicable",
+            "conflict"
+          ]
+        },
+        "reported": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "log2": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "qualifier": {
+          "enum": [
+            "estimate",
+            "upper_bound",
+            "lower_bound",
+            "exact",
+            "unspecified",
+            "not_applicable"
+          ]
+        },
+        "relation": {
+          "enum": [
+            "=",
+            "<",
+            "<=",
+            ">",
+            ">="
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 5
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "relation": {}
+            },
+            "required": [
+              "relation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "const": "reported"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "reported"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reported": {
+                "type": "string",
+                "minLength": 1
+              },
+              "unit": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "qualitative",
+                  "not_reported",
+                  "not_applicable",
+                  "conflict"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "log2": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "not_reported",
+                  "not_applicable"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reported": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "registered_goal": {
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "goal": {
+              "const": "key_recovery"
+            },
+            "result_kind": {
+              "const": "key_recovery_attack"
+            },
+            "experiment": false,
+            "theorem": false
+          },
+          "required": [
+            "goal",
+            "result_kind"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "partial_key_recovery"
+            },
+            "result_kind": {
+              "const": "key_recovery_attack"
+            },
+            "experiment": false,
+            "theorem": false
+          },
+          "required": [
+            "goal",
+            "result_kind"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "candidate_reduction"
+            },
+            "result_kind": {
+              "const": "key_space_reduction"
+            },
+            "experiment": false,
+            "theorem": false,
+            "candidate_space": {}
+          },
+          "required": [
+            "goal",
+            "result_kind",
+            "candidate_space"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "key_collision"
+            },
+            "result_kind": {
+              "const": "collision_construction"
+            },
+            "experiment": false,
+            "theorem": false,
+            "setting": {
+              "type": "object",
+              "properties": {
+                "key_model": {
+                  "const": "chosen_key_pair"
+                }
+              }
+            }
+          },
+          "required": [
+            "goal",
+            "result_kind"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "minimum_active_sboxes"
+            },
+            "result_kind": {
+              "const": "structural_bound"
+            },
+            "experiment": false,
+            "theorem": false
+          },
+          "required": [
+            "goal",
+            "result_kind"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "structural_property"
+            },
+            "result_kind": {
+              "const": "structural_property"
+            },
+            "experiment": false,
+            "theorem": false,
+            "property": {}
+          },
+          "required": [
+            "goal",
+            "result_kind",
+            "property"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "distinguishing"
+            },
+            "result_kind": {
+              "const": "distinguisher"
+            },
+            "experiment": false,
+            "theorem": false
+          },
+          "required": [
+            "goal",
+            "result_kind"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "compression_preimage"
+            },
+            "result_kind": {
+              "const": "preimage_attack"
+            },
+            "experiment": {
+              "type": "object",
+              "properties": {
+                "construction": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "compression_function"
+                    }
+                  }
+                }
+              }
+            },
+            "theorem": false
+          },
+          "required": [
+            "goal",
+            "result_kind",
+            "experiment"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "compression_collision"
+            },
+            "result_kind": {
+              "const": "collision_construction"
+            },
+            "experiment": {
+              "type": "object",
+              "properties": {
+                "construction": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "compression_function"
+                    }
+                  }
+                }
+              }
+            },
+            "theorem": false
+          },
+          "required": [
+            "goal",
+            "result_kind",
+            "experiment"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "compression_pseudocollision"
+            },
+            "result_kind": {
+              "const": "collision_construction"
+            },
+            "experiment": {
+              "type": "object",
+              "properties": {
+                "construction": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "compression_function"
+                    }
+                  }
+                }
+              }
+            },
+            "theorem": false
+          },
+          "required": [
+            "goal",
+            "result_kind",
+            "experiment"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "differential_q_multicollision"
+            },
+            "result_kind": {
+              "const": "multicollision_construction"
+            },
+            "experiment": {},
+            "theorem": false
+          },
+          "required": [
+            "goal",
+            "result_kind",
+            "experiment"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "characteristic_probability_bound"
+            },
+            "result_kind": {
+              "const": "theorem"
+            },
+            "experiment": false,
+            "theorem": {
+              "type": "object",
+              "properties": {
+                "metric": {
+                  "const": "characteristic_probability"
+                }
+              }
+            }
+          },
+          "required": [
+            "goal",
+            "result_kind",
+            "theorem"
+          ]
+        },
+        {
+          "properties": {
+            "goal": {
+              "const": "pairwise_independence_bound"
+            },
+            "result_kind": {
+              "const": "theorem"
+            },
+            "experiment": false,
+            "theorem": {
+              "type": "object",
+              "properties": {
+                "metric": {
+                  "const": "pairwise_independence_advantage"
+                }
+              }
+            }
+          },
+          "required": [
+            "goal",
+            "result_kind",
+            "theorem"
+          ]
+        }
+      ]
+    },
+    "legacy_result": {
+      "type": "object",
+      "properties": {
+        "goal": {
+          "enum": [
+            "key_recovery",
+            "partial_key_recovery",
+            "candidate_reduction",
+            "key_collision",
+            "minimum_active_sboxes",
+            "structural_property",
+            "distinguishing"
+          ]
+        },
+        "experiment": false,
+        "theorem": false,
+        "target": {
+          "type": "object",
+          "properties": {
+            "rounds": {
+              "type": "number"
+            },
+            "full_round": {
+              "type": "boolean"
+            },
+            "round_domain": false
+          }
+        }
+      }
+    }
+  },
+  "$comment": "Taxonomy projections generated by scripts/sync-result-model.cjs; SHA256 bf22b02a9d7699c945ca1fbe1393b95df063f3bd75566bf50ef65a8b954751a1"
+}

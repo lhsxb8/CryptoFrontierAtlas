@@ -1,0 +1,170 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-3r-differential-linear-hde2024-distinguisher",
+  "title": "3-round AES single-key differential-linear distinguisher, |C|=2^-7.66",
+  "display": {
+    "name": "Single-key differential-linear",
+    "method": "differential_linear"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 3,
+    "full_round": false,
+    "round_convention": "hde2024-fig3-r0-r2-last-sbox-output",
+    "description": "Figure3: three SubBytes layers R0,R1,R2, with SR/MC/AK between layers, input difference before R0 SB and output mask immediately after R2 SB. No general final-MC/other-endpoint equivalence is assumed. AppendixC Fig9b/Table5 gives an equivalent explicit full-SR/MC output mask: row-major0032000000ab00000066000000980000 pulls back by the binary transpose of SR/MC to byte(row2,col3)=0x67 at the Fig3 last-SB endpoint. This checked mapping applies to this pattern, not arbitrary endpoint conventions."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed unknown key; no related-key queries or round-key control.",
+    "key_population": "single-secret-key AES of all key sizes under the source differential-linear correlation model",
+    "plaintext_model": "Chosen pairs with a fixed input difference and fixed output linear mask. AppendixC Table5 row-major serialization: DeltaX0=0000000000000000000000000000b400, GammaX3=0032000000ab00000066000000980000; ru=0,rm=3,rl=0;p=q=1,r=2^-7.66.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "reference_model": "Differential-linear output-parity statistic versus a random permutation; source correlation is not decision probability or advantage.",
+    "assumptions": [
+      "Generalized DLCT handles middle dependency; outer composition uses the source prq^2 correlation model.",
+      "Source endpoint/trail conventions remain explicit; affine output layers are not silently treated as identical endpoints.",
+      "The published generalized-DLCT composition assumes round/round-key independence and averaged random-key correlations; exact correlation for every fixed standard AES master key is not established.",
+      "Published author README additionally gives a three-round(b4,67) reproduction recipe with2^25 random-base pair queries under each of10 random fixed master keys. Its sample signed counts are negative and reported average magnitude is2^-7.6748. The recipe is not assumed to describe every Table2 experiment or to provide fixed-key confidence bounds."
+    ]
+  },
+  "techniques": [
+    "differential-linear",
+    "generalized-dlct",
+    "single-key-model"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No per-point attack budget stated in the inspected proceedings; no C^-2 extrapolation."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No per-point attack budget stated in the inspected proceedings; no C^-2 extrapolation."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No per-point attack budget stated in the inspected proceedings; no C^-2 extrapolation."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No per-point attack budget stated in the inspected proceedings; no C^-2 extrapolation."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "distinguishing-decision-probability",
+    "value": null,
+    "description": "The3-round AES point reports absolute differential-linear correlation |C|=2^-7.66, not a finite-budget distinguishing decision probability. The round-independence approximation concerns the random-key average, not a guarantee for every fixed key. Table2 reports the best pair (b4,67) with theoretical signed correlation -2^-7.66 and experimental -2^-7.64; neither is a repeated-trial decision-success rate. No per-point sample budget N, threshold or false-positive/false-negative distribution is specified. Keep signed correlation/theoretical support separate; do not relabel the correlation as a probability component or transfer a3-round experiment to other points.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Local pair filters, conditional trails, weak-pair incidence and expected counts keep their own experiment; correlation is not a decision probability. Existing conflicts, resources, targets, settings and full-audit gates remain unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "hde2024-differential-linear-proceedings",
+      "locator": "PDF pp.4–5 / printed pp.41–42, AES contributions and Table1; pp.21–22 / printed pp.58–59, prq^2 model and Application to AES. PDF pp.14–15 / printed pp.51–52, Figure3, Eq(5) and Table2.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Preserve own single-key 3-round AES distinguisher and source |C|=2^-7.66; no squared-correlation budget or success assigned. Null bound means no minimum-active-S-box claim; missing costs are explicitly not reported, never zero."
+    },
+    {
+      "source_id": "hde2024-differential-linear-proceedings",
+      "locator": "PDF pp.8,13 / printed pp.45,50, correlation averaging and round/key independence assumptions.",
+      "fields": [
+        "/setting/assumptions"
+      ],
+      "interpretation": "Preserve the source single-key attack model separately from assumptions used to evaluate its correlation; no every-fixed-key theorem."
+    },
+    {
+      "source_id": "hde2024-differential-linear-proceedings",
+      "locator": "Complete exact primaryPDF1–35, all sections, displayed formulas/tables/algorithms, proofs and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full contribution inventory read; bounded forward checking and finite component validation are separately receipted. Full attack reproduction not attempted."
+    },
+    {
+      "source_id": "hde2024-differential-linear-proceedings",
+      "locator": "Complete proceedingsPDF1–35/printed38–72, Sections1–5 and all references.",
+      "fields": [
+        "/assessment",
+        "/setting",
+        "/success"
+      ],
+      "interpretation": "Full primary-edition inventory; exact AES supplementary trails now acquired through separately hashed HALv1. No author attack/search code executed."
+    },
+    {
+      "source_id": "hde2024-differential-linear-hal-full",
+      "locator": "HALv1 PDF41–43/printed40–42 AppendixC.1–C.2, Table5 and Fig9; original full file has122pages, only cover/title and AppendicesA–C targeted here.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/success"
+      ],
+      "interpretation": "Exact all-AES appendix read and endpoint/mask assignments checked. Neither the other cipher appendices nor the whole122-page version is claimed as fully read."
+    },
+    {
+      "source_id": "hde2024-differential-linear-author-readme",
+      "locator": "Commit202b936cf17c834c76b96ab88826a249b9998ac6 dated2025-08-04, Experimental Verification / Example1:AES.",
+      "fields": [
+        "/setting",
+        "/success"
+      ],
+      "interpretation": "A published reproduction recipe:2^25 random plaintext differential-linear queries under one random fixed master key, repeated for10 random master keys; sample output reports average magnitude2^-7.6748. This is not a per-Table2-row sample receipt or an attack budget; no author code executed. README masks use a different serialization from Table5."
+    },
+    {
+      "source_id": "hde2024-differential-linear-proceedings",
+      "locator": "Proceedings Table1; PDF8 / printed45 round-independence discussion; PDF13–15 / printed50–52 DDLCT, Equation5 and Table2; PDF21–22 / printed58–59 AES applications.",
+      "fields": [
+        "/success"
+      ],
+      "interpretation": "The3-round AES point reports absolute differential-linear correlation |C|=2^-7.66, not a finite-budget distinguishing decision probability. The round-independence approximation concerns the random-key average, not a guarantee for every fixed key. Table2 reports the best pair (b4,67) with theoretical signed correlation -2^-7.66 and experimental -2^-7.64; neither is a repeated-trial decision-success rate. No per-point sample budget N, threshold or false-positive/false-negative distribution is specified. Keep signed correlation/theoretical support separate; do not relabel the correlation as a probability component or transfer a3-round experiment to other points."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "No author search or attack code executed; search runtime is not attack cost."
+  ],
+  "related_problem_ids": []
+}

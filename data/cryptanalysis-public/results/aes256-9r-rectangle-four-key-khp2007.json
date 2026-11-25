@@ -1,0 +1,113 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-9r-rectangle-four-key-khp2007",
+  "title": "KHP07 9-round AES-256 / aes256-9r-rectangle-four-key-khp2007",
+  "display": {
+    "name": "Related-key rectangle / four-key",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "khp07-9r-final-no-mc",
+    "description": "9 nonlinear AES rounds with the initial whitening addition and no final MixColumns. The recovered material is specified below.Output: whitening bytes 1,2,6,7,8,11,12,13 plus K8 bytes 0,4,8,12. Twelve subkey bytes, not a completed master key."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": 4,
+    "target_selection": "designated_target",
+    "key_relation": "Four unknown AES256keys form XORparallelogram: delta hasbyte16=byte20=a, delta-prime hasbytes0,4,8,12=a, all other master-key difference byteszero (Figures5–6).",
+    "key_population": "general secret key",
+    "plaintext_model": "Chosen plaintexts aggregated across the 4 source-related keys; individual data points retain source average accounting.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "related-key-rectangle",
+    "four-key"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^120",
+      "log2": 120,
+      "unit": "9-round-aes256-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^99",
+      "log2": 99,
+      "unit": "related-key-chosen-plaintext-queries",
+      "qualifier": "estimate",
+      "note": "Source headline aggregate over the required related-key oracles, not a per-key codebook."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical resource budget is supplied for this endpoint."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical resource budget is supplied for this endpoint."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "selected-subkey-identification",
+    "value": 0.9,
+    "description": "Author-reported probability 0.9 of identifying the stated subkey material, not full master-key recovery."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-95ab248a25672b7a-2007",
+      "locator": "PDF pp.3–4 round convention; pp.13–15 Section 5 and Figures 2,4–6, explicit recovered bytes and success.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining algorithm/accounting passages checked; partial outputs and native units retained."
+    },
+    {
+      "source_id": "aes-paper-95ab248a25672b7a-2007",
+      "locator": "Complete PDF1–17/printed225–241, Sections3–7 and figures/references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete endpoint/support inventory; no extra numeric attack points inferred from internal rectangle probabilities."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This record prices the stated endpoint; it does not append an unreported master-key completion budget."
+  ],
+  "related_problem_ids": []
+}

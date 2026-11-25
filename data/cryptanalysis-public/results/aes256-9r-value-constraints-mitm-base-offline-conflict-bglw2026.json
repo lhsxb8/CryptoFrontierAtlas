@@ -1,0 +1,203 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-9r-value-constraints-mitm-base-offline-conflict-bglw2026",
+  "title": "9-round AES-256 value-constraint DS-MITM, base table endpoint",
+  "display": {
+    "name": "Value-constraint MITM, base table",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "bglw2026-initial-k0-9-rounds-final-no-mixcolumns-equivalent-keys",
+    "description": "9-round AES-256, with initial K^0 whitening and the source's equivalent-key/inverse-MixColumns representation. Section 2 defines the final round without MixColumns. The procedure includes full master-key reconstruction and testing."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown AES master key; standard key schedule is used to join partial round-key guesses.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "2^40 chosen plaintexts in structures of 2^32 texts varying diagonal D3, with the other bytes fixed per structure",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Before the additional standard table-sampling tradeoff: 2^8 structures, four byte-difference constraints and 35 texts per partial delta-set.",
+      "Section 4.4 normalizes r-round encryption computation by 16r S-box evaluations, excluding key-schedule S-boxes from that baseline. Memory accesses to non-small/huge tables remain a separate cost coordinate.",
+      "The 32-byte filter leaves an expected 2^216 candidates, with sufficient combined round-key information to derive and test the full master key.",
+      "Candidate counts and matching costs use the author's average-case model; a whole-attack numerical success probability is not reported."
+    ]
+  },
+  "techniques": [
+    "demirci-selcuk-meet-in-the-middle",
+    "value-and-difference-constraints",
+    "nested-meet-in-the-middle",
+    "partial-delta-sets",
+    "key-schedule-constraints"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^222.7 Enc + 2^224 MA (online)",
+      "log2": null,
+      "unit": "9-round-encryption-equivalents + huge-table-memory-accesses",
+      "qualifier": "estimate",
+      "note": "Online costs only; offline construction is separately recorded as preprocessing. Enc and MA are independent coordinates, with no conversion or scalar exponent assigned. The 32-byte filter leaves an expected 2^216 candidates, with sufficient combined round-key information to derive and test the full master key."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^40",
+      "log2": 40,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Before the additional standard table-sampling tradeoff: 2^8 structures, four byte-difference constraints and 35 texts per partial delta-set."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^249.5",
+      "log2": 249.5,
+      "unit": "128-bit-state-equivalents",
+      "qualifier": "estimate",
+      "note": "Dominated by H: 44 bytes per entry (30-byte difference sequence plus 12+2 key bytes), normalized by 16 bytes per state; the final tradeoff samples the table."
+    },
+    "preprocessing": {
+      "status": "conflict",
+      "reported": "2^248.1 Enc (Section 7.2) / 2^248.4 Enc (Section 7.4); 2^248 MA",
+      "log2": null,
+      "unit": "9-round-encryption-equivalents + huge-table-memory-accesses",
+      "qualifier": "unspecified",
+      "note": "Section 7.2 p.20 derives approximately 2^248.1 Enc; p.23 instead says the base offline phase requires 2^248.4. Both are printed. The final 2^-8-tradeoff bullet list and Table 1 give 2^240.1 Enc. No author correction was located."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "full-master-key-recovery",
+    "value": null,
+    "description": "The source reports average candidates and final key tests, not numerical end-to-end full-master-key recovery success. Signature-match probabilities below describe the source average uniform-signature model only. Sampling a table and repeating online work are not certified independent trials. Whole-attack success remains unquantified; the separate terminal-MixColumns/key-schedule/setup obligations remain recorded.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-06",
+      "scope": "Exact28-page publisher edition; source-first attack-output and budget review, identical current PDF and bounded author/supplement discovery checked2026-11-06. No numerical whole-output probability or empirical denominator located. No probability was added; local components and target/key-schedule/resource conflicts remain. Not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "wrong-entry-lookup-signature-match-source-model",
+        "value": 8.636168555094445e-78,
+        "basis": "author_model",
+        "description": "Sections7.4: source expected-false-match arithmetic uses a32-byte signature, giving2^-256 per fixed unrelated online/offline entry comparison under its uniform-signature model. Not the probability of any false positive among all queries, nor correct-key success.",
+        "expression": "2^{-256}"
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bglw2026-practical-data-mitm-cic",
+      "locator": "pp.19-23 Sections 7.1-7.4, before the final 2^-8 tradeoff; p.20 versus p.23. p.9 Section 4.4 for computation model; pp.4-6 for round and tradeoff definitions.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Keeps online computation, offline construction and memory-access coordinates distinct. The listed memory is in 128-bit-state equivalents, not bytes. Full-key completion is explicitly part of the source's algorithm."
+    },
+    {
+      "source_id": "bglw2026-practical-data-mitm-cic",
+      "locator": "CompletePDF1–28, Sections1–7, Algorithms1–20 and references24–28.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    },
+    {
+      "source_id": "bglw2026-practical-data-mitm-cic",
+      "locator": "CompletePDF1–28, Sections1–7, Algorithms1–20 and references24–28.",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "The field-conflict observations identify the exact defining passages; complete-source review and independent local checks preserve the original costs."
+    },
+    {
+      "source_id": "bglw2026-practical-data-mitm-cic",
+      "locator": "PDF6 Section3.2; PDF22–23 Section7.4/Algorithms19–20,32-byte lookup signature and2^-8 sampling; existing terminal-round,constant and base-offline conflicts.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The source reports average candidates and final key tests, not numerical end-to-end full-master-key recovery success. Signature-match probabilities below describe the source average uniform-signature model only. Sampling a table and repeating online work are not certified independent trials. Existing terminal-MixColumns/key-schedule/setup obligations are preserved, so full recovery remains pending."
+    },
+    {
+      "source_id": "bglw2026-practical-data-mitm-cic",
+      "locator": "PDF3 Table1; PDF6 Section3.2; PDF10–14 Sections5.1–5.4, Algorithms1–6; PDF15–19 Sections6.1–6.4, Algorithms7–13; PDF19–23 Sections7.1–7.4, Algorithms14–20.",
+      "fields": [
+        "/success/review",
+        "/success/description"
+      ],
+      "interpretation": "Extraction-review scope only: the checked source does not quantify this exact main output at its recorded budget. This dated review supersedes earlier implications that independent non-success conflicts alone leave the numerical source-search task pending. All probability values, component events, source conflicts, costs and attack-correctness tasks are preserved. No probability was added and no scientific conflict was resolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Encryption-equivalent work and memory-access counts have different units and are not collapsed to one exponent.",
+    "All costs retain the source's average-case accounting; no attack code was executed.",
+    "The source contains a 248.1/248.4 exponent discrepancy in its base offline estimate; the explicit final endpoint is recorded separately.",
+    "Algorithm transcription task: Alg13/20 lists guessedbyte13 but later uses15; AES256 also has a Z8/Z9 line and Alg14 H2^160 versus Alg16 H2^248. These localized print observations do not supply a repaired algorithm or replacement costs.",
+    "Section7.4 prints a32*40 memory-access exponent where the acquisition narrative uses32+40; the separate dominant2^224 MA term and the explicitly reported endpoint remain unchanged.",
+    "Algorithm20 line13 labels InvS(K9[12] xor K1[12]) as equivalentKhat8[12], while the standard-schedule identity yields ordinaryK8[12]. Three independent valid-key contexts distinguish these values. Reconcile the local representation before claiming an implemented repair; source budgets remain unchanged."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/target/round_convention",
+      "label": "Final MixColumns convention",
+      "description": "Section2 defines the last round withoutMixColumns, but Figs2–4 and Algs4/10/17 invert a finalMixColumns and use equivalent-key coordinates. A consistent boundary or explicit transformation is required. The local representation check does not establish attack impossibility or a repaired budget.",
+      "observations": [
+        {
+          "source_id": "bglw2026-practical-data-mitm-cic",
+          "locator": "PDF4 Section2; Figs2–4; Algs4/10/17.",
+          "reported": "No-finalMC definition and inverse-finalMC online preprocessing coexist in the same edition."
+        },
+        {
+          "source_id": "bglw2026-practical-data-mitm-cic",
+          "locator": "PDF4,13,17,21; two raw-source reviewer component checks accepted2026-10-27.",
+          "reported": "Literal inverseMC(C) xor inverseMC(K) recovers Z for a fullMC terminal round, not for the printed noMC boundary without an accompanying transformation."
+        }
+      ]
+    },
+    {
+      "field": "/setting/key_relation",
+      "label": "Missing fixed key-schedule constant",
+      "description": "The printed K0[12] identity omits Rcon4=08 under the standard AES schedule. Its RHS is K0[12] xor08, while the adjacent K5(AES192)/K1(AES256) relation is retained. This is a local known additive constant, not a new search exponent or a K0/K1 relabelling. Source costs are unchanged.",
+      "observations": [
+        {
+          "source_id": "bglw2026-practical-data-mitm-cic",
+          "locator": "PDF21 Section7.3.",
+          "reported": "Printed K0[12] relation lacks the fixed08 term."
+        },
+        {
+          "source_id": "bglw2026-practical-data-mitm-cic",
+          "locator": "Standard-key word recurrence and independent valid-key controls accepted2026-10-27.",
+          "reported": "For each long-key schedule,64 valid-key controls have printedRHS xor K0[12]=08; word-recursion derivation identifies g4/Rcon4."
+        }
+      ]
+    }
+  ]
+}

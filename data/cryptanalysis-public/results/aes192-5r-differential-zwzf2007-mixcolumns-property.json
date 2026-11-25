@@ -1,0 +1,127 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-5r-differential-zwzf2007-mixcolumns-property",
+  "title": "5-round AES-192: Conditional MixColumns difference equality",
+  "display": {
+    "name": "Conditional MixColumns difference equality",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "zwzf2007-conditional-prefix-through-mixcolumns5",
+    "description": "Conditional property inside the first5 AES rounds, ending after MC5 before ARK5. The internal x1^M difference is the Section3 two-column pattern; this is not an unconditional five-round differential."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": 2,
+    "key_relation": "Two unknown AES-192 master keys K and K'=K XOR Delta, where Delta[0]=Delta[8]=a!=0 and the other22 bytes are0. Initial whitening is k0; round subkeys are k1,... .",
+    "key_population": "General unknown key pair with attacker-chosen nonzero a; b,c are actual key-dependent S-box output differences, not independently chosen subkeys.",
+    "plaintext_model": "Condition on Delta x1^M equal to(a,0,0,0) in columns2 and3 and zero elsewhere.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "related-key",
+    "differential",
+    "mixcolumns-equality"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-or-conditional-statistical-statement",
+    "value": null,
+    "description": "Parameters describe a structural identity or conditional random-elimination model."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "Printed p.25 Section6, MixColumns relation preceding the attack",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal",
+        "/property"
+      ],
+      "interpretation": "Complete original proceedings reviewed. Source-convention boundaries, total queries across the two keys, partial output and native accounting are kept explicit."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Independent local checks cover the AES key schedule and deterministic components. Full cryptanalytic searches, resource calibration and success rates have not been reproduced."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "Under the specified first-round internal difference, (Delta x5^M)[4]=(Delta x5^M)[5] holds deterministically.",
+    "quantifier": "For every internal pair and standard related-key schedule satisfying the input condition.",
+    "scope": "Before MC5, column1 has difference(0,0,0,N) with N!=0. Equal1 coefficients in the first two rows of the last MixColumns column yield equal nonzero outputs.",
+    "parameters": [
+      {
+        "name": "Equality probability",
+        "reported": "1",
+        "meaning": "Conditional on the first-round internal difference and Table2."
+      },
+      {
+        "name": "Constrained coordinates",
+        "reported": "Delta x5^M[4]=Delta x5^M[5]",
+        "meaning": "Two byte differences before AddRoundKey5."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Section6 proof and512 independent AES forward examples; the source's wrong-key2^-8 equality heuristic is distinct from this exact conditional identity."
+    }
+  }
+}

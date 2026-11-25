@@ -1,0 +1,221 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-6r-partial-sums-fft-dgklmm2024-two-structures-lowmemory",
+  "title": "Six-round AES partial-subkey recovery, low-memory packed FFT",
+  "display": {
+    "name": "Packed FFT, two structures, low memory",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "dgklmm2024-zero-based-rounds-0-to-5-final-no-mixcolumns",
+    "description": "Six-round AES with whitening key k^-1 and round keys k^0 through k^5. The procedure targets the 32-bit final-round subkey k^5 at indices 0,7,10,13, testing state bytes x^4 at indices 0,5,10,15. It also guesses equivalent penultimate-round bytes bar(k)^4 at indices 0,1,2,3, totaling 64 bits of candidate subkey material. This is not a full-master-key recovery budget."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown secret key; no related-key oracle or attacker-controlled subkey is required.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "two disjoint chosen-plaintext structures of 2^32 blocks, each varying bytes 0,5,10,15 over all values and fixing the other bytes",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Section 2.1 explicitly states that AES key-schedule properties are not used; the recorded round-subkey procedure applies to the three standard AES key lengths, without claiming recovery of their master keys.",
+      "Two structure checks are repeated at four state-byte positions, sharing the same four final-round key bytes but changing the equivalent penultimate-round byte.",
+      "The theoretical packed variant uses 64-bit arithmetic and probabilistic packing of several convolutions per word, with packing widths and transform reuse from Sections 3.2-3.3.",
+      "Wrong-key filtering estimates use the source's statistical model of parity indicators; a whole-attack numerical success probability is not supplied.",
+      "The first final-round byte is guessed externally, as in Algorithm 4; the recorded theoretical time scans its complete range, rather than applying the separate average-case early-termination factor."
+    ]
+  },
+  "techniques": [
+    "integral-square",
+    "partial-sums",
+    "fast-hadamard-transform",
+    "packed-word-convolution"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "82.5*2^40 approximately 2^46.4",
+      "log2": 46.4,
+      "unit": "64-bit-word-additions",
+      "qualifier": "estimate",
+      "note": "Section 3.3 reports the complete external-key-guess cost 82.5*2^40 approximately 2^46.4 additions. Its separate expected factor-of-two early-termination gain is not applied here. This is not an AES-encryption count or full-master-key budget. Published scalar unchanged; displayed-sum/summary mismatch unresolved. No reviewer-derived corrected headline. Split first step includes2^40 S-box evaluations plus(32/7)*2^40 additions under the source's operation-equivalence convention."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^33",
+      "log2": 33,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "The same two structures are reused for four state-byte tests; the data count is not multiplied by four."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^27",
+      "log2": 27,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Section 3.3 derives less than 2^34 bits and reports about 2^27 128-bit blocks for Algorithm 4. The source's exponent convention is retained; bits, bytes and blocks are not interchanged."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Algorithm 4 replaces the original first-step functions with a different indicator function. Its separate total setup budget is not given; the original Algorithm 3 estimate of 2^28 additions is not transferred to this variant."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "four-byte-final-round-subkey-recovery",
+    "value": null,
+    "description": "The source gives high-probability unique subkey filtering, but no numerical aggregate success for this exact structure/implementation choice. Integral validity, wrong-key elimination and packed-arithmetic errors are separate events. Neither six/two structures nor the implementation validation establishes a measured whole-attack probability. The native7/7/8/12 packing also needs lower-lane guard coefficients and their upstream inputs to be correct. New isolated-stage guard bounds retain those premises explicitly; they do not quantify the full pipeline.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "PDF6–9,14–22 and24–25 rechecked. Source intended-lane estimates do not by themselves control carry/borrow from other-key lanes in the eight-/twelve-lane implementation. Isolated exact-input guard-row/output bounds are derived separately. Upstream guard dependencies, multi-structure retention and unique selected-output success remain unquantified. Native costs, output, existing conflicts and all author local values are retained; no new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "correct-subkey-integral-predicate-acceptance",
+        "value": 1,
+        "basis": "source_proof",
+        "description": "Mathematical integral predicate of Lemma2 for a complete2^32-plaintext structure under the correct subkey, evaluated exactly. This is not unique recovery and does not include errors in packed arithmetic."
+      },
+      {
+        "metric": "packed-third-stage-right-key-parities-correct",
+        "value": 0.98,
+        "basis": "author_model",
+        "description": "Section3.2 gives Pr[96<b′<160]^256>0.98 for b′~Bin(256,1/2), separation s=6. This stage bound is not the complete attack success. This is the source intended-lane concentration estimate, not a bound including every lower packed guard lane and its upstream inputs. In the fastest implementation those other lanes can carry or borrow into the correct lane.",
+        "relation": ">"
+      },
+      {
+        "metric": "packed-fourth-stage-one-coefficient-in-range",
+        "value": 0.99,
+        "basis": "author_model",
+        "description": "Section3.2 gives Pr[48<b_j<80]>0.99 for one b_j~Bin(128,1/2). This is not simultaneous correctness of every coefficient, bit, key guess or structure.",
+        "relation": ">"
+      },
+      {
+        "metric": "third-stage-eight-lane-guarded-reference-row-model",
+        "value": null,
+        "basis": "derived_from_source",
+        "expression": "P_{\\mathrm{model}}\\ge 1-2^{11}q_{256}",
+        "description": "Isolated third-stage reference-input model, not pipeline retention. Let \\(q_{256}=\\Pr[B\\le96\\ \\mathrm{or}\\ B\\ge160]\\), \\(B\\sim\\mathrm{Bin}(256,1/2)\\). For one specified true-key A3 row, cover all256 desired output coefficients and up to8 packed lanes, including lower other-key lanes that may carry or borrow into the desired lane. Assume exact input arrays for EVERY guard lane and the source marginal binomial tail bounds on those reference coefficients. A union bound over at most2048 coefficients gives the displayed lower bound (approximately0.84424). With8 lanes, s=6 and n=16, the highest parity position42 is below64-n=48. This is an exact-input stage experiment with stated marginals, not a conditional-probability claim after earlier packed stages happen to succeed. No independence between coefficients is assumed. The source does not close the upstream guard-input dependencies; no six-/two-structure retention or unique subkey recovery follows."
+      },
+      {
+        "metric": "fourth-stage-twelve-lane-guarded-reference-output-model",
+        "value": null,
+        "basis": "derived_from_source",
+        "expression": "P_{\\mathrm{model}}\\ge 1-96q_{128}",
+        "description": "Isolated final-stage reference-input model, not pipeline retention. Let \\(q_{128}=\\Pr[B\\le48\\ \\mathrm{or}\\ B\\ge80]\\), \\(B\\sim\\mathrm{Bin}(128,1/2)\\). The fastest theoretical implementation packs12 different key-guess chi4 inputs for each of8 output-bit functions. For one specified correct k4 output, cover all96 relevant lane coefficients, including lower other-key lanes that may carry or borrow. Assume exact input arrays for EVERY guard lane and the source marginal binomial tail bounds on those reference coefficients. Their union gives the displayed lower bound (approximately0.43118), not the source single-coefficient >0.99 statement. With12 lanes, s=5 and n=8, the highest parity position55 is below64-n=56. This isolated exact-input model does not condition the marginal law on previous packed-stage success. It does not establish correctness of guard inputs, all structures, unique five-byte/four-byte recovery, or the full master key. No independence or experimental trial count is added."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dgklmm2024-partial-sums-fft-author",
+      "locator": "PDF p.5, Section 2.1; p.6, Section 2.2 and footnote 4; pp.7-9, Section 2.3, recovered subkeys and structure reuse.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting"
+      ],
+      "interpretation": "The source specifies zero-based round numbering, six rounds with final MixColumns omitted, a chosen-plaintext integral setting and selected subkey material. It uses no AES key-schedule properties; no full-master-key budget is inferred."
+    },
+    {
+      "source_id": "dgklmm2024-partial-sums-fft-author",
+      "locator": "PDF pp.14-20, packing and two-structure filtering; pp.20-22, alternative first step, Algorithm 4 and resource analysis; p.4, Table 2, own six-round AES row.",
+      "fields": [
+        "/resources",
+        "/techniques",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "This record isolates the stated structure-count, arithmetic and memory tradeoff. Time and storage retain the source's word-addition and 128-bit-block units. Numerical subkey-recovery success is absent; the result is not a security lower bound."
+    },
+    {
+      "source_id": "dgklmm2024-partial-sums-fft-author",
+      "locator": "PDF p.20 visually checked sum versus summary, p.22 propagation; reviewer bounded arithmetic script.",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "Source-internal discrepancy retained without changing the published scalar; this is not an independently corrected attack."
+    },
+    {
+      "source_id": "dgklmm2024-partial-sums-fft-author",
+      "locator": "Complete exact primary PDF1–41, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete reading and source inventory; later-literature gates and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "dgklmm2024-partial-sums-fft-author",
+      "locator": "PDF pp.6–11 Sections2.2–2.4, Lemma2 and Algorithm1–2; pp.16–22 Sections3.2–3.3; pp.40–41 AppendixD.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The source gives high-probability unique subkey filtering, but no numerical aggregate success for this exact structure/implementation choice. Integral validity, wrong-key elimination and packed-arithmetic errors are separate events. Neither six/two structures nor the implementation validation establishes a measured whole-attack probability."
+    },
+    {
+      "source_id": "dgklmm2024-partial-sums-fft-author",
+      "locator": "PDF14–18 Section3.2, especially p18 eight-way third-stage and twelve-chi4 final-stage packing; PDF19 optimized six-structure stage schedule; PDF20–22 two-structure and Algorithm4 variants; PDF25 different experimental packing. B67 guarded reference-input bounds.",
+      "fields": [
+        "/success/description",
+        "/success/review",
+        "/success/components"
+      ],
+      "interpretation": "Two derived isolated-stage bounds under explicit exact-reference-input and author marginal-binomial premises. Count all lower neighboring lanes, not only the right-key lane; use union bounds with no independent-lane assumption. The exact-input model is not a conditional marginal law after prior-stage success. Preserve primary unknown, all source probabilities, native7/7/8/12 packing costs and existing field conflicts. No runtime trial is treated as a success sample."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Only the explicitly analyzed round-subkey recovery is recorded; completing recovery of a full AES master key requires further analysis and costs not assigned here.",
+    "The theoretical packing parameters differ from the simpler 4/4/4/8 packing used in the source's timing experiments; the wall-clock measurements do not independently verify this exact arithmetic count.",
+    "The algorithms and complexity estimates were read but not independently executed; no current best-known or Pareto-frontier status is asserted.",
+    "Pinned Algorithm4 has six structures, five-byte output, separately timed data generation, and double FHT in steps1–3;48-minute report does not validate this theoretical two-structure/eight-byte point."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "Displayed sum versus printed summary",
+      "description": "The p.20 displayed summands total53*2^40, while its printed conclusion is62.8*2^40; p.22's82.5 propagates printed62.8 through six changed first steps. This is a source-accounting conflict, not a corrected full-attack budget. Retain published scalars pending reconciliation.",
+      "observations": [
+        {
+          "source_id": "dgklmm2024-partial-sums-fft-author",
+          "locator": "PDF p.20 displayed two-structure formula (visually checked).",
+          "reported": "(48/7+4+6)+(48/7+4+1)+(48/7+1+1)+(48/7+1)+(16/7+1)+(16/7+1)+1, sum53."
+        },
+        {
+          "source_id": "dgklmm2024-partial-sums-fft-author",
+          "locator": "PDF p.20 conclusion and p.22 low-memory summary.",
+          "reported": "62.8*2^40 approximately2^46;82.5*2^40 approximately2^46.4 additions."
+        }
+      ]
+    }
+  ]
+}

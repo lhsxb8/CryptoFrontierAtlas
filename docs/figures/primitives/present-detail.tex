@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+  \node[phase] at (6,4) {Substitution and bit permutation};
+  \node[accent,minimum width=12cm] at (6,2.7) {$\begin{array}{c|rrrrrrrrrrrrrrrr}
+    x&0&1&2&3&4&5&6&7&8&9&A&B&C&D&E&F\\\hline
+    S(x)&C&5&6&B&9&0&A&D&3&E&F&8&4&7&1&2
+  \end{array}$};
+  \node[box,minimum width=12cm] at (6,1.05) {Bit $i$ moves to $P(i)=16i\bmod63$ for $0\le i<63$; $P(63)=63$.};
+  \node[phase] at (6,-.1) {Key register: $\AtlasKeyBits$ bits; emit its leftmost $64$ bits before each update};
+  \node[box,minimum width=5.7cm] at (2.9,-1.9) {$80$-bit schedule\\Rotate register left by $61$\\Apply $S$ to bits $79{:}76$\\XOR round counter into $19{:}15$};
+  \node[box,minimum width=5.7cm] at (9.3,-1.9) {$128$-bit schedule\\Rotate register left by $61$\\Apply $S$ to $127{:}124$ and $123{:}120$\\XOR round counter into $66{:}62$};
+  \node[note] at (6,-3.5) {Hexadecimal S-box entries\quad State and key bits are indexed from the least significant bit, starting at zero.};
+\end{tikzpicture}

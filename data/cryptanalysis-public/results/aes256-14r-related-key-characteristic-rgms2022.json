@@ -1,0 +1,155 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-14r-related-key-characteristic-rgms2022",
+  "title": "256 14-round RGMS22: aes256-14r-related-key-characteristic-rgms2022",
+  "display": {
+    "name": "Related-key characteristic",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "rgms2022-table3-final-no-mc-last-subkey-sboxes-included",
+    "description": "Author-reported Rijndael-128-256 (standard AES dimensions) Table 3, 14 rounds. Section 2 states initial AddRoundKey and no final MixColumns; Tables 3/4 include last-round subkey S-boxes. Pinned source-code inspection reconciles printed schedule-indexing typos; no independent search reproduction."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": 2,
+    "target_selection": "designated_target",
+    "key_relation": "XOR-related master-key pair, with round-key differences constrained by the source AES/Rijndael key-schedule model.",
+    "key_population": "general secret key",
+    "plaintext_model": "Nontrivial related-key differential characteristics over source state and key-schedule differences; no attack-query budget is claimed.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source Markov/round-independence assumption is used for the multiplicative S-box characteristic weight.",
+      "o1 is the Step1 truncated-model lower bound; o2 counts active S-boxes in the maximum-weight instantiated characteristic, including state and key schedule.",
+      "Printed pseudocode/indexing inconsistencies were independently checked against pinned author AfricaCrypt22 commit5c76954038191d9d9b65bea7cbbda1c613b2ee3b and PhD-Core64511a3e87ab238bdc71ceaa74158d22a04df634; correct Nk-based/same-row recurrence and key-Sbox ranges occur in inspected code. Solver output/optimality not independently reproduced."
+    ]
+  },
+  "techniques": [
+    "related-key-characteristic",
+    "constraint-programming",
+    "state-and-key-schedule-weight"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural characteristic statement, not an online attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural characteristic statement, not an online attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural characteristic statement, not an online attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural characteristic statement, not an online attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "characteristic-property",
+    "value": null,
+    "description": "A characteristic probability/active-count statement, not attack success or distinguishing advantage."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-f68f129c6f3f3e99-2022",
+      "locator": "PDF pp.3–4 Section 2 round convention; pp.6–8 Section 3.2 and Algorithm 2; pp.12–13 Section 3.4 product-weight model; pp.16–18 results definitions and Table 3.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Primary table and defining text checked. Unknown costs are retained rather than preventing extraction."
+    },
+    {
+      "source_id": "aes-paper-f68f129c6f3f3e99-2022",
+      "locator": "Complete exact primary PDF1–26, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full reading and result inventory; bounded forward check and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "aes-paper-f68f129c6f3f3e99-2022",
+      "locator": "PDF4 Algorithm1; PDF8/13 Models1/3; PDF16–18/Table3; pinned AfricaCrypt22 commit5c76954038191d9d9b65bea7cbbda1c613b2ee3b sat/Rijndael.mzn48–58/130 and OptimizeForSatKt.kt145–179; PhD-Core64511a3e87ab238bdc71ceaa74158d22a04df634 Configuration.kt13.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/property"
+      ],
+      "interpretation": "Independent read-only code review resolves printed schedule recurrence/guard/range typos. No author code run, no upgraded independent optimality or actual differential-hull claim."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Tables 3/4 and Figure 1 use different last-subkey S-box accounting. The source cites AES-192 seven-round 2^-84 versus earlier 2^-78; this is a model-accounting change, not a same-model attack improvement. Pinned author-code inspection resolves the printed recurrence/range discrepancies as transcription/model-presentation issues; not a verified solver certificate."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "The reported 14-round AES-256 related-key characteristic has source-model maximum product weight p=2^-146 and o1=o2=24 active S-boxes across state and key schedule.",
+    "quantifier": "Optimization over the source nontrivial related-key byte-difference characteristic model, not maximum differential-hull probability or a per-fixed-key success guarantee.",
+    "scope": "Exactly Table 3 Clen=128,Klen=256,Nr=14. Search CPU seconds and 16GB RAM are experiment resources, not online attack costs.",
+    "parameters": [
+      {
+        "name": "o1_relaxed_active_count",
+        "reported": "24",
+        "meaning": "Minimum active count in Step1-opt truncated relaxation; attained by the reported characteristic in these selected rows."
+      },
+      {
+        "name": "o2_optimal_characteristic_active_count",
+        "reported": "24",
+        "meaning": "Active count of the maximum-product-weight byte-difference characteristic, not by definition a general minimum."
+      },
+      {
+        "name": "characteristic_probability",
+        "reported": "2^-146",
+        "meaning": "Single-characteristic multiplicative S-box weight including state and key expansion under the source Markov model."
+      }
+    ],
+    "validation": {
+      "basis": "analytical_and_reported_experiment",
+      "description": "Source reports analytical constraints and automatic search results. No solver or attack code was executed independently."
+    }
+  }
+}

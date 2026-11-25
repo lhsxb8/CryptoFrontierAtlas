@@ -1,0 +1,156 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-dfa-dlv2003-four-byte-known-location",
+  "title": "AES-256 four-byte last-round subkey recovery with known fault position (DLV2003)",
+  "display": {
+    "name": "Four-byte recovery, known position",
+    "method": "fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full 14-round AES-256. This endpoint recovers one affected 32-bit group (four bytes) of the final round key K_14, not the whole last-round key or master key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "paired-correct-and-faulty-encryption-outputs",
+      "single-byte-state-fault-injection"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret AES master key; no related-key oracle.",
+    "key_population": "All master keys in the stated attack model; no weak-key restriction is specified.",
+    "plaintext_model": "Each correct/faulty ciphertext pair encrypts the same possibly unknown plaintext under the same key. Repeatable paired execution is required.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "assumptions": [
+      "A useful fault affects one state byte in the specified late-round window, and paired correct/faulty outputs are available.",
+      "This record targets one four-byte subkey group; there is no extrapolation from that group to a complete key.",
+      "The approximately five-fault description is given in Section 3.1 and illustrated by Appendix A. It is not a worst-case bound."
+    ],
+    "fault_model": {
+      "target": "One byte of the AES encryption state, not a round-key schedule fault.",
+      "granularity": "One initial state byte; the byte error may involve several bits.",
+      "timing": "After MixColumns of round 12 and before MixColumns of round 13, using the paper's Nr-relative injection window.",
+      "location": "The faulty state-byte position is known and repeated faults target one four-byte final-round-key group. Faults need not cover the other columns for this partial endpoint.",
+      "value_control": "Random nonzero byte difference; the fault value is unknown. Multiple bits within that byte may change.",
+      "sample_pairing": "Observe a correct and a faulty output for the same input and key. A pair is not one ciphertext, and acquisition attempts are not counted.",
+      "evidence_scope": "analytical"
+    }
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "known-location",
+    "four-byte-subkey-recovery"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The abstract's few-minutes claim and introduction's PC implementation statement are not a per-variant benchmark; no complete time budget for this specific model/instance is tabulated."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "about 5",
+      "unit": "correct-faulty-ciphertext-pairs",
+      "log2": 2.321928094887362,
+      "qualifier": "estimate",
+      "note": "Section 3.1 p.297 and Appendix A p.305 describe five repeated useful faults to determine four bytes with known fault position. The full-key twenty-pair budget is a different endpoint."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical peak storage requirement is specified for the whole attack."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing cost is tabulated; algebraic candidate-set construction is described without a whole-attack preprocessing budget."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "four-byte-subkey-recovery-success-probability",
+    "value": null,
+    "description": "No numerical probability of recovering this exact partial_key_recovery output at the recorded data budget is supplied. Necessary true-key inclusion in the modeled differential-equation candidate sets is separate from unique recovery. The four-byte point is not recovery of the entire final round key. Section3.1 says roughly five faults for a four-byte group and about20 for the full basic attack, while Proposition7 gives heuristic11/9-type means. These are data estimates, not population probabilities.  The stored target remains only the last-round subkey or a four-byte group, not the AES192/256 master key; no additional key-schedule recovery success is borrowed.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit; preserves costs, targets, settings, existing conflicts and full-audit gates. Local author models and conditional candidate retention do not certify whole-output success."
+    },
+    "components": [
+      {
+        "metric": "true-subkey-in-modeled-fault-equation-candidates",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections3.1–3.2: for a genuine effective nonzero byte fault and the correct location (or the enumerated union of locations), the actual affected subkey bytes satisfy the differential equation and remain among its candidates. It is not uniqueness after five/nine/ten faults or a population recovery guarantee."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "ACNS2003 Section 3.1 p.297; Appendix A pp.303–305; Nr conventions pp.295–296",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The explicit four-byte endpoint is instantiated for each standard round count. The target remains partial subkey recovery for every key size; no full-key cost is inferred."
+    },
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "CompletePDF1–14/printed293–306: Sections3.1–3.3, Propositions1–7 and both worked appendices.",
+      "fields": [
+        "/assessment",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "All19existing endpoints checked in their own fault model and instance. Resource/success values preserved; algebraic components are inventoried separately. Longer-instance subkey targets are not relabelled as full master-key recovery."
+    },
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "Proceedings PDF4–5 / printed296–297 Section3/3.1; PDF6–11 / printed298–303 Sections3.2–3.3, Propositions1/6/7.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical probability of recovering this exact partial_key_recovery output at the recorded data budget is supplied. Necessary true-key inclusion in the modeled differential-equation candidate sets is separate from unique recovery. The four-byte point is not recovery of the entire final round key. Section3.1 says roughly five faults for a four-byte group and about20 for the full basic attack, while Proposition7 gives heuristic11/9-type means. These are data estimates, not population probabilities.  The stored target remains only the last-round subkey or a four-byte group, not the AES192/256 master key; no additional key-schedule recovery success is borrowed."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Only four bytes of the last round key are recovered; recovery of other subkey groups or complete master keys is outside this endpoint.",
+    "The useful-pair budget omits ineffective or misplaced physical injection attempts.",
+    "The article does not supply per-instance timing, peak memory or a numerical success probability for this partial endpoint."
+  ],
+  "related_problem_ids": []
+}

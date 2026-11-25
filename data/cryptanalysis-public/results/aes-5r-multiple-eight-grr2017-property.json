@@ -1,0 +1,142 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-5r-multiple-eight-grr2017-property",
+  "title": "GRR17 5-round AES Multiple-of-eight property",
+  "display": {
+    "name": "Multiple-of-eight property",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "grr2017-5r-final-no-mc",
+    "description": "Five nonlinear AES rounds with whitening and finalMC omitted; property also transports through the public final linear layer. Theorems1–3, not an attack-time statement."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key oracle.",
+    "key_population": "general secret key",
+    "plaintext_model": "Source-defined plaintext/ciphertext observations under the same key.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "value": null,
+    "metric": "structural-property",
+    "description": "Probability and counts belong to the mathematical statement, not attack success or resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-7a9a9302ef091e22-2017",
+      "locator": "PDF pp.7–10 round boundary/Theorem1; pp.14–15 inverse Theorem2/generalized Theorem3. Forward core proof PDF15–21 and generalized AppendixA PDF23–28; inverse proof deferred outside this edition.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Complete registered proceedings read and AES claim inventory checked2026-10-26; work-level gates remain open as specified in the audit receipt. Source claims and unresolved fields retain their original status."
+    },
+    {
+      "source_id": "aes-paper-7a9a9302ef091e22-2017-extended-dtu",
+      "locator": "PDF pp.9–13,17–18,23–28: formal forward spaces, Theorems 3–4 and core proof. PDF pp.31–32 / printed pp.29–30: Appendix A, Theorem 5 inverse proof sketch. PDF pp.33–38 / printed pp.31–36: Appendix B, forward D=2,3.",
+      "fields": [
+        "/property",
+        "/target",
+        "/setting",
+        "/limitations"
+      ],
+      "interpretation": "The separately hashed full version resolves the missing-appendix access and inventory task. The inverse theorem remains D=1 only and its source proof is a sketch. No new key-recovery attack or generalized attack-cost point."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Both the registered proceedings and the separately hashed extended version have been read. The inverse proof is a D=1 sketch; the forward D=1,2,3 generalization is inspected. Source cost and success approximations remain attached."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "Forward formal Theorems 3–4: for a complete diagonal coset with D active diagonals and 2^(32D) texts, D in {1,2,3}, the number of distinct unordered output pairs whose differences lie in fixed M_J (full final MixColumns), or ID_J (final MixColumns omitted), is divisible by 8. Inverse Theorem 5: for D=1 only, choose a complete M_I ciphertext coset for five full rounds, or the corresponding ID_I coset when final MixColumns is omitted. The returned-plaintext pair-difference count in D_J is divisible by 8.",
+    "quantifier": "For every secret key, all AES key lengths, arbitrary invertible byte S-box and branch-number-five MixColumns under the source round boundary.",
+    "scope": "Distinct unordered pairs, fixed chosen subspaces; the standard128-bit AES case, not a claim that every D has the same attack data.",
+    "parameters": [
+      {
+        "name": "D_active_diagonals",
+        "reported": "D in {1,2,3}; 2^(32D) texts",
+        "meaning": "Forward active input diagonals/coset size; inspected inverse Theorem2 only D=1."
+      },
+      {
+        "name": "d_zero_antidiagonals",
+        "reported": "d in {1,2,3}; n=0 mod8",
+        "meaning": "Number of fixed antidiagonals tested in the output difference."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "The complete forward main proof and generalized Appendix B were read, including whole-column-vector exchanges for D=2,3. Appendix A gives the inverse D=1 statement and proof sketch: it expands the two-unequal-variable case and refers the other cases to the forward proof. Empty classes contribute zero; variable-count nonemptiness assertions and the m<=3 wording are not used to establish the theorem or an exact 2-adic valuation. No author code or full attack reproduction."
+    }
+  }
+}

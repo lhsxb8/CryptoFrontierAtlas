@@ -1,0 +1,189 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-5r-consistent-patterns-ss2003",
+  "title": "SS03 5-round AES-128 Consistent-pattern key recovery",
+  "display": {
+    "name": "Consistent-pattern key recovery",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "ss2003-5r-final-no-mc",
+    "description": "Standard128-bit Rijndael block and128-bit key; 5 rounds, finalMC omitted. Recover full terminal round key, use backward key expansion and consistency checks to obtain the complete master key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key oracle.",
+    "key_population": "general secret key",
+    "plaintext_model": "One complete2^32-text source diagonal structure.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The wrong-byte acceptance probability1/256 implies an expected255/256 wrong byte survivors under the source heuristic, not at most2total byte candidates. Multiplying byte expectations also does not establish a deterministic full-key worst-case bound."
+    ]
+  },
+  "techniques": [
+    "consistent-differential-patterns",
+    "subkey-enumeration",
+    "key-schedule-consistency"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^34 + 2^16",
+      "log2": 34.00000550343433,
+      "unit": "5-round-source-encryption-estimate",
+      "qualifier": "estimate",
+      "note": "Source native work:2^44 S-box lookups plus5*2^16 ciphertext decryptions; published conversion gives2^34+2^16."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Exactly the source data choice for the stated time; lower data prose does not preserve this budget."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "conditional-source-model-full-key-recovery-lower-bound",
+    "value": null,
+    "expression": "\\ge 1-(2^{128}-1)2^{-256}",
+    "basis": "derived_from_source",
+    "description": "Section4.3 invokes Section4.2's reasoning for the final four second-round difference tests from five plaintexts. Under that author heuristic, any fixed wrong complete key passes with probability2^-256. A union bound over all2^128-1 wrong AES128 keys gives the displayed conditional full-key output-correctness lower bound; it does not use the disputed2^16 candidate cap and needs no independence between different wrong keys. Correct-key retention and backward key expansion are part of the source complete-enumeration algorithm. This verifies model attribution/derivation, not actual-AES independence or an executed recovery experiment. Complete survivor enumeration is required; no tail bound proves it fits the source native2^34+2^16 estimated work. Existing candidate-count and S-box conversion conflicts remain. The symbolic bound is strictly below1 and is not rounded to100%.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "PDF11 Section4.2 final false-key model and PDF11–12 Section4.3's explicit same-reason cross-reference, necessary retention and full terminal-key/backward-schedule completion rechecked. Derived a conservative all-key union bound, not a probability obtained by multiplying expected byte survivors. This is conditional model output correctness under complete enumeration and source-estimated work, not a fixed native-budget or actual-AES correctness certification. Both existing local components and scientific conflicts remain unchanged."
+    },
+    "components": [
+      {
+        "metric": "correct-candidate-retention-by-necessary-pattern",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Section4.3: a correct key satisfies the required consistent-difference/balanced pattern and is not rejected by that necessary-condition test, assuming exhaustive candidate enumeration. This does not prove unique identification or the stated finite work budget."
+      },
+      {
+        "metric": "wrong-byte-balanced-xor-acceptance-source-model",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "PDF11 Section4.3: a wrong fifth-round key byte yields zero byte-XOR with source probability1/256. The expected candidate count does not give a worst-case2^16 full-key enumeration bound."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-fc5f7ea80c518957-2003",
+      "locator": "PDF pp.2–3 Table1/128-bit scope; pp.11–12 Section4.3.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete registered proceedings read and AES claim inventory checked2026-10-26; bounded forward checks complete. Source claims and unresolved fields retain their original status."
+    },
+    {
+      "source_id": "aes-paper-fc5f7ea80c518957-2003",
+      "locator": "PDF9–14/printed157–162 Sections4.1–4.4; exact5-round candidate and verification paragraphs.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The exact5-round data/time endpoint has no reported numerical end-to-end master-key success. Correct-key retention by a necessary deterministic pattern is separate from uniqueness and expected work. Source accidental-pattern probabilities are heuristic wrong-key filters, not false-negative or recovery rates. The existing expected-candidate-versus-worst-case and native S-box conversion conflicts remain. No four-round verification rate is automatically copied to the different Pattern2 test."
+    },
+    {
+      "source_id": "aes-paper-fc5f7ea80c518957-2003",
+      "locator": "PDF5–14 / printed153–162, Sections3.2 and4.1–4.4; especially PDF11–14 selected endpoint tests and completion. Targeted success recheck2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Re-read PDF5–14 Sections3.2 and4.1–4.4. Five-round Section4.3 explicitly invokes Section4.2's final four-difference false-key argument; a conservative all2^128-key union bound gives conditional complete-output correctness under that source heuristic, without using the disputed2^16 worst-case candidate cap. Six rounds still lacks an assembled false-output distribution. Neither result gets a hard native-work-cap guarantee. Preserve expected-versus-worst-case and S-box conversion conflicts and both original components per endpoint."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Complete source inventory and bounded forward check retained. Source S-box/round conversion remains unresolved; the5r candidate worst-case bound is not established by the per-byte expectation. No replacement total cost is inferred."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "S-box lookup to round conversion",
+      "description": "Defining source equates2^44 S-box lookups with2^36 full-state one-round decryptions, a factor256; ordinary AES has16 state S-box evaluations per full round. Keep native work and source estimate without a normalized frontier claim.",
+      "observations": [
+        {
+          "source_id": "aes-paper-fc5f7ea80c518957-2003",
+          "locator": "PDF p.12 defining work.",
+          "reported": "2^44 S-box lookups."
+        },
+        {
+          "source_id": "aes-paper-fc5f7ea80c518957-2003",
+          "locator": "PDF p.12 conversion and Table1 PDFp2.",
+          "reported": "2^36 one-round decryptions, then 2^34+2^16 reduced encryptions."
+        }
+      ]
+    },
+    {
+      "field": "/resources/time",
+      "label": "Candidate-survivor worst-case bound",
+      "description": "Section4.3 calls about2^16 candidate keys a worst-case bound using less than two candidates per byte; the preceding1/256 wrong-byte acceptance only supplies an expectation. Retain the reported verification term without claiming a deterministic survivor bound or inventing a corrected total.",
+      "observations": [
+        {
+          "source_id": "aes-paper-fc5f7ea80c518957-2003",
+          "locator": "PDF11/printed159 Section4.3 wrong-byte filter.",
+          "reported": "Wrong-byte acceptance probability1/256 under the source random-output heuristic."
+        },
+        {
+          "source_id": "aes-paper-fc5f7ea80c518957-2003",
+          "locator": "PDF12/printed160 Section4.3 candidate-key enumeration.",
+          "reported": "Approximately2^16candidate fifth-round keys even in the worst case, based on less than two candidates per byte."
+        }
+      ]
+    }
+  ]
+}

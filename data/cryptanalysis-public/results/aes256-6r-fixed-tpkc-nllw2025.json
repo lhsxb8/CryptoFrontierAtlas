@@ -1,0 +1,113 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes256-6r-fixed-tpkc-nllw2025",
+  "title": "Fixed-TPKC",
+  "display": {
+    "name": "Fixed-TPKC",
+    "method": "rebound"
+  },
+  "result_kind": "collision_construction",
+  "goal": "key_collision",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "nllw2025-standard-reduced-final-no-mc",
+    "description": "6-round AES-256 with initial whitening and no final MixColumns; two distinct keys yield the same complete ciphertext for a predetermined plaintext."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "offline_public_cipher_evaluation"
+    ],
+    "related_key_count": null,
+    "key_relation": "Two distinct attacker-chosen master keys; no secret related-key oracle.",
+    "key_population": "General standard AES master keys",
+    "plaintext_model": "One predetermined common plaintext; published witnesses use the all-zero block.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "SAT characteristic search cost is not included in the reported attack work.",
+      "Work is expected collision-generation cost; component trail probabilities are not end-to-end success."
+    ]
+  },
+  "techniques": [
+    "bit-oriented-rebound",
+    "rebound-friendly-sat"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{60}",
+      "log2": 60,
+      "unit": "round-reduced-aes-encryptions",
+      "qualifier": "estimate",
+      "note": "Author expected-work estimate; no fixed-budget collision probability provided."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Offline public-cipher construction; no secret-key oracle data budget."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Table1 has a dash, not a numerical storage bound."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately quantified reusable setup."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "find-full-output-key-collision-for-source-plaintext-model",
+    "value": null,
+    "description": "The checked analysis gives an expected-work or filtering argument without a numeric probability for the complete named output event.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF pp.35–39 AppendixC/Figure16/Table12."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "nllw2025-practical-key-collision",
+      "locator": "PDF pp.35–39 AppendixC/Figure16/Table12.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/bound"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete named output probability is not quantified by the source."
+  ],
+  "related_problem_ids": []
+}

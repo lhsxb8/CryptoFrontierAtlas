@@ -1,0 +1,151 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-delta-equivalence-hss2008-property",
+  "title": "HSS08 10-round AES-128 Five-round internal-modification equivalence",
+  "display": {
+    "name": "Five-round internal-modification equivalence",
+    "method": "algebraic"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes-with-explicit-delta-comparison",
+    "description": "Full standard AES-128 is the reference computation. Compare it on the SAME(P,K) with deltaAES, whose already-expanded round keys receive20 individually computed byte XOR offsets in a five-consecutive-full-round window. This is not a collision between ordinary AES inputs or master keys."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "The delta algorithm takes the concrete plaintext P and known key K; offsets are applied AFTER ordinary key expansion, not obtained by a second related master key.",
+    "key_population": "Any source plaintext/key pair for which the delta construction computes valid offsets.",
+    "plaintext_model": "One concrete P,K is supplied to the delta algorithm, including intermediate-state computation. Every distinct(P,K) needs a new offset computation.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Twenty extra byte XORs afterARK: four positions in each of five rounds containing SB,SR,MC,ARK.",
+      "Exclude the final AES round withoutMC from each modification window.",
+      "If an offset choice produces dependent linear equation groups, retry initial offsets; source reports no such event in its large-sample experiments."
+    ]
+  },
+  "techniques": [
+    "algebraic-internal-modification-equivalence",
+    "plaintext-dependent-expanded-subkey-offsets"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "value": null,
+    "metric": "structural-property",
+    "description": "Probability and counts belong to the mathematical statement, not attack success or resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-9dde023f471d0560-2008",
+      "locator": "PDF pp.1–15 complete reading; pp.3–9 Section3.1, p.10 Remarks2–4/Section3.2, pp.10–11 Section4, pp.12–15 AppendicesA–B.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/property",
+        "/bound"
+      ],
+      "interpretation": "Complete primary and all equation appendices read. Twenty plaintext/key-dependent byte offsets apply after ordinary expansion; no related-master-key attack. Eight displayed fixed 2×2 systems have determinant04 in AES GF(256), a bounded local check rather than full algorithm reproduction."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The first four non-all-zero offsets have source cardinality2^32−1; the remaining16 are derived for each supplied(P,K). This is not a master-key class or attack tuning domain.",
+    "The original dependent-system retry qualification is retained. Local fixed-coefficient rank checks do not establish every layout/window or reproduce the full δ algorithm."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "For a fixed plaintext P and AES-128 key K, the source delta algorithm computes20 byte offsets at four positions afterARK in five consecutive FULL rounds includingMC. Applying them leaves the input to the following round unchanged, hence AES_K(P)=deltaAES_(K,delta(P,K))(P). Four layouts {0,2,8,10},{4,6,12,14},{1,3,9,11},{5,7,13,15} and windows starting at1..5 give20 layout/window choices. The first four non-all-zero offsets have2^32-1 initial choices; the other16 follow from the construction. This does not prove that every initial choice has independent linear systems.",
+    "quantifier": "Author construction for each supplied(P,K), with valid computed offsets and retries if the intermediate linear systems are dependent.",
+    "scope": "Equality between standardAES and explicitly internally modified deltaAES on the SAME input/key; not unknown-key recovery, a standard related-key relation, or a standardAES collision.",
+    "parameters": [
+      {
+        "name": "modified_bytes",
+        "reported": "20",
+        "meaning": "Extra byte XOR positions across the five modified rounds."
+      },
+      {
+        "name": "full_round_window",
+        "reported": "5",
+        "meaning": "Consecutive rounds, each including MixColumns."
+      },
+      {
+        "name": "layouts",
+        "reported": "4",
+        "meaning": "The four source sets of byte positions."
+      },
+      {
+        "name": "window_starts",
+        "reported": "5",
+        "meaning": "Allowed starts before the final no-MixColumns round."
+      },
+      {
+        "name": "layout_window_choices",
+        "reported": "20",
+        "meaning": "Position choices, not key classes or attack work."
+      },
+      {
+        "name": "initial_offset_choices",
+        "reported": "2^32 - 1",
+        "meaning": "Nonzero initial four-byte offset assignments, not attack time or master keys."
+      }
+    ],
+    "validation": {
+      "basis": "analytical_and_reported_experiment",
+      "description": "Full15-page source, all construction equations and appendices checked; all eight displayed coefficient matrices have nonzero determinant04. Source experimental claims remain attributed; the complete algorithm was not run."
+    }
+  }
+}

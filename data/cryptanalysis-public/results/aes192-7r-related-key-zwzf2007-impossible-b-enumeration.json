@@ -1,0 +1,193 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-related-key-zwzf2007-impossible-b-enumeration",
+  "title": "7-round AES-192: Impossible differential, b enumeration",
+  "display": {
+    "name": "Impossible differential, b enumeration",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "zwzf2007-whitening-k0-final-round-without-mixcolumns",
+    "description": "Standard AES-192 under the paper's round numbering: initial whitening k0, rounds1 onward; last MixColumns omitted for 7-round recovery variants. Eight whitening bytes1,2,6,7,8,11,12,13 and k7 byte3:72 bits of named subkey material. These are selected round-key values, not an independently priced complete192-bit master key."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related_key_chosen_plaintext_encryption"
+    ],
+    "related_key_count": 2,
+    "key_relation": "Two unknown AES-192 master keys K and K'=K XOR Delta, where Delta[0]=Delta[8]=a!=0 and the other22 bytes are0. Initial whitening is k0; round subkeys are k1,... .",
+    "key_population": "General unknown key pair with attacker-chosen nonzero a; b,c are actual key-dependent S-box output differences, not independently chosen subkeys.",
+    "plaintext_model": "Reuse the same two pools of2^51 plaintexts for127 feasible b hypotheses, approximated by2^7 repetitions.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source models pair filters and incorrect whitening-key eliminations probabilistically; those independence assumptions have not been proved for every AES key.",
+      "Named subkey bits may be dependent. No complete192-bit master-key recovery budget is supplied.",
+      "The source uses64 memory accesses per encryption equivalent; this is an accounting convention, not an independent implementation measurement.",
+      "a is chosen; b is enumerated over its127 feasible S-box differences, and c is not needed. Data and memory do not multiply by127."
+    ]
+  },
+  "techniques": [
+    "related-key",
+    "impossible-differential",
+    "wrong-key-elimination"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^80",
+      "log2": 80,
+      "unit": "zwzf2007-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Known-b phase is2^79 memory accesses≈2^73 encryptions;127-way b enumeration is charged only in the general endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^52",
+      "log2": 52,
+      "unit": "related-key-chosen-plaintext-blocks-total",
+      "qualifier": "estimate",
+      "note": "Total plaintext-block encryption queries across exactly2 related keys, not a per-key budget."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^69 bytes",
+      "log2": 69,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Author-reported memory; do not reinterpret the exponent as128-bit blocks."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^62",
+      "log2": 62,
+      "unit": "zwzf2007-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Section4 plaintext-pair table; depends on chosen a and is reused across b hypotheses."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "source-model-unique-partial-subkey-lower-bound",
+    "value": null,
+    "description": "The complete72-bit partial-subkey output is tested over all2^8 terminal guesses and127 feasible b hypotheses. Applying the source wrong-whitening survival model in every trial yields E_model W <= 127*2^72 exp(-64), not the per-list expectation alone. The actual b trial preserves the true output; cross-trial independence is not needed by the final first-moment step. Existing2^52 queries,2^80 processing time and2^69 bytes are retained. The existing per-bin versus aggregate pair-count conflict is not resolved; the bound is conditional on the source subsequent aggregate-count interpretation. Derived first-moment lower bound within the source random-filter model for a unique correct complete stated partial-subkey output. It is not an author-printed aggregate percentage, an experimental rate, or a proved actual-AES success probability; no full master-key recovery is asserted. Correct-tuple retention plus P_model(W>=1)<=E_model W supplies the implication without independence between different wrong tuples or auxiliary trials. The repeated-filter uniformity/independence assumptions are inherited from the source; the source also substitutes mean retained-pair counts for random counts, which is not justified as an actual-cipher upper bound by this audit.",
+    "components": [
+      {
+        "metric": "true-candidate-retained-under-intended-difference-conditions",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections3–5: with the actual schedule differences and the intended Delta-w conditions, the correct tuple survives the impossible test. This conditional identity does not validate the already disputed literal omitted-Delta notation or guarantee uniqueness."
+      },
+      {
+        "metric": "three-byte-hash-filter",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "expression": "2^{-24}",
+        "description": "Section4.1 Step4: source24-bit pair-filter model. Preserve the existing per-bin versus aggregate-count conflict."
+      },
+      {
+        "metric": "additional-byte-filter-given-terminal-guess",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "Section4.1 Step5c: source additional8-bit filter for a fixed terminal-byte hypothesis."
+      },
+      {
+        "metric": "one-fixed-wrong-whitening-candidate-survives-source-model",
+        "value": 1.603810890548638e-28,
+        "basis": "author_model",
+        "expression": "(1-2^{-64})^{2^{70}}",
+        "description": "Section4.2 uniform-elimination model for one fixed wrong64-bit whitening candidate after2^70 useful pairs. The source expected count2^64 times this curve is rounded toexp(-20); it is not joint72-bit recovery success."
+      }
+    ],
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Verified exact-edition source extraction, full stored-output and same-budget loop mapping, right-candidate retention and first-moment arithmetic. Independent source-first and endpoint review. This verifies the conditional model inference, not actual-cipher random-filter assumptions, mean-count substitution, attack reproduction or a new full-paper audit."
+    },
+    "basis": "derived_from_source",
+    "expression": "P_{\\mathrm{model}}\\ge 1-127\\cdot2^{72}e^{-64}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "Printed p.21 Section4.2,127 possible b values and final summary; p.16 Table1",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete original proceedings reviewed. Source-convention boundaries, total queries across the two keys, partial output and native accounting are kept explicit."
+    },
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "Proceedings PDF6–7 / printed20–21 Sections4.1–4.2, pair filtering, uniform-elimination model and127 b hypotheses.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical success is supplied for this72-bit selected-subkey output. The127 feasible b hypotheses multiply time, not an independent collection of attacks or a new-key acquisition probability. The source small expected wrong-list count and high-probability wording are retained without an invented recovery scalar; the existing aggregate-versus-per-bin conflict remains."
+    },
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "PDF6–7 / printed20–21 Sections4.1–4.2; PDF9–11 / printed23–25 Section5.2, especially PDF10 first/second attacks.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: no numerical success is established for this exact output and budget in the checked passages. No primary probability was added; existing primary probabilities, local components, costs, targets, settings and all scientific conflicts are unchanged. No scientific conflict was resolved."
+    },
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "PDF6–7 / printed20–21, Sections4.1–4.2, all2^8 terminal guesses and127 feasible b hypotheses; source cost2^80.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Aggregate lower bound derived within the source model, retaining the existing exact output, conditions, resource assignment and all scientific conflicts. The inequality applies to the model, not to the real cipher without proving the source assumptions."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Independent local checks cover the AES key schedule and deterministic components. Full cryptanalytic searches, resource calibration and success rates have not been reproduced."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/plaintext_model",
+      "label": "Per-bin versus aggregate pair count",
+      "description": "Section4.2 says2^-24*m^2 pairs remain in each bin after a24-bit hash. Under its uniform model this is the aggregate matching count over all bins; one specified bin has expected m^2/2^48 pairs. The subsequent2^-32*m^2 calculation uses the aggregate interpretation.",
+      "observations": [
+        {
+          "source_id": "zwzf2007-related-key-proceedings",
+          "locator": "Printed p.20 Section4.1 Step4",
+          "reported": "Both ciphertext pools are hashed on three bytes6,9,12, a24-bit index."
+        },
+        {
+          "source_id": "zwzf2007-related-key-proceedings",
+          "locator": "Printed p.21 Section4.2 opening paragraph",
+          "reported": "Text says2^-24*m^2 in each bin, then2^-32*m^2 after an additional8-bit test."
+        }
+      ]
+    }
+  ]
+}

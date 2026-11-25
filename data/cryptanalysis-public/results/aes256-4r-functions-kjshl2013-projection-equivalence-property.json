@@ -1,0 +1,187 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-4r-functions-kjshl2013-projection-equivalence-property",
+  "title": "4-round AES-256: projected equality and finite-sample filter",
+  "display": {
+    "name": "Projected equality and finite-sample filter",
+    "method": "collision"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "kjshl2013-inner-rounds-with-mixcolumns-standard-left-shiftrows",
+    "description": "AES-256: rounds2–5 map I2 to O5; each internal round includes MixColumns and standard left ShiftRows. The article explicitly targets AES-192/256."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_analysis_no_attack_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "Four fixed, unknown round keys. Master-key dependencies are not used in the component argument.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "Fix the12 bytes outside column0 of I2. The active function input is I2_00; (I2_10,I2_20,I2_30) is a three-byte parameter.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Birthday collision estimates assume random-like32-bit internal tuples; the approximate0.5 source estimate is distinct from exact distinguishing advantage."
+    ]
+  },
+  "techniques": [
+    "collision-of-functions",
+    "inverse-mixcolumns-projection"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "component-relation-not-attack-success",
+    "value": null,
+    "description": "The property parameters and quantified relation are recorded separately from attack success and resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "kjshl2013-collision-spn-journal",
+      "locator": "Article pp.3–4 Section2.2 Equations(4)–(5),25-value argument",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property",
+        "/field_conflicts"
+      ],
+      "interpretation": "Original article read in full; printed pages3–5 checked visually. Native costs, output scope and documented discrepancies retained."
+    },
+    {
+      "source_id": "kjshl2013-collision-spn-journal",
+      "locator": "PDF4 Section2.2 false-match paragraph and Steps3–4 search scope.",
+      "fields": [
+        "/setting",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact primary passage checked in the full-audit batch; source claims and reviewer component checks are separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Full attack search, total complexity and success probability are not independently reproduced. Component identity checks are documented separately.",
+    "Full exact-edition inventory checked; numerical attack execution is not claimed."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "Under a common fixed round5 key, equality of I5_00 is equivalent to equality of the inverse-MixColumns projection of column0 of O5. The source uses25 active-input values as a heuristic wrong-key filter.",
+    "quantifier": "The pointwise equality equivalence holds for each input pair under the same key. Extending25 sampled matches to function equality relies on the paper's independent wrong-key model; it is not a deterministic implication.",
+    "scope": "Four internal rounds2–5. Equation(5)'s absolute equality to Sbox(I5_00) omits a fixed key offset present in Equation(4); that offset cancels in a same-key pairwise comparison.",
+    "parameters": [
+      {
+        "name": "Projection coefficients",
+        "reported": "0E,0B,0D,09",
+        "meaning": "First row of inverse MixColumns applied to output column0."
+      },
+      {
+        "name": "Filter length",
+        "reported": "25 active-input values",
+        "meaning": "Twenty-five, not2^25; used in the selected-round-key search."
+      },
+      {
+        "name": "Wrong-candidate match",
+        "reported": "(2^-8)^25 =2^-200",
+        "meaning": "Source independence heuristic for one192-bit round-key guess, not an attack-success probability."
+      },
+      {
+        "name": "Nominal candidate multiplier",
+        "reported": "2^192 *2^-200",
+        "meaning": "The source's false-match argument for192 guessed round-key bits; no new population success estimate is inferred."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Local independent AES checks verify the offset-corrected projection and Equation(6) inversion for64 samples. With sequential-byte keys and zero I5, raw projections are be/cd while Sbox(00)=63; the missing offsets are dd/ae for AES-192/256. This checks component identities only."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property/statement",
+      "label": "Projection key offset",
+      "description": "Equation(4) retains the transformed round5 key, while Equation(5) equates the raw output projection directly with Sbox(I5_00). Pairwise equality under the same key survives because the fixed offset cancels.",
+      "observations": [
+        {
+          "source_id": "kjshl2013-collision-spn-journal",
+          "locator": "Article p.3 Equation(4)",
+          "reported": "Sbox(I5) equals the transformed output XOR the transformed round5 key."
+        },
+        {
+          "source_id": "kjshl2013-collision-spn-journal",
+          "locator": "Article p.3 Equation(5)",
+          "reported": "The displayed absolute equality to Sbox(I5_00) contains no round5 key offset."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "Search-wide key-pair witness multiplicity",
+      "description": "Printed2^192*2^-200 covers one fixed pair of structures. If all unordered pairs among2^16 structures are searched, under that same per-key/per-fixed-pair2^-200 model the expected wrong-key/pair witness count is2^192*C(2^16,2)*2^-200=8,388,480 (log2≈23), not2^-8. This is neither a distinct-wrong-key count nor an actual AES false-positive probability; its expectation alone does not establish high error probability. No corrected whole-attack success/time is inferred.",
+      "observations": [
+        {
+          "source_id": "kjshl2013-collision-spn-journal",
+          "locator": "PDF4 Section2.2 false-match paragraph.",
+          "reported": "25-input2^-200 and192-bit guesses yield2^-8."
+        },
+        {
+          "source_id": "kjshl2013-collision-spn-journal",
+          "locator": "PDF4 Steps3–4.",
+          "reported": "2^16 structures; choose two distinct structures for the collision search."
+        }
+      ]
+    }
+  ]
+}

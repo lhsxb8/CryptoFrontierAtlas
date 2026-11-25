@@ -1,0 +1,214 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-8r-single-chosen-key-streamed-dfj2012",
+  "title": "DFJ12 8-round AES-128 / aes128-8r-single-chosen-key-streamed-dfj2012",
+  "display": {
+    "name": "Single-chosen-key rebound / streamed",
+    "method": "rebound"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "dfj2012-8r-source-linear-output",
+    "description": "8 nonlinear AES-128 rounds; Figures 4/9 include the final public linear output map and the subspace condition is transported through it. Figure 1/source Section 2 use AK before SB. This pair-finding endpoint is not unknown-master-key recovery."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "public_chosen_key_permutation_evaluation"
+    ],
+    "related_key_count": null,
+    "target_selection": "attacker_selected_pair",
+    "key_relation": "One freely chosen AES-128 master key used for BOTH messages. No key difference or related-key oracle; the key schedule is standard.",
+    "key_population": "attacker-chosen valid standard AES-128 key",
+    "plaintext_model": "Construct (m,m-prime,k) such that m XOR m-prime lies in the prescribed four-byte-dimensional input subspace and the ciphertext difference lies in the prescribed four-byte-dimensional output subspace.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The adversary chooses one key; not a fixed known-key game and not a secret-key recovery game.",
+      "Reduced-round source uses AK before SB and a public linear terminal map. The finite AppendixA witness matches with terminalMC and finalARK; the AppendixB absolute End row has a separate local discrepancy, while its output difference matches."
+    ],
+    "reference_model": "Single-chosen-key limited-birthday restricted-pair construction versus an ideal keyed permutation; source generic comparator 2^64 basic operations."
+  },
+  "techniques": [
+    "rebound",
+    "chosen-single-key",
+    "list-intersections",
+    "keyed-supersbox",
+    "list-merging"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^24",
+      "log2": 24,
+      "unit": "basic-operations",
+      "qualifier": "estimate",
+      "note": "Native construction/list cost, not AES encryption equivalents."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical resource amount supplied for this endpoint."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^16",
+      "log2": 16,
+      "unit": "source-native-storage-units",
+      "qualifier": "estimate",
+      "note": "Source headline/native list storage exponent; no total byte or AES-block width specified."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical resource amount supplied for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "distinguishing-success",
+    "value": null,
+    "description": "No numerical overall success is stated for this eight-round streamed AES128 endpoint. The source builds2^24 middle candidates and expects one to pass the2^-24 outbound model; no Poisson hit rate is inferred. Preserve its own resource vector and the existing AppendixB absolute terminal-state witness conflict. The seven-round greater-than99.96% list claim is not borrowed for this different construction. Streaming changes storage, not the success event.",
+    "components": [
+      {
+        "metric": "list-L0-one-byte-key-consistency-given-L3",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "Section3.3: one fixed candidate of L0 passes the byte k4[0] consistency test imposed by a selected L3 element in the source list model."
+      },
+      {
+        "metric": "list-L1-one-byte-key-consistency-given-joined-state",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "Section3.3: one fixed candidate of L1 passes the byte k4[5] consistency test imposed by L0,3. The source expected2^8 matches do not guarantee a nonempty list."
+      },
+      {
+        "metric": "list-L2-two-byte-consistency-given-joined-state",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "Section3.3 Equations10–11: one fixed L2 candidate meets the two named byte conditions for one L0,1,3 element under the source list model.2^16 candidates give expected one match, not guaranteed uniqueness."
+      },
+      {
+        "metric": "backward-four-to-one-mixcolumns-given-valid-middle",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "expression": "2^{-24}",
+        "description": "Section3.3: a valid middle solution passes the source backward4-to-1 MixColumns condition with modeled probability2^-24. This does not establish independence among2^24 constructed candidates."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Re-read PDF6–16 Sections3.1–4.3 and PDF18–19 AppendicesA–C. Section3.3 constructs2^24 middle candidates and expects one outbound hit at per-candidate model2^-24, without a joint hit/list/restart distribution or repeated-trial whole-success measurement. Shared candidate construction does not justify an iid Poisson conversion. AppendixC explicitly analyzes seven-round Section3.2, not these eight-round AES128 storage variants. Preserve each native cost vector, all four local components per endpoint and the existing absolute-End witness conflict."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-c979e91b0b19fd75-2012",
+      "locator": "PDF pp.2–6 model/Table 1; pp.10–14 Section 3.3 initial 2^24-memory lists, final factor-2^8 streaming/hash optimization.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Targeted primary result statements and accounting checked; not a complete-paper proof audit."
+    },
+    {
+      "source_id": "aes-paper-c979e91b0b19fd75-2012",
+      "locator": "Complete PDF1–19 / printed225–243; Sections2–4, AppendixA/B PDF18, AppendixC PDF19 and allreferences.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-primary inventory: six configurations. Independent finite FIPS/witness and recurrence checks are component validation, not attack execution. Generic limited-birthday reference cost is not attack data; native list memory is not automatically bytes."
+    },
+    {
+      "source_id": "aes-paper-c979e91b0b19fd75-2012",
+      "locator": "PDF18 / printed242, AppendixB Table3 caption and rows Init,0–7.",
+      "fields": [
+        "/target/description",
+        "/field_conflicts"
+      ],
+      "interpretation": "Located source observation retained with independently reviewed local conflict; no replacement of original scalar or whole-attack refutation."
+    },
+    {
+      "source_id": "aes-paper-c979e91b0b19fd75-2012",
+      "locator": "PDF18 / printed242, AppendixB Table3 End row.",
+      "fields": [
+        "/target/description",
+        "/field_conflicts"
+      ],
+      "interpretation": "Located source observation retained with independently reviewed local conflict; no replacement of original scalar or whole-attack refutation."
+    },
+    {
+      "source_id": "aes-paper-c979e91b0b19fd75-2012",
+      "locator": "Proceedings PDF10–14 / printed234–238 Section3.3, Equations3–11, list joins, outward filter and materialized/streamed memory variants; PDF18 AppendixB witness remains disputed.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical overall success is stated for this eight-round streamed AES128 endpoint. The source builds2^24 middle candidates and expects one to pass the2^-24 outbound model; no Poisson hit rate is inferred. Preserve its own resource vector and the existing AppendixB absolute terminal-state witness conflict. The seven-round greater-than99.96% list claim is not borrowed for this different construction. Streaming changes storage, not the success event."
+    },
+    {
+      "source_id": "aes-paper-c979e91b0b19fd75-2012",
+      "locator": "PDF10–14 / printed234–238, Section3.3, Problem1 and final outbound test; PDF18–19 / printed242–243, AppendicesA–C and its explicit Section3.2 scope. Targeted success recheck2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Re-read PDF6–16 Sections3.1–4.3 and PDF18–19 AppendicesA–C. Section3.3 constructs2^24 middle candidates and expects one outbound hit at per-candidate model2^-24, without a joint hit/list/restart distribution or repeated-trial whole-success measurement. Shared candidate construction does not justify an iid Poisson conversion. AppendixC explicitly analyzes seven-round Section3.2, not these eight-round AES128 storage variants. Preserve each native cost vector, all four local components per endpoint and the existing absolute-End witness conflict."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Overall distinguishing-game success is not numerically reported. Internal list nonemptiness uses an iid-uniform model; list storage counts outside the seven-round AES128 byte estimate have unspecified item widths."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/target/description",
+      "label": "Appendix B absolute terminal-state witness",
+      "description": "Independent FIPS-checked finite AES evaluation agrees with all16 preterminal state values and the displayed output XOR, but neither the present/absent terminalMixColumns nor present/absent finalAddRoundKey combinations reproduce both printed absolute End values for the given masterkey. The two End values have a common XOR offset, so the differential witness remains consistent. Retain the source End row without silently replacing it; this does not establish a wrong attack complexity.",
+      "observations": [
+        {
+          "source_id": "aes-paper-c979e91b0b19fd75-2012",
+          "locator": "PDF18 / printed242, AppendixB Table3 caption and rows Init,0–7.",
+          "reported": "Masterkey98C456236CA00686301E836D614DFAB0 and the two printed inputs determine all source preterminal rows."
+        },
+        {
+          "source_id": "aes-paper-c979e91b0b19fd75-2012",
+          "locator": "PDF18 / printed242, AppendixB Table3 End row.",
+          "reported": "End16E58308DFD78F11A8B05B9DC0A0363E and E49CFA83D4DC9207FC4CF3C99B3BF6FE; XORF279798B0B0B1D1654FCA8545B9BC0C0."
+        }
+      ]
+    }
+  ]
+}

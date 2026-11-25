@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+  \node[box] (in) at (0,0) {$P=(X_0,X_1,X_2,X_3)$\\$\AtlasBlockBits$ bits};
+  \node[accent,minimum width=4.5cm] (rounds) at (5.1,0) {$X_{i+4}=X_i\oplus T(X_{i+1}\oplus X_{i+2}$\\$\phantom{X_{i+4}={}}\oplus X_{i+3}\oplus rk_i)$};
+  \node[box] (reverse) at (9.7,0) {Reverse word order\\$C=(X_{35},X_{34},X_{33},X_{32})$};
+  \draw[wire] (in) -- (rounds); \draw[wire] (rounds) -- (reverse);
+  \node[box] (schedule) at (5.1,2) {$\AtlasKeyBits$-bit key $\to$ key expansion};
+  \draw[keywire] (schedule) -- node[right,note] {$rk_0,\ldots,rk_{\AtlasPriorRounds}$} (rounds);
+  \node[note] at (5,-1.3) {$i=0,\ldots,\AtlasPriorRounds$; $\AtlasRounds$ rounds\qquad Four $32$-bit words\qquad $T=L\circ\tau$};
+  \node[note] at (5,-1.9) {Decryption uses the same structure with the round keys in reverse order.};
+\end{tikzpicture}

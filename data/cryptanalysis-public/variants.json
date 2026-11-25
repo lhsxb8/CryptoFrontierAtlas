@@ -1,0 +1,98 @@
+[
+  {
+    "id": "aes-128",
+    "family": "aes",
+    "key_bits": 128,
+    "block_bits": 128,
+    "full_rounds": 10,
+    "specification_source": "nist-fips197-upd1"
+  },
+  {
+    "id": "aes-192",
+    "family": "aes",
+    "key_bits": 192,
+    "block_bits": 128,
+    "full_rounds": 12,
+    "specification_source": "nist-fips197-upd1"
+  },
+  {
+    "id": "aes-256",
+    "family": "aes",
+    "key_bits": 256,
+    "block_bits": 128,
+    "full_rounds": 14,
+    "specification_source": "nist-fips197-upd1"
+  },
+  {
+    "id": "aes-128-secret-sbox",
+    "name": "AES-128 with secret S-box",
+    "family": "aes",
+    "key_bits": 128,
+    "block_bits": 128,
+    "full_rounds": 10,
+    "specification_source": "aes-paper-e9db95c2f7469e08-2017"
+  },
+  {
+    "id": "aes-ind-8r",
+    "name": "AES-IND (8 rounds, independent round keys)",
+    "family": "aes",
+    "key_bits": 1152,
+    "block_bits": 128,
+    "full_rounds": 8,
+    "specification_source": "dks2015-single-key-journal"
+  },
+  {
+    "id": "aes-ind-40r",
+    "name": "AES-IND (40 rounds, independent round keys)",
+    "family": "aes",
+    "key_bits": 5248,
+    "block_bits": 128,
+    "full_rounds": 40,
+    "specification_source": "dinur2026-differentials-proceedings"
+  },
+  {
+    "id": "aes-128-secret-sbox-secret-mc-mds",
+    "name": "AES-structured128-bit key, secret S-box and secret MDS MixColumns",
+    "family": "aes",
+    "key_bits": 128,
+    "block_bits": 128,
+    "full_rounds": 10,
+    "specification_source": "dkrs2024-retracing-boomerang-journal"
+  },
+  {
+    "id": "aes-ind-10r",
+    "name": "AES-IND (10 rounds, independent round keys)",
+    "family": "aes",
+    "key_bits": 1408,
+    "block_bits": 128,
+    "full_rounds": 10,
+    "specification_source": "gilbert2014-simplified-aes-conference"
+  },
+  {
+    "id": "aes-ind-20r",
+    "name": "AES-IND (20 rounds, independent round keys)",
+    "family": "aes",
+    "key_bits": 2688,
+    "block_bits": 128,
+    "full_rounds": 20,
+    "specification_source": "beyne-leander-schutt2026-pairwise-proceedings"
+  },
+  {
+    "id": "aes-ind-9r",
+    "name": "AES-IND (9 rounds, independent round keys)",
+    "family": "aes",
+    "key_bits": 1280,
+    "block_bits": 128,
+    "full_rounds": 9,
+    "specification_source": "gr2017-known-key-limits"
+  },
+  {
+    "id": "aes-ind-12r",
+    "name": "AES-IND (12 rounds, independent round keys)",
+    "family": "aes",
+    "key_bits": 1664,
+    "block_bits": 128,
+    "full_rounds": 12,
+    "specification_source": "gr2017-known-key-limits"
+  }
+]

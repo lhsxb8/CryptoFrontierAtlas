@@ -1,0 +1,197 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-dfa-pq2003-one-late-fault-four-byte-candidates",
+  "title": "AES-128 One late fault: four-byte candidate space (Piret–Quisquater 2003)",
+  "display": {
+    "name": "One late fault: four-byte candidate space",
+    "method": "fault"
+  },
+  "result_kind": "key_space_reduction",
+  "goal": "candidate_reduction",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full ten-round AES-128. One late single-byte state fault constrains a 32-bit group of final-round-key bytes; the remaining 96 last-round-key bits are not recovered by this observation."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "paired-correct-and-faulty-encryption-outputs",
+      "single-byte-state-fault-injection"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unchanged secret AES-128 master key; no related-key or key-schedule-fault oracle.",
+    "key_population": "AES-128 keys in the stated unprotected single-byte-fault model; no weak-key restriction.",
+    "plaintext_model": "A correct ciphertext and its faulty counterpart for each plaintext; different pairs may use different plaintexts. The source's algorithm associates every pair with the same key.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "A byte of the AES encryption state; faults in the key schedule are outside this result.",
+      "granularity": "One initial byte with an unknown nonzero difference; later diffusion may change four or sixteen state bytes.",
+      "timing": "After the round-8 diffusion layer and before the round-9 diffusion layer (theta_(R−2) to theta_(R−1)); the source's theta is ShiftRows followed by MixColumns.",
+      "location": "Faults must supply the required affected four-byte last-round-key group. The precise faulty byte inside the permitted position class is unknown.",
+      "value_control": "The faulty byte value is random and assumed uniformly distributed; no chosen difference or bit-level fault control.",
+      "sample_pairing": "Every faulty ciphertext has its correct counterpart for the same plaintext and key; useful pairs are distinguished from total injection attempts.",
+      "evidence_scope": "software_experiment"
+    },
+    "assumptions": [
+      "Only correct/faulty output pairs satisfying the stated single-byte model and timing window are counted.",
+      "The last-round-key candidate set is computed from differential constraints, and any remaining candidates require a separate check.",
+      "The paper instantiates and tests the 128-bit-block, 128-bit-key variant; its general extension remark is not a quantified AES-192/256 result.",
+      "In the source theta_r=ShiftRows_r followed by MixColumns_r. The four final-round-key groups in column-majorFIPSindices are{0,13,10,7}, {4,1,14,11}, {8,5,2,15}, {12,9,6,3}; these are affected sets, not ordered inverseMixColumns arguments."
+    ]
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "late-byte-fault",
+    "candidate-list-filtering"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numeric end-to-end runtime is stated for this specific endpoint. Candidate-list sizes and candidate-search space are not substituted for time."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "1",
+      "unit": "correct-faulty-ciphertext-pairs",
+      "log2": 0,
+      "qualifier": "exact",
+      "note": "Section 3.3 uses one useful pair affecting a specified four-byte group."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Section 2 stores differential patterns D and candidate lists L but does not tabulate whole-attack peak memory."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Section 2 forms a table of 255*n single-byte-fault diffusion patterns. For one AES column n=4, this gives 1020 patterns as a derived component count, not a reported total preprocessing-time budget."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "candidate-space-reduction",
+    "value": null,
+    "description": "The endpoint outputs a candidate list. Unique recovery and a population success probability are not asserted from one pair."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "pq2003-dfa-ches",
+      "locator": "CHES2003 Section 2 pp.79–81; Section 3.3 p.84, theory and PC experiment paragraphs",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/candidate_space"
+      ],
+      "interpretation": "The predicted and measured mean refer to the same 32-bit candidate-list endpoint under different statistical bases. Neither count is time, memory, a master-key count or a completed recovery."
+    },
+    {
+      "source_id": "pq2003-dfa-ches",
+      "locator": "Complete PDF1–12/printed77–88, including Section2 model, Section3.3 every AESendpoint, Table3 and AppendixA.",
+      "fields": [
+        "/assessment",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/candidate_space"
+      ],
+      "interpretation": "Exact12-page CHES2003 chapter independently read in full on2026-10-27. Reviewer finite component identities and arithmetic checks do not execute or reproduce the author attack or remeasure its empirical frequencies."
+    },
+    {
+      "source_id": "gt2010-pq-revisited-mirror",
+      "locator": "PDF4 Section3.1 and footnote3.",
+      "fields": [
+        "/candidate_space",
+        "/field_conflicts",
+        "/assessment",
+        "/limitations"
+      ],
+      "interpretation": "Same old one-late-fault list remeasured at1036mean with1,000,000 trials. Original1046 sample mean and theoretical1036 prediction remain exact. This denominator belongs to candidate-list size, not automatically to the neighboring98% two-fault local singleton statistic."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Useful correct/faulty pairs exclude acquisition failures and faults outside the model; total physical attempts are not costed.",
+    "Computer experiments in this paper do not establish a measured physical fault-injection setup.",
+    "Exact12-page CHES2003 chapter independently read in full on2026-10-27. Reviewer finite component identities and arithmetic checks do not execute or reproduce the author attack or remeasure its empirical frequencies.",
+    "B61 acquired and read a distinct independent-mirror copy of ePrint2010/440. Later1036mean/92% remeasurements are retained with explicit provenance; original observations and native costs remain. Official PDF byte/version identity and new-construction inventory remain unverified."
+  ],
+  "related_problem_ids": [],
+  "candidate_space": {
+    "material": "One affected four-byte group of the final AES-128 round key, with the other twelve bytes unconstrained by this pair.",
+    "material_bits": 32,
+    "observations": [
+      {
+        "statistic": "heuristic_mean",
+        "sample_count": null,
+        "count": {
+          "status": "reported",
+          "reported": "1036",
+          "unit": "key-candidates",
+          "log2": 10.016808287686555,
+          "qualifier": "estimate",
+          "note": "Section 3.3's expected candidate count from the generic complexity estimate in Section 2; printed p.84."
+        }
+      },
+      {
+        "statistic": "sample_mean",
+        "sample_count": null,
+        "count": {
+          "status": "reported",
+          "reported": "1046",
+          "unit": "key-candidates",
+          "log2": 10.030667136246942,
+          "qualifier": "estimate",
+          "note": "Section 3.3 reports this average from the PC implementation. The number of trials and a confidence interval are not specified; this is distinct from the theoretical 1036."
+        }
+      }
+    ]
+  },
+  "field_conflicts": [
+    {
+      "field": "/candidate_space/observations/1/count/reported",
+      "label": "One-fault candidate mean: original1046 versus later1036",
+      "description": "PQ03 distinguishes its theoretical1036 from measured1046. GT explicitly remeasures the same late-fault list and reports mean1036 over1,000,000 simulations. Preserve the original measured observation and later remeasurement separately; a candidate count is not a success probability.",
+      "observations": [
+        {
+          "source_id": "pq2003-dfa-ches",
+          "locator": "PDF8/printed84 Section3.3.",
+          "reported": "Predicted1036; PC experimental average1046, trial count unspecified."
+        },
+        {
+          "source_id": "gt2010-pq-revisited-mirror",
+          "locator": "PDF4 Section3.1 and footnote3.",
+          "reported": "Average1036 candidates from1,000,000 simulations; explicitly revisits the original1046 experiment."
+        }
+      ]
+    }
+  ]
+}

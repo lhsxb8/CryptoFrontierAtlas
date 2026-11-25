@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+  \node (in) at (0,0) {$P$};
+  \node[accent,minimum width=6cm] (rounds) at (4.3,0) {AddRoundKey $\to$ S-box layer $\to$ bit permutation};
+  \node[xor] (last) at (8.8,0) {$+$};
+  \node (out) at (10.7,0) {$C$};
+  \draw[wire] (in) -- (rounds); \draw[wire] (rounds) -- (last); \draw[wire] (last) -- (out);
+  \node[box] (schedule) at (5.5,2) {$\AtlasKeyBits$-bit key $\to$ key schedule};
+  \draw[keywire] (schedule.south) -- (5.5,1.1) -| node[left,note,pos=.8] {$K_1,\ldots,K_{\AtlasRounds}$} (rounds.north);
+  \draw[keywire] (5.5,1.1) -- (8.8,1.1) -- node[right,note] {$K_{\AtlasRoundKeys}$} (last.north);
+  \node[note] at (4.3,-1.1) {$\AtlasRounds$ substitution-permutation rounds};
+  \node[note] at (8.8,-1.1) {Final key addition};
+  \node[note] at (5.5,-1.9) {$\AtlasBlockBits$-bit state\qquad $16$ parallel $4$-bit S-boxes\qquad $\oplus$: XOR};
+\end{tikzpicture}

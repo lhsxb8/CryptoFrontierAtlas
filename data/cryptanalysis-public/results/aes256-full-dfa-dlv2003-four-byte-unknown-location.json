@@ -1,0 +1,201 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-dfa-dlv2003-four-byte-unknown-location",
+  "title": "AES-256 four-byte last-round subkey recovery with unknown fault position (DLV2003)",
+  "display": {
+    "name": "Four-byte recovery, unknown position",
+    "method": "fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full 14-round AES-256. This endpoint recovers one affected 32-bit group (four bytes) of the final round key K_14, not the whole last-round key or master key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "paired-correct-and-faulty-encryption-outputs",
+      "single-byte-state-fault-injection"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret AES master key; no related-key oracle.",
+    "key_population": "All master keys in the stated attack model; no weak-key restriction is specified.",
+    "plaintext_model": "Each correct/faulty ciphertext pair encrypts the same possibly unknown plaintext under the same key. Repeatable paired execution is required.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "assumptions": [
+      "A useful fault affects one state byte in the specified late-round window, and paired correct/faulty outputs are available.",
+      "This record targets one four-byte subkey group; there is no extrapolation from that group to a complete key.",
+      "Proposition 7 assumes random candidate sets to estimate the mean number of useful pairs. The nine-pair budget is a heuristic average, not a guaranteed sample count."
+    ],
+    "fault_model": {
+      "target": "One byte of the AES encryption state, not a round-key schedule fault.",
+      "granularity": "One initial state byte; the byte error may involve several bits.",
+      "timing": "After MixColumns of round 12 and before MixColumns of round 13, using the paper's Nr-relative injection window.",
+      "location": "The affected column is identified from the faulty output, but the initial row position is unknown; all four possible row positions are tried. Repeated useful pairs constrain one four-byte last-round-key group.",
+      "value_control": "Random nonzero byte difference; the fault value is unknown. Multiple bits within that byte may change.",
+      "sample_pairing": "Observe a correct and a faulty output for the same input and key. A pair is not one ciphertext, and acquisition attempts are not counted.",
+      "evidence_scope": "analytical"
+    }
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "unknown-location",
+    "four-byte-subkey-recovery"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The abstract's few-minutes claim and introduction's PC implementation statement are not a per-variant benchmark; no complete time budget for this specific model/instance is tabulated."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "9 on average",
+      "unit": "correct-faulty-ciphertext-pairs",
+      "log2": 3.169925001442312,
+      "qualifier": "estimate",
+      "note": "Proposition 7 and its proof (pp.302–303) derive about 8.277 pairs and round to nine for four bytes with unknown fault position, trying four row possibilities. This partial endpoint is separate from the full-subkey mean of 34 pairs and descriptive budget of 40–50."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical peak storage requirement is specified for the whole attack."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing cost is tabulated; algebraic candidate-set construction is described without a whole-attack preprocessing budget."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "four-byte-subkey-recovery-success-probability",
+    "value": null,
+    "description": "No numerical probability of recovering this exact partial_key_recovery output at the recorded data budget is supplied. Necessary true-key inclusion in the modeled differential-equation candidate sets is separate from unique recovery. The four-byte point is not recovery of the entire final round key. Proposition7 uses the source mean candidate-cardinality heuristic131.0058441 for unknown location; it is not a per-wrong-key survival probability or a probability of finishing at nine/34 pairs. The existing Proposition7 equality-multiplicity versus binary-rank conflict remains; the mean is not promoted to an exact distribution. The stored target remains only the last-round subkey or a four-byte group, not the AES192/256 master key; no additional key-schedule recovery success is borrowed.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-06",
+      "scope": "Exact14-page ACNS edition; targeted PDF1–2,5,9–11,14 and independent defining-passage review. Proposition7 is a mean-cardinality/data model and AppendixB is one worked example, not an endpoint success frequency. No probability was added; the rank/multiplicity conflict and partial-subkey/master-key distinction remain. Not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "true-subkey-in-modeled-fault-equation-candidates",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections3.1–3.2: for a genuine effective nonzero byte fault and the correct location (or the enumerated union of locations), the actual affected subkey bytes satisfy the differential equation and remain among its candidates. It is not uniqueness after five/nine/ten faults or a population recovery guarantee."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "ACNS2003 Section 3.3 Proposition 7 and proof pp.302–303; Sections 3.1–3.2 pp.297–302; Nr conventions pp.295–296",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The explicit four-byte endpoint is instantiated for each standard round count. The target remains partial subkey recovery for every key size; no full-key cost is inferred."
+    },
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "CompletePDF1–14/printed293–306: Sections3.1–3.3, Propositions1–7 and both worked appendices.",
+      "fields": [
+        "/assessment",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "All19existing endpoints checked in their own fault model and instance. Resource/success values preserved; algebraic components are inventoried separately. Longer-instance subkey targets are not relabelled as full master-key recovery."
+    },
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "PDF10–11/printed302–303 Proposition7 and proof.",
+      "fields": [
+        "/resources/data",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized source observation or independently checked formula discrepancy; historical values retained. This is not an unscoped whole-attack refutation."
+    },
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "PDF9/printed301 Proposition4; PDF12/printed304 AppendixA.",
+      "fields": [
+        "/resources/data",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized source observation or independently checked formula discrepancy; historical values retained. This is not an unscoped whole-attack refutation."
+    },
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "Proceedings PDF4–5 / printed296–297 Section3/3.1; PDF6–11 / printed298–303 Sections3.2–3.3, Propositions1/6/7.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical probability of recovering this exact partial_key_recovery output at the recorded data budget is supplied. Necessary true-key inclusion in the modeled differential-equation candidate sets is separate from unique recovery. The four-byte point is not recovery of the entire final round key. Proposition7 uses the source mean candidate-cardinality heuristic131.0058441 for unknown location; it is not a per-wrong-key survival probability or a probability of finishing at nine/34 pairs. The existing Proposition7 equality-multiplicity versus binary-rank conflict remains; the mean is not promoted to an exact distribution. The stored target remains only the last-round subkey or a four-byte group, not the AES192/256 master key; no additional key-schedule recovery success is borrowed."
+    },
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "PDF5 Section3.1; PDF9–11 Proposition7 and candidate-set analysis; PDF14 AppendixB.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: the checked source does not quantify this exact main output at its recorded budget. This dated review supersedes earlier implications that independent non-success conflicts alone leave the numerical source-search task pending. All probability values, component events, source conflicts, costs and attack-correctness tasks are preserved. No probability was added and no scientific conflict was resolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Only four bytes of the last round key are recovered; recovery of other subkey groups or complete master keys is outside this endpoint.",
+    "The useful-pair budget omits ineffective or misplaced physical injection attempts.",
+    "The article does not supply per-instance timing, peak memory or a numerical success probability for this partial endpoint."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/data",
+      "label": "proposition7-multiplicity-versus-binary-rank",
+      "description": "Proposition7 partitions four values by equality multiplicity to obtain its candidate-cardinality heuristic. Proposition4 instead depends on the GF(2) rank of inverse transformed multipliers: four distinct values can have rank3. The printed expectation arithmetic reproduces, but this equality-only partition does not establish it as an exact expectation. No corrected attack average or whole-attack failure is claimed.",
+      "observations": [
+        {
+          "source_id": "dlv2003-dfa-proceedings",
+          "locator": "PDF10–11/printed302–303 Proposition7 and proof.",
+          "reported": "Source heuristic mu=(32*(256)_4+64*6*(256)_3+128*7*(256)_2+256*256)/256^4=32.751461029052734; useful-pair estimates round to11,9,34."
+        },
+        {
+          "source_id": "dlv2003-dfa-proceedings",
+          "locator": "PDF9/printed301 Proposition4; PDF12/printed304 AppendixA.",
+          "reported": "Independent finite rank witness: distinct lambda=(01,8d,cb,d1) has inverse lambda=(01,02,04,07), rank3, and common nonzero fault set31 rather than the rank4 count15. AppendixA also has four distinct multipliers of rank3."
+        }
+      ]
+    }
+  ]
+}

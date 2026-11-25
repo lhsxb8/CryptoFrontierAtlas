@@ -1,0 +1,148 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-chosen-key-trail41-bkn2009",
+  "title": "Full AES-256 chosen-key multicollision supporting trail with 36 state and 5 schedule active S-boxes, BKN 2009",
+  "display": {
+    "name": "Differential, 41-active-S-box supporting trail",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "One specified full-round AES-256 differential trail in Table2, including whitening and the actual nonlinear AES-256 key schedule, with DeltaP=0. This property is not the full q-multicollision construction and not a universal minimum bound."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "offline-public-aes-evaluation"
+    ],
+    "related_key_count": 2,
+    "target_selection": "attacker_selected_pair",
+    "key_relation": "A selected key pair K and K XOR DeltaK with DeltaK specified by Table2 K^0,K^1 differences; all five active key-schedule S-box conditions are imposed.",
+    "key_population": "Chosen related keys satisfying the fixed differential trail; not an arbitrary secret-key claim.",
+    "plaintext_model": "Equal chosen plaintexts in the two executions (DeltaP=0); output difference is 01 in all four bytes of row0 and zero elsewhere.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Only the stated fixed trail is represented; multicollision multiplicity q and ideal-cipher distinguishing experiment remain separately unstructured.",
+      "Local S-box compatibility does not on its own prove joint global realizability or TA output independence."
+    ]
+  },
+  "techniques": [
+    "related-key-differential",
+    "local-collisions",
+    "explicit-byte-differences",
+    "triangulation-algorithm"
+  ],
+  "property": {
+    "statement": "The specified full14-round equal-plaintext trail has 36 active state S-boxes and five active key-schedule S-boxes. TA fixes30 active inputs and leaves11 unhandled transitions with nominal product2^-67.",
+    "quantifier": "Existential author-reported fixed differential trail; no all-key statement, minimum-active-S-box theorem, or independent attack-success claim is asserted.",
+    "scope": "Table2 full AES-256 multicollision trail, DeltaP=0 and the source fixed nonzero key/output differences. The Davies-Meyer first-round variant is a separate target experiment.",
+    "parameters": [
+      {
+        "name": "state_active",
+        "reported": "36",
+        "meaning": "State active S-box counts byround are16,5,2,2,1,1,4,0,2,0,2,0,1,0."
+      },
+      {
+        "name": "schedule_active",
+        "reported": "5",
+        "meaning": "Five active key-schedule S-box transitions have DDT count2."
+      },
+      {
+        "name": "fixed_active",
+        "reported": "30",
+        "meaning": "All25 active state S-boxes in rounds1–4 plus five schedule S-box inputs are fixed by the source TA."
+      },
+      {
+        "name": "free_bytes",
+        "reported": "18",
+        "meaning": "Source TA returns18 free bytes:11 in subkeys and7 in state variables."
+      },
+      {
+        "name": "residual_exponent",
+        "reported": "67 = 10*6 + 7",
+        "meaning": "Eleven unsolved transitions in rounds5–14 include10 count4 transitions and1 count2 transition."
+      }
+    ],
+    "validation": {
+      "basis": "analytical_and_reported_experiment",
+      "description": "Original source trail, AppendixA constants and reported probability analysis checked. Independent finite test recomputes the AES S-box DDT, all state linear layers and final whitening, and the key-difference recurrence. It establishes local compatibility and arithmetic only; the full attack, global trail/TA distribution and numerical success remain unreproduced."
+    }
+  },
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A supporting fixed differential-trail property, not a completed costed attack."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A supporting fixed differential-trail property, not a completed costed attack."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A supporting fixed differential-trail property, not a completed costed attack."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A supporting fixed differential-trail property, not a completed costed attack."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "fixed-differential-trail-property",
+    "value": null,
+    "description": "Supporting specified-trail property; its S-box transition product is not a numerical completed-attack success probability."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "PDF9–10 / printed pp.239–240 Section2.2; PDF18–19 / printed pp.248–249 Table2 and Figure5.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/property",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Source constants are preserved as one explicit supporting trail, separate from a completed recovery or a q-multicollision target."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This is one explicit supporting trail, not a globally optimal or minimum-active-S-box theorem.",
+    "Local DDT compatibility and linear-layer checks do not establish joint realizability, TA independence, or a completed attack.",
+    "Source-native nominal products and reported experiments are not promoted to independently proved end-to-end probabilities."
+  ],
+  "related_problem_ids": []
+}

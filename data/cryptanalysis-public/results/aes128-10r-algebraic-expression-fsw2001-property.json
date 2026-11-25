@@ -1,0 +1,147 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-10r-algebraic-expression-fsw2001-property",
+  "title": "FSW01 10-round AES-128 Full-cipher algebraic representation",
+  "display": {
+    "name": "Full-cipher algebraic representation",
+    "method": "algebraic"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fsw2001-full-aes-source-approximate-term-count",
+    "description": "Full 10-round AES-128, including initial whitening and the standard final-noMC round. The reported description-size estimate uses normal-round branching throughout."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One AES master key with the standard key schedule. Public S-box affine constants are absorbed into dependent round-key offsets; repeated key bytes retain their dependencies.",
+    "key_population": "general secret key",
+    "plaintext_model": "Symbolic plaintext/ciphertext and dependent key variables; known pairs may instantiate equations, with no claimed efficient solver.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Arithmetic is over GF(2^8) in the AES polynomial basis, with a/0=0, including at a=0.",
+      "S-box affine constants, byte positions and Frobenius powers are public. Absorbed round-key offsets remain dependent on the master key.",
+      "The source leaf-count model uses 32 summands per normal round and ignores the final-noMC simplification.",
+      "The Section 4 discussion of 2^26 key-byte appearances and 2^22 known pairs uses independent appearance variables. Actual AES key-byte occurrences remain dependent."
+    ]
+  },
+  "techniques": [
+    "nested-algebraic-representation",
+    "freshmans-dream-expansion"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "value": null,
+    "metric": "structural-property",
+    "description": "Probability and counts belong to the mathematical statement, not attack success or resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-3ae4f79f1f4cb057-2001",
+      "locator": "PDF 1–9 / printed 103–111; PDF 2: zero convention and public offsets; PDF 3: Equation 1; PDF 4–5: Equations 4–5; PDF 6: Sections 2.2–2.3, reported counts; PDF 7–8: Section 4, conditional solver discussion.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property",
+        "/assessment"
+      ],
+      "interpretation": "Complete primary reading and bounded forward checks. The nested representation retains zero branches and the dependencies of expanded key bytes."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The leaf counts estimate description size using normal-round branching, including in the final layer.",
+    "The conditional solver discussion does not provide an implemented key-recovery algorithm or a resource vector."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "Equation 1 composes 32 inverse-Frobenius summands per normal round into the nested expressions of Equations 4–5. With the source convention a/0=0, the algebraic identity holds at every input. The reported 10-round description has approximately 2^50 leaf terms under L(r)=32L(r-1), L(0)=1.",
+    "quantifier": "Every AES-128 key and plaintext, with the standard dependent key expansion and the source zero-inversion convention. The count describes expression leaves; repeated leaves can share a key byte or polynomial term.",
+    "scope": "Algebraic representation and description size. Section 4 gives conditional solver-degree observations; no attack cost or key-recovery success is established.",
+    "parameters": [
+      {
+        "name": "expression_rounds",
+        "reported": "10",
+        "meaning": "Half/full expression interval with the source final-noMC counting convention."
+      },
+      {
+        "name": "expanded_term_count",
+        "reported": "approximately 2^50",
+        "meaning": "Source estimate of fully unrolled nested-expression leaves. Actual terminal-round simplification is omitted."
+      },
+      {
+        "name": "generic_leaf_model",
+        "reported": "L(r)=32^r=2^(5r)",
+        "meaning": "Four-by-eight branching per normal round. The estimate concerns description size."
+      },
+      {
+        "name": "source_solver_observations",
+        "reported": "5-round halves: hypothetical O(n^4); full 10 rounds: hypothetical O(n^2); independent 2^26 key-byte appearances require at least 2^22 known pairs",
+        "meaning": "Conditional solver feasibility discussion in Section 4; solver existence and measured performance are unspecified."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Finite checks cover 256 S-box inputs, 524288 Frobenius triples, 64 normal and 64 final-round vectors, 24 AES compositions, and 3 FIPS known-answer vectors. They verify representation components and the reported leaf-count arithmetic."
+    }
+  }
+}

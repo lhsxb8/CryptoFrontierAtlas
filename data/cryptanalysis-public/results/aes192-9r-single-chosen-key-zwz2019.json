@@ -1,0 +1,213 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-9r-single-chosen-key-zwz2019",
+  "title": "ZWZ19 9-round AES-192 Chosen-key restricted-pair construction",
+  "display": {
+    "name": "Chosen-key restricted-pair construction",
+    "method": "mitm"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "zwz2019-9r-final-no-mc",
+    "description": "9 rounds with finalMC omitted. Construct(m,m-prime,k) jointly; both messages use the SAME chosen standardAES-192 key. Inverting the schedule constructs a compatible key, not recovery of an externally supplied unknown target."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "public_chosen_key_permutation_evaluation"
+    ],
+    "related_key_count": null,
+    "target_selection": "attacker_selected_pair",
+    "key_relation": "One chosen192-bit key shared by the constructed message pair; no unknown-target key or related-key oracle.",
+    "key_population": "attacker-selected compatible standard AES-192 master key",
+    "plaintext_model": "Construct same-key pair following12→3→2→8→16→16→4→1→4→4 active-byte path.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Pinned authorAES_9.cpp declaresK[7][6] but finalgetRes accessesK[8][i]; static undefined-index evidence, not execution. The independently recomputed9r differential remains valid."
+    ],
+    "reference_model": "Source chosen-key limited-birthday constrained input/output pair game, not the ordinary single-secret-key recovery game."
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "keyed-supersbox",
+    "chosen-single-key"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "1",
+      "log2": 0,
+      "unit": "9-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Author headline for retrieval/compatible-key completion after list setup; not an established all-in budget."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^16",
+      "log2": 16,
+      "unit": "source-native-list-storage",
+      "qualifier": "estimate",
+      "note": "Table1 exponent; four lists each2^16 elements with unspecified item width and constant factors."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "4 * 2^16",
+      "log2": 18,
+      "unit": "basic-operations",
+      "qualifier": "estimate",
+      "note": "Four SuperSBox lists, each2^16 operations per Observation1; literal4*2^16 setup count, not converted to encryption units."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "value": null,
+    "metric": "whole-attack-success",
+    "description": "No numerical whole chosen-key success is stated for this nine-round AES192 endpoint. The headline one-encryption cost follows list setup, whose native4*2^16 basic operations remain separately recorded. The AppendixB absolute ciphertext conflict and pinned-code index issue remain, while the independently checked differential remains valid. Local list and key-completion fractions do not give an end-to-end stopping/output distribution. No author attack code is executed, repaired or treated as a success experiment.",
+    "components": [
+      {
+        "metric": "L2-two-byte-consistency-source-model",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "Section4: the sourceu4[10,11] conditions impose16 bits on one fixed L2 candidate in the source list model. Expected one match is not a demonstrated acquisition or uniqueness probability."
+      },
+      {
+        "metric": "L1-two-byte-consistency-source-model",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "Section4: the sourceu4[4,7] conditions impose16 bits on one fixed L1 candidate in the source list model. Expected one match is not a demonstrated acquisition or uniqueness probability."
+      },
+      {
+        "metric": "L0-two-byte-consistency-source-model",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "Section4: the sourceu4[2] and X4[10] conditions impose16 bits on one fixed L0 candidate in the source list model. Expected one match is not a demonstrated acquisition or uniqueness probability."
+      },
+      {
+        "metric": "one-key-byte-guess-passes-last-mixcolumns-compatibility-source-model",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "Section4 Figure5: one guessed k3[9] passes the last five-byte MixColumns compatibility test with source probability2^-8. Exhausting2^8 guesses gives an expected match, not a proven joint output rate."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Independent source-first and endpoint review, PDF3–15: whole chosen-key triplet success is not quantified. Source expected list occupancy and final-byte compatibility do not specify a restart/stopping law and its expected retry/setup cost. No one-pass or expected-search success1 is assigned. Preserve eight-round standard-schedule/path and nine-round absolute-ciphertext issues, native4*2^16 setup and headline costs; source code is inspected only, not executed or repaired. Targeted success review does not change full-paper audit gates."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-faa6493c8c4a9323-2019",
+      "locator": "PDF pp.3–7 Table1/model/Observation1; pp.9–11 Section4 compatible-key construction.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-faa6493c8c4a9323-2019",
+      "locator": "CompletePDF1–15 full audit;[local audit reference not distributed]",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete registered primary edition read. Inventory/forward gates and scientific correctness are separate; see exact localized conflicts."
+    },
+    {
+      "source_id": "aes-paper-faa6493c8c4a9323-2019",
+      "locator": "ACISP proceedings PDF9–11 / printed581–583 Section4 and Figures4–5; original AppendixB absolute-ciphertext conflict retained.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical whole chosen-key success is stated for this nine-round AES192 endpoint. The headline one-encryption cost follows list setup, whose native4*2^16 basic operations remain separately recorded. The AppendixB absolute ciphertext conflict and pinned-code index issue remain, while the independently checked differential remains valid. Local list and key-completion fractions do not give an end-to-end stopping/output distribution. No author attack code is executed, repaired or treated as a success experiment."
+    },
+    {
+      "source_id": "aes-paper-faa6493c8c4a9323-2019",
+      "locator": "PDF3/printed575 Table1; PDF6–8/printed578–580 Observation1,Section3 lists and compatible-key completion; PDF9–11/printed581–583 Section4 sequential lists and final2^8 choices; PDF12–13 AppendicesA–B witnesses.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Expected one match does not specify complete-output yield or verified-restart cost. A witness is not a success denominator. The intended chosen-key target and separate setup remain intact; no numerical primary is inferred."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Reported1.05s/1.14s Corei5-4210M examples are source platform runtimes;8GB is machine capacity, not peak algorithm memory."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "Headline excludes unnormalized list construction",
+      "description": "Table1 calls the construction one reduced encryption, but Observation1 and Sections3–4 first build four2^16-operation lists; no justified unit conversion or proof that setup is included.",
+      "observations": [
+        {
+          "source_id": "aes-paper-faa6493c8c4a9323-2019",
+          "locator": "PDF p.3 Table1 and headline.",
+          "reported": "Time one reduced-round encryption."
+        },
+        {
+          "source_id": "aes-paper-faa6493c8c4a9323-2019",
+          "locator": "PDF pp.6–7 Observation1 and Section3; pp.9–10 Section4.",
+          "reported": "Four lists each2^16 solutions at2^16 basic operations before constant-cost retrieval."
+        }
+      ]
+    },
+    {
+      "field": "/target/description",
+      "label": "AppendixB absolute ciphertext versus valid differential",
+      "description": "Both independent implementations reproduce allP/R0…R8absolute states and all11actual differential rows including finalDeltaC. Only the two absoluteC values are incorrect; the supplied key/plaintexts still witness the9r truncated differential with corrected absolute ciphertexts.",
+      "observations": [
+        {
+          "source_id": "aes-paper-faa6493c8c4a9323-2019",
+          "locator": "PDF13/585 AppendixB Table3.",
+          "reported": "PrintedC=434a9744d2e1aa06217d3f93398796cb."
+        },
+        {
+          "source_id": "aes-paper-faa6493c8c4a9323-2019",
+          "locator": "Same source examples independently computed with FIPS-validated full AES192 expansion2026-10-26.",
+          "reported": "StandardC=83f9aefa9c811d2963106cb572a0e774; finalDeltaC=170000000000008a00006a0000260000 matches source."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+  \node[box] (state) at (0,0) {Expand key, nonce, counter\\$X$: $\AtlasStateBits$-bit state};
+  \node[accent] (rounds) at (4.4,0) {Column round $\to$ row round\\Repeat $\AtlasDoubleRounds$ times};
+  \node[add] (add) at (7.7,0) {$+$};
+  \node[box] (serialize) at (10.4,0) {Little-endian output\\$\AtlasStreamBlockBits$ keystream bits};
+  \draw[wire] (state) -- (rounds); \draw[wire] (rounds) -- (add); \draw[wire] (add) -- (serialize);
+  \draw[wire] (state.south) -- (0,-1.4) -- node[below,note] {Original $X$: wordwise feed-forward} (7.7,-1.4) -- (add.south);
+  \node[note] at (5.4,1.45) {Key: $\AtlasKeyBits$ bits\quad Nonce: $\AtlasNonceBits$ bits\quad Block counter: $\AtlasCounterBits$ bits};
+  \node[note] at (5.4,-2.4) {$\AtlasRounds$ rounds\quad $\boxplus$: addition modulo $2^{32}$\quad Ciphertext = plaintext XOR keystream};
+\end{tikzpicture}

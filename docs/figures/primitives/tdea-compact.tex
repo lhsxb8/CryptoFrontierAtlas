@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+  \node at (0,1) {$P$};
+  \node[accent,minimum width=3.4cm] (e1) at (0,0) {DES encryption $E_{K_1}$};
+  \node[box,minimum width=3.4cm] (d) at (0,-1.7) {DES decryption $D_{K_2}$};
+  \node[accent,minimum width=3.4cm] (e2) at (0,-3.4) {DES encryption $E_{K_3}$};
+  \draw[wire] (0,.8) -- (e1); \draw[wire] (e1) -- (d); \draw[wire] (d) -- (e2);
+  \draw[wire] (e2) -- (0,-4.4) node[below] {$C$};
+  \node[note,text width=5.2cm] at (0,-5.6) {Each DES stage:\\IP $\to$ 16 rounds $\to$ swap $\to$ IP$^{-1}$\\$64$-bit blocks, three independent DES keys};
+\end{tikzpicture}

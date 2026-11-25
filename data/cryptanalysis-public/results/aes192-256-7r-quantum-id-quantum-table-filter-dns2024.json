@@ -1,0 +1,351 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-256-7r-quantum-id-quantum-table-filter-dns2024",
+  "title": "AES 7-round DNS24: aes192-256-7r-quantum-id-quantum-table-filter-dns2024",
+  "display": {
+    "name": "Quantum impossible differential / quantum-table-filter",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "dns2024-fig6-rounds0-6-k0-k1-k7",
+    "description": "Seven-round AES-192/256, Figure 6 and Section 6 boundary convention. The explicit algorithm isolates sixteen bytes across k0, k1 and k7, not an explicitly budgeted full master key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "coherent_secret_key_permutation_queries"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key with its expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "Generate N=2^78.5 limited-birthday pairs, requiring about 2^99.8 Q2 permutation queries. Section 3.3 permits input structures or inverse output structures.",
+    "computation": "quantum",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Q2 coherent secret-key oracle and QRAQM access are required; this is not a Q1 attack.",
+      "QRAQM random access is treated as an elementary unit operation; no physical-memory or gate-implementation estimate is claimed.",
+      "The search targets one surviving 128-bit subkey tuple. No quantitative full-master-key completion cost is supplied in Section 6.",
+      "Actual firstthree filter probabilities are2^-16,2^-16,2^-24; final stage combines two8-bit tests. Table4label discrepancy retained. StandardEq16 and optimizedEq17 are distinct."
+    ],
+    "quantum_model": {
+      "query_model": "coherent_secret_oracle",
+      "cost_level": "logical_circuit",
+      "gate_set": "Abstract reversible S-box evaluations and unit-cost QRAQM access; elementary gate counts are not given.",
+      "routing": "No hardware routing or physical layout is included in the abstract algorithm cost.",
+      "error_correction": "No error-correction overhead is included or estimated.",
+      "oracle_parallelism": "No separate multi-oracle parallel speedup is assumed; source counts total Q2 queries.",
+      "solution_assumption": "N=2^78.5 pairs are chosen to leave one tuple among 2^128 boundary-subkey guesses; numerical whole-attack success is not supplied."
+    }
+  },
+  "techniques": [
+    "quantum-impossible-differential",
+    "limited-birthday-pair-generation",
+    "quantum-table-filter"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^99.9",
+      "log2": 99.9,
+      "unit": "reversible-sbox-evaluations",
+      "qualifier": "estimate",
+      "note": "Table 1 gives total 2^99.9; Eq.17 gives filtering at most 2^95.2, so pair generation dominates. Native query/S-box accounting and source rounding are retained. Table 1 labels AES time in S-box evaluations, but Section 6 states pair-generation cost in Q2 cipher queries without an explicit common-unit conversion. The headline total is retained as author-reported, not independently normalized."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^99.8",
+      "log2": 99.8,
+      "unit": "coherent-secret-permutation-queries",
+      "qualifier": "estimate",
+      "note": "Section 6 generation cost. This is quantum query complexity, not a stored classical chosen-plaintext codebook."
+    },
+    "memory": {
+      "status": "conflict",
+      "reported": "2^78.5 qubits in Section 6; 2^78.5 pair registers of 4n bits in Section 4.2",
+      "log2": null,
+      "unit": "source-native-qraqm-storage",
+      "qualifier": "unspecified",
+      "note": "Section 4.2 measures memory in stored pairs, each on a 4n-bit register; Section 6 calls the same exponent qubits. No byte/qubit width normalization is silently applied."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^99.8",
+      "log2": 99.8,
+      "unit": "coherent-secret-permutation-queries",
+      "qualifier": "estimate",
+      "note": "Required pair-generation phase, included in the source total, not an offline reusable setup to add twice. Its conversion to the Table 1 S-box time unit is not supplied."
+    },
+    "t_gates": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No complete elementary-circuit t_gates estimate is reported; the source QRAQM memory estimate is retained in memory."
+    },
+    "clifford_gates": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No complete elementary-circuit clifford_gates estimate is reported; the source QRAQM memory estimate is retained in memory."
+    },
+    "t_depth": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No complete elementary-circuit t_depth estimate is reported; the source QRAQM memory estimate is retained in memory."
+    },
+    "circuit_depth": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No complete elementary-circuit circuit_depth estimate is reported; the source QRAQM memory estimate is retained in memory."
+    },
+    "logical_qubits": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No complete elementary-circuit logical_qubits estimate is reported; the source QRAQM memory estimate is retained in memory."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "128-bit-boundary-subkey-tuple-recovery",
+    "value": null,
+    "description": "Section4.1 explicitly separates success conditional on a unique surviving boundary-subkey tuple and bounded tables from the unquantified probability that those hypotheses hold. Q2 pair generation and full AES192/256 master-key completion are not quantified by this statement. Existing byte-index, table-label and memory conflicts remain; optimized Lemma4 has a further distinct-pair coverage gap, so its search-count tail is not a table-completion probability. The aggregate no-wrong-tuple bound below concerns the initial pair-table model only and does not quantify the complete recovery algorithm.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Rechecked PDF4–6,9–19,24–27: boundary-subkey output, Eq5 survival, Section4.1 assumptions, exact conditional filtering, optimized search coverage and AES parameter/cost assignment. Added only a local union-bound component under the source pair-survival model. Pair generation, table bounds, actual-cipher applicability and complete selected-output probability at the native Q2 costs remain unquantified; optimized coverage and all other source conflicts remain. Targeted endpoint review, not a new full audit."
+    },
+    "components": [
+      {
+        "metric": "aes-pair-filter-stage-1",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "description": "Section6 defining filter sigma1=2^-16. Use the explicit filter definitions, not the shifted Table4 labels. This is a local author filter model, conditional on the guessed subkey.",
+        "expression": "2^{-16}"
+      },
+      {
+        "metric": "aes-pair-filter-stage-2",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "description": "Section6 defining filter sigma2=2^-16. Use the explicit filter definitions, not the shifted Table4 labels. This is a local author filter model, conditional on the guessed subkey.",
+        "expression": "2^{-16}"
+      },
+      {
+        "metric": "aes-pair-filter-stage-3",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "description": "Section6 defining filter sigma3=2^-24. Use the explicit filter definitions, not the shifted Table4 labels. This is a local author filter model, conditional on the guessed subkey.",
+        "expression": "2^{-24}"
+      },
+      {
+        "metric": "aes-pair-filter-stage-4a",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "description": "PDF25: one8-bit equality in the final two-test stage. Separate key bytes do not supply an unconditional whole-attack success."
+      },
+      {
+        "metric": "aes-pair-filter-stage-4b",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "description": "PDF25: one8-bit equality in the final two-test stage. Separate key bytes do not supply an unconditional whole-attack success."
+      },
+      {
+        "metric": "incorrect-boundary-subkey-survival-source-model",
+        "value": null,
+        "basis": "author_model",
+        "description": "Eq5 gives the per-wrong-tuple survival model after N distinct valid pairs. The source AES assignment is N approximately2^78.5. The model's pair-survival independence is not proved for actual AES; the appended aggregate component applies a union bound without assuming independence between different wrong tuples.",
+        "expression": "(1-2^{-(c_{\\mathrm{in}}+c_{\\mathrm{out}})})^{N}"
+      },
+      {
+        "metric": "one-good-pair-grover-search-given-strengthened-model",
+        "value": 0.75,
+        "basis": "author_model",
+        "description": "Section4.4: the stated single-search bound requires the true marked fraction in[a/2,3a/2] and the source search choice. Not all distinct pairs, table completion or recovery.",
+        "relation": ">="
+      },
+      {
+        "metric": "too-few-successful-searches-source-tail",
+        "value": null,
+        "basis": "author_model",
+        "description": "Lemma4 Chernoff tail for the NUMBER of successful searches only, under the author independent-search model. Repeated successful samples can be duplicates; the existing coverage conflict is not resolved or hidden.",
+        "relation": "<=",
+        "expression": "e^{-M_{i+1}/12}"
+      },
+      {
+        "metric": "source-model-no-surviving-wrong-128-bit-boundary-tuple",
+        "value": null,
+        "basis": "derived_from_source",
+        "relation": ">=",
+        "expression": "\\max\\{0,1-(2^{128}-1)(1-2^{-72})^{N}\\}",
+        "description": "Union bound from Eq5 and Section6, given N distinct valid generated pairs and the source per-wrong-tuple survival model. N is the integer pair count, with source assignment N approximately2^78.5; the plug-in lower bound is approximately0.8325, not an exact probability for a rounded exponent. No independence between different wrong tuples is required. Independence across pair-survival tests is inherited from Eq5, not established for actual AES. This event does not include pair generation, correct-tuple retention, intermediate-table bounds, exact-oracle validity, optimized distinct-pair coverage or AES192/256 master-key completion. It is not end-to-end recovery success."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-87d0bd7cf0a5d83f-2024",
+      "locator": "PDF p.3 Table 1; pp.4–6 subkey-only goal and remaining-key discussion; pp.8–11 Q2/QRAQM and query model; p.14 pair-register memory units; pp.24–27 Section 6, Fig.6, Eqs.16–17.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Primary table and defining text checked. Unknown costs are retained rather than preventing extraction."
+    },
+    {
+      "source_id": "aes-paper-87d0bd7cf0a5d83f-2024",
+      "locator": "Complete publisher PDF1–29; [local audit reference not distributed]",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Full primary source read; inventory and scientific correctness are tracked separately. Numerical source claims retained unless explicitly field-conflicted."
+    },
+    {
+      "source_id": "schrottenloher-stevens2024-nested-search-cic",
+      "locator": "PDF21–23 Section5.3/Algorithm7; memory relative to block size.",
+      "fields": [
+        "/setting",
+        "/field_conflicts"
+      ],
+      "interpretation": "Later primary reanalysis explicitly covers only the first/standardDNS attack; it does not validate optimizedLemma4 coverage."
+    },
+    {
+      "source_id": "david-naya-plasencia-schrottenloher2022-quantum-id-wcc",
+      "locator": "CompletePDF1–10;PDF3Table1 andPDF9AESapplication.",
+      "fields": [
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Earlier official version confirms2AES endpoints, din64/dout32, explicit native phase sum."
+    },
+    {
+      "source_id": "aes-paper-87d0bd7cf0a5d83f-2024",
+      "locator": "PDF6 /printed728 Eq5; PDF10 /732 Theorem1 and Corollary1; PDF12–13 /734–735 Assumptions1–3; PDF24–27 /746–749 Section6/Eqs16–17; PDF18–19 /740–741 Lemma4 search-count bound and existing distinct-pair coverage conflict.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "Section4.1 explicitly separates success conditional on a unique surviving boundary-subkey tuple and bounded tables from the unquantified probability that those hypotheses hold. Q2 pair generation and full AES192/256 master-key completion are not quantified by this statement. Existing byte-index, table-label and memory conflicts remain; optimized Lemma4 has a further distinct-pair coverage gap, so its search-count tail is not a table-completion probability."
+    },
+    {
+      "source_id": "aes-paper-87d0bd7cf0a5d83f-2024",
+      "locator": "PDF6/printed728 Eq5; PDF12–13/734–735 Section4.1; PDF15–19/737–741 exact and optimized filtering; PDF24–27/746–749 Section6,16 guessed bytes,2^56 discarded tuples per pair,2^128 tuple space,N approximately2^78.5.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "A union bound from the source marginal model gives max(0,1-(2^128-1)(1-2^-72)^N) for no surviving wrong tuple, with N the integer number of valid distinct pairs. It needs no independence between different wrong tuples and does not establish independence of pair tests for AES. Source rounded N gives approximately0.8325 only as a plug-in model evaluation. It is not pair-generation, table-completion, correct-tuple-retention, optimized-algorithm or master-key success; primary remains not_reported."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Complete29-page publisher plus10-page WCC version read;2partial boundary-subkey recovery endpoints and phase formulas inventoried. Bounded SS24/BL24 checks complete. Memory units, byte index, sigma labels and optimized distinct-pair coverage remain scientific conflicts; no missing deferred AES endpoint identified."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/memory",
+      "label": "QRAQM storage unit",
+      "description": "The general filtering memory convention counts pair registers of 4n bits, whereas the AES application describes its pair count as qubits.",
+      "observations": [
+        {
+          "source_id": "aes-paper-87d0bd7cf0a5d83f-2024",
+          "locator": "PDF p.14 Section 4.2 before Lemma 2; pp.25–26 Section 6 pair count.",
+          "reported": "Memory is counted in pairs, each on a 4n-bit register; N=2^78.5 pairs for AES."
+        },
+        {
+          "source_id": "aes-paper-87d0bd7cf0a5d83f-2024",
+          "locator": "PDF p.26 Section 6, following Eq.16; p.3 Table 1.",
+          "reported": "2^78.5 qubits with QRAQM access to store the pairs."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "Table4 sigma labels versus defining filters",
+      "description": "The actual first3 filters are2^-16,2^-16,2^-24; the last stage combines two8-bit tests. Table4 labelled sigma rows are shifted. Use explicit definitions/Eq16 for phase arithmetic; retain the label discrepancy.",
+      "observations": [
+        {
+          "source_id": "aes-paper-87d0bd7cf0a5d83f-2024",
+          "locator": "PDF26/748 Table4.",
+          "reported": "Labelled sigma rows1,2^-16,2^-16,2^-24."
+        },
+        {
+          "source_id": "aes-paper-87d0bd7cf0a5d83f-2024",
+          "locator": "PDF25–26/747–748 filter definitions,nested classical sum,Eq16.",
+          "reported": "Successive table sizesN,2^-16N,2^-32N,2^-56N; finaltwo8-bitconditions."
+        }
+      ]
+    },
+    {
+      "field": "/setting/key_relation",
+      "label": "Boundary byte14 versus13",
+      "description": "DNS printsk7[0,7,10,14]; SS24 rewriting the standardattack uses[0,7,10,13], consistent with inverseSR column0. Retain exact source indexing; no silent byte substitution or revised exponent.",
+      "observations": [
+        {
+          "source_id": "aes-paper-87d0bd7cf0a5d83f-2024",
+          "locator": "PDF25–26/747–748 Section6.",
+          "reported": "K3=k7[0,7,10,14]."
+        },
+        {
+          "source_id": "schrottenloher-stevens2024-nested-search-cic",
+          "locator": "PDF23Algorithm7;PDF21–22Section5.3.",
+          "reported": "Guessk7[0,7,10,13], inverseSRcolumn0={0,13,10,7}."
+        }
+      ]
+    },
+    {
+      "field": "/success",
+      "label": "Optimized table distinct-pair coverage",
+      "description": "Lemma4 Chernoff bound controls successful Grover sample count, not distinct good-pair coverage. No seen-pair exclusion or coverage mechanism/cost is specified. Under independent uniform replacement, g*(1-1/g)^r goodpairs remain unseen in expectation; g64,r128 gives8.52577. This affects optimizedEq17 only, not standardEq16; no repaired cost inferred.",
+      "observations": [
+        {
+          "source_id": "aes-paper-87d0bd7cf0a5d83f-2024",
+          "locator": "PDF18–19/740–741 Lemma4 proof.",
+          "reported": "4E(Ni+1)Grover runs and at least2E(Ni+1)successful samples are used to claim completed intermediate table and exp(-M/12)error."
+        },
+        {
+          "source_id": "aes-paper-87d0bd7cf0a5d83f-2024",
+          "locator": "Same Lemma4 algorithm and proof, independent full-text reasoning.",
+          "reported": "Successful samples can repeat; sample count alone does not imply everydistinctgoodpair wascopied."
+        }
+      ]
+    }
+  ]
+}

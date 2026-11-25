@@ -1,0 +1,202 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-4r-mixture-integral-no-final-mc-precomputed-gs2020",
+  "title": "GS20 4-round AES-128 / aes128-4r-mixture-integral-no-final-mc-precomputed-gs2020",
+  "display": {
+    "name": "Mixture-integral key recovery / precomputed",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "gs2020-4-nonlinear-rounds-final-no-mc",
+    "description": "4 nonlinear AES-128 rounds without final MixColumns (source label 3.5 rounds). The attack recovers the full last-round key, permitting inversion of the AES-128 key schedule. Footnote 6 describes equivalent-key conversion when final MixColumns is present."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown AES-128 master key; the public standard AES S-box is known, not the secret key.",
+    "key_population": "general secret key",
+    "plaintext_model": "Six nonadaptive plaintexts, three related pairs, reused for four anti-diagonal recovery passes.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "mixture-integral",
+    "zero-sum",
+    "precomputed"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^33.3",
+      "log2": 33.3,
+      "unit": "4-round-aes128-encryptions",
+      "qualifier": "estimate",
+      "note": "Source Table 2 and Section 4.2 give the full four-pass online recovery cost. Published singleton lookup demonstrably discards valid candidates; this is not a verified completed-key-recovery budget."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "6",
+      "log2": 2.584962500721156,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "Source Table 2 query count, reused across byte/anti-diagonal passes."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^28",
+      "log2": 28,
+      "unit": "16-byte-plaintext-storage-units",
+      "qualifier": "estimate",
+      "note": "Table 2 measures memory in 16-byte plaintext units: 2^28 such units, not 2^28 bytes."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^35.7",
+      "log2": 35.7,
+      "unit": "4-round-aes128-encryptions",
+      "qualifier": "estimate",
+      "note": "Reusable public-S-box lookup table setup, separate from online time; not silently dropped from total cost."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-aes128-key-recovery",
+    "value": null,
+    "description": "The exact endpoint has no numerical complete-output success. The three-round distinguishing experiment95%/300000 cases and the approximate99.991% byte-distinctness figure are not whole-key recovery rates. The source writes one kappa to each table cell; the existing independently checked lost-valid-candidate conflict remains. The true zero-sum relation has probability1, but the printed singleton implementation is not assigned retention1. The C++ verification sentence has no trial-denominated recovery rate.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-06",
+      "scope": "Exact20-page proceedings edition; Sections4.1–4.2, Algorithms2–3 and Equations7–8. No probability was added: zero-sum1 and local lookup acceptance are not complete AES128 recovery. Distinctness99.991% and Section3 distinguisher experiments describe different events. Existing single-value-table lost-candidate conflict remains unchanged; not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "true-key-zero-sum-relation",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF13 Eq.(7),PDF14 Section4.2: the correct key satisfies the mixture zero-sum equation with probability1, including equivalent-key transport when finalMC is present. This is a relation, not successful singleton lookup or unique complete-key recovery."
+      },
+      {
+        "metric": "wrong-eight-byte-guess-four-text-zero-sum-model",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "PDF14: with only four texts, a guessed four-byte last key and four-byte previous key passes the four-byte zero-sum test with source probability2^-32. This does not give the six-text endpoint aggregate success."
+      },
+      {
+        "metric": "first-1-lookup-equalities-source-model",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "PDF15 Algorithm3/ComputationalCost: source probability for the first1 byte-lookup equality conditions, at the six-text construction. Shared texts and the known singleton lost-candidate conflict prevent promoting this model to correct-key retention."
+      },
+      {
+        "metric": "first-2-lookup-equalities-source-model",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "PDF15 Algorithm3/ComputationalCost: source probability for the first2 byte-lookup equality conditions, at the six-text construction. Shared texts and the known singleton lost-candidate conflict prevent promoting this model to correct-key retention."
+      },
+      {
+        "metric": "first-3-lookup-equalities-source-model",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "expression": "2^{-24}",
+        "description": "PDF15 Algorithm3/ComputationalCost: source probability for the first3 byte-lookup equality conditions, at the six-text construction. Shared texts and the known singleton lost-candidate conflict prevent promoting this model to correct-key retention."
+      },
+      {
+        "metric": "first-4-lookup-equalities-source-model",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "PDF15 Algorithm3/ComputationalCost: source probability for the first4 byte-lookup equality conditions, at the six-text construction. Shared texts and the known singleton lost-candidate conflict prevent promoting this model to correct-key retention."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-8256ba7259c80e2c-2020",
+      "locator": "PDF p.4 Table 2 (AES-128 only); pp.12–15 Sections 4.1–4.2, Algorithms 2–3, footnote 6 and full-key four-pass cost. Standard public S-box only.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining algorithm/accounting passages checked; partial outputs and native units retained."
+    },
+    {
+      "source_id": "aes-paper-8256ba7259c80e2c-2020",
+      "locator": "PDF pp.13–15 Algorithm 2 and Algorithm 3",
+      "fields": [
+        "/resources/time",
+        "/field_conflicts"
+      ],
+      "interpretation": "Located source claim and the attached independent review observations; original reported values retained pending reconciliation."
+    },
+    {
+      "source_id": "aes-paper-8256ba7259c80e2c-2020",
+      "locator": "Exact20-page proceedings: PDF12–15/printed323–326 Sections4.1–4.2,Eq.(7),Algorithms2–3; PDF16–19 Sections4.3/5,Algorithm4,Eq.(9),AppendixA Algorithm5.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The exact endpoint has no numerical complete-output success. The three-round distinguishing experiment95%/300000 cases and the approximate99.991% byte-distinctness figure are not whole-key recovery rates. The source writes one kappa to each table cell; the existing independently checked lost-valid-candidate conflict remains. The true zero-sum relation has probability1, but the printed singleton implementation is not assigned retention1. The C++ verification sentence has no trial-denominated recovery rate."
+    },
+    {
+      "source_id": "aes-paper-8256ba7259c80e2c-2020",
+      "locator": "PDF12–15 / printed323–326 Sections4.1–4.2, Algorithms2–3, Equations7–8 and footnote6; PDF7–11 distinguishing-property context.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: no numerical success is established for this exact output and budget in the checked passages. Primary probabilities, local components, costs, target and all scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Table 2 separates online work from reusable precomputation. The key output is AES-128; no AES-192/256 full-master-key budget is inferred.",
+    "Algorithm 2 explicitly checks residual key candidates; the source estimates average per-byte solutions but does not quantify worst-case completion.",
+    "Direct filtering retains candidate sets; complete master-key verification is additional work. No inference of AES-192/256 full master-key recovery is made. A source average of one solution is not a uniqueness guarantee on true-generated quartets."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "Singleton lookup loses valid key candidates",
+      "description": "The published singleton table overwrites multiple Eq.8 solutions. Source-reported online time does not bound a corrected set-valued lookup plus full-key completion. Own finite control demonstrates an actual standard AES-128 three-round input rectangle, not just an arbitrary quartet.",
+      "observations": [
+        {
+          "source_id": "aes-paper-8256ba7259c80e2c-2020",
+          "locator": "PDF pp.13–15 Algorithm 2 and Algorithm 3",
+          "reported": "A[quartet] is assigned each matching key byte in ascending order, and only one byte is read back."
+        },
+        {
+          "source_id": "aes-paper-8256ba7259c80e2c-2020",
+          "locator": "PDF p.13 Eq.8; independent finite substitution into the defining equation",
+          "reported": "AES-128 zero master key; plaintext first-column coordinates (0,0),(1,12),(0,12),(1,0); byte2 ciphertext quartet [93,248,238,98] admits key bytes52 and62, whereas the true third-round byte is52 and A retains62."
+        }
+      ]
+    }
+  ]
+}

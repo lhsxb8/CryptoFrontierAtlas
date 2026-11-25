@@ -1,0 +1,2874 @@
+{
+  "schema_version": 1,
+  "cipher_family_id": "aes",
+  "families": {
+    "aes-6r-boomerang-chain-without-b2-ytxq2025-family": {
+      "display_name": "Boomerang chain · without B2",
+      "parameters": {
+        "s": {
+          "short_meaning": "middle-boomerang stages",
+          "short_domain": "s in {2, 3, 4} (reported)"
+        },
+        "n": {
+          "short_meaning": "Ordered tuple n1,...,n_(s+1) or n_(s+2)",
+          "short_domain": "Reported: 1,14,1 / 1,14,1,79 / 1,14,1,97,105"
+        },
+        "w": {
+          "short_meaning": "complete-chain repetitions",
+          "short_domain": "w in {2} (reported)"
+        }
+      }
+    },
+    "aes-6r-boomerang-chain-ytxq2025-family": {
+      "display_name": "Boomerang chain",
+      "parameters": {
+        "s": {
+          "short_meaning": "middle-boomerang stages",
+          "short_domain": "s in {1, 2, 3, 4} (reported)"
+        },
+        "n": {
+          "short_meaning": "Ordered tuple of middle-friend counts (n1,...,n_(s+2))",
+          "short_domain": "Reported: 1,7,2 / 1,2,13,5 / 1,2,15,110,4 / 1,2,14,116,122,5"
+        },
+        "w": {
+          "short_meaning": "complete-chain repetitions",
+          "short_domain": "w in {2} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes-6r-re-boomerang-repetitions-ytxq2025-family": {
+      "display_name": "Re-boomerang",
+      "parameters": {
+        "w": {
+          "short_meaning": "repeated re-boomerang runs",
+          "short_domain": "w in {1, 2} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes-6r-triple-boomerang-ytxq2025-family": {
+      "display_name": "Triple boomerang",
+      "parameters": {
+        "n": {
+          "short_meaning": "Friend-pair multiplier and middle-boomerang acceptance threshold",
+          "short_domain": "16 reported values"
+        },
+        "w": {
+          "short_meaning": "complete triple-boomerang repetitions",
+          "short_domain": "w in {3} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes-all-6r-dgklmm2024-six-structure-packing-family": {
+      "display_name": "FFT partial sums · six structures",
+      "parameters": {
+        "arithmetic": {
+          "short_meaning": "Packing configuration of the common six-structure convolution filter",
+          "short_domain": "Reported: packed 64bit / unpacked mixed 32 16bit"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes-all-6r-dgklmm2024-two-structure-storage-family": {
+      "display_name": "FFT partial sums · two structures",
+      "parameters": {
+        "first_step": {
+          "short_meaning": "computation/storage organization of the first step",
+          "short_domain": "Reported: algorithm3 full array / algorithm4 split external byte"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-4r-gm2000-constant-enumeration-family": {
+      "display_name": "Constant-enumeration distinguisher",
+      "parameters": {
+        "N": {
+          "short_meaning": "distinct tested values of the active byte y",
+          "short_domain": "Reported: symbolic N<=256; source cost family / 16"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-4r-lucks2000-completion-family": {
+      "display_name": "Square · key completion",
+      "parameters": {
+        "completion": {
+          "short_meaning": "Completion after the common first-structure filter",
+          "short_domain": "Reported: candidate check existing pairs / second lambda1 structure"
+        },
+        "structures": {
+          "short_meaning": "256-block Lambda1 chosen-plaintext structures",
+          "short_domain": "structures in {1, 2} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-7r-bglw2026-table-coverage-family": {
+      "display_name": "Value-constraint MITM",
+      "parameters": {
+        "c": {
+          "short_meaning": "bits fixing the offline retained fraction 2^-c",
+          "short_domain": "c in {0, 4} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-7r-dfj2013-multiple-table-family": {
+      "display_name": "DFJ multiple-table/data tradeoff",
+      "parameters": {
+        "tables": {
+          "short_meaning": "differential-position tables checked for this construction",
+          "short_domain": "Reported: 1 / reported 2^8; printed enumeration count unresolved"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "2^99"
+          }
+        }
+      }
+    },
+    "aes128-7r-dks-multiset-sampling-full-key-family": {
+      "display_name": "Five-differential multiset MITM · full key",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 reduction exponent of the special-multiset table",
+          "short_domain": "4 reported values"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5. Conference Table 1 gives 2^(103-n); the body and journal give 2^(103+n)."
+          },
+          "data": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5."
+          }
+        }
+      }
+    },
+    "aes128-7r-dks-multiset-sampling-selected-subkeys-family": {
+      "display_name": "Five-differential multiset MITM · subkeys",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 reduction exponent of the special-multiset table",
+          "short_domain": "4 reported values"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5. Conference Table 1 gives 2^(103-n); the body and journal give 2^(103+n)."
+          },
+          "data": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5."
+          }
+        }
+      }
+    },
+    "aes128-7r-value-constraints-gds-dlwgc2024-family": {
+      "display_name": "Value-constrained GDS MITM",
+      "parameters": {
+        "n": {
+          "short_meaning": "Negative base-2 logarithm of the retained precomputation-table fraction",
+          "short_domain": "n in {16, 0} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-full-dfa-giraud2005-bit-one-byte-sample-family": {
+      "display_name": "Bit-fault analysis · one byte",
+      "parameters": {
+        "n": {
+          "short_meaning": "useful faulty ciphertexts affecting the same selected or postselected pre-final state byte",
+          "short_domain": "n in {2, 3} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-full-dfa-giraud2005-k8-byte12-sample-family": {
+      "display_name": "Key-schedule faults · K8[12]",
+      "parameters": {
+        "n": {
+          "short_meaning": "useful faulty ciphertexts generated by faults on K8[12] after its correct use and before online K9 derivation",
+          "short_domain": "n in {10, 13} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-full-fault-bs2003-biased-bit-sample-family": {
+      "display_name": "Biased reset · one bit",
+      "parameters": {
+        "p0": {
+          "short_meaning": "Fixed conditional probability that the attempted reset changes a zero bit to one",
+          "short_domain": "0 <= p0 < 1/2"
+        },
+        "p1": {
+          "short_meaning": "Fixed conditional probability that the attempted reset changes a one bit to zero",
+          "short_domain": "1/2 < p1 <= 1"
+        },
+        "m": {
+          "short_meaning": "attempted fault-injection encryptions for the same target bit",
+          "short_domain": "Reported: m / 176/(p1 p0)^2"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-full-fault-bs2003-biased-whole-key-family": {
+      "display_name": "Biased reset · full key",
+      "parameters": {
+        "p0": {
+          "short_meaning": "Fixed conditional probability of a zero-to-one change under an attempted reset",
+          "short_domain": "0 <= p0 < 1/2, known and fixed within the conditioned fault model."
+        },
+        "p1": {
+          "short_meaning": "Fixed conditional probability of a one-to-zero change under an attempted reset",
+          "short_domain": "1/2 < p1 <= 1, known and fixed within the conditioned fault model."
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-full-fault-bs2003-xtime-dual-result-byte-sample-family": {
+      "display_name": "Dual-result xtime · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-full-fault-bs2003-xtime-flipflop-reset-byte-sample-family": {
+      "display_name": "Flip-flop reset · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-full-fault-bs2003-xtime-mul-skip-byte-sample-family": {
+      "display_name": "MUL skip · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-full-fault-bs2003-xtime-ram-input-reset-byte-sample-family": {
+      "display_name": "RAM-input reset · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-4r-gm2000-constant-enumeration-family": {
+      "display_name": "Constant-enumeration distinguisher",
+      "parameters": {
+        "N": {
+          "short_meaning": "distinct tested values of the active byte y",
+          "short_domain": "Reported: symbolic N<=256; source cost family / 16"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-7r-dks-multiset-sampling-full-key-family": {
+      "display_name": "Five-differential multiset MITM · full key",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 reduction exponent of the special-multiset table",
+          "short_domain": "Reported: 0 / 13 / source symbolic n>=0; not a fixed numerical assignment"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5."
+          },
+          "data": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5."
+          }
+        }
+      }
+    },
+    "aes192-7r-dks-multiset-sampling-selected-subkeys-family": {
+      "display_name": "Five-differential multiset MITM · subkeys",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 reduction exponent of the special-multiset table",
+          "short_domain": "Reported: 0 / 13 / source symbolic n>=0; not a fixed numerical assignment"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5."
+          },
+          "data": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5."
+          }
+        }
+      }
+    },
+    "aes192-7r-ds2008-basic-sampling-full-key-family": {
+      "display_name": "Basic MITM · full key",
+      "parameters": {
+        "n1": {
+          "short_meaning": "Offline table reduction factor",
+          "short_domain": "Reported: 1 / symbolic n1>1"
+        },
+        "n2": {
+          "short_meaning": "online searches with changed plaintext structures",
+          "short_domain": "Reported: 1 / symbolic n2>1"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-7r-ds2008-basic-sampling-selected-subkeys-family": {
+      "display_name": "Basic MITM · subkeys",
+      "parameters": {
+        "n1": {
+          "short_meaning": "Offline table reduction factor",
+          "short_domain": "Reported: 1 / symbolic n1>1"
+        },
+        "n2": {
+          "short_meaning": "online searches with changed plaintext structures",
+          "short_domain": "Reported: 1 / symbolic n2>1"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-7r-ds2008-improved-sampling-full-key-family": {
+      "display_name": "XOR-improved MITM · full key",
+      "parameters": {
+        "n1": {
+          "short_meaning": "Offline table reduction factor",
+          "short_domain": "Reported: 1 / 2^n; source symbolic sampling exponent n"
+        },
+        "n2": {
+          "short_meaning": "online searches with changed plaintext structures",
+          "short_domain": "Reported: 1 / 2^(n+2)=4*n1; same n"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-7r-ds2008-improved-sampling-selected-subkeys-family": {
+      "display_name": "XOR-improved MITM · subkeys",
+      "parameters": {
+        "n1": {
+          "short_meaning": "Offline table reduction factor",
+          "short_domain": "Reported: 1 / 2^n; source symbolic sampling exponent n"
+        },
+        "n2": {
+          "short_meaning": "online searches with changed plaintext structures",
+          "short_domain": "Reported: 1 / 2^(n+2)=4*n1; same n"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-7r-value-constraints-gds-dlwgc2024-family": {
+      "display_name": "Value-constrained GDS MITM",
+      "parameters": {
+        "n": {
+          "short_meaning": "Negative base-2 logarithm of the retained precomputation-table fraction",
+          "short_domain": "n in {12, 0} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-8r-dks-multiset-sampling-full-key-family": {
+      "display_name": "Five-differential multiset MITM · full key",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 reduction exponent of the retained special-multiset table",
+          "short_domain": "Reported: 0 / source symbolic n>=0; not a fixed numerical assignment"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-8r-dks-multiset-sampling-selected-subkeys-family": {
+      "display_name": "Five-differential multiset MITM · subkeys",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 reduction exponent of the retained special-multiset table",
+          "short_domain": "Reported: 0 / source symbolic n>=0; not a fixed numerical assignment"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-9r-value-constraints-tdc-dlwgc2024-family": {
+      "display_name": "TDC MITM",
+      "parameters": {
+        "configuration": {
+          "short_meaning": "accounting/configuration of Attack 3",
+          "short_domain": "Reported: unsplit base / sampled and reused"
+        }
+      }
+    },
+    "aes192-full-fault-bs2003-biased-bit-sample-family": {
+      "display_name": "Biased reset · one bit",
+      "parameters": {
+        "p0": {
+          "short_meaning": "Fixed conditional probability that the attempted reset changes a zero bit to one",
+          "short_domain": "0 <= p0 < 1/2"
+        },
+        "p1": {
+          "short_meaning": "Fixed conditional probability that the attempted reset changes a one bit to zero",
+          "short_domain": "1/2 < p1 <= 1"
+        },
+        "m": {
+          "short_meaning": "attempted fault-injection encryptions for the same target bit",
+          "short_domain": "Reported: m / 176/(p1 p0)^2"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-full-fault-bs2003-xtime-dual-result-byte-sample-family": {
+      "display_name": "Dual-result xtime · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-full-fault-bs2003-xtime-flipflop-reset-byte-sample-family": {
+      "display_name": "Flip-flop reset · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-full-fault-bs2003-xtime-mul-skip-byte-sample-family": {
+      "display_name": "MUL skip · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-full-fault-bs2003-xtime-ram-input-reset-byte-sample-family": {
+      "display_name": "RAM-input reset · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-10r-new-distinguisher-mitm-lz2024-family": {
+      "display_name": "new-distinguisher MITM matching",
+      "parameters": {
+        "matching": {
+          "short_meaning": "Matching schedule for the same Section 5 attack",
+          "short_domain": "Reported: full sequence / early abort"
+        }
+      }
+    },
+    "aes256-4r-gm2000-constant-enumeration-family": {
+      "display_name": "Constant-enumeration distinguisher",
+      "parameters": {
+        "N": {
+          "short_meaning": "distinct tested values of the active byte y",
+          "short_domain": "Reported: symbolic N<=256; source cost family / 16"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-7r-dks-multiset-sampling-full-key-family": {
+      "display_name": "Five-differential multiset MITM · full key",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 reduction exponent of the special-multiset table",
+          "short_domain": "Reported: 0 / 13 / source symbolic n>=0; not a fixed numerical assignment"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5."
+          },
+          "data": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5."
+          }
+        }
+      }
+    },
+    "aes256-7r-dks-multiset-sampling-selected-subkeys-family": {
+      "display_name": "Five-differential multiset MITM · subkeys",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 reduction exponent of the special-multiset table",
+          "short_domain": "Reported: 0 / 13 / source symbolic n>=0; not a fixed numerical assignment"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5."
+          },
+          "data": {
+            "display_expression": "2^(103+n)",
+            "note": "Source-rounded curve; the n=0 endpoint is also given as 2^105/5."
+          }
+        }
+      }
+    },
+    "aes256-7r-ds2008-basic-sampling-full-key-family": {
+      "display_name": "Basic MITM · full key",
+      "parameters": {
+        "n1": {
+          "short_meaning": "Offline table reduction factor",
+          "short_domain": "Reported: 1 / symbolic n1>1"
+        },
+        "n2": {
+          "short_meaning": "online searches with changed plaintext structures",
+          "short_domain": "Reported: 1 / symbolic n2>1"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-7r-ds2008-basic-sampling-selected-subkeys-family": {
+      "display_name": "Basic MITM · subkeys",
+      "parameters": {
+        "n1": {
+          "short_meaning": "Offline table reduction factor",
+          "short_domain": "Reported: 1 / symbolic n1>1"
+        },
+        "n2": {
+          "short_meaning": "online searches with changed plaintext structures",
+          "short_domain": "Reported: 1 / symbolic n2>1"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-7r-ds2008-improved-sampling-full-key-family": {
+      "display_name": "XOR-improved MITM · full key",
+      "parameters": {
+        "n1": {
+          "short_meaning": "Offline table reduction factor",
+          "short_domain": "Reported: 1 / 2^n; source symbolic sampling exponent n"
+        },
+        "n2": {
+          "short_meaning": "online searches with changed plaintext structures",
+          "short_domain": "Reported: 1 / 2^(n+2)=4*n1; same n"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-7r-ds2008-improved-sampling-selected-subkeys-family": {
+      "display_name": "XOR-improved MITM · subkeys",
+      "parameters": {
+        "n1": {
+          "short_meaning": "Offline table reduction factor",
+          "short_domain": "Reported: 1 / 2^n; source symbolic sampling exponent n"
+        },
+        "n2": {
+          "short_meaning": "online searches with changed plaintext structures",
+          "short_domain": "Reported: 1 / 2^(n+2)=4*n1; same n"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-7r-value-constraints-gds-dlwgc2024-family": {
+      "display_name": "Value-constrained GDS MITM",
+      "parameters": {
+        "n": {
+          "short_meaning": "Negative base-2 logarithm of the retained precomputation-table fraction",
+          "short_domain": "n in {8, 0} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-8r-dks-multiset-sampling-full-key-family": {
+      "display_name": "Five-differential multiset MITM · full key",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 reduction exponent of the retained special-multiset table",
+          "short_domain": "Reported: 0 / source symbolic n>=0; not a fixed numerical assignment"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-8r-dks-multiset-sampling-selected-subkeys-family": {
+      "display_name": "Five-differential multiset MITM · subkeys",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 reduction exponent of the retained special-multiset table",
+          "short_domain": "Reported: 0 / source symbolic n>=0; not a fixed numerical assignment"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-8r-ds2008-improved-sampling-full-key-family": {
+      "display_name": "XOR-improved MITM · full key",
+      "parameters": {
+        "n1": {
+          "short_meaning": "Offline-table reduction factor",
+          "short_domain": "Reported: 1 / 2^n; source symbolic sampling exponent n"
+        },
+        "n2": {
+          "short_meaning": "Repeated online searches",
+          "short_domain": "Reported: 1 / 2^(n+2)=4*n1; same n"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-9r-bglw2026-table-coverage-family": {
+      "display_name": "Value-constraint MITM",
+      "parameters": {
+        "c": {
+          "short_meaning": "bits fixing the offline retained fraction 2^-c",
+          "short_domain": "c in {0, 8} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "preprocessing": {
+            "display_expression": "2^(248.1-c) Enc + 2^(248-c) MA",
+            "note": "Section 7.2 formula. Section 7.4 gives 2^248.4 Enc at c=0; the c=8 endpoint is 2^240.1 Enc + 2^240 MA."
+          }
+        }
+      }
+    },
+    "aes256-9r-dfj2013-table-coverage-family": {
+      "display_name": "DFJ retained-multiset-table tradeoff",
+      "parameters": {
+        "c": {
+          "short_meaning": "Base-2 exponent reducing covered middle-table multisets",
+          "short_domain": "c in {0, 7} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-9r-value-constraints-gds-dlwgc2024-family": {
+      "display_name": "Value-constrained GDS MITM",
+      "parameters": {
+        "n": {
+          "short_meaning": "Table-sampling exponent",
+          "short_domain": "n in {20, 0} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-9r-value-constraints-tdc-dlwgc2024-family": {
+      "display_name": "TDC MITM",
+      "parameters": {
+        "q": {
+          "short_meaning": "Product n0*n1 of the input/output constraint counts",
+          "short_domain": "q in {4, 256} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-full-fault-bs2003-biased-bit-sample-family": {
+      "display_name": "Biased reset · one bit",
+      "parameters": {
+        "p0": {
+          "short_meaning": "Fixed conditional probability that the attempted reset changes a zero bit to one",
+          "short_domain": "0 <= p0 < 1/2"
+        },
+        "p1": {
+          "short_meaning": "Fixed conditional probability that the attempted reset changes a one bit to zero",
+          "short_domain": "1/2 < p1 <= 1"
+        },
+        "m": {
+          "short_meaning": "attempted fault-injection encryptions for the same target bit",
+          "short_domain": "Reported: m / 176/(p1 p0)^2"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-full-fault-bs2003-xtime-dual-result-byte-sample-family": {
+      "display_name": "Dual-result xtime · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-full-fault-bs2003-xtime-flipflop-reset-byte-sample-family": {
+      "display_name": "Flip-flop reset · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-full-fault-bs2003-xtime-mul-skip-byte-sample-family": {
+      "display_name": "MUL skip · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-full-fault-bs2003-xtime-ram-input-reset-byte-sample-family": {
+      "display_name": "RAM-input reset · one byte",
+      "parameters": {
+        "N": {
+          "short_meaning": "selected plaintext-byte values i and corresponding attempted fault observations for one key byte",
+          "short_domain": "Reported: approximately 16 / 256"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-10r-mitm-li-jin2016-family": {
+      "display_name": "MITM · list streaming",
+      "parameters": {
+        "q": {
+          "short_meaning": "equal-probability conditional distinguishers used in parallel",
+          "short_domain": "q in {1, 4} (reported)"
+        },
+        "b": {
+          "short_meaning": "Bit length of the streamed round-key partition index",
+          "short_domain": "b in {0, 32} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "data": {
+            "display_expression": null
+          },
+          "memory": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-4r-truncated-differential-cwsw2022-one-inactive-ps-family": {
+      "display_name": "one-inactive truncated differential success settings",
+      "parameters": {
+        "PS": {
+          "short_meaning": "normal-model success target",
+          "short_domain": "PS in {0.95, 0.99} (reported)"
+        }
+      }
+    },
+    "aes128-4r-truncated-differential-cwsw2022-conditional-ps-family": {
+      "display_name": "conditional truncated differential success settings",
+      "parameters": {
+        "PS": {
+          "short_meaning": "normal-model success target",
+          "short_domain": "PS in {0.95, 0.99} (reported)"
+        }
+      }
+    },
+    "aes-3r-differential-linear-hde2024-masks-family": {
+      "display_name": "Three-layer generalized-DLCT correlation",
+      "parameters": {
+        "input_difference": {
+          "short_meaning": "Nonzero active-byte input difference",
+          "short_domain": "6 reported values"
+        },
+        "output_mask": {
+          "short_meaning": "Nonzero active-byte output mask",
+          "short_domain": "6 reported values"
+        }
+      }
+    },
+    "aes192-9r-mitm-corrected-basic-lz2024-family": {
+      "display_name": "Corrected basic MITM",
+      "parameters": {
+        "f": {
+          "short_meaning": "Negative base-two logarithm of precomputed sequence fraction",
+          "short_domain": "f in {0, 8} (reported)"
+        },
+        "b": {
+          "short_meaning": "Key-partition bits used for sequential table reuse",
+          "short_domain": "b in {0, 8} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "data": {
+            "display_expression": null
+          },
+          "memory": {
+            "display_expression": null
+          },
+          "preprocessing": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes192-9r-mitm-four-relations-lz2024-family": {
+      "display_name": "Four-relation MITM",
+      "parameters": {
+        "f": {
+          "short_meaning": "Negative base-two logarithm of precomputed sequence fraction",
+          "short_domain": "f in {0, 8} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "data": {
+            "display_expression": null
+          },
+          "memory": {
+            "display_expression": null
+          },
+          "preprocessing": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes192-9r-mitm-ljw-reanalysis-first9-plain-lz2024-family": {
+      "display_name": "Key-dependent sieve · first nine rounds",
+      "parameters": {
+        "f": {
+          "short_meaning": "Negative base-two logarithm of precomputed sequence fraction",
+          "short_domain": "f in {0, 12.2} (reported)"
+        }
+      }
+    },
+    "aes192-9r-mitm-ljw-reanalysis-rounds3to11-plain-lz2024-family": {
+      "display_name": "Key-dependent sieve · intermediate rounds",
+      "parameters": {
+        "f": {
+          "short_meaning": "Negative base-two logarithm of precomputed sequence fraction",
+          "short_domain": "f in {0, 8} (reported)"
+        }
+      }
+    },
+    "aes192-9r-mitm-ljw-reanalysis-rounds3to11-streamed-lz2024-family": {
+      "display_name": "Key-dependent sieve · streamed",
+      "parameters": {
+        "f": {
+          "short_meaning": "Negative base-two logarithm of precomputed sequence fraction",
+          "short_domain": "f in {0, 8, 9.8} (reported)"
+        }
+      }
+    },
+    "aes192-7r-mixture-dissection-bdkrs2020": {
+      "display_name": "mixture/dissection storage choices",
+      "parameters": {
+        "stage": {
+          "short_meaning": "algorithm refinement",
+          "short_domain": "Reported: basic / dissection / key schedule dissection / key relation mitm"
+        }
+      }
+    },
+    "aes256-7r-mixture-dissection-bdkrs2020": {
+      "display_name": "mixture/dissection storage choices",
+      "parameters": {
+        "stage": {
+          "short_meaning": "algorithm refinement",
+          "short_domain": "Reported: basic / dissection"
+        }
+      }
+    },
+    "aes192-7r-gm-dissection-bdkrs2020": {
+      "display_name": "GM dissection time-memory choices",
+      "parameters": {
+        "schedule": {
+          "short_meaning": "dissection schedule",
+          "short_domain": "Reported: dissection / key schedule dissection"
+        }
+      }
+    },
+    "aes128-7r-impossible-key-schedule-lp2025-family": {
+      "display_name": "reconstruction",
+      "parameters": {
+        "ell": {
+          "short_meaning": "Structure/pair tuning parameter",
+          "short_domain": "ell in {3.9} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-8r-related-key-impossible-stages-lp2025": {
+      "display_name": "related-key impossible-differential reconstruction stages",
+      "parameters": {
+        "stage": {
+          "short_meaning": "reconstruction refinement",
+          "short_domain": "Reported: retained candidates / key bridging / new representation"
+        },
+        "ell": {
+          "short_meaning": "Pair/structure parameter at the reported optimum",
+          "short_domain": "ell in {5.9, 5.6, 4.6} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-8r-related-key-impossible-second-tradeoff-lp2025-family": {
+      "display_name": "related-key ID second-tradeoff",
+      "parameters": {
+        "ell": {
+          "short_meaning": "structure tuning parameter",
+          "short_domain": "ell in {5.4} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-8r-related-key-impossible-third-tradeoff-lp2025-family": {
+      "display_name": "related-key ID third-tradeoff",
+      "parameters": {
+        "ell": {
+          "short_meaning": "structure tuning parameter",
+          "short_domain": "ell in {5.7} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-8r-square-herds-lp2025": {
+      "display_name": "Square herd-count",
+      "parameters": {
+        "i": {
+          "short_meaning": "processed herds",
+          "short_domain": "i in {2} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [
+          "i=2"
+        ],
+        "resources": {
+          "data": {
+            "display_expression": "2^128 - 2^119"
+          }
+        }
+      }
+    },
+    "aes256-13r-differential-mitm-bdf2023": {
+      "display_name": "two-related-key differential MITM right-pair tradeoff",
+      "parameters": {
+        "right_pairs": {
+          "short_meaning": "Expected right-pair target for the reconstruction schedule",
+          "short_domain": "right_pairs in {1, 2} (reported)"
+        }
+      }
+    },
+    "aes192-full-rectangle-lcs2023-family": {
+      "display_name": "Related-key rectangle",
+      "parameters": {
+        "configuration": {
+          "short_meaning": "The published tuning choice of this construction",
+          "short_domain": "Reported: guess filter / table extraction"
+        }
+      }
+    },
+    "aes192-first9-mitm-ljw2015-family": {
+      "display_name": "Key-dependent sieve · first nine rounds",
+      "parameters": {
+        "t": {
+          "short_meaning": "Precompute fraction2^-t and repeat the source online data/trials2^t times",
+          "short_domain": "t in {0, 8} (reported)"
+        },
+        "m": {
+          "short_meaning": "Partition into2^m key classes and stream all classes sequentially",
+          "short_domain": "m in {0, 8} (reported)"
+        },
+        "q": {
+          "short_meaning": "Use the source shorter16-byte sequence plus shared-key information (1) or32-byte sequence (0)",
+          "short_domain": "q in {0, 1} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-rounds3-11-mitm-ljw2015-family": {
+      "display_name": "Key-dependent sieve · rounds 3–11",
+      "parameters": {
+        "t": {
+          "short_meaning": "Precompute fraction2^-t and repeat the source online data/trials2^t times",
+          "short_domain": "t in {0, 4} (reported)"
+        },
+        "m": {
+          "short_meaning": "Partition into2^m key classes and stream all classes sequentially",
+          "short_domain": "m in {0, 16} (reported)"
+        },
+        "q": {
+          "short_meaning": "Use the source shorter16-byte sequence plus shared-key information (1) or32-byte sequence (0)",
+          "short_domain": "q in {0, 1} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-first9-mitm-ljw2015-family": {
+      "display_name": "Key-dependent sieve · first nine rounds",
+      "parameters": {
+        "t": {
+          "short_meaning": "Precompute fraction2^-t and repeat the source online data/trials2^t times",
+          "short_domain": "t in {0, 8} (reported)"
+        },
+        "m": {
+          "short_meaning": "Partition into2^m key classes and stream all classes sequentially",
+          "short_domain": "m in {0, 32} (reported)"
+        },
+        "q": {
+          "short_meaning": "Use the source shorter16-byte sequence plus shared-key information (1) or32-byte sequence (0)",
+          "short_domain": "q in {0} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-full-enlarged-biclique-tw2015-family": {
+      "display_name": "Enlarged independent biclique",
+      "parameters": {
+        "d2": {
+          "short_meaning": "Log2 of the ciphertext-side biclique dimension, with d1=16 fixed",
+          "short_domain": "d2 in {8, 16} (reported)"
+        },
+        "sim": {
+          "short_meaning": "Enable the source Section 7 sieve-in-the-middle table optimization",
+          "short_domain": "Reported: disabled / enabled"
+        }
+      }
+    },
+    "aes192-full-enlarged-biclique-tw2015-family": {
+      "display_name": "Enlarged independent biclique",
+      "parameters": {
+        "d2": {
+          "short_meaning": "Log2 of the ciphertext-side biclique dimension, with d1=16 fixed",
+          "short_domain": "d2 in {8} (reported)"
+        },
+        "sim": {
+          "short_meaning": "Enable the source Section 7 sieve-in-the-middle table optimization",
+          "short_domain": "Reported: disabled / enabled"
+        }
+      }
+    },
+    "aes256-full-enlarged-biclique-tw2015-family": {
+      "display_name": "Enlarged independent biclique",
+      "parameters": {
+        "d2": {
+          "short_meaning": "Log2 of the ciphertext-side biclique dimension, with d1=16 fixed",
+          "short_domain": "d2 in {8} (reported)"
+        },
+        "sim": {
+          "short_meaning": "Enable the source Section 7 sieve-in-the-middle table optimization",
+          "short_domain": "Reported: disabled / enabled"
+        }
+      }
+    },
+    "aes192-8r-ds-mitm-df2014-family": {
+      "display_name": "Differential-enumeration MITM",
+      "parameters": {
+        "configuration": {
+          "short_meaning": "The published tuning choice of this construction",
+          "short_domain": "Reported: single path / parallel paths"
+        }
+      }
+    },
+    "aes256-8r-ds-mitm-df2014-family": {
+      "display_name": "Differential-enumeration MITM",
+      "parameters": {
+        "configuration": {
+          "short_meaning": "The published tuning choice of this construction",
+          "short_domain": "Reported: single path / parallel paths"
+        }
+      }
+    },
+    "aes192-256-7r-quantum-id-dns2024-family": {
+      "display_name": "Quantum impossible differential",
+      "parameters": {
+        "filter": {
+          "short_meaning": "intermediate-table construction strategy",
+          "short_domain": "Reported: standard table filter / quantum table filter"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "\\(T_{\\mathrm{std,filter}}\\approx2^{101.5},\\quad T_{\\mathrm{opt,filter}}\\le2^{95.2},\\quad T_{\\mathrm{opt}}\\approx2^{99.9}\\)",
+            "note": "Standard and optimized filter costs; the total also includes pair-generation queries in a separate unit."
+          },
+          "memory": {
+            "display_expression": "\\(M=N,\\quad N=2^{78.5}\\)",
+            "note": "N pair registers of 4n bits each. The application instead states N qubits; the source conflict is retained."
+          }
+        }
+      }
+    },
+    "aes-8r-known-key-list-merging-jnp2014-family": {
+      "display_name": "Known-key list-merging rebound",
+      "parameters": {
+        "nB": {
+          "short_meaning": "characteristic active-cell/diagonal parameter nB",
+          "short_domain": "nB in {4, 1} (reported)"
+        },
+        "mB": {
+          "short_meaning": "characteristic active-cell/diagonal parameter mB",
+          "short_domain": "mB in {1, 4} (reported)"
+        },
+        "mF": {
+          "short_meaning": "characteristic active-cell/diagonal parameter mF",
+          "short_domain": "mF in {4, 1} (reported)"
+        },
+        "nF": {
+          "short_meaning": "characteristic active-cell/diagonal parameter nF",
+          "short_domain": "nF in {1, 4} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [
+          "nB+mB>=t+1; nF+mF>=t+1",
+          "t=4; c=8; all rounds include MixColumns"
+        ],
+        "resources": {
+          "memory": {
+            "display_expression": "\\(M=m_B2^{ct},\\quad m_B\\leq m_F\\)",
+            "note": "Formula for m_B<=m_F. The reverse direction has a source-formula discrepancy."
+          }
+        }
+      }
+    },
+    "aes256-11r-related-subkey-odd-bdk2010-family": {
+      "display_name": "odd-start partial recovery",
+      "parameters": {
+        "restricted_sboxes": {
+          "short_meaning": "restricted active output S-boxes in the source variant",
+          "short_domain": "restricted_sboxes in {3, 4} (reported)"
+        }
+      }
+    },
+    "aes256-11r-related-subkey-even-bdk2010-family": {
+      "display_name": "even-start partial recovery",
+      "parameters": {
+        "restricted_sboxes": {
+          "short_meaning": "restricted active output S-boxes in the source variant",
+          "short_domain": "restricted_sboxes in {3, 2} (reported)"
+        }
+      }
+    },
+    "aes192-8r-related-key-id-bdk2006-family": {
+      "display_name": "column tradeoff",
+      "parameters": {
+        "g": {
+          "short_meaning": "last-round columns guessed",
+          "short_domain": "g in {3, 2, 1} (reported)"
+        }
+      }
+    },
+    "aes-3r-mixture-integral-gs2020-family": {
+      "display_name": "low-data impossible-mixture-integral distinguisher",
+      "parameters": {
+        "q": {
+          "short_meaning": "related input pairs",
+          "short_domain": "6 reported values"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-3r-mixture-integral-no-final-mc-gs2020-family": {
+      "display_name": "omitted-final-MC key recovery",
+      "parameters": {
+        "strategy": {
+          "short_meaning": "direct key-byte search or precomputed public-S-box lookup table",
+          "short_domain": "Reported: direct / precomputed"
+        }
+      }
+    },
+    "aes128-3r-mixture-integral-full-mc-gs2020-family": {
+      "display_name": "full-MC key recovery",
+      "parameters": {
+        "strategy": {
+          "short_meaning": "direct key-byte search or precomputed public-S-box lookup table",
+          "short_domain": "Reported: direct / precomputed"
+        }
+      }
+    },
+    "aes128-4r-mixture-integral-no-final-mc-gs2020-family": {
+      "display_name": "omitted-final-MC key recovery",
+      "parameters": {
+        "strategy": {
+          "short_meaning": "direct key-byte search or precomputed public-S-box lookup table",
+          "short_domain": "Reported: direct / precomputed"
+        }
+      }
+    },
+    "aes128-4r-mixture-integral-full-mc-gs2020-family": {
+      "display_name": "full-MC key recovery",
+      "parameters": {
+        "strategy": {
+          "short_meaning": "direct key-byte search or precomputed public-S-box lookup table",
+          "short_domain": "Reported: direct / precomputed"
+        }
+      }
+    },
+    "aes-5r-yoyo-rbh2017-family": {
+      "display_name": "yoyo byte-collision distinguisher",
+      "parameters": {
+        "t": {
+          "short_meaning": "zero words after the initial Q-prime partial round",
+          "short_domain": "t in {1, 2, 3} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-8r-single-chosen-key-dfj2012-family": {
+      "display_name": "single-chosen-key storage strategies",
+      "parameters": {
+        "strategy": {
+          "short_meaning": "Intermediate-list materialization or streaming/hash storage",
+          "short_domain": "Reported: materialized / streamed"
+        }
+      }
+    },
+    "aes-5r-multiple-eight-structures-grr2017-family": {
+      "display_name": "fixed-antidiagonal repeated-structure test",
+      "parameters": {
+        "s": {
+          "short_meaning": "complete diagonal structures",
+          "short_domain": "s in {1, 3} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-5r-statistical-integral-cscw2017-secret-sbox-family": {
+      "display_name": "Statistical integral · secret S-box",
+      "parameters": {
+        "N": {
+          "short_meaning": "Texts per structure",
+          "short_domain": "N in {2^106.32} (reported)"
+        },
+        "Ns": {
+          "short_meaning": "structures",
+          "short_domain": "Ns in {1} (reported)"
+        },
+        "s": {
+          "short_meaning": "Dimension of uniform input set",
+          "short_domain": "s in {120} (reported)"
+        },
+        "t": {
+          "short_meaning": "Tested output width",
+          "short_domain": "t in {32} (reported)"
+        },
+        "b": {
+          "short_meaning": "independent output projections",
+          "short_domain": "b in {4} (reported)"
+        },
+        "alpha0": {
+          "short_meaning": "Type-I error",
+          "short_domain": "alpha0 in {0.0002} (reported)"
+        },
+        "alpha1": {
+          "short_meaning": "Type-II error",
+          "short_domain": "alpha1 in {0.0002} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [
+          "N=((2^s-1)(q_(1-alpha0)+q_(1-alpha1)))/(sqrt(b*Ns*(2^t-1)/2)+q_(1-alpha0))+1; D_per_delta=N*Ns; D_total=2^8*N*Ns with Ns=1"
+        ],
+        "resources": {}
+      }
+    },
+    "aes128-8r-statistical-integral-cscw2017-family": {
+      "display_name": "Statistical integral",
+      "parameters": {
+        "N": {
+          "short_meaning": "Texts per structure",
+          "short_domain": "N in {2^20.81} (reported)"
+        },
+        "Ns": {
+          "short_meaning": "structures",
+          "short_domain": "Ns in {2^20.81} (reported)"
+        },
+        "s": {
+          "short_meaning": "Dimension of uniform input set",
+          "short_domain": "s in {32} (reported)"
+        },
+        "t": {
+          "short_meaning": "Tested output width",
+          "short_domain": "t in {8} (reported)"
+        },
+        "b": {
+          "short_meaning": "independent output projections",
+          "short_domain": "b in {16} (reported)"
+        },
+        "alpha0": {
+          "short_meaning": "Type-I error",
+          "short_domain": "alpha0 in {2^-128} (reported)"
+        },
+        "alpha1": {
+          "short_meaning": "Type-II error",
+          "short_domain": "alpha1 in {2^-128} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [
+          "N=((2^s-1)(q_(1-alpha0)+q_(1-alpha1)))/(sqrt(b*Ns*(2^t-1)/2)+q_(1-alpha0))+1; D=N*Ns"
+        ],
+        "resources": {}
+      }
+    },
+    "aes128-10r-statistical-integral-cscw2017-family": {
+      "display_name": "Statistical integral",
+      "parameters": {
+        "N": {
+          "short_meaning": "Texts per structure",
+          "short_domain": "N in {2^27.92} (reported)"
+        },
+        "Ns": {
+          "short_meaning": "structures",
+          "short_domain": "Ns in {2^27.92} (reported)"
+        },
+        "s": {
+          "short_meaning": "Dimension of uniform input set",
+          "short_domain": "s in {32} (reported)"
+        },
+        "t": {
+          "short_meaning": "Tested output width",
+          "short_domain": "t in {8} (reported)"
+        },
+        "b": {
+          "short_meaning": "independent output projections",
+          "short_domain": "b in {1} (reported)"
+        },
+        "alpha0": {
+          "short_meaning": "Type-I error",
+          "short_domain": "alpha0 in {2^-50} (reported)"
+        },
+        "alpha1": {
+          "short_meaning": "Type-II error",
+          "short_domain": "alpha1 in {2^-10.51} (reported)"
+        },
+        "ns": {
+          "short_meaning": "Structures per filter group",
+          "short_domain": "ns in {2^8} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [
+          "N=((2^s-1)(q_(1-alpha0)+q_(1-alpha1)))/(sqrt(b*ns*(2^t-1)/2)+q_(1-alpha0))+1; D=N*Ns"
+        ],
+        "resources": {}
+      }
+    },
+    "aes128-9r-chosen-key-fjp2013-family": {
+      "display_name": "chosen-key pair solution-count endpoints",
+      "parameters": {
+        "q": {
+          "short_meaning": "Expected number of constructed solutions",
+          "short_domain": "q in {1, 4096} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-4r-cwsw2022-single-zero-index-classes-family": {
+      "display_name": "single-zero probabilities by published index class",
+      "parameters": {
+        "index_class": {
+          "short_meaning": "Table2 row/equivalence class",
+          "short_domain": "16 reported values"
+        }
+      }
+    },
+    "aes128-4r-cwsw2022-joint-zero-first-column-family": {
+      "display_name": "joint two-zero-byte probabilities: all published cells",
+      "parameters": {
+        "i0": {
+          "short_meaning": "Input active-byte index",
+          "short_domain": "16 reported values"
+        },
+        "output_pair": {
+          "short_meaning": "Intermediate DeltaX4 first-column inactive pair",
+          "short_domain": "6 reported values"
+        }
+      }
+    },
+    "aes-5r-mixture-partial-data-success-bdkrs2020": {
+      "display_name": "partial recovery: data and success",
+      "parameters": {
+        "structure_log2": {
+          "short_meaning": "Log2 number of chosen plaintexts in each constituent structure",
+          "short_domain": "6 reported values"
+        },
+        "output_columns": {
+          "short_meaning": "shifted output columns tested within each partial attack",
+          "short_domain": "output_columns in {1, 2} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-5r-mixture-full-data-success-bdkrs2020": {
+      "display_name": "full recovery: data and success",
+      "parameters": {
+        "structure_log2": {
+          "short_meaning": "Log2 number of chosen plaintexts in each constituent structure",
+          "short_domain": "structure_log2 in {21.5, 21.75, 22, 22.5} (reported)"
+        },
+        "output_columns": {
+          "short_meaning": "shifted output columns tested within each partial attack",
+          "short_domain": "output_columns in {1, 2} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-6r-mixture-refinements-bdkrs2020": {
+      "display_name": "key recovery",
+      "parameters": {
+        "stage": {
+          "short_meaning": "discrete algorithm-refinement stage",
+          "short_domain": "Reported: basic / mitm / special pairs"
+        }
+      }
+    },
+    "aes192-256-6r-mixture-refinements-bdkrs2020": {
+      "display_name": "/256 subkey recovery",
+      "parameters": {
+        "stage": {
+          "short_meaning": "discrete algorithm-refinement stage",
+          "short_domain": "Reported: basic / mitm / special pairs"
+        }
+      }
+    },
+    "aes-5r-mixture-count-statistics-bdkrs2020": {
+      "display_name": "good-mixture count statistics",
+      "parameters": {
+        "structure_log2": {
+          "short_meaning": "Log2 sampled type-T plaintext count in the reported experiment",
+          "short_domain": "7 reported values"
+        }
+      }
+    },
+    "aes128-7r-dks-basic-parallel-selected-subkeys-family": {
+      "display_name": "Parallel-differential MITM · subkeys",
+      "parameters": {
+        "m": {
+          "short_meaning": "basic differential choices, with a separate multiset table for each",
+          "short_domain": "m in {1, 256} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-7r-dks-basic-parallel-full-key-headline-family": {
+      "display_name": "Parallel-differential MITM · full key",
+      "parameters": {
+        "m": {
+          "short_meaning": "basic differential choices, with a separate multiset table for each",
+          "short_domain": "m in {1, 256} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-7r-dks-basic-parallel-selected-subkeys-family": {
+      "display_name": "Parallel-differential MITM · subkeys",
+      "parameters": {
+        "m": {
+          "short_meaning": "basic differential choices, with a separate multiset table for each",
+          "short_domain": "m in {1, 256} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-7r-dks-basic-parallel-full-key-headline-family": {
+      "display_name": "Parallel-differential MITM · full key",
+      "parameters": {
+        "m": {
+          "short_meaning": "basic differential choices, with a separate multiset table for each",
+          "short_domain": "m in {1, 256} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-7r-dks-basic-parallel-selected-subkeys-family": {
+      "display_name": "Parallel-differential MITM · subkeys",
+      "parameters": {
+        "m": {
+          "short_meaning": "basic differential choices, with a separate multiset table for each",
+          "short_domain": "m in {1, 256} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-7r-dks-basic-parallel-full-key-headline-family": {
+      "display_name": "Parallel-differential MITM · full key",
+      "parameters": {
+        "m": {
+          "short_meaning": "basic differential choices, with a separate multiset table for each",
+          "short_domain": "m in {1, 256} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-7r-impossible-one-output-reanalysis-lp2025-family": {
+      "display_name": "one-output historical reconstruction",
+      "parameters": {
+        "ell": {
+          "short_meaning": "structure/pair tuning parameter",
+          "short_domain": "ell in {5.1} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-7r-impossible-multiple-output-reanalysis-lp2025-family": {
+      "display_name": "multiple-output reanalysis",
+      "parameters": {
+        "ell": {
+          "short_meaning": "structure/pair tuning parameter",
+          "short_domain": "ell in {6.1} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-7r-impossible-state-test-reanalysis-lp2025-family": {
+      "display_name": "state-test reanalysis",
+      "parameters": {
+        "ell": {
+          "short_meaning": "structure/pair tuning parameter",
+          "short_domain": "ell in {6} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-8r-square-exhaustive-reconstruction-lp2025-family": {
+      "display_name": "Square exhaustive reconstruction",
+      "parameters": {
+        "i": {
+          "short_meaning": "processed herds",
+          "short_domain": "i in {5} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [
+          "i=5"
+        ],
+        "resources": {}
+      }
+    },
+    "aes-all-6r-dgklmm2024-todo-six-structure-packing-family": {
+      "display_name": "FFT partial sums · six structures",
+      "parameters": {
+        "packing": {
+          "short_meaning": "Source's packed-convolution adaptation",
+          "short_domain": "Reported: none / two"
+        }
+      }
+    },
+    "aes128-5r-mixing-retracing-mitm-dkrs2024-family": {
+      "display_name": "Mixing-retracing MITM",
+      "parameters": {
+        "extractor": {
+          "short_meaning": "discrete extractor/input/friend-pair configuration",
+          "short_domain": "Reported: naive full table / lowdata dissection / fast friend pairs"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "data": {
+            "display_expression": null
+          },
+          "memory": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes192-aes256-5r-mixing-retracing-mitm-dkrs2024-family": {
+      "display_name": "Mixing-retracing MITM",
+      "parameters": {
+        "extractor": {
+          "short_meaning": "discrete extractor/input/friend-pair configuration",
+          "short_domain": "Reported: naive full table / lowdata dissection / fast friend pairs"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "data": {
+            "display_expression": null
+          },
+          "memory": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-5r-retracing-secret-sbox-dkrs2024-family": {
+      "display_name": "Retracing · secret S-box",
+      "parameters": {
+        "selection": {
+          "short_meaning": "How the useful initial pair is selected before final equation solving",
+          "short_domain": "Reported: direct / distinguish first"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "data": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-5r-retracing-secret-sbox-secret-mc-mds-dkrs2024-family": {
+      "display_name": "Retracing · secret S-box and MDS matrix",
+      "parameters": {
+        "selection": {
+          "short_meaning": "How the useful initial pair is selected before final equation solving",
+          "short_domain": "Reported: direct / distinguish first"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "data": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-6r-truncated-boomerang-distinguisher-bl2023-family": {
+      "display_name": "structural truncated-boomerang trail sets",
+      "parameters": {
+        "m": {
+          "short_meaning": "Cumulative published trail-set refinement",
+          "short_domain": "m in {0, 1, 2, 3} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-6r-truncated-boomerang-key-recovery-bl2023-family": {
+      "display_name": "truncated-boomerang key extraction",
+      "parameters": {
+        "trail": {
+          "short_meaning": "Source-supported extraction/trail choice",
+          "short_domain": "Reported: basic mu4 / multiple mu4 / two diagonal mu8"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes256-full-related-subkey-key-structure-boomerang-gsw2022-base-family": {
+      "display_name": "Key-structure boomerang",
+      "parameters": {
+        "s": {
+          "short_meaning": "Log2 reduction of the encryption-side key-structure cardinality from2^16",
+          "short_domain": "s in {0} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [
+          "0<=s<=7.5 (source approximate range)"
+        ],
+        "resources": {}
+      }
+    },
+    "aes256-full-related-subkey-key-structure-boomerang-gsw2022-reuse-family": {
+      "display_name": "Key-structure boomerang · encryption reuse",
+      "parameters": {
+        "s": {
+          "short_meaning": "Log2 reduction of the encryption-side key-structure cardinality from2^16",
+          "short_domain": "s in {0} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [
+          "0<=s<=7.5 (source approximate range)"
+        ],
+        "resources": {}
+      }
+    },
+    "aes-5r-probabilistic-mixture-c1-gra2020-family": {
+      "display_name": "One-column probabilistic mixture",
+      "parameters": {
+        "n": {
+          "short_meaning": "constructedS sets",
+          "short_domain": "Reported: 2^71.243 (source)"
+        },
+        "q": {
+          "short_meaning": "Desired model-based distinguishing success",
+          "short_domain": "Reported: >0.95 (disputed)"
+        },
+        "implementation": {
+          "short_meaning": "Counting strategy for same set construction",
+          "short_domain": "Reported: sorted / naive all pairs lower bound"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "data": {
+            "display_expression": "2^32 * ceil(n/N)"
+          },
+          "time": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes-5r-probabilistic-mixture-c2-gra2020-family": {
+      "display_name": "Two-column probabilistic mixture",
+      "parameters": {
+        "subset": {
+          "short_meaning": "Evidenced chosen plaintext subset",
+          "short_domain": "Reported: published2^52 subset / full2^64 coset"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "data": {
+            "display_expression": null
+          },
+          "time": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-6r-probabilistic-mixture-partial32-gra2020-family": {
+      "display_name": "Probabilistic mixture · 32-bit subkey recovery",
+      "parameters": {
+        "L": {
+          "short_meaning": "complete chosenD_i cosets",
+          "short_domain": "Reported: 2^40.77 (source)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "data": {
+            "display_expression": "L*2^32"
+          },
+          "time": {
+            "display_expression": "2^32*L*C_sort/(20*6)"
+          }
+        }
+      }
+    },
+    "aes128-6r-probabilistic-mixture-gra2020-family": {
+      "display_name": "Probabilistic mixture differential",
+      "parameters": {
+        "L": {
+          "short_meaning": "complete chosenD_i cosets",
+          "short_domain": "Reported: 2^40.77 (source)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "data": {
+            "display_expression": "L*2^32"
+          },
+          "time": {
+            "display_expression": "2^32*L*C_sort/(20*6) + 2^96"
+          }
+        }
+      }
+    },
+    "aes-column-g2-support-count-wj2019-family": {
+      "display_name": "g2 predecessor counts",
+      "parameters": {
+        "n": {
+          "short_meaning": "Fixed active input support size or dependent-tree depth",
+          "short_domain": "n in {1, 2, 3, 4} (reported)"
+        }
+      }
+    },
+    "aes-column-g2-dependent-tree-wj2019-family": {
+      "display_name": "g2 dependent trees",
+      "parameters": {
+        "n": {
+          "short_meaning": "Fixed active input support size or dependent-tree depth",
+          "short_domain": "n in {1, 2, 3, 4} (reported)"
+        }
+      }
+    },
+    "aes128-full-biclique-minimal-kp-bcgs2015-family": {
+      "display_name": "Star-based independent biclique",
+      "parameters": {
+        "sim": {
+          "short_meaning": "Whether the source sieve-in-the-middle implementation is used",
+          "short_domain": "sim in {0, 1} (reported)"
+        },
+        "known_pairs": {
+          "short_meaning": "Known-pair count for stars, or a non-KP setting marker",
+          "short_domain": "known_pairs in {2, 1} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "C_full=2^(n-2d)*(C_biclique+C_precomp+C_recomp+C_falsepos)",
+            "note": "d=8. The source evaluates Table 1 layouts; SIM costs are reported at separate endpoints."
+          },
+          "data": {
+            "display_expression": "D=m"
+          }
+        }
+      }
+    },
+    "aes128-full-biclique-subcodebook-cc-bcgs2015-family": {
+      "display_name": "Independent biclique · subcodebook",
+      "parameters": {
+        "sim": {
+          "short_meaning": "Whether the source sieve-in-the-middle implementation is used",
+          "short_domain": "sim in {0, 1} (reported)"
+        },
+        "known_pairs": {
+          "short_meaning": "Known-pair count for stars, or a non-KP setting marker",
+          "short_domain": "Reported: not a KP setting"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "C_full=2^(n-2d)*(C_biclique+C_precomp+C_recomp+C_falsepos)",
+            "note": "d=8. The source evaluates Table 1 layouts; SIM costs are reported at separate endpoints."
+          },
+          "data": {
+            "display_expression": "D=2^64"
+          }
+        }
+      }
+    },
+    "aes128-full-biclique-full-codebook-bcgs2015-family": {
+      "display_name": "Independent biclique · full codebook",
+      "parameters": {
+        "sim": {
+          "short_meaning": "Whether the source sieve-in-the-middle implementation is used",
+          "short_domain": "sim in {0, 1} (reported)"
+        },
+        "known_pairs": {
+          "short_meaning": "Known-pair count for stars, or a non-KP setting marker",
+          "short_domain": "Reported: not a KP setting"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "C_full=2^(n-2d)*(C_biclique+C_precomp+C_recomp+C_falsepos)",
+            "note": "d=8. The source evaluates Table 1 layouts; SIM costs are reported at separate endpoints."
+          },
+          "data": {
+            "display_expression": "D=2^128"
+          }
+        }
+      }
+    },
+    "aes192-full-biclique-minimal-kp-bcgs2015-family": {
+      "display_name": "Star-based independent biclique",
+      "parameters": {
+        "sim": {
+          "short_meaning": "Whether the source sieve-in-the-middle implementation is used",
+          "short_domain": "sim in {0, 1} (reported)"
+        },
+        "known_pairs": {
+          "short_meaning": "Known-pair count for stars, or a non-KP setting marker",
+          "short_domain": "known_pairs in {2} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "C_full=2^(n-2d)*(C_biclique+C_precomp+C_recomp+C_falsepos)",
+            "note": "d=8. The source evaluates Table 1 layouts; SIM costs are reported at separate endpoints."
+          },
+          "data": {
+            "display_expression": "D=m"
+          }
+        }
+      }
+    },
+    "aes192-full-biclique-subcodebook-cc-bcgs2015-family": {
+      "display_name": "Independent biclique · subcodebook",
+      "parameters": {
+        "sim": {
+          "short_meaning": "Whether the source sieve-in-the-middle implementation is used",
+          "short_domain": "sim in {0, 1} (reported)"
+        },
+        "known_pairs": {
+          "short_meaning": "Known-pair count for stars, or a non-KP setting marker",
+          "short_domain": "Reported: not a KP setting"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "C_full=2^(n-2d)*(C_biclique+C_precomp+C_recomp+C_falsepos)",
+            "note": "d=8. The source evaluates Table 1 layouts; SIM costs are reported at separate endpoints."
+          },
+          "data": {
+            "display_expression": "D=2^48"
+          }
+        }
+      }
+    },
+    "aes192-full-biclique-full-codebook-bcgs2015-family": {
+      "display_name": "Independent biclique · full codebook",
+      "parameters": {
+        "sim": {
+          "short_meaning": "Whether the source sieve-in-the-middle implementation is used",
+          "short_domain": "sim in {0, 1} (reported)"
+        },
+        "known_pairs": {
+          "short_meaning": "Known-pair count for stars, or a non-KP setting marker",
+          "short_domain": "Reported: not a KP setting"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "C_full=2^(n-2d)*(C_biclique+C_precomp+C_recomp+C_falsepos)",
+            "note": "d=8. The source evaluates Table 1 layouts; SIM costs are reported at separate endpoints."
+          },
+          "data": {
+            "display_expression": "D=2^128"
+          }
+        }
+      }
+    },
+    "aes256-full-biclique-minimal-kp-bcgs2015-family": {
+      "display_name": "Star-based independent biclique",
+      "parameters": {
+        "sim": {
+          "short_meaning": "Whether the source sieve-in-the-middle implementation is used",
+          "short_domain": "sim in {0, 1} (reported)"
+        },
+        "known_pairs": {
+          "short_meaning": "Known-pair count for stars, or a non-KP setting marker",
+          "short_domain": "known_pairs in {3, 2} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "C_full=2^(n-2d)*(C_biclique+C_precomp+C_recomp+C_falsepos)",
+            "note": "d=8. The source evaluates Table 1 layouts; SIM costs are reported at separate endpoints."
+          },
+          "data": {
+            "display_expression": "D=m"
+          }
+        }
+      }
+    },
+    "aes256-full-biclique-subcodebook-cc-bcgs2015-family": {
+      "display_name": "Independent biclique · subcodebook",
+      "parameters": {
+        "sim": {
+          "short_meaning": "Whether the source sieve-in-the-middle implementation is used",
+          "short_domain": "sim in {0, 1} (reported)"
+        },
+        "known_pairs": {
+          "short_meaning": "Known-pair count for stars, or a non-KP setting marker",
+          "short_domain": "Reported: not a KP setting"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "C_full=2^(n-2d)*(C_biclique+C_precomp+C_recomp+C_falsepos)",
+            "note": "d=8. The source evaluates Table 1 layouts; SIM costs are reported at separate endpoints."
+          },
+          "data": {
+            "display_expression": "D≤2^64"
+          }
+        }
+      }
+    },
+    "aes256-full-biclique-full-codebook-bcgs2015-family": {
+      "display_name": "Independent biclique · full codebook",
+      "parameters": {
+        "sim": {
+          "short_meaning": "Whether the source sieve-in-the-middle implementation is used",
+          "short_domain": "sim in {0, 1} (reported)"
+        },
+        "known_pairs": {
+          "short_meaning": "Known-pair count for stars, or a non-KP setting marker",
+          "short_domain": "Reported: not a KP setting"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "C_full=2^(n-2d)*(C_biclique+C_precomp+C_recomp+C_falsepos)",
+            "note": "d=8. The source evaluates Table 1 layouts; SIM costs are reported at separate endpoints."
+          },
+          "data": {
+            "display_expression": "D=2^128"
+          }
+        }
+      }
+    },
+    "aes-6r-yoyo-rbh2017-family": {
+      "display_name": "Yoyo · word collisions",
+      "parameters": {
+        "t": {
+          "short_meaning": "zero32-bit words in the intermediate difference",
+          "short_domain": "t in {1, 2, 3} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-6r-ds-mitm-lowdata-df2014-family": {
+      "display_name": "Differential-enumeration MITM · low data",
+      "parameters": {
+        "choice": {
+          "short_meaning": "Explicit source online/memory choice",
+          "short_domain": "Reported: unbalanced / balanced"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "memory": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes256-7r-ds-mitm-df2013-author-family": {
+      "display_name": "Differential-enumeration MITM",
+      "parameters": {
+        "choice": {
+          "short_meaning": "Explicit author appendix endpoint",
+          "short_domain": "Reported: unbalanced d8 / balanced d15.84"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "data": {
+            "display_expression": null
+          },
+          "memory": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes192-7r-dfj2013-efficient-layout-family": {
+      "display_name": "192seven-round DFJ efficient reported layouts",
+      "parameters": {
+        "layout": {
+          "short_meaning": "Source-reported layout, not a certified arbitrary number of tables",
+          "short_domain": "Reported: efficient first table / reported parallel256 / table1 keysize specific"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "2^99"
+          }
+        }
+      }
+    },
+    "aes192-8r-dfj2013-parallel-differential-family": {
+      "display_name": "192eight-round DFJ single/parallel differential layouts",
+      "parameters": {
+        "layout": {
+          "short_meaning": "Fixed source layout and its matching-table collection",
+          "short_domain": "Reported: single differential x5 / parallel64 differentials y5"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "2^172"
+          }
+        }
+      }
+    },
+    "aes256-7r-dfj2013-efficient-layout-family": {
+      "display_name": "256seven-round DFJ efficient reported layouts",
+      "parameters": {
+        "layout": {
+          "short_meaning": "Source-reported layout, not a certified arbitrary number of tables",
+          "short_domain": "Reported: efficient first table / reported parallel256 / table1 keysize specific"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes256-8r-dfj2013-parallel-differential-family": {
+      "display_name": "256eight-round DFJ single/parallel differential layouts",
+      "parameters": {
+        "layout": {
+          "short_meaning": "Fixed source layout and its matching-table collection",
+          "short_domain": "Reported: single differential x5 / parallel64 differentials y5"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "2^196"
+          }
+        }
+      }
+    },
+    "aes128-nls2013-shift-threshold-family": {
+      "display_name": "Clockwise-collision EM · shift mapping",
+      "parameters": {
+        "t": {
+          "short_meaning": "Collision count",
+          "short_domain": "t in {8} (reported)"
+        },
+        "h": {
+          "short_meaning": "EM intensity threshold",
+          "short_domain": "h in {12.5} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [
+          "P_0=1/256",
+          "f_0: fitted Gaussian collision-leakage density"
+        ],
+        "resources": {
+          "data": {
+            "display_expression": "\\(\\dfrac{t}{P_0\\int_{- \\infty}^{h} f_0(x)\\,\\mathrm{d}x}\\)",
+            "note": "f_0(x)=exp(-(x-mu_0)^2/(2*sigma_0^2))/sqrt(2*pi*sigma_0^2). Fitted collision-leakage density; Table 2 calibration."
+          }
+        }
+      }
+    },
+    "aes128-nls2013-no-shift-ncc4-threshold-family": {
+      "display_name": "Clockwise-collision EM · no-shift mapping",
+      "parameters": {
+        "t": {
+          "short_meaning": "Collision count",
+          "short_domain": "t in {4} (reported)"
+        },
+        "h": {
+          "short_meaning": "EM intensity threshold",
+          "short_domain": "h in {12.5} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [
+          "P_0=4/256",
+          "f_0: fitted Gaussian collision-leakage density"
+        ],
+        "resources": {
+          "data": {
+            "display_expression": "\\(\\dfrac{t}{P_0\\int_{- \\infty}^{h} f_0(x)\\,\\mathrm{d}x}\\)",
+            "note": "f_0(x)=exp(-(x-mu_0)^2/(2*sigma_0^2))/sqrt(2*pi*sigma_0^2). Fitted collision-leakage density; Table 2 calibration."
+          }
+        }
+      }
+    },
+    "aes256-9r-xor-cp-bdk2010-source-accounting-family": {
+      "display_name": "XOR-related-key differential",
+      "parameters": {
+        "alpha": {
+          "short_meaning": "Nonzero AES S-box input difference",
+          "short_domain": "Reported: any nonzero byte, beta determined by probability 2^ 6"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "data": {
+            "display_expression": null
+          },
+          "memory": {
+            "display_expression": null
+          },
+          "preprocessing": {
+            "display_expression": "2^16"
+          }
+        }
+      }
+    },
+    "aes128-full-independent-biclique-d8-bkr2011-source-model": {
+      "display_name": "Independent biclique · dimension 8",
+      "parameters": {
+        "n": {
+          "short_meaning": "AES master-key bit length fixed for this construction",
+          "short_domain": "n in {128} (reported)"
+        },
+        "d": {
+          "short_meaning": "Dimension of the independent biclique and half the log2 key-group size",
+          "short_domain": "d in {8} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "memory": {
+            "display_expression": "<=2^d"
+          }
+        }
+      }
+    },
+    "aes128-7r-impossible-differential-mdrm2010-full-key-family": {
+      "display_name": "complete-key recovery tradeoff",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 logarithm of the number of 2^64-plaintext structures",
+          "short_domain": "n in {42.2} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-7r-impossible-differential-mdrm2010-candidate-filter-family": {
+      "display_name": "joint-subkey filtering tradeoff",
+      "parameters": {
+        "n": {
+          "short_meaning": "Base-2 logarithm of the number of 2^64-plaintext structures",
+          "short_domain": "n in {43.3} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes128-5r-yoyo-mrsa2023-success-family": {
+      "display_name": "Yoyo · query–success tradeoff",
+      "parameters": {
+        "x": {
+          "short_meaning": "initial chosen plaintext pairs/outer chains, not individual queries",
+          "short_domain": "5 reported values"
+        },
+        "y": {
+          "short_meaning": "Maximum adaptive pair iterations for each chain, with early rejection allowed",
+          "short_domain": "37 reported values"
+        },
+        "t": {
+          "short_meaning": "Threshold of zero words in the source intermediate difference",
+          "short_domain": "t in {2} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-6r-yoyo-mrsa2023-success-family": {
+      "display_name": "Yoyo · query–success tradeoff",
+      "parameters": {
+        "x": {
+          "short_meaning": "initial chosen plaintext pairs/outer chains, not individual queries",
+          "short_domain": "x in {2^61.4} (reported)"
+        },
+        "y": {
+          "short_meaning": "Maximum adaptive pair iterations for each chain, with early rejection allowed",
+          "short_domain": "81 reported values"
+        },
+        "t": {
+          "short_meaning": "Threshold of zero words in the source intermediate difference",
+          "short_domain": "t in {2} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes-7r-ds-mitm-a1-format-lhsh2024-family": {
+      "display_name": "A1 shortened multiset format",
+      "parameters": {
+        "u": {
+          "short_meaning": "retained elements from the full 256-element delta-set difference sequence",
+          "short_domain": "u in {32} (reported)"
+        },
+        "v": {
+          "short_meaning": "retained low bits of each element before multiset formation",
+          "short_domain": "v in {8} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes-7r-ds-mitm-a2-format-lhsh2024-family": {
+      "display_name": "A2 value-truncated multiset format",
+      "parameters": {
+        "u": {
+          "short_meaning": "retained elements from the full 256-element delta-set difference sequence",
+          "short_domain": "u in {256} (reported)"
+        },
+        "v": {
+          "short_meaning": "retained low bits of each element before multiset formation",
+          "short_domain": "v in {6} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {}
+      }
+    },
+    "aes192-9r-rectangle-bdk2005-reported-assignments": {
+      "display_name": "original rectangle assignments",
+      "parameters": {
+        "structures_per_key": {
+          "short_meaning": "number of chosen-plaintext structures of2^72 values encrypted per key",
+          "short_domain": "structures_per_key in {64, 128} (reported)"
+        }
+      }
+    },
+    "aes256-13r-related-subkey-bdd26-gen1": {
+      "display_name": "Weak-key differential core · Gen1",
+      "parameters": {
+        "counter_order": {
+          "short_meaning": "Discrete order in which key guesses are moved outside counter accumulation",
+          "short_domain": "Reported: base / lower / upper"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "memory": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes256-13r-related-subkey-bdd26-gen2": {
+      "display_name": "Weak-key differential core · Gen2",
+      "parameters": {
+        "counter_order": {
+          "short_meaning": "Discrete order in which key guesses are moved outside counter accumulation",
+          "short_domain": "Reported: base / lower / upper"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "memory": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-7r-impossible-state-test-blns2018-family": {
+      "display_name": "state-test/four-output-multiple tradeoff",
+      "parameters": {
+        "epsilon": {
+          "short_meaning": "surplus-pair exponent, N=2^(68+epsilon)",
+          "short_domain": "epsilon in {6.1} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "preprocessing": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-2r-2kp-auto-bdf2012-solvers": {
+      "display_name": "two-full-round/two-KP solver variants",
+      "parameters": {
+        "solver_variant": {
+          "short_meaning": "Discrete source-described realization of the same low-data construction",
+          "short_domain": "Reported: tool optimized / explained variant"
+        }
+      }
+    },
+    "aes128-4r-4cp-auto-bdf2012-solvers": {
+      "display_name": "four-full-round/four-CP solver variants",
+      "parameters": {
+        "solver_variant": {
+          "short_meaning": "Discrete source-described realization of the same low-data construction",
+          "short_domain": "Reported: tool optimized / explained variant"
+        }
+      }
+    },
+    "aes192-4r-deterministic-rk-td-sgww2020-family": {
+      "display_name": "three deterministic related-key TD patterns",
+      "parameters": {
+        "r": {
+          "short_meaning": "Zero-based active byte row in words2 and3 of the master-key XOR and whitening-matched plaintext XOR",
+          "short_domain": "r in {1, 2, 3} (reported)"
+        }
+      }
+    },
+    "aes-ctyy2026-four-round-kp-conditional-distinguisher-success-formula": {
+      "display_name": "Conditional known-plaintext distinguisher",
+      "parameters": {
+        "P_s": {
+          "short_meaning": "normal-model goal-specific success parameter",
+          "short_domain": "P_s in {0.998} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "preprocessing": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes-ctyy2026-four-round-kp-60-endpoint-key-constraint-recovery-success-formula": {
+      "display_name": "Endpoint-key constraint recovery",
+      "parameters": {
+        "P_s": {
+          "short_meaning": "normal-model goal-specific success parameter",
+          "short_domain": "P_s in {0.95} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "preprocessing": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes192-11r-glms18-table2-byte-infeasible-classes": {
+      "display_name": "Byte-infeasible activity classes",
+      "parameters": {
+        "a": {
+          "short_meaning": "Exact objStep1 total source-defined active state/key-schedule S-boxes",
+          "short_domain": "a in {30, 31} (reported)"
+        }
+      }
+    },
+    "aes-3r-cross-ratio-4cp-test-policy-bglw2026": {
+      "display_name": "Cross-ratio",
+      "parameters": {
+        "test_policy": {
+          "short_meaning": "first-test versus first-usable-test stopping rule",
+          "short_domain": "Reported: first column / first usable column"
+        }
+      }
+    },
+    "aes-3r-cross-ratio-6cp-test-policy-bglw2026": {
+      "display_name": "Cross-ratio",
+      "parameters": {
+        "test_policy": {
+          "short_meaning": "first-test versus first-usable-test stopping rule",
+          "short_domain": "Reported: first byte / first usable byte"
+        }
+      }
+    },
+    "aes-4r-cross-ratio-byte-sets-bglw2026": {
+      "display_name": "Cross-ratio",
+      "parameters": {
+        "n0": {
+          "short_meaning": "active-byte values in position0",
+          "short_domain": "n0 in {9} (reported)"
+        },
+        "n1": {
+          "short_meaning": "active-byte values in position1",
+          "short_domain": "n1 in {10} (reported)"
+        },
+        "n2": {
+          "short_meaning": "active-byte values in position2",
+          "short_domain": "n2 in {12} (reported)"
+        },
+        "n3": {
+          "short_meaning": "active-byte values in position3",
+          "short_domain": "n3 in {15} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "\\(N_{\\mathrm{str}}\\cdot7\\cdot4\\cdot16\\cdot2^{-6},\\quad N_{\\mathrm{str}}=\\prod_i\\binom{n_i}{2}\\)"
+          },
+          "preprocessing": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-7r-cross-ratio-phase-model-bglw2026": {
+      "display_name": "Cross-ratio MITM",
+      "parameters": {
+        "s": {
+          "short_meaning": "log2 number of2^64-plaintext structures",
+          "short_domain": "s in {33} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": null
+          },
+          "preprocessing": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-4r-polytopic-four-cp-k2026": {
+      "display_name": "Polytopic sieve",
+      "parameters": {
+        "h": {
+          "short_meaning": "Expected membership checks per candidate from the source occupancy calculation",
+          "short_domain": "h in {1.635} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [],
+        "resources": {
+          "time": {
+            "display_expression": "4×2^32×(1+h)/4 <2^34"
+          }
+        }
+      }
+    },
+    "aes128-6r-extended-mixture-sampling-yt2026": {
+      "display_name": "Extended-mixture sampling",
+      "parameters": {
+        "lambda": {
+          "short_meaning": "Sampling fraction of the2^24 three-structure",
+          "short_domain": "lambda in {2^(-9/8)} (reported)"
+        }
+      },
+      "model": {
+        "display_constraints": [
+          "0<lambda<=1; lambda=2^(-9/8) for the complete cost tuple"
+        ],
+        "resources": {
+          "time": {
+            "display_expression": "2^24×2^30×(2^21/16+2^19)/6≈2^70.74",
+            "note": "Cost at lambda=2^(-9/8)."
+          },
+          "memory": {
+            "display_expression": "2^30×8=2^33"
+          },
+          "preprocessing": {
+            "display_expression": null
+          }
+        }
+      }
+    },
+    "aes128-4r-subspace-ee-grr2016-family": {
+      "display_name": "Subspace-trail end extension",
+      "parameters": {
+        "N": {
+          "short_meaning": "chosen plaintexts",
+          "short_domain": "N in {2, 3} (reported)"
+        },
+        "storage": {
+          "short_meaning": "constant-memory or memory-table implementation of the end extension",
+          "short_domain": "Reported: constant / table"
+        }
+      }
+    }
+  }
+}

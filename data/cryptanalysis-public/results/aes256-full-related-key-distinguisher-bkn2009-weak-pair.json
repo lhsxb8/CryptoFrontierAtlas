@@ -1,0 +1,143 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-related-key-distinguisher-bkn2009-weak-pair",
+  "title": "Full AES-256 differential distinguisher conditional on a weak related-key pair, BKN 2009",
+  "display": {
+    "name": "Differential, weak-pair distinguisher",
+    "method": "differential"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "Standard full 14-round AES-256 with its actual key schedule, using the related-key differential of Section 4.1 and Appendix A."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related-key-chosen-plaintext-encryption"
+    ],
+    "related_key_count": 2,
+    "target_selection": "conditional_weak_pair",
+    "reference_model": "Editorial statement of the differential test: compare the selected pair of AES-256 permutations with two independent uniform 128-bit permutations, using plaintext pairs at the fixed input difference and testing the specified output difference. No numerical overall distinguishing advantage is asserted.",
+    "key_relation": "A fixed XOR master-key difference: K and K XOR DeltaK. DeltaK is fixed by the subkeys K^0 and K^1 in Appendix A, pp.247-248; applicability additionally requires the five active key-schedule S-box transitions of the trail.",
+    "key_population": "Conditional on a weak related-key pair satisfying the key-schedule trail; the authors estimate one qualifying pair among 2^35 related-key pairs on average.",
+    "plaintext_model": "Chosen plaintext pairs at the fixed difference DeltaP in Appendix A's related-key distinguisher trail.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The two secret related-key encryption oracles are already available and their pair satisfies the weak key-schedule condition.",
+      "The data-path trail probability 2^-119 is an author estimate conditional on that weak pair.",
+      "The cost of finding a weak pair in a larger pool is excluded from this conditional record."
+    ]
+  },
+  "techniques": [
+    "related-key-differential",
+    "local-collisions",
+    "weak-key-pair"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^120",
+      "log2": 120,
+      "unit": "source-reported-differential-testing-work",
+      "qualifier": "estimate",
+      "note": "Abstract p.231 and discussion p.233 give 2^120 time and data for a qualifying pair. This is not the cost of scanning 2^35 candidate pairs."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^120",
+      "log2": 120,
+      "unit": "total-two-key-encryption-queries",
+      "qualifier": "estimate",
+      "note": "The stated 2^120 total corresponds to testing approximately 2^119 chosen plaintext pairs, with one encryption under each of the two related keys. Table 1's 2^119 per-key entry is consistent with this total."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "negligible",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The abstract and p.233 explicitly describe negligible memory; no byte or block count is assigned."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately reusable preprocessing budget is reported for the conditional distinguisher."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "conditional-distinguishing-success",
+    "value": null,
+    "description": "No finite-budget distinguishing decision probability or advantage is quantified. The state-trail2^-119 and key-population incidence2^-35 have separate conditioning. Neither the2^120 data budget nor an expected number of right pairs defines a decision probability without its test distribution. No pool-hit model is added.",
+    "components": [
+      {
+        "metric": "uniform-related-key-pair-satisfies-five-schedule-transitions",
+        "value": 2.9103830456733704e-11,
+        "basis": "author_model",
+        "expression": "2^{-35}",
+        "description": "Section4.1: five key-schedule transitions each2^-7 give mean weak-pair incidence2^-35 in the source key model. This is not the probability that a2^35-pair pool contains a qualifying pair; independence between tested pairs is not established."
+      },
+      {
+        "metric": "state-trail-given-qualifying-related-key-pair",
+        "value": 1.504632769052528e-36,
+        "basis": "author_model",
+        "expression": "2^{-119}",
+        "description": "Section4.1: source state trail probability2^(-14*6-5*7), conditional on the five schedule transitions. It is not a finite-budget distinguishing decision success or advantage."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Local pair filters, conditional trails, weak-pair incidence and expected counts keep their own experiment; correlation is not a decision probability. Existing conflicts, resources, targets, settings and full-audit gates remain unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "Printed p.231 abstract; p.233 Table 1 and discussion; Section 4.1 p.242; Appendix A pp.247-249.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Section 4.1 explicitly separates the 19 active data-path S-boxes from five active key-schedule S-boxes. Their probabilities give the conditional trail and weak-pair fraction, respectively. The selected record is the secret-key related-key test, not the paper's chosen-key multicollision construction."
+    },
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "CRYPTO proceedings PDF12–14 / printed242–244 Sections4.1–4.2 and Figure4; PDF3 Table1 distinguishes weak-pair and pool costs.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No finite-budget distinguishing decision probability or advantage is quantified. The state-trail2^-119 and key-population incidence2^-35 have separate conditioning. Neither the2^120 data budget nor an expected number of right pairs defines a decision probability without its test distribution. No pool-hit model is added."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Not an all-key attack using two related keys; weak-pair selection is an explicit precondition.",
+    "The stated work and probability analysis have not been independently reproduced.",
+    "The source's chosen-key q-multicollisions and Davies-Meyer pseudo-collisions are different target experiments and are not represented by this record.",
+    "Independent2026-10-27 full19-page reread and bounded S-box/linear-layer/exponent checks completed; these are not full attack, global TA distribution or end-to-end success reproductions."
+  ],
+  "related_problem_ids": []
+}

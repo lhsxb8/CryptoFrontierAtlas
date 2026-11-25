@@ -1,0 +1,149 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-7r-impossible-key-schedule-lp2025",
+  "title": "Seven-round AES-128 impossible-differential key reconstruction",
+  "display": {
+    "name": "Impossible-differential key reconstruction",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "lp2025-rounds-1-to-7-final-no-mixcolumns",
+    "description": "Initial AddRoundKey k0 and rounds1–7; the final MixColumns must be omitted for the stated subkey reconstruction (Section6.3)."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES-128 master key; no related-key oracles.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "chosen-plaintext structures under the designated unknown key",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "impossible-differential",
+    "key-schedule-representation",
+    "candidate-reconstruction"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^(101+ell) + 2^(112+ell)/35 + exp(-2^ell)*(2^128/5 + 2^128) ≈ 2^110.9 at ell=3.9",
+      "log2": 110.9,
+      "unit": "aes128-7r-encryptions",
+      "qualifier": "estimate",
+      "note": "Native phase sum includes reconstruction and final full-master-key checks. Source prices seven-round encryption as140 lookups and fourDDT lookups as1/35 encryption."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^(101+ell) = 2^104.9 at ell=3.9",
+      "log2": 104.9,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "One-output-differential structure variant, not the four-output-differential or state-test variants."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^(68+ell) = 2^71.9 at ell=3.9",
+      "log2": 71.9,
+      "unit": "source-words",
+      "qualifier": "estimate",
+      "note": "Source says words; no inferred byte or128-bit-block width."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "TablesT1/T2 and chunk reconstruction tables are required. No separately itemized complete reusable setup is reported; do not assign zero."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "key-recovery-success",
+    "value": null,
+    "description": "Sections6.2–6.4 quantify surviving wrong-subkey fractions and expected candidate counts at ell=3.9, not full-key recovery success. The complete-filter retention event is conditional inclusion only; reconstruction and verification remain part of the existing resource vector. The0.44 success in the abstract concerns mixFeed forgery, not this AES attack.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit of the defining construction/parameter passages; not a new full-paper or forward-literature audit. Whole-attack, retention, local filtering and source sampling events remain distinct."
+    },
+    "components": [
+      {
+        "metric": "wrong-subkey-survival-after-modeled-workload",
+        "value": null,
+        "basis": "author_model",
+        "description": "Source approximation exp(-2^ell), with ell=3.9 for this configuration. This is the wrong-subkey fraction used in the reconstruction cost, not the probability of recovering the true master key.",
+        "expression": "e^{-2^{\\ell}}"
+      },
+      {
+        "metric": "correct-target-subkey-retention-under-valid-complete-filter",
+        "value": 1,
+        "basis": "derived_from_source",
+        "description": "Conditional inclusion event only: a genuine target assignment cannot satisfy the forbidden impossible differential, hence cannot be removed by complete and correct evaluation of this filter. This source-construction consequence does not ensure a unique candidate, absence of implementation errors, or completion within an average cost."
+      },
+      {
+        "metric": "wrong-last-subkey-survival-single-output-exact-source-model",
+        "value": null,
+        "basis": "author_model",
+        "description": "Section6.2 Step4 models marking32-bit final-subkey assignments with2^(32+ell) suggestions. ell=3.9; exact formula inside the source random-marking model, not a proven independence bound or full recovery probability.",
+        "expression": "(1-2^{-32})^{2^{32+\\ell}}"
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "lp2025-key-schedule-journal",
+      "locator": "PDF pp.28–34 / article pp.28–34, Sections6.2–6.3 Algorithms1–2; p.2 Table2.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The new representation improves reconstruction of the same complete AES-128 master key, at the explicitly evaluated ell3.9 point. Source precision and phase sums are retained."
+    },
+    {
+      "source_id": "lp2025-key-schedule-journal",
+      "locator": "Complete exact primaryPDF1–52, all sections, displayed formulas/tables/algorithms, proofs and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full contribution inventory read; bounded forward checking and finite component validation are separately receipted. Full attack reproduction not attempted."
+    },
+    {
+      "source_id": "lp2025-key-schedule-journal",
+      "locator": "PDF pp.28–36 Sections6.2–6.4, especially PDF30 wrong-key survival, PDF31 multiple-output lists, PDF32 state-test variant, PDF34 Algorithm2 and PDF35–36 related-key tradeoffs.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "Sections6.2–6.4 quantify surviving wrong-subkey fractions and expected candidate counts at ell=3.9, not full-key recovery success. The complete-filter retention event is conditional inclusion only; reconstruction and verification remain part of the existing resource vector. The0.44 success in the abstract concerns mixFeed forgery, not this AES attack."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Targeted primary-source extraction, not independent attack reproduction, a complete paper inventory or contemporary global SOTA certification."
+  ],
+  "related_problem_ids": []
+}

@@ -1,0 +1,171 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-full-biclique-bkr2011-proceedings",
+  "title": "Full-round AES-192 biclique key recovery, 2011 proceedings version",
+  "display": {
+    "name": "Biclique key recovery",
+    "method": "biclique"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 12,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "Standard full 12-round AES-192 with its real key schedule and standard final round."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "Internal biclique computations do not grant a related-key oracle.",
+    "key_population": "all keys as reported by the paper",
+    "plaintext_model": "obtained by decrypting selected ciphertexts",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Single target secret key and chosen-ciphertext decryption access.",
+      "Detailed AES-192 construction is referred by the inspected proceedings text to a separate full version."
+    ]
+  },
+  "techniques": [
+    "biclique",
+    "meet-in-the-middle"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^189.74",
+      "log2": 189.74,
+      "unit": "aes192-computations-per-success-rate",
+      "qualifier": "estimate",
+      "note": "Exact printed exponent in proceedings Table 1; do not replace with the 189.4 exponent in later comparative tables."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^80",
+      "log2": 80,
+      "unit": "chosen-ciphertext-blocks",
+      "qualifier": "estimate",
+      "note": "Table 1 data count under the generic decryption-oracle biclique setting."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^8",
+      "log2": 8,
+      "unit": "source-native-storage-units-unspecified",
+      "qualifier": "unspecified",
+      "note": "Proceedings Table 1 value; detailed unit interpretation for AES-192 was not established from the same source version."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing budget is extracted; do not assume zero."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "key-recovery-success",
+    "value": 1,
+    "description": "The full author version explicitly states whole secret-key recovery success1 for full 12-round AES192 independent-biclique search, using complete key-space group coverage. Section7.4/PDF17 binds this rate to the corresponding construction and source D/T/M row. The proceedings explicitly delegates this exact Table1 row to the full version, whose Table1 matches its rounds, construction, D/T-normalized/M and biclique length. The stored time is computations/success-rate; at claimed success1 the normalization does not change its value. The full source has unresolved internal cost formulas, attached as a time-field conflict; the claimed success1 does not establish that the headline budget is achievable. This event is not merely conditional biclique closure and is not compression-preimage success. The acquired mirror is separately hashed; exact official-byte identity and historical availability remain unauthenticated, so no frontier or full-audit certification follows.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Source extraction, direct proceedings-to-full-version endpoint bridge and success/cost normalization independently checked. Verified denotes extraction applicability, not attack execution, mathematical certification of an author model, resolution of cost conflicts or a completed full-paper/forward audit."
+    },
+    "relation": "=",
+    "basis": "author_statement"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bkr2011-biclique-proceedings",
+      "locator": "PDF p.4, Table 1, AES-192 12-round row; p.6, Section 2.3, Step 2; references to the full version for the longer-key variants.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Historical proceedings-only extraction scope, superseded by B24 supplementary success evidence through the explicit full-version pointer: This is a proceedings-version reported result; absent detailed success, storage-unit and preprocessing information is not filled from another version."
+    },
+    {
+      "source_id": "bkr2011-biclique-proceedings",
+      "locator": "Complete publisher proceedings PDF1–28 / printed pp.344–371, including Tables1–6 and AppendixA.",
+      "fields": [
+        "/assessment",
+        "/resources",
+        "/success",
+        "/setting"
+      ],
+      "interpretation": "Fresh independent complete-primary review of an independently acquired publisher edition; byte identity with the formerly hashless IACR route is not asserted."
+    },
+    {
+      "source_id": "bkr2011-biclique-proceedings",
+      "locator": "PDF3 /printed346 Results on AES, independent-biclique success-rate statement; PDF4 /347 Table1 exact round/data/memory/time endpoint; PDF6–7 /349–350 Sections2.3/3.1; PDF16 /359 Section6.4; PDF17–19 /360–362 Section7 applies only to its separate9-round AES256 long-biclique point.",
+      "fields": [
+        "/success"
+      ],
+      "interpretation": "Historical proceedings-only extraction scope, superseded by B24 supplementary success evidence through the explicit full-version pointer: No separate numerical success has been established for this exact Table1 endpoint in the inspected proceedings edition. The overview on PDF3 associates success1 with the largest independent-biclique improvements, without identifying every exact Table1 row. A fresh raw-first source-scope review did not extend that quantifier to this endpoint. The direct success1 statements on PDF16 and19 refer to other explicitly described configurations, and the Section3.1 probability-one boomerang is a conditional construction event, not whole recovery. The compression preimage0.632 probability is a different goal. Native computations/success-rate costs are not raw one-pass budgets."
+    },
+    {
+      "source_id": "bkr2011-biclique-proceedings",
+      "locator": "Proceedings PDF3/printed346 last introduction paragraph: full version means reference12; PDF4/printed347 Table1 exact endpoint with Full version pointer; PDF23/printed366 reference12 identifies ePrint2011/449.",
+      "fields": [
+        "/success"
+      ],
+      "interpretation": "Direct source-defined reference bridge to the detailed author edition, not transfer merely by title, key size or round count. Existing point IDs, source edition, oracle, target and resources remain unchanged."
+    },
+    {
+      "source_id": "bkr2011-biclique-author-mirror",
+      "locator": "Author full PDF3 Table1, PDF15–17 Sections7.1–7.4, especially explicit full and nine-round success paragraphs PDF17.",
+      "fields": [
+        "/success",
+        "/field_conflicts",
+        "/assessment/claim_status"
+      ],
+      "interpretation": "The full author version explicitly states whole secret-key recovery success1 for full 12-round AES192 independent-biclique search, using complete key-space group coverage. Section7.4/PDF17 binds this rate to the corresponding construction and source D/T/M row. The proceedings explicitly delegates this exact Table1 row to the full version, whose Table1 matches its rounds, construction, D/T-normalized/M and biclique length. The stored time is computations/success-rate; at claimed success1 the normalization does not change its value. The full source has unresolved internal cost formulas, attached as a time-field conflict; the claimed success1 does not establish that the headline budget is achievable. This event is not merely conditional biclique closure and is not compression-preimage success. The acquired mirror is separately hashed; exact official-byte identity and historical availability remain unauthenticated, so no frontier or full-audit certification follows."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "No complete attack or cost reproduction was performed.",
+    "The inspected DFJ comparative table reports 189.4; the original inspected BKR table reports 189.74. These are retained as a version/transcription audit issue rather than silently merged.",
+    "Detailed full-version reconciliation and systematic later-literature review remain pending."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "Full-version AES-192 headline versus detailed cost formulas",
+      "description": "The proceedings Table1 endpoint explicitly refers to the full version. That full edition states whole-key success1, but Table4 prints total2^189.68 while Table1 and Section7.4 print2^189.74. Section7.1 partitions into2^176 groups, whereas Section7.4 literally multiplies by2^172. Preserve the proceedings2^189.74 and the author success claim; no exact achievable cost is certified or repaired.",
+      "observations": [
+        {
+          "source_id": "bkr2011-biclique-proceedings",
+          "locator": "Proceedings PDF3–4/printed346–347, full-version convention and Table1 exact row; reference12 PDF23/printed366.",
+          "reported": "Full AES192 Table1 work/success2^189.74, data2^80, memory2^8; details explicitly delegated to Full version."
+        },
+        {
+          "source_id": "bkr2011-biclique-author-mirror",
+          "locator": "Author full PDF3 Table1, PDF15 Table4/Section7.1 and PDF17 Section7.4.",
+          "reported": "Table4 total2^189.68; Table1/Section7.4 total2^189.74;2^176 key groups versus literal2^172 multiplier; explicit whole-key success1."
+        }
+      ]
+    }
+  ]
+}

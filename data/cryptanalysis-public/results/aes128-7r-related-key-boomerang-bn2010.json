@@ -1,0 +1,186 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-7r-related-key-boomerang-bn2010",
+  "title": "BN10 two-key related-key boomerang key recovery on7-round AES-128",
+  "display": {
+    "name": "Two-key boomerang",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "bn10-7r-source-boundary",
+    "description": "Source Figure4 seven-round AES-128 interval:3-round single-key top component, related-key bottom component and one extra bottom round. Section3.2 gives voting and an about2^96 exhaustive completion or shifted repeat."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": 2,
+    "target_selection": "designated_target",
+    "key_relation": "Two related secret master keys defined through the prescribed XOR difference at K4/K7 and the standard invertible AES-128 key schedule; the source explicitly uses two, not four keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "2^66 chosen plaintexts and 2^97 adaptive chosen ciphertexts, with 31-bit guesses controlling the second-key inverse queries.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "related-key-boomerang",
+    "two-key-oracle",
+    "key-voting",
+    "exhaustive-key-completion"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^97 (headline) + about 2^96 completion steps",
+      "log2": 97,
+      "unit": "source-native-workload",
+      "qualifier": "estimate",
+      "note": "Table1 headline2^97 is retained. Section3.2 separately adds about2^96 completion; the formal sum has log2≈97.585 only if these native steps are treated as the same unit, which is not a replacement reported estimate."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^66 CP + 2^97 adaptive CC",
+      "log2": null,
+      "unit": "mixed-plaintext-and-ciphertext-block-queries",
+      "qualifier": "estimate",
+      "note": "Section 3.2 separates directions; Table 1 headline 2^97 does not replace the full query vector."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The source does not separately quantify this resource for this configuration."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate setup budget is stated."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "key-recovery-success",
+    "value": null,
+    "description": "Section3.2 requests two good quartets under the correct31-bit bottom-key guess, estimates false-quartet counts and expects none to survive the91-bit vote. No trial-denominated or numerical complete-key success is given. All local values below use the source correct-guess/compatibility model; the two bottom branches are not blindly treated as independent copies of2^-30.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit of defining construction and parameter passages, not a new full-paper or forward-literature audit. Source local/conditional models, expected counts, key-relation construction and full recovery remain separate."
+    },
+    "components": [
+      {
+        "metric": "structured-pair-first-round-transition",
+        "value": 2.384185791015625e-7,
+        "basis": "author_model",
+        "expression": "2^{-22}",
+        "description": "PDF12: forward four-to-one MixColumns condition, with the active position and value unrestricted."
+      },
+      {
+        "metric": "one-bottom-characteristic-given-correct-key-guess",
+        "value": 9.313225746154785e-10,
+        "basis": "author_model",
+        "expression": "2^{-30}",
+        "description": "PDF12: five S-boxes at2^-6, given the correct31-bit guess. This single-path probability is not squared for the joint bottom event."
+      },
+      {
+        "metric": "joint-bottom-branches-source-model",
+        "value": 8.881784197001252e-16,
+        "basis": "author_model",
+        "expression": "2^{-50}",
+        "description": "PDF12: author joint model2^-(3*6+3*6+2*7), exploiting shared intermediate differences."
+      },
+      {
+        "metric": "return-mixcolumns-condition",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "expression": "2^{-24}",
+        "description": "PDF12: returning in the same four bytes requires the stated2^-24 condition."
+      },
+      {
+        "metric": "boomerang-quartet-given-correct-key-guess",
+        "value": 1.262177448353619e-29,
+        "basis": "author_model",
+        "expression": "2^{-96}",
+        "description": "PDF13: source product2^(-22-50-24) for the boomerang event; not the probability of two good quartets at the full budget."
+      },
+      {
+        "metric": "candidate-active-sbox-extra-filter",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "PDF12 Step6/PDF13: additional eight-bit wrong-quartet filter from eight active top S-boxes."
+      },
+      {
+        "metric": "wrong-quartet-total-sieve-source-model",
+        "value": 4.930380657631324e-32,
+        "basis": "author_model",
+        "expression": "2^{-104}",
+        "description": "PDF13: the source96+8-bit wrong-quartet sieve used to count2^24 false quartets across all guesses; not a correct-key survival or full-recovery probability."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-af8c03e065ed94cd-2010",
+      "locator": "PDF p.4 Table 1; pp.11–13 Section 3.2; p.22 Figure 4.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining text checked. Unknown costs are retained rather than preventing extraction."
+    },
+    {
+      "source_id": "aes-paper-af8c03e065ed94cd-2010",
+      "locator": "PDF pp.11–13 / printed pp.332–334, Section3.2; PDF p.22 / printed p.343, Figure4.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "All defining text and colour diagram read; local arithmetic checks96−63+1=34,34+32=66,31+66=97 and31+34+63−104=24."
+    },
+    {
+      "source_id": "aes-paper-af8c03e065ed94cd-2010",
+      "locator": "PDF11–13/printed332–334 Section3.2,31-bit guess, Steps5–7, probability derivation and voting.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "Section3.2 requests two good quartets under the correct31-bit bottom-key guess, estimates false-quartet counts and expects none to survive the91-bit vote. No trial-denominated or numerical complete-key success is given. All local values below use the source correct-guess/compatibility model; the two bottom branches are not blindly treated as independent copies of2^-30."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Memory and setup costs remain not_reported; sorting a2^32 structure is a procedure, not a reported memory budget.",
+    "The31-bit guesses are charged, not prior key knowledge. Two related keys, CPA plus adaptive CCA, and the full data vector2^66 CP+2^97 CC are preserved.",
+    "Bounded S-box DDT check finds127 possible output differences, versus source power-of-two approximation2^7. No whole attack was executed."
+  ],
+  "related_problem_ids": []
+}

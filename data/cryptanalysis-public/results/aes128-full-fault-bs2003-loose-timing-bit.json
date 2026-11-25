@@ -1,0 +1,199 @@
+{
+  "schema_version": "0.10.0",
+  "related_problem_ids": [],
+  "id": "aes128-full-fault-bs2003-loose-timing-bit",
+  "title": "AES-128: Time-window reset: one-bit recovery (Blömer–Seifert, FC2003)",
+  "display": {
+    "name": "Time-window reset: one-bit recovery",
+    "method": "ineffective_fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "One initial master-key bit of AES-128 under the paper's heuristic time-window model."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen-plaintext-encryption-with-fault-attempt",
+      "observable-encryption-correctness"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret master key; no related-key oracle.",
+    "key_population": "Arbitrary key of the stated AES instance in an implementation meeting the fault and feedback assumptions.",
+    "plaintext_model": "Chosen plaintexts fix the target bit to zero and choose the other127 bits uniformly at random.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "State bits immediately after a selected AddRoundKey operation.",
+      "granularity": "One selected state bit per fault-injection attempt.",
+      "timing": "A window described as c relevant operations, with probability1/c for the key-dependent interval; the printed t=0,...,c indexing is inconsistent with that interval count.",
+      "location": "The attacker targets the required individual state-bit locations and can move between them.",
+      "value_control": "Force the selected bit to zero; a bit already equal to zero remains unchanged.",
+      "sample_pairing": "Each attempted injection yields a correct/incorrect outcome. Ciphertext-comparison feedback additionally needs a correct reference for the same input, outside the stated attempt count.",
+      "feedback": "Observable correct-versus-incorrect encryption outcome. Section1 permits alternatives: a device reset/error flag; comparison with a fault-free ciphertext; or detectable recomputation timing. Only the binary outcome is required, not the faulty ciphertext bytes.",
+      "evidence_scope": "analytical"
+    },
+    "assumptions": [
+      "Successful localization and the stipulated fault-value effect are model assumptions, not measured acquisition success rates.",
+      "The ciphertext-validity alternatives are interchangeable only as a binary observation; the source does not cost each feedback channel's calibration or reference executions separately.",
+      "Recovery target: One initial master-key bit of AES-128 under the paper's heuristic time-window model.",
+      "The paper heuristically assumes conditional uniformity of the selected bit after SubBytes and at later non-target times. The actual AES S-box is not exactly conditionally balanced; this model is not a verified property of the cipher.",
+      "Under that heuristic, error probabilities are(c-1)/(2c) and(c+1)/(2c); the separation1/c supports a threshold test. No concrete m is supplied."
+    ]
+  },
+  "techniques": [
+    "ineffective-fault-analysis",
+    "bit-reset",
+    "correctness-feedback"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical complete-attack offline runtime is reported."
+    },
+    "data": {
+      "status": "qualitative",
+      "reported": "m chosen sufficiently large for the c-operation timing window",
+      "log2": null,
+      "unit": "fault-injection-encryption-attempts",
+      "qualifier": "unspecified",
+      "note": "The article refers to the preceding statistical argument but supplies no independent numerical attempt budget."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical whole-attack peak-memory budget is supplied."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical preprocessing time is supplied."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "conditional-source-model-bit-recovery-lower-bound",
+    "value": null,
+    "description": "Derived bit-recovery lower bound within the Section4.2 heuristic timing model, for positive integers m and c and m attempts for this one bit. Interpret the source mixture as c slots: the key-dependent slot has mass1/c; the others have total mass(c-1)/c. Under the source later-bit uniformity heuristic and independent stationary trials, the incorrect-output probabilities are q0=(c-1)/(2c) and q1=(c+1)/(2c). The midpoint decision count>=m/2 selects bit1; otherwise select bit0. The gap is1/c, so substituting it into the preceding concentration argument gives the conservative displayed lower bound; Hoeffding even bounds error by exp(-m/(2c^2)). Integer thresholds and either key-bit value are covered, without choosing m or changing the symbolic attempt budget. This is conditional source-model recovery, not an unconditional AES or physical-channel guarantee: actual AES conditional S-box balance is false, and the existing c-versus-c+1 timing-index conflict remains. No combined noise-and-timing model, empirical rate or whole-key extrapolation is added.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Independently source-first and endpoint reviewed conditional one-bit concentration bound under the explicit c-slot heuristic and independent-trial model. Actual AES imbalance and timing-index conflict remain; no physical rate, full-key or fixed numerical m claim."
+    },
+    "components": [
+      {
+        "metric": "incorrect-ciphertext-given-key-bit-zero-loose-timing-model",
+        "value": null,
+        "basis": "author_model",
+        "expression": "\\frac{c-1}{2c}",
+        "description": "Section4.2 per-query probability of an incorrect ciphertext conditional on target key bit0, under the printed slot normalization and heuristic conditional S-box balance. It is not bit-recovery success; the c versus c+1 timing-domain conflict remains."
+      },
+      {
+        "metric": "incorrect-ciphertext-given-key-bit-one-loose-timing-model",
+        "value": null,
+        "basis": "author_model",
+        "expression": "\\frac{c-1}{2c}+\\frac{1}{c}",
+        "description": "Section4.2 per-query probability of an incorrect ciphertext conditional on target key bit1 under the same author heuristic. It is not an aggregate recovery probability, and actual AES conditional bit distributions are not exactly balanced."
+      }
+    ],
+    "basis": "derived_from_source",
+    "expression": "P_{\\mathrm{bit,model}}\\ge 1-\\exp\\!\\left(-\\frac{m}{16c^2}\\right)"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Section1 p.164; Section4.2 pp.172–173",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary-version result with explicit target, feedback model and native fault-attempt accounting; AES means128-bit blocks and the stated standard key size."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Section4.2 pp.172–173, timing model and probability calculation",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "Retain the interval-index inconsistency; conditional-uniformity limitations are stated separately."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Complete PDF1–20/printed162–181; Sections4–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Proceedings PDF11–12 / printed172–173 Section4.2, c-slot heuristic and the two error probabilities.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "Section4.2 claims high-probability bit recovery after sufficiently many trials but specifies no fixed m or numerical recovery rate. Preserve its two conditioned feedback probabilities and existing timing-index conflict. Do not transfer the Section4.1 precise-time noisy-reset bound into this different experiment or add a combined noise/timing formula."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "PDF11–12 / printed172–173 Section4.2: the two conditional incorrect-output probabilities and explicit referral to the preceding statistical argument. B41 endpoint note derives the midpoint concentration bound for this same one-bit experiment.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "New conditional source-model one-bit recovery bound; existing timing conflict, local components and resource accounting are retained."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The paper supplies attack-model reasoning, not a physical experiment with measured chip-level success, time and calibration cost.",
+    "Attempts leaving the targeted value unchanged are informative and remain in the data budget."
+  ],
+  "field_conflicts": [
+    {
+      "field": "/setting/fault_model/timing",
+      "label": "Timing-window indexing",
+      "description": "The text assigns probability1/c to each t=0,...,c interval, while the following analysis uses only c possible positions.",
+      "observations": [
+        {
+          "source_id": "bs2003-fault-fc",
+          "locator": "Section4.2 p.172, opening timing-window paragraph",
+          "reported": "The range is t=0,...,c, with probability1/c after each corresponding operation."
+        },
+        {
+          "source_id": "bs2003-fault-fc",
+          "locator": "Section4.2 p.173, first probability calculation",
+          "reported": "Target interval probability1/c, all other intervals combined probability(c-1)/c."
+        }
+      ]
+    }
+  ]
+}

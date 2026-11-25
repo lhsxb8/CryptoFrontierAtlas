@@ -1,0 +1,176 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-8r-mitm-dks2010-endpoint-full-key-headline",
+  "title": "8-round AES-256: Eight-round attack: full-key claim",
+  "display": {
+    "name": "Eight-round attack: full-key claim",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "dks-whitening-final-round-without-mixcolumns",
+    "description": "Reduced 8-round AES-256 with whitening k_-1, final MixColumns omitted, and u_i=MC^-1(k_i). Returns k7 and selected u6, u5 and whitening bytes; the full k7 alone is128 bits of round-key material. Source whole-key claim; the standard schedule permits completing remaining master-key material. A separate completion timing is not itemized."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed standard AES schedule; no related-key oracle.",
+    "key_population": "General fixed key; no weak-key subset is specified.",
+    "plaintext_model": "2^81 structures of2^32 blocks;2^144 within-structure pairs, tested by early abort and refined key-consistency tables.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The four-round one-byte differential is modeled at2^-120; Observation5 enumerates middle states using an average S-box count.",
+      "Wrong-key multisets are modeled random. The journal's separate probability proof has documented count/max-probability issues.",
+      "Reported time is the online stage; preprocessing is explicit and key-independent. Partial-encryption conversion factors are author estimates.",
+      "AES-256 saves only8 guessed bits in this construction."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "multiset-tabulation",
+    "differential-enumeration"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^196",
+      "log2": 196,
+      "unit": "dks-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Source online attack cost; dependent on early-abort and wrong-key rejection assumptions."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^113",
+      "log2": 113,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Expected right-pair collection for one-key8-round attack."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^129",
+      "log2": 129,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Same special-multiset table as the basic7-round stage."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^132",
+      "log2": 132,
+      "unit": "dks-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Shared base special-table construction; auxiliary early-abort tables have separate smaller component counts."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-master-key-recovery",
+    "value": null,
+    "description": "No numerical finite-budget success is supplied for this exact key_recovery endpoint. Expected right-pair counts, table coverage and wrong-key rejection are distinct from complete-output success. The existing Observation5 average-to-uniform enumeration conflict remains. Section6 keeps the original inner differential and2^113-data scale. The quoted2^24/2^32 per-pair key suggestions and optimized2^-8 table nonemptiness estimate are intermediate counts/models, not final success. The basic early-abort candidate-reduction point is not a completed attack; the same distinction also applies to selected-subkey and full-key headlines. The full-key author headline does not supply a separately quantified completion probability.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-06",
+      "scope": "Exact19-page proceedings edition; endpoint-event review of Section4.2, Sections5–6 and AppendixA. No probability was added: expected right pairs, conditional enumeration, wrong-key filtering and sampled-table fractions do not quantify this exact output at its recorded data budget. Separate Observation5, time-sign and cost obligations remain unchanged; not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "inner-four-round-one-byte-output-differential-source-model",
+        "value": 7.52316384526264e-37,
+        "basis": "author_model",
+        "expression": "2^{-120}",
+        "description": "Section4.2 / footnote5 models the original inner four-round one-byte-in/one-byte-out differential at about2^-120 under a random-permutation approximation. This is per eligible pair, not probability of finding a pair, table inclusion, or key recovery."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dks2010-single-key-proceedings",
+      "locator": "Printed pp.171–174 Section6 and p.172 Table1",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/goal",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Full source version read and compared. Matching statements share one scoped record; changed claims and source-specific discrepancies retain their own identities."
+    },
+    {
+      "source_id": "dks2015-single-key-journal",
+      "locator": "Printed pp.417–420 Section7 and p.418 Table2",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/goal",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Full source version read and compared. Matching statements share one scoped record; changed claims and source-specific discrepancies retain their own identities."
+    },
+    {
+      "source_id": "dks2010-single-key-proceedings",
+      "locator": "Proceedings PDF10–12 / printed167–169 Observations5–6; PDF14–17 / printed171–174 Section6 and Table1.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical finite-budget success is supplied for this exact key_recovery endpoint. Expected right-pair counts, table coverage and wrong-key rejection are distinct from complete-output success. The existing Observation5 average-to-uniform enumeration conflict remains. Section6 keeps the original inner differential and2^113-data scale. The quoted2^24/2^32 per-pair key suggestions and optimized2^-8 table nonemptiness estimate are intermediate counts/models, not final success. The basic early-abort candidate-reduction point is not a completed attack; the same distinction also applies to selected-subkey and full-key headlines. The full-key author headline does not supply a separately quantified completion probability."
+    },
+    {
+      "source_id": "dks2010-single-key-proceedings",
+      "locator": "PDF9–11 Section4.2, Observation5 and footnotes5–7; PDF13–16 Sections5–6; PDF18–19 AppendixA.1–A.3.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: the checked source does not quantify this exact main output at its recorded budget. Separate proof, coordinate, key-schedule and cost obligations remain recorded. All primary probability values, components and scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Local identity/counting tests cover components; full attack searches and success rates have not been reproduced.",
+    "Full exact-edition inventory checked; numerical attack execution is not claimed."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Average solution count versus asserted uniform enumeration bound",
+      "description": "Observation5 uses one S-box solution on average to assert an at-most2^64 middle-state count. Its own footnote gives0/2/4 solutions. The mean does not by itself prove the stated bound for every structured difference tuple; the global count remains under review.",
+      "observations": [
+        {
+          "source_id": "dks2010-single-key-proceedings",
+          "locator": "Printed pp.167–168 Observation5 and footnote6",
+          "reported": "At most2^64 prescribed states is argued using one solution on average; actual S-box counts can be0,2,4."
+        },
+        {
+          "source_id": "dks2015-single-key-journal",
+          "locator": "Printed pp.408–409 Observation5 proof and footnote6",
+          "reported": "The journal retains the same average-to-at-most step and0/2/4 qualification."
+        }
+      ]
+    }
+  ]
+}

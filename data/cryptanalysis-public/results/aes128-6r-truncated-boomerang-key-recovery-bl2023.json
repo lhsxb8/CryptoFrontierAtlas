@@ -1,0 +1,183 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-6r-truncated-boomerang-key-recovery-bl2023",
+  "title": "Six-round AES-128 truncated-boomerang key recovery with two returning active diagonals",
+  "display": {
+    "name": "Truncated boomerang, two-diagonal recovery",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "bl2023-six-rounds-initial-ark-final-no-mixcolumns",
+    "description": "Six-round AES-128 with the initial AddRoundKey and no final MixColumns. The attack first recovers 32 bits of k0 and 32 bits of k6, then repeats on other diagonals using recovered k6 information to complete the key, as specified in Section 4.2 and Algorithm 2."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One unknown AES-128 master key; the S-box and diffusion matrix are public.",
+    "key_population": "general secret AES-128 key under the paper's probabilistic trail model",
+    "plaintext_model": "partial chosen-plaintext and adaptive-ciphertext structures allowing two active returning diagonals",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The Section 4.2 attack uses mu=8 expected right quartets, Q=2^116.4 and a candidate counter threshold of five.",
+      "The source approximates right and wrong counters by Poisson distributions and treats completion after the initial 64 recovered key bits as negligible work.",
+      "Time includes oracle work and candidate extraction, using T_C approximately 2^5.4 T_E and 96 S-boxes per six-round encryption."
+    ]
+  },
+  "techniques": [
+    "truncated-boomerang",
+    "multiple-trails",
+    "key-candidate-counting"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "approximately 2^60.8 (Table 1 rounds to 2^61)",
+      "log2": 60.8,
+      "unit": "six-round-aes-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Section 4.2, p.20 gives T=2^58.7 T_E+2^55 T_C approximately 2^60.8 T_E. The table's exponent 61 is its rounded overview, not a separate conflicting estimate."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^58.7 (Table 1 rounds to 2^59)",
+      "log2": 58.7,
+      "unit": "total-chosen-plaintext-and-adaptive-ciphertext-block-queries",
+      "qualifier": "estimate",
+      "note": "Section 4.2, p.19 gives a partial structure of D=2^58.7 elements in the paper's mixed-oracle data model. Table 1 rounds this value."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The final variant uses six hash tables and key counters, but a complete peak-memory figure is not separately extracted."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Small lookup tables support candidate extraction; no separately priced reusable preprocessing budget is reported."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-master-key-recovery-success",
+    "value": null,
+    "description": "No numerical complete-master-key success is given for this exact endpoint. The source approximately0.9 rate is only the first 64-bit correct counter reaching five, under a Poisson model. Repeated-diagonal completion has a qualitative negligible-work claim but no numerical joint success. The reported small-scale experiment and Deoxys/Kiasu/TNT success rates are not standard-AES complete-recovery trials.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit; preserve resource parameters, existing conflicts and full-audit gates. Local source models and conditional relations do not certify whole-output success."
+    },
+    "components": [
+      {
+        "metric": "true-partial-key-among-candidates-given-right-quartet",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF13–16 Section3.2: conditioned on an actual quartet following the specified known-S-box trails, exhaustive compatible candidate extraction includes the true first/last subkey material. This does not guarantee that a finite data set contains a right quartet or that voting/completion succeeds."
+      },
+      {
+        "metric": "one-quartet-follows-boomerang-trail-source-model",
+        "value": 7.297909806615429e-35,
+        "basis": "author_model",
+        "expression": "\\approx 2^{-113.4}",
+        "description": "Source-specific trail probability at this exact basic/multiple/two-returning-diagonal choice; mu is an expected count, not success."
+      },
+      {
+        "metric": "random-quartet-return-test-source-model",
+        "value": 3.2526065174565133e-19,
+        "basis": "author_model",
+        "expression": "6\\cdot2^{-64}\\approx2^{-61.4}",
+        "description": "Equation7 and this endpoint return set: a random quartet passes the designated returning-difference test. It is not the probability of full key recovery."
+      },
+      {
+        "metric": "one-trial-suggests-fixed-wrong64-bit-key-source-model",
+        "value": 1.11357266336295e-39,
+        "basis": "author_model",
+        "expression": "\\approx 2^{-129.4}",
+        "description": "Source pw from Equation7 and the endpoint extraction factor, before multiplying by the number of trials. This is a fixed wrong 64-bit key suggestion, not any-wrong-key or whole-output failure."
+      },
+      {
+        "metric": "wrong-quartet-suggests-fixed64-bit-key-source-model",
+        "value": 3.3881317890172014e-21,
+        "basis": "derived_from_source",
+        "expression": "2^{-68}",
+        "description": "Source ell*2^-kappa for kappa=64. Basic/Figure8 uses ell=2^-32; multiple/two-diagonal uses ell=2^-4. This conditional source model remains attached to the same trail choice."
+      },
+      {
+        "metric": "fixed-wrong64-bit-counter-reaches-five-poisson-model",
+        "value": 2.269568586902648e-22,
+        "basis": "author_model",
+        "expression": "1-e^{-\\lambda}\\sum_{j=0}^{4}\\lambda^j/j!\\approx2^{-71.9},\\quad\\lambda=2^{-13}",
+        "description": "PDF19: one fixed wrong 64-bit counter reaches at least five under the source Poisson approximation. The 2^64-counter aggregate is not asserted to have probability zero."
+      },
+      {
+        "metric": "first64-bit-correct-counter-reaches-five-poisson-model",
+        "value": 0.9,
+        "basis": "author_model",
+        "expression": "1-e^{-8}\\sum_{j=0}^{4}8^j/j!\\approx0.9",
+        "description": "PDF19: the correct first-stage 64-bit counter reaches the threshold of five at mean mu=8 with source probability approximately0.9. This is threshold retention, not uniqueness or joint full-key completion over other diagonals."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bl2023-truncated-boomerang-full",
+      "locator": "PDF p.4, Table 1; pp.13-15, Section 3.2 and Algorithm 2; pp.18-20, Section 4.2, 'Using two active diagonals', success paragraph and final time equation.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The detailed body gives the unrounded time and data estimates and an explicit repeated-diagonal key-completion step. The approximately 0.9 first-stage counter probability is retained in prose rather than relabelled as full-master-key success."
+    },
+    {
+      "source_id": "bl2023-truncated-boomerang-full",
+      "locator": "Complete exact primary PDF1–56, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete reading and source inventory; later-literature gates and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "bl2023-truncated-boomerang-full",
+      "locator": "Full56-page edition PDF13–16 Section3.2; PDF18–20 Section4.2, source-coupled trail and mu choices.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical complete-master-key success is given for this exact endpoint. The source approximately0.9 rate is only the first 64-bit correct counter reaching five, under a Poisson model. Repeated-diagonal completion has a qualitative negligible-work claim but no numerical joint success. The reported small-scale experiment and Deoxys/Kiasu/TNT success rates are not standard-AES complete-recovery trials."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "No independent full-size implementation or cost reproduction was performed.",
+    "Known S-boxes and adaptive decryption access are required; the paper's separate secret-S-box variant has a different target and recovery scope."
+  ],
+  "related_problem_ids": []
+}

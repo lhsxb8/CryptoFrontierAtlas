@@ -1,0 +1,168 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-4r-differential-probability-psl2003-property",
+  "title": "aes-128/aes-192/aes-256, 4 rounds: Expected differential probability bound [PSL+03]",
+  "display": {
+    "name": "Expected differential probability bound",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "source-pslplus03-4r",
+    "description": "The source four-round AES SPN with independently uniform round subkeys, not the distribution induced by the standard master-key schedule. The final linear layer is omitted as the source coordinate convention."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "An independently uniform round-key ensemble, not the distribution induced by the standard AES master-key schedule.",
+    "key_population": "Independent uniform round-key ensemble; averaging/existence quantifier is explicit in the property.",
+    "plaintext_model": "Source differential/linear patterns and their quantified propagation, not chosen-plaintext attack queries.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "An independently uniform round-key ensemble, not the distribution induced by the standard AES master-key schedule."
+    ]
+  },
+  "techniques": [
+    "differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-property",
+    "value": null,
+    "description": "A quantified structural property, not attack success."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-46fbc2544841fcb2-2003",
+      "locator": "CompletePDF1–14/printed247–260; PDF2 model, PDF5–8 Theorem1, PDF10 Table1/Theorem4, PDF10–12 Theorem5, PDF13 r>=5 extension.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property",
+        "/field_conflicts"
+      ],
+      "interpretation": "Full primary inventory and source-native bounds retained. Independent round-key ensemble and source output-linear convention are explicit; local moment derivation discrepancy is not a new measured AES maximum."
+    },
+    {
+      "source_id": "aes-paper-46fbc2544841fcb2-2003",
+      "locator": "PDF10/printed256 Table1 and Theorems4–5; PDF12/printed258 Theorem5 conclusion.",
+      "fields": [
+        "/property/parameters",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized source observation or independently checked formula discrepancy; historical values retained. This is not an unscoped whole-attack refutation."
+    },
+    {
+      "source_id": "aes-paper-46fbc2544841fcb2-2003",
+      "locator": "PDF10/printed256 Table1 and sum of fifth powers; PDF10–12 Theorem5 uses P^4.",
+      "fields": [
+        "/property/parameters",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized source observation or independently checked formula discrepancy; historical values retained. This is not an unscoped whole-attack refutation."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Probability bounds concern independent uniform round subkeys. They are not attack-resource vectors or fixed-master-key guarantees.",
+    "The original differential rounding discrepancy is preserved; the source linear bound uses conservative displayed rounding."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "The source bounds the maximum expected differential probability for four-round AES under independent uniform round keys by 1.144 * 2^-111.",
+    "quantifier": "Maximum expected differential probability or expected squared correlation over nontrivial input/output differences or masks, averaged over independent uniform round keys; no per-fixed-master-key guarantee.",
+    "scope": "Four-round source SPN ensemble; the explicit Section4 extension keeps the same bound for r>=5. The symbolic extension is recorded here, not duplicated as nominal five-round attacks.",
+    "parameters": [
+      {
+        "name": "probability_bound",
+        "reported": "1.144 * 2^-111",
+        "meaning": "Upper bound on maximum expected differential probability for the four-round ensemble."
+      },
+      {
+        "name": "extension_round_domain",
+        "reported": "r integer>=5; instantiated only up to the applicable AES round count",
+        "meaning": "Section4 convolution argument extends the same ensemble maximum bound; it is not a standard AES master-key security claim."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "All14pages, proof cases, byte spectra and r>=5 extension read. Independent finite DDT/LAT and MixColumns-minor checks plus a fresh reviewer verify component arithmetic; no complete proof or attack reproduction."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property/parameters",
+      "label": "differential-moment-rounded-before-fourth-power",
+      "description": "Table1 and the fifth-moment formula give79*2^-34=1.234375*2^-28. The source rounds this down to1.23 before taking its fourth power, yielding the printed1.144*2^-111. The exact source-moment fourth power has coefficient1.1608028709888458 at2^-111. This mismatch in the displayed derivation does not prove the true differential maximum exceeds the printed headline.",
+      "observations": [
+        {
+          "source_id": "aes-paper-46fbc2544841fcb2-2003",
+          "locator": "PDF10/printed256 Table1 and Theorems4–5; PDF12/printed258 Theorem5 conclusion.",
+          "reported": "P≈1.23*2^-28; maximum4r differential probability bounded by1.144*2^-111."
+        },
+        {
+          "source_id": "aes-paper-46fbc2544841fcb2-2003",
+          "locator": "PDF10/printed256 Table1 and sum of fifth powers; PDF10–12 Theorem5 uses P^4.",
+          "reported": "Local exact arithmetic: (2^-6)^5+126*(2^-7)^5=79*2^-34; fourth power=1.1608028709888458*2^-111. Not a source erratum or exact probability measurement."
+        }
+      ]
+    }
+  ]
+}

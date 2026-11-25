@@ -1,0 +1,144 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-3r-functions-gm2000-one-active-byte-property",
+  "title": "3-round AES-192: One-active-byte bottleneck relation",
+  "display": {
+    "name": "One-active-byte bottleneck relation",
+    "method": "collision"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 3,
+    "full_round": false,
+    "round_convention": "gm2000-3-inner-rounds-with-mixcolumns-reflected-columns",
+    "description": "AES-192 on 128-bit blocks. Consecutive inner rounds each include MixColumns; the round keys are fixed and unknown. The source's right-going coordinates are conjugated by column reflection as documented in the AES3 review."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_analysis_no_attack_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "Three fixed, unknown 128-bit round keys. The structural argument does not use their master-key dependencies, and therefore also applies to keys derived from any of the standard AES key lengths.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "Fix twelve input bytes and vary one byte y together with a three-byte parameter c in the source's selected input column; use consistent reflected coordinates.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source describes right-going ShiftRow. Standard AES uses left-going shifts. Reindexing columns by J(r,c)=(r,-c mod 4) conjugates the independent-round-key construction; inputs, outputs and recovered round keys are reflected consistently before standard key expansion. This coordinate normalization is a local structural interpretation, not a complete attack reproduction."
+    ]
+  },
+  "techniques": [
+    "collision-of-functions",
+    "restricted-byte-dependency"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "component-relation-not-attack-success",
+    "value": null,
+    "description": "The property parameters and quantified relation are recorded separately from attack success and resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "Paper pp.5–6 Section3.3 Properties1–3",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "CompletechapterPDF230–241 in original AES3volume; chapter1–12, allSections1–5 and references.",
+      "fields": [
+        "/assessment",
+        "/property"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Primary-text claims are catalogued by target and scope. Full attacks, cost estimates and global success are not independently reproduced."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "The induced one-byte function s_c(y) is described by five c-independent key-dependent byte parameters and four c/key-dependent byte parameters. Equal parameter tuples give equal functions over all 256 y values.",
+    "quantifier": "For fixed unknown round keys and fixed twelve input bytes, equality of the four internal parameters is sufficient for s_c(y)=s_c'(y) for every y. Finding distinct colliding c values uses a random-function heuristic; no probability-one guarantee for every key is asserted.",
+    "scope": "Three internal AES rounds; projected byte-valued functions, not a collision of complete ciphertext blocks or AES master keys.",
+    "parameters": [
+      {
+        "name": "Fixed key-dependent bytes",
+        "reported": "5",
+        "meaning": "Four first-stage offsets and one final projected-key offset in the source representation."
+      },
+      {
+        "name": "Parameter-dependent bytes",
+        "reported": "4",
+        "meaning": "The internal tuple depending on c and the fixed unknown round keys."
+      },
+      {
+        "name": "Function domain",
+        "reported": "256 y values",
+        "meaning": "One colliding pair agrees pointwise over this domain; this is not an oracle-query budget."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "The published dependency argument is retained with its heuristic collision-existence step. No universal existence theorem or full collision-search reproduction is claimed."
+    }
+  }
+}

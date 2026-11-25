@@ -1,0 +1,182 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-8r-impossible-differential-phan-lowdata-ldkk2008",
+  "title": "8-round AES-256 impossible-differential key recovery, improved Phan construction",
+  "display": {
+    "name": "Impossible differential, Phan line, low data",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "ldkk2008-rounds-0-to-7-initial-whitening-final-no-mixcolumns",
+    "description": "8 rounds of standard AES-256 with initial AddRoundKey and final MixColumns omitted. The source reports complete master-key recovery, using impossible-differential subkey elimination followed by key-schedule completion or trial encryption."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed unknown AES master key; no related-key oracle.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "chosen-plaintext structures with a varying inverse-shifted column and fixed other bytes; compatible pairs are selected after encryption",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Uses the four-round impossible differential of Proposition 1 with input/output extension and early rejection of wrong key guesses.",
+      "Reuses three column choices. After filtering, about 2^149 candidate 192-bit subkey guesses are completed with 64 remaining bits, at about 2^213 trial encryptions. The final published time is dominated by 2^229.7 memory accesses.",
+      "Section 2's textual AES-256 key-schedule description includes a rotation in the i=4 mod 8 branch; the canonical AES specification has an unrotated SubWord there. This source description discrepancy remains flagged for full-version checking; no alternative cipher is silently substituted."
+    ]
+  },
+  "techniques": [
+    "impossible-differential",
+    "early-abort",
+    "key-schedule-constraints",
+    "wrong-key-elimination",
+    "data-reuse"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^229.7",
+      "log2": 229.7,
+      "unit": "memory-accesses",
+      "qualifier": "estimate",
+      "note": "Source final 2^229.7 MA (192+37.7). At intermediate D=2^90.7 it separately gives 4·2^128·2^57.7·2^32·2=2^220.7 MA for Steps 3–4; wrong-guess survival 2^-43 leaves 2^149 candidates, with 2^64 completion each costing about 2^213 trial encryptions. Three column-pair repetitions reduce final D to 2^89.1 without multiplying the reported total time. These are stages of one endpoint, not coordinate-wise minima from different attacks."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^89.1",
+      "log2": 89.1,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Final source-reported chosen-plaintext budget for this instance and endpoint; distinct from intermediate pre-optimization counts."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^101",
+      "log2": 101,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Dominated by storing the 2^96-pair table, as stated on p.290."
+    },
+    "preprocessing": {
+      "status": "qualitative",
+      "reported": "2^64*2^96 two-column/two-round computations; also elimination-table setup",
+      "log2": null,
+      "unit": "source-described-table-construction",
+      "qualifier": "unspecified",
+      "note": "Section 4.2 explicitly reuses the 2^96-pair table while k5,Col(2,3) is fixed; generating all such tables costs about 2^64·2^96 encryptions of two columns for two rounds. Appendix A additionally constructs and sorts the 2^42-pair elimination table. Neither count is silently changed into full AES encryptions or a complete combined setup total."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "full-master-key-recovery",
+    "value": null,
+    "description": "No numerical finite-budget full-master-key success is established for this exact endpoint. The intermediate2^90.7-data analysis targets a fixed-wrong192-bit-guess survival of2^-43 and an expected2^149 survivors. The final2^89.1 endpoint reuses three overlapping column choices; no final joint elimination rate or stochastic independence is provided, so the intermediate2^-43 is not copied into its components. The64-bit residual completion is priced as expected work, not a recovery probability.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit; preserve resource parameters, existing conflicts and full-audit gates. Local source models and conditional relations do not certify whole-output success."
+    },
+    "components": [
+      {
+        "metric": "true-key-not-rejected-by-intended-impossible-relation",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF6 Proposition1 and the source elimination rule: a true hypothesis cannot satisfy both conditions of the impossible differential and is not discarded by that mathematical contradiction. This is a local retention relation, not a finite-budget uniqueness or residual-search success rate."
+      },
+      {
+        "metric": "partially-decrypted-pair-eight-zero-byte-sieve-source-model",
+        "value": 5.421010862427522e-20,
+        "basis": "derived_from_source",
+        "expression": "2^{-64}",
+        "description": "PDF10–11: after a k7 hypothesis peels the last round, the inner attack requires eight zero-difference bytes, yielding expected2^57.7 pairs at the preliminary2^90.7 data budget. This is not an eight-round raw-ciphertext sieve or a final-data survivor count."
+      },
+      {
+        "metric": "pair-suggests-fixed-equivalent64-bit-subkey-source-model",
+        "value": 2.3283064365386963e-10,
+        "basis": "derived_from_source",
+        "expression": "2^{-32}",
+        "description": "PDF11: each inner pair suggests an expected2^32 out of2^64 values of w6, i.e. source-model fraction2^-32. It is not a whole192-bit key survival probability."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "p.281 Table 1; pp.287-290 Section 4.2. pp.282-283 for round convention; pp.291-292 for elimination-table setup.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/resources",
+        "/techniques",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Reuses three column choices. After filtering, about 2^149 candidate 192-bit subkey guesses are completed with 64 remaining bits, at about 2^213 trial encryptions. The final published time is dominated by 2^229.7 memory accesses."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "Full source PDF pp.1–15 / printed pp.279–293 read 2026-10-27; Table 1/PDF3 and defining Sections 4.1–4.2/PDF7–12 or Appendix B/PDF14–15.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Independent raw-first complete proceedings-edition audit. Whole-key success remains unknown; memory accesses are not converted to encryptions. The separate 2008/540 full-version PDF was not acquired."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF p.5 / printed p.283, AES-256 key-schedule i≡4(mod8) sentence; Sections4.1–4.2.",
+      "fields": [
+        "/setting"
+      ],
+      "interpretation": "The source description rotates SubWord in the AES-256 extra branch, unlike canonical AES. Preserve this localized description caveat; do not redefine the target cipher or infer that all attacks are invalid."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF pp.10–12 / printed pp.288–290, all Section4.2 accounting, table reuse and final summary.",
+      "fields": [
+        "/resources",
+        "/success",
+        "/setting"
+      ],
+      "interpretation": "Exact printed formulas are checked by bounded exponent arithmetic. The90.7 intermediate budget is not presented as a newly published final endpoint or a continuous tuning family."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "Proceedings PDF6 Proposition1; PDF10–12 / printed288–290 Section4.2; AppendixA PDF13–14.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical finite-budget full-master-key success is established for this exact endpoint. The intermediate2^90.7-data analysis targets a fixed-wrong192-bit-guess survival of2^-43 and an expected2^149 survivors. The final2^89.1 endpoint reuses three overlapping column choices; no final joint elimination rate or stochastic independence is provided, so the intermediate2^-43 is not copied into its components. The64-bit residual completion is priced as expected work, not a recovery probability."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Reuses three column choices. After filtering, about 2^149 candidate 192-bit subkey guesses are completed with 64 remaining bits, at about 2^213 trial encryptions. The final published time is dominated by 2^229.7 memory accesses.",
+    "The 15-page proceedings edition has been fully read and its AES contributions inventoried. The separate full online edition 2008/540 remains access-pending; independent attack reproduction was not attempted."
+  ],
+  "related_problem_ids": []
+}

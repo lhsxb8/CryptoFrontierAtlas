@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+  \node[box] (s) at (0,1.1) {$S_0,\ldots,S_4$};
+  \node[accent] (c) at (3.5,1.1) {$p_C$\\$S_2\gets S_2\oplus c_i$};
+  \node[accent] (sb) at (7,1.1) {$p_S$\\$64\times$ parallel S-box};
+  \node[accent] (l) at (10.5,1.1) {$p_L$\\Wordwise diffusion};
+  \draw[wire] (s) -- (c); \draw[wire] (c) -- (sb); \draw[wire] (sb) -- (l);
+  \node at (5.5,-.2) {$S_j\gets S_j\oplus(S_j\rotr a_j)\oplus(S_j\rotr b_j)$};
+  \node at (5.5,-1.35) {$\begin{array}{c|ccccc}
+    j&0&1&2&3&4\\\hline
+    a_j&19&61&1&10&7\\ b_j&28&39&6&17&41
+  \end{array}$};
+  \node[note] at (5.5,-2.65) {Each $S_j$ contains $64$ bits; $\rotr$ denotes right rotation.\\$p[8]$ uses the last eight round constants of $p[12]$.};
+\end{tikzpicture}

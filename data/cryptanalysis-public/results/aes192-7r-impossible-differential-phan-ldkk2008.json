@@ -1,0 +1,173 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-impossible-differential-phan-ldkk2008",
+  "title": "7-round AES-192 impossible-differential key recovery, improved Phan construction",
+  "display": {
+    "name": "Impossible differential, Phan line",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "ldkk2008-rounds-0-to-6-initial-whitening-final-no-mixcolumns",
+    "description": "7 rounds of standard AES-192 with initial AddRoundKey and final MixColumns omitted. The source reports complete master-key recovery, using impossible-differential subkey elimination followed by key-schedule completion or trial encryption."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed unknown AES master key; no related-key oracle.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "chosen-plaintext structures with a varying inverse-shifted column and fixed other bytes; compatible pairs are selected after encryption",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Uses the four-round impossible differential of Proposition 1 with input/output extension and early rejection of wrong key guesses.",
+      "Thirteen subkey bytes are guessed/derived, 80 bits guessed in the early-abort stage, and remaining master-key material is exhaustively completed. Page 287 reduces data by 2^0.8 while retaining the headline 2^139.2 estimate; memory-access filtering is also separately discussed."
+    ]
+  },
+  "techniques": [
+    "impossible-differential",
+    "early-abort",
+    "key-schedule-constraints",
+    "wrong-key-elimination",
+    "data-reuse"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^139.2",
+      "log2": 139.2,
+      "unit": "7-round-AES-encryptions",
+      "qualifier": "estimate",
+      "note": "Headline 2^139.2 seven-round AES-192 encryptions is preserved. The body prices the early stage as 2^142 one-round encryptions (142−log2(7)≈139.193), and candidate-table elimination separately as 2^143 memory accesses. No universal memory-access/encryption conversion is stated. Final data reduction by 2^0.8 is said to reduce work similarly but the final repeated headline remains 139.2; no 138.4 endpoint is fabricated."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^91.2",
+      "log2": 91.2,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Final source-reported chosen-plaintext budget for this instance and endpoint; distinct from intermediate pre-optimization counts."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^65",
+      "log2": 65,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Section 4.1 p.287 estimates 2^65 bytes using per-80-bit-guess processing."
+    },
+    "preprocessing": {
+      "status": "qualitative",
+      "reported": "2^42-pair wrong-key-elimination table construction",
+      "log2": null,
+      "unit": "source-described-table-construction",
+      "qualifier": "unspecified",
+      "note": "Appendix A precomputes 2^42 (difference,value) pairs, corresponding to 2^32 possible four-byte values and 2^10 one-active-byte alternatives, then sorts by difference. These are native table cardinality and iteration counts, not a reported complete setup-time total. Section 4.1 explicitly invokes the method."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "full-master-key-recovery",
+    "value": null,
+    "description": "No numerical finite-budget full-master-key success is established for this exact endpoint. The 2^-152.7 survival figure is explicitly referred to the earlier Phan full-data procedure and is not transferred to the reduced-data endpoint. The source trades data for more surviving104-bit guesses and residual96-bit exhaustive work; expected survivor limits do not quantify actual key recovery.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit; preserve resource parameters, existing conflicts and full-audit gates. Local source models and conditional relations do not certify whole-output success."
+    },
+    "components": [
+      {
+        "metric": "true-key-not-rejected-by-intended-impossible-relation",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF6 Proposition1 and the source elimination rule: a true hypothesis cannot satisfy both conditions of the impossible differential and is not discarded by that mathematical contradiction. This is a local retention relation, not a finite-budget uniqueness or residual-search success rate."
+      },
+      {
+        "metric": "ciphertext-pair-eight-zero-byte-sieve-source-model",
+        "value": 5.421010862427522e-20,
+        "basis": "derived_from_source",
+        "expression": "2^{-64}",
+        "description": "PDF6–7: Step2 retains ciphertext pairs with eight designated zero-difference bytes. Source 2^123 candidate pairs become an expected2^59 pairs at the original 2^92-data analysis; the local 64-bit sieve is not a post-reduction survivor count."
+      },
+      {
+        "metric": "deduced-column-key-byte-consistency-source-model",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "PDF8–9: a deduced k5 column agrees with the byte already known through the AES192 schedule with source probability2^-8. The final2^91.2-data point keeps this local consistency test, not the earlier full-budget wrong-subkey expectation."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "p.281 Table 1; pp.285-287 Section 4.1. pp.282-283 for round convention; pp.291-292 for elimination-table setup.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/resources",
+        "/techniques",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Thirteen subkey bytes are guessed/derived, 80 bits guessed in the early-abort stage, and remaining master-key material is exhaustively completed. Page 287 reduces data by 2^0.8 while retaining the headline 2^139.2 estimate; memory-access filtering is also separately discussed."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "Full source PDF pp.1–15 / printed pp.279–293 read 2026-10-27; Table 1/PDF3 and defining Sections 4.1–4.2/PDF7–12 or Appendix B/PDF14–15.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Independent raw-first complete proceedings-edition audit. Whole-key success remains unknown; memory accesses are not converted to encryptions. The separate 2008/540 full-version PDF was not acquired."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF pp.8–9 / printed pp.286–287, key-byte relations, early-abort cost, candidate table and final residual search; PDF pp.13–14 / pp.291–292 AppendixA.",
+      "fields": [
+        "/resources",
+        "/success",
+        "/setting"
+      ],
+      "interpretation": "Bounded canonical-key-expansion checks validate the three192-bit byte deductions. Numeric resource dimensions stay separate; no missing success or setup unit is filled."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "Proceedings PDF6–9 / printed284–287 Sections3.1/4.1 and Proposition1; AppendixA PDF13–14.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical finite-budget full-master-key success is established for this exact endpoint. The 2^-152.7 survival figure is explicitly referred to the earlier Phan full-data procedure and is not transferred to the reduced-data endpoint. The source trades data for more surviving104-bit guesses and residual96-bit exhaustive work; expected survivor limits do not quantify actual key recovery."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Thirteen subkey bytes are guessed/derived, 80 bits guessed in the early-abort stage, and remaining master-key material is exhaustively completed. Page 287 reduces data by 2^0.8 while retaining the headline 2^139.2 estimate; memory-access filtering is also separately discussed.",
+    "The 15-page proceedings edition has been fully read and its AES contributions inventoried. The separate full online edition 2008/540 remains access-pending; independent attack reproduction was not attempted."
+  ],
+  "related_problem_ids": []
+}

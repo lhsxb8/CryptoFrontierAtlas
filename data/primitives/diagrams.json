@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "style_reference": {"title": "TikZ for Cryptographers", "author": "Jérémy Jean", "url": "https://www.iacr.org/authors/tikz/", "note": "Original Atlas drawings informed by the IACR gallery's conventions. No gallery source or auxiliary packages are vendored."},
+  "design_sources": [
+    {"id": "rijndael-design", "title": "Daemen and Rijmen · AES proposal: Rijndael", "url": "https://csrc.nist.gov/csrc/media/projects/cryptographic-standards-and-guidelines/documents/aes-development/rijndael-ammended.pdf", "locator": "Design specification: round transformation and key schedule"},
+    {"id": "chacha-design", "title": "Bernstein · ChaCha, a variant of Salsa20 (2008)", "url": "https://cr.yp.to/chacha/chacha-20080128.pdf", "locator": "The ChaCha permutation; the catalog uses the later IETF state layout"},
+    {"id": "keccak-design", "title": "Bertoni et al. · The Keccak reference, version 3.0 (2011)", "url": "https://keccak.team/files/Keccak-reference-3.0.pdf", "locator": "Sections 1–2: sponge construction and Keccak-f"},
+    {"id": "ascon-design", "title": "Ascon designers · Specifications and design publications", "url": "https://ascon.isec.tugraz.at/specification.html", "locator": "Design history; the diagram follows the final NIST edition, not earlier submissions"},
+    {"id": "omac-design", "title": "Iwata and Kurosawa · OMAC / OMAC1 design", "url": "https://www.nuee.nagoya-u.ac.jp/labs/tiwata/omac/omac.html", "locator": "OMAC1 construction and original FSE 2003 publication"},
+    {"id": "sm3-standard-text", "title": "GB/T 32905-2016 · Specification text", "url": "https://tsgdag.jhun.edu.cn/_upload/article/files/7d/c2/952f626a48589eeb00644bf8e7b4/0ea064f0-e3d0-4ff0-b0f8-27aadd1c4b02.pdf", "locator": "National standard, Sections 4–5; public copy hosted by Jianghan University"},
+    {"id": "sm4-english-description", "title": "Tse, Wong and Saarinen · SM4 English description", "url": "https://datatracker.ietf.org/doc/html/draft-ribose-cfrg-sm4-10", "locator": "Sections 4–7. Archived individual Internet-Draft, not an IETF standard; the normative algorithm reference is GB/T 32907-2016."},
+    {"id": "sha1-transition", "title": "NIST · SHA-1 transition", "url": "https://www.nist.gov/news-events/news/2022/12/nist-retires-sha-1-cryptographic-algorithm", "locator": "Historical security context and transition announcement; the algorithm diagram follows FIPS 180-4 Section 6.1"}
+  ],
+  "diagrams": [
+    {
+      "family_id": "aes", "instance_ids": ["aes-128", "aes-192", "aes-256"],
+      "compact_template": "aes-compact.tex",
+      "specification_ids": ["standard-fips-197-2023"], "design_source_ids": ["rijndael-design"],
+      "locator": "FIPS 197 (2023), Section 5.1, Algorithm 1; Section 5.2, Algorithm 2",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "aes-overview.tex", "label": {"en": "Encryption", "zh": "加密结构"}, "caption": {"en": "The initial key addition precedes the rounds. Only the final round omits MixColumns; the key schedule supplies every round key.", "zh": "初始密钥加位于轮迭代之前；仅末轮省略 MixColumns，轮密钥由密钥扩展生成。"}},
+        {"id": "detail", "template": "aes-detail.tex", "label": {"en": "Round & key schedule", "zh": "轮函数与密钥扩展"}, "caption": {"en": "A state contains four columns of bytes. Key expansion depends on the key length, including the extra SubWord case for AES-256.", "zh": "状态由四列字节组成。密钥扩展随密钥长度变化，AES-256 包含额外的 SubWord 分支。"}}
+      ]
+    },
+    {
+      "family_id": "tdea", "instance_ids": ["tdea-3key"],
+      "compact_template": "tdea-compact.tex",
+      "specification_ids": ["standard-sp-800-67-r2"], "design_source_ids": [],
+      "locator": "SP 800-67 Rev. 2, Sections 2.1 and 3.1 (historical, withdrawn edition)",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "tdea-overview.tex", "label": {"en": "E–D–E construction", "zh": "E–D–E 构造"}, "caption": {"en": "Three complete DES stages, each with its own key, permutations and 16 Feistel rounds. This is a historical construction, not a deployment recommendation.", "zh": "三个完整 DES 阶段各自使用密钥、置换和 16 轮 Feistel 结构。此处展示历史研究对象。"}},
+        {"id": "detail", "template": "tdea-detail.tex", "label": {"en": "DES round", "zh": "DES 轮函数"}, "caption": {"en": "The right half enters the expansion, key XOR, S-boxes and permutation. Decryption uses the round keys in reverse order.", "zh": "右半部分依次经过扩展、轮密钥异或、S 盒与置换；解密反序使用轮密钥。"}}
+      ]
+    },
+    {
+      "family_id": "chacha20", "instance_ids": ["chacha20-ietf"],
+      "compact_template": "chacha-compact.tex",
+      "specification_ids": ["standard-rfc-8439"], "design_source_ids": ["chacha-design"],
+      "locator": "RFC 8439, Sections 2.1–2.4; IETF 32-bit counter / 96-bit nonce layout",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "chacha-overview.tex", "label": {"en": "Keystream generation", "zh": "密钥流生成"}, "caption": {"en": "Ten column/diagonal double rounds are followed by wordwise feed-forward addition and little-endian serialization. Plaintext is XORed with the resulting keystream.", "zh": "十次列轮/对角轮组合后，逐字前馈相加并按小端序输出密钥流，再与明文异或。"}},
+        {"id": "detail", "template": "chacha-detail.tex", "label": {"en": "Quarter round", "zh": "四分之一轮"}, "caption": {"en": "Each row updates four 32-bit words in order. Boxed plus means addition modulo 2^32; circled plus means XOR; rotations are to the left.", "zh": "按顺序更新四个 32 比特字。方框加号表示模 2^32 加法，圆圈加号表示异或，旋转方向为左旋。"}}
+      ]
+    },
+    {
+      "family_id": "sha2", "instance_ids": ["sha-224", "sha-256", "sha-384", "sha-512", "sha-512-224", "sha-512-256"],
+      "compact_template": "sha2-compact.tex",
+      "specification_ids": ["standard-fips-180-4-2015"], "design_source_ids": [],
+      "locator": "FIPS 180-4 (2015), Sections 4.1.2–4.1.3, 5 and 6.2–6.7",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "sha2-overview.tex", "label": {"en": "Hash construction", "zh": "哈希构造"}, "caption": {"en": "Padded blocks update the chaining state through compression and feed-forward. Each named instance has its own specified initial value, not just a different output length.", "zh": "填充后的分组通过压缩函数与前馈更新链值。每个命名实例采用各自规定的初始值，不只是输出长度不同。"}},
+        {"id": "detail", "template": "sha2-detail.tex", "label": {"en": "Compression step", "zh": "压缩函数步"}, "caption": {"en": "A step updates eight working words using the schedule word and round constant. Sigma functions and constants depend on the 32-bit or 64-bit branch.", "zh": "每一步结合消息扩展字和轮常量，更新八个工作字。Sigma 函数与常量随 32/64 比特分支变化。"}}
+      ]
+    },
+    {
+      "family_id": "sha3", "instance_ids": ["sha3-224", "sha3-256", "sha3-384", "sha3-512"],
+      "compact_template": "sponge-compact.tex",
+      "specification_ids": ["standard-fips-202-2015"], "design_source_ids": ["keccak-design"],
+      "locator": "FIPS 202, Sections 3, 4, 5.1 and 6.1; SHA-3 suffix 01 before pad10*1",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "sponge-overview.tex", "label": {"en": "Absorb & squeeze", "zh": "吸收与挤出"}, "caption": {"en": "Only the rate is XORed with padded input blocks and read for output. The capacity is internal; the permutation always acts on the complete state.", "zh": "填充消息仅异或到 rate 部分，输出也仅从该部分读取；capacity 保持内部状态，置换作用于完整状态。"}},
+        {"id": "detail", "template": "keccak-detail.tex", "label": {"en": "Keccak round", "zh": "Keccak 轮函数"}, "caption": {"en": "Each permutation round applies theta, rho, pi, chi and iota in this order, with 64-bit lanes arranged in a 5 by 5 state.", "zh": "64 比特 lane 构成 5×5 状态，每轮按 θ、ρ、π、χ、ι 的顺序更新。"}}
+      ]
+    },
+    {
+      "family_id": "shake", "instance_ids": ["shake128", "shake256"],
+      "compact_template": "sponge-compact.tex",
+      "specification_ids": ["standard-fips-202-2015"], "design_source_ids": ["keccak-design"],
+      "locator": "FIPS 202, Sections 3, 4, 5.1 and 6.2; SHAKE suffix 1111 before pad10*1",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "sponge-overview.tex", "label": {"en": "Absorb & squeeze", "zh": "吸收与挤出"}, "caption": {"en": "SHAKE uses its own domain suffix and a caller-selected output length. Additional output blocks require further permutation calls, without absorbing more input.", "zh": "SHAKE 使用独立域分离后缀，由调用者指定输出长度；继续输出时再次调用置换，不吸收新的消息。"}},
+        {"id": "detail", "template": "keccak-detail.tex", "label": {"en": "Keccak round", "zh": "Keccak 轮函数"}, "caption": {"en": "The same 24-round Keccak-f[1600] permutation is used for both SHAKE instances. Their rate and capacity differ.", "zh": "两个 SHAKE 实例均使用 24 轮 Keccak-f[1600] 置换，区别在于 rate 与 capacity。"}}
+      ]
+    },
+    {
+      "family_id": "keccak", "instance_ids": ["keccak-f-1600", "keccak-p-1600-12"],
+      "compact_template": "keccak-compact.tex",
+      "specification_ids": ["standard-fips-202-2015"], "design_source_ids": ["keccak-design"],
+      "locator": "FIPS 202, Sections 3.1–3.4, Algorithms 1–7",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "keccak-overview.tex", "label": {"en": "Permutation", "zh": "置换结构"}, "caption": {"en": "Keccak-p[1600,n] applies round indices 24-n through 23. Its 12-round instance is the last twelve rounds of Keccak-f[1600]. No key is involved.", "zh": "Keccak-p[1600,n] 使用轮索引 24−n 至 23；12 轮实例对应 Keccak-f[1600] 的最后十二轮。置换本身不使用密钥。"}},
+        {"id": "detail", "template": "keccak-detail.tex", "label": {"en": "Round mapping", "zh": "单轮映射"}, "caption": {"en": "Lane coordinates are taken modulo five. Theta mixes column parities, rho rotates lanes, pi relocates them, chi is nonlinear, and iota injects the round constant.", "zh": "lane 坐标按模五计算。θ 混合列奇偶校验，ρ 旋转 lane，π 重排位置，χ 引入非线性，ι 注入轮常量。"}}
+      ]
+    },
+    {
+      "family_id": "ascon-aead", "instance_ids": ["ascon-aead128"],
+      "compact_template": "ascon-compact.tex",
+      "specification_ids": ["standard-sp-800-232-2025"], "design_source_ids": ["ascon-design"],
+      "locator": "SP 800-232 (August 2025), Sections 3 and 4.1.1, Algorithm 3; Appendix A",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "ascon-overview.tex", "label": {"en": "AEAD phases", "zh": "认证加密阶段"}, "caption": {"en": "The standardized encryption phases use 12-round initialization/finalization and 8-round intermediate permutations. Empty associated data and the last message block have explicit handling.", "zh": "标准化加密采用 12 轮初始化/最终化置换及 8 轮中间置换；空关联数据与最后消息块具有独立处理规则。"}},
+        {"id": "detail", "template": "ascon-detail.tex", "label": {"en": "Permutation round", "zh": "置换轮函数"}, "caption": {"en": "Five 64-bit state words undergo constant addition, a bit-sliced 5-bit S-box, and word-specific linear diffusion. Bit ordering follows the final NIST edition.", "zh": "五个 64 比特状态字经过常量注入、比特切片的 5 比特 S 盒和逐字线性扩散；比特序遵循最终 NIST 版本。"}}
+      ]
+    },
+    {
+      "family_id": "chacha20-poly1305", "instance_ids": ["chacha20-poly1305-ietf"],
+      "compact_template": "aead-compact.tex",
+      "specification_ids": ["standard-rfc-8439"], "design_source_ids": ["chacha-design"],
+      "locator": "RFC 8439, Sections 2.5, 2.6 and 2.8",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "aead-overview.tex", "label": {"en": "Encrypt & authenticate", "zh": "加密与认证"}, "caption": {"en": "Counter zero derives the one-time Poly1305 key; encryption starts at counter one. The authenticator covers padded AAD, padded ciphertext and their little-endian byte lengths.", "zh": "计数器零用于导出一次性 Poly1305 密钥，加密从计数器一开始；认证输入包含填充后的关联数据、密文及小端序字节长度。"}},
+        {"id": "detail", "template": "aead-detail.tex", "label": {"en": "Authentication input", "zh": "认证输入"}, "caption": {"en": "Padding reaches a multiple of 16 bytes and is empty for an aligned field. Lengths are each encoded as unsigned 64-bit little-endian integers; the tag is 128 bits.", "zh": "各字段填充至 16 字节整数倍，已对齐时无需填充；两个长度各以 64 比特无符号小端整数编码，标签长 128 比特。"}}
+      ]
+    },
+    {
+      "family_id": "cmac", "instance_ids": ["cmac-aes-128", "cmac-aes-192", "cmac-aes-256"],
+      "compact_template": "cmac-compact.tex",
+      "specification_ids": ["standard-sp-800-38b-2016", "standard-fips-197-2023"], "design_source_ids": ["omac-design"],
+      "locator": "SP 800-38B, Sections 6.1–6.2; full-length AES tags",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "cmac-overview.tex", "label": {"en": "Chaining construction", "zh": "链接构造"}, "caption": {"en": "CBC chaining starts at zero. A complete, nonempty last block uses subkey K1; an incomplete or empty last block uses 10* padding and subkey K2.", "zh": "CBC 链从零开始。非空完整末块使用子密钥 K1；不完整末块或空消息采用 10* 填充并使用 K2。"}},
+        {"id": "detail", "template": "cmac-detail.tex", "label": {"en": "Subkeys & last block", "zh": "子密钥与末块"}, "caption": {"en": "Subkeys are successive doublings of AES_K(0^128) in GF(2^128). The registered instances retain the full 128-bit tag.", "zh": "对 AES_K(0^128) 在 GF(2^128) 中连续倍乘生成两个子密钥；当前实例保留完整 128 比特标签。"}}
+      ]
+    },
+    {
+      "family_id": "sm4", "instance_ids": ["sm4-128"], "compact_template": "sm4-compact.tex",
+      "specification_ids": ["standard-gbt-32907-2016"], "design_source_ids": ["sm4-english-description"],
+      "locator": "GB/T 32907-2016, Sections 4–7; English description draft-ribose-cfrg-sm4-10, Sections 6–7",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "sm4-overview.tex", "label": {"en": "Encryption", "zh": "加密结构"}, "caption": {"en": "The four-word state advances through 32 rounds and then reverses word order. Decryption reverses the round-key sequence.", "zh": "四字状态经过 32 轮迭代后反序输出；解密反序使用轮密钥。"}},
+        {"id": "detail", "template": "sm4-detail.tex", "label": {"en": "Round & key schedule", "zh": "轮函数与密钥扩展"}, "caption": {"en": "Encryption and key expansion share the byte S-box but use different linear maps: L in the data path and L′ in the key schedule.", "zh": "加密与密钥扩展共用字节 S 盒，但分别使用不同的线性变换 L 与 L′。"}}
+      ]
+    },
+    {
+      "family_id": "camellia", "instance_ids": ["camellia-128", "camellia-192", "camellia-256"], "compact_template": "camellia-compact.tex",
+      "specification_ids": ["standard-rfc-3713"], "design_source_ids": [],
+      "locator": "RFC 3713, Sections 2.2–2.4; 18 rounds for 128-bit keys, 24 for 192/256-bit keys",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "camellia-overview.tex", "label": {"en": "Encryption", "zh": "加密结构"}, "caption": {"en": "Six-round groups are separated by FL/FLINV layers. Whitening surrounds the network; no FL layer follows the last group. The final output swaps the halves.", "zh": "每组六轮之间插入 FL/FLINV 层，网络首尾进行密钥白化；最后一组之后不再插入 FL 层，输出交换左右半部。"}},
+        {"id": "detail", "template": "camellia-detail.tex", "label": {"en": "Feistel & FL layers", "zh": "Feistel 与 FL 层"}, "caption": {"en": "Odd and even Feistel rounds update alternate halves. The keyed FL layer acts on 32-bit words and has an explicitly reversed inverse.", "zh": "奇偶 Feistel 轮交替更新左右半部；带密钥的 FL 层作用于 32 比特字，其逆变换反序执行相应操作。"}}
+      ]
+    },
+    {
+      "family_id": "aria", "instance_ids": ["aria-128", "aria-192", "aria-256"], "compact_template": "aria-compact.tex",
+      "specification_ids": ["standard-rfc-5794"], "design_source_ids": [], "locator": "RFC 5794, Sections 2.2–2.4",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "aria-overview.tex", "label": {"en": "Encryption", "zh": "加密结构"}, "caption": {"en": "Odd and even rounds use different substitution layers. The last round uses SL2 and a final key XOR, omitting the diffusion layer.", "zh": "奇偶轮使用不同的替换层。末轮采用 SL2 并增加一次密钥异或，不执行扩散层。"}},
+        {"id": "detail", "template": "aria-detail.tex", "label": {"en": "Round & key schedule", "zh": "轮函数与密钥扩展"}, "caption": {"en": "The byte substitutions alternate between S-boxes and their inverses. Key expansion derives four 128-bit working words; key length selects constants and round-key count.", "zh": "字节替换交替使用 S 盒及其逆。密钥扩展生成四个 128 比特工作字，密钥长度决定常量顺序与轮密钥数量。"}}
+      ]
+    },
+    {
+      "family_id": "seed", "instance_ids": ["seed-128"], "compact_template": "seed-compact.tex",
+      "specification_ids": ["standard-rfc-4269"], "design_source_ids": [], "locator": "RFC 4269, Sections 2.1–2.3; corrected specification replacing RFC 4009",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "seed-overview.tex", "label": {"en": "Encryption", "zh": "加密结构"}, "caption": {"en": "The first 15 Feistel rounds exchange halves; the final round updates the left half without another exchange. Each round key contains two 32-bit words.", "zh": "前 15 个 Feistel 轮交换左右半部，末轮更新左半部而不再交换；每个轮密钥由两个 32 比特字组成。"}},
+        {"id": "detail", "template": "seed-detail.tex", "label": {"en": "Round function", "zh": "轮函数"}, "caption": {"en": "Three G evaluations combine key-mixed right-half words through XOR and modular addition. G consists of byte substitutions and linear mixing.", "zh": "右半部与轮密钥混合后，通过异或、模加及三次 G 变换生成轮函数输出；G 包含字节替换与线性混合。"}}
+      ]
+    },
+    {
+      "family_id": "present", "instance_ids": ["present-80", "present-128"], "compact_template": "present-compact.tex",
+      "specification_ids": ["specification-present-2007"], "design_source_ids": [], "locator": "Bogdanov et al., PRESENT (CHES 2007), Section 3 and Appendix II",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "present-overview.tex", "label": {"en": "Encryption", "zh": "加密结构"}, "caption": {"en": "Each of the 31 rounds adds a key, applies sixteen 4-bit S-boxes and permutes bits. A final key addition follows the last permutation.", "zh": "31 轮各自执行密钥加、十六个 4 比特 S 盒及比特置换；最后一次置换之后再进行一次密钥加。"}},
+        {"id": "detail", "template": "present-detail.tex", "label": {"en": "Substitution & key schedule", "zh": "替换与密钥扩展"}, "caption": {"en": "The two instances share the same state transformation. Their key registers differ in width, substituted nibbles and round-counter injection positions.", "zh": "两个实例共用状态变换，但密钥寄存器宽度、被替换的半字节和轮计数器注入位置不同。"}}
+      ]
+    },
+    {
+      "family_id": "salsa20", "instance_ids": ["salsa20-128", "salsa20-256"], "compact_template": "salsa20-compact.tex",
+      "specification_ids": ["specification-salsa20-2005"], "design_source_ids": [], "locator": "Bernstein, Salsa20 specification (April 27, 2005), Sections 3–6 and 8–10",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "salsa20-overview.tex", "label": {"en": "Keystream generation", "zh": "密钥流生成"}, "caption": {"en": "Ten column/row double rounds precede feed-forward and serialization. The original nonce and counter are each 64 bits; the 128-bit-key variant repeats its key with distinct constants.", "zh": "十次列轮/行轮组合后执行前馈与序列化。原始 nonce 与计数器均为 64 比特；128 比特密钥实例重复放置密钥并使用独立常量。"}},
+        {"id": "detail", "template": "salsa20-detail.tex", "label": {"en": "Quarter round", "zh": "四分之一轮"}, "caption": {"en": "The four updates use left rotations by 7, 9, 13 and 18 bits. Salsa20 uses column and row tuples, not ChaCha's column and diagonal tuples.", "zh": "四次更新依次左旋 7、9、13、18 比特；Salsa20 使用列与行组合，不同于 ChaCha 的列与对角组合。"}}
+      ]
+    },
+    {
+      "family_id": "sm3", "instance_ids": ["sm3-256"], "compact_template": "mdhash-compact.tex",
+      "specification_ids": ["standard-gbt-32905-2016"], "design_source_ids": ["sm3-standard-text"], "locator": "GB/T 32905-2016, Sections 4 and 5.1–5.4",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "mdhash-overview.tex", "label": {"en": "Hash construction", "zh": "哈希构造"}, "caption": {"en": "Padded 512-bit blocks update eight 32-bit chaining words through 64 steps. Feed-forward uses XOR, not SHA-2's modular addition; the digest is 256 bits.", "zh": "填充后的 512 比特消息块经过 64 步，更新八个 32 比特链值字；前馈使用异或而非 SHA-2 的模加，输出 256 比特摘要。"}},
+        {"id": "detail", "template": "sm3-detail.tex", "label": {"en": "Compression & expansion", "zh": "压缩与消息扩展"}, "caption": {"en": "The two working-word branches use Wj and W′j. P0 acts in compression; P1 acts in message expansion. Boolean functions change after step 15.", "zh": "两条工作字分支分别使用 Wj 与 W′j；P0 用于压缩步骤，P1 用于消息扩展，布尔函数从第 16 步起改变。"}}
+      ]
+    },
+    {
+      "family_id": "sha1", "instance_ids": ["sha-1"], "compact_template": "mdhash-compact.tex",
+      "specification_ids": ["standard-fips-180-4-2015"], "design_source_ids": ["sha1-transition"], "locator": "FIPS 180-4, Sections 4.1.1, 5.1.1, 5.3.1 and 6.1",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "mdhash-overview.tex", "label": {"en": "Hash construction", "zh": "哈希构造"}, "caption": {"en": "Five 32-bit words pass through 80 steps per message block and additive feed-forward. SHA-1 is retained as a historical research target; collision resistance is broken.", "zh": "五个 32 比特字针对每个消息块执行 80 步并进行加法前馈。SHA-1 作为历史研究对象保留，其抗碰撞性已被攻破。"}},
+        {"id": "detail", "template": "sha1-detail.tex", "label": {"en": "Compression step", "zh": "压缩函数步"}, "caption": {"en": "The schedule expands 16 input words into 80 words, including a one-bit rotation absent from SHA-0. Each step rotates and updates the five working words.", "zh": "消息扩展将 16 个输入字扩为 80 个字，并包含 SHA-0 所没有的一比特旋转；每一步旋转并更新五个工作字。"}}
+      ]
+    },
+    {
+      "family_id": "md5", "instance_ids": ["md5-128"], "compact_template": "mdhash-compact.tex",
+      "specification_ids": ["standard-rfc-1321", "standard-rfc-6151"], "design_source_ids": [], "locator": "RFC 1321, Section 3; security context from RFC 6151, Section 2",
+      "review": {"status": "source_checked", "checked_on": "2026-11-24"},
+      "views": [
+        {"id": "overview", "template": "mdhash-overview.tex", "label": {"en": "Hash construction", "zh": "哈希构造"}, "caption": {"en": "Each 512-bit block updates four 32-bit words in 64 steps, followed by additive feed-forward. MD5 has broken collision resistance and is retained for historical research.", "zh": "每个 512 比特消息块经过 64 步更新四个 32 比特字，再进行加法前馈。MD5 的抗碰撞性已被攻破，此处保留用于历史研究。"}},
+        {"id": "detail", "template": "md5-detail.tex", "label": {"en": "Compression step", "zh": "压缩函数步"}, "caption": {"en": "Four groups of 16 steps use different Boolean functions, message-word orders and rotations. Message words, length encoding and digest serialization are little-endian.", "zh": "四组各 16 步分别使用不同的布尔函数、消息字顺序和旋转量；消息字、长度编码和摘要序列化均采用小端序。"}}
+      ]
+    }
+  ]
+}

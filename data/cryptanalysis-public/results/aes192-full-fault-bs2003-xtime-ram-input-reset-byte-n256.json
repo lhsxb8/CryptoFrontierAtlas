@@ -1,0 +1,156 @@
+{
+  "schema_version": "0.10.0",
+  "related_problem_ids": [],
+  "id": "aes192-full-fault-bs2003-xtime-ram-input-reset-byte-n256",
+  "title": "AES-192: RAM-input xtime: one byte, N256 (Blömer–Seifert, FC2003)",
+  "display": {
+    "name": "RAM-input xtime: one byte, N256",
+    "method": "ineffective_fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 12,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "One byte of the initial128-bit AES-192 master-key portion, using RAM-input xtime and N=256 selected input values."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen-plaintext-encryption-with-fault-attempt",
+      "observable-encryption-correctness"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret master key; no related-key oracle.",
+    "key_population": "Arbitrary key of the stated AES instance in an implementation meeting the fault and feedback assumptions.",
+    "plaintext_model": "For a target first-round key byte, use chosen values i=0,...,N-1 in its plaintext byte; other bytes are arbitrary/random. Whole-key extension repeats for the required key material, with adaptive inputs for long keys.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "The most significant bit of the writable input-state byte before lookup in an immutable256-byte xtime ROM table.",
+      "granularity": "One selected input-state bit in RAM; the ROM table itself is not corrupted.",
+      "timing": "After first-round ShiftRows and before the target xtime lookup.",
+      "location": "The RAM input-bit location used for the target byte's xtime lookup.",
+      "value_control": "Force the input byte's MSB to zero; an existing zero is unchanged.",
+      "sample_pairing": "Each attempted injection yields a correct/incorrect outcome. Ciphertext-comparison feedback additionally needs a correct reference for the same input, outside the stated attempt count.",
+      "feedback": "Observable correct-versus-incorrect encryption outcome. Section1 permits alternatives: a device reset/error flag; comparison with a fault-free ciphertext; or detectable recomputation timing. Only the binary outcome is required, not the faulty ciphertext bytes. An unchanged correct output means the reset input bit was0; an incorrect output means it was1.",
+      "evidence_scope": "analytical"
+    },
+    "assumptions": [
+      "Successful localization and the stipulated fault-value effect are model assumptions, not measured acquisition success rates.",
+      "The ciphertext-validity alternatives are interchangeable only as a binary observation; the source does not cost each feedback channel's calibration or reference executions separately.",
+      "Recovery target: One byte of the initial128-bit AES-192 master-key portion, using RAM-input xtime and N=256 selected input values.",
+      "The implementation must expose precisely the specified temporary, instruction, RAM input or register-bank location. A timing-resistant xtime implementation alone does not establish these fault controls."
+    ]
+  },
+  "techniques": [
+    "ineffective-fault-analysis",
+    "correctness-feedback",
+    "sbox-msb-prediction-table",
+    "ram-input-reset"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical complete-attack offline runtime is reported."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "256",
+      "log2": 8,
+      "unit": "fault-injection-encryption-attempts",
+      "qualifier": "exact",
+      "note": "N chosen inputs and attempted faults for one key byte. N≈16 is an author expectation; the N=20 timing result belongs to a cited earlier paper, not this fault endpoint."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "Prediction table T has256 × 256 Boolean entries; peak memory not reported",
+      "log2": null,
+      "unit": "Boolean-table-entries",
+      "qualifier": "unspecified",
+      "note": "This is the table's logical shape, not a numerical peak-memory or byte-storage claim."
+    },
+    "preprocessing": {
+      "status": "qualitative",
+      "reported": "Build T[k,i] = MSB(SBOX[k XOR i])",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The source specifies this reusable table but gives no preprocessing-time measurement or normalized operation count."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "stated-target-recovery-probability",
+    "value": 1,
+    "description": "Deterministic ONE-BYTE recovery in the exact noiseless model, conditional on the stipulated fault effect/location and reliable correctness feedback for all256 selected inputs i=0..255. Section5.1 explicitly states that N=256 with correct predictions reveals the byte; the complete Boolean prediction-table rows are distinct (independent finite component check). Success1 is a theoretical conditional model guarantee, not a measured physical success rate or probability of obtaining those observations. The target is one byte of the initial128-bit portion, including for AES192/256, not a full master key. Correct-reference and calibration costs remain outside the source attempt count where applicable.",
+    "basis": "source_proof",
+    "expression": "1",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Theoretical deterministic guarantees require the stated ideal model; local filters, characteristic products, expected counts and physical acquisition are separate. Costs, targets, settings, existing conflicts and full-audit gates are unchanged."
+    },
+    "components": [
+      {
+        "metric": "exact-msb-observation-under-specified-xtime-fault-model",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections5.1–5.5: provided the specified fault effect/location and reliable correctness feedback, the target S-box output MSB is determined exactly. The specified MUL skip or input-MSB reset causes an incorrect output iff MSB1. This local observation is not physical fault acquisition or whole-key success."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Section1 p.164; Section5.1 pp.174–175; Section5.4 p.177",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary-version result with explicit target, feedback model and native fault-attempt accounting; AES means128-bit blocks and the stated standard key size."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Complete PDF1–20/printed162–181; Sections4–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Proceedings PDF13–14 / printed174–175 Section5.1 Equation4, selected inputs i=0..N-1 and N=256 statement; Section5.4 printed177 / PDF16.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "Deterministic ONE-BYTE recovery in the exact noiseless model, conditional on the stipulated fault effect/location and reliable correctness feedback for all256 selected inputs i=0..255. Section5.1 explicitly states that N=256 with correct predictions reveals the byte; the complete Boolean prediction-table rows are distinct (independent finite component check). Success1 is a theoretical conditional model guarantee, not a measured physical success rate or probability of obtaining those observations. The target is one byte of the initial128-bit portion, including for AES192/256, not a full master key. Correct-reference and calibration costs remain outside the source attempt count where applicable."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The paper supplies attack-model reasoning, not a physical experiment with measured chip-level success, time and calibration cost.",
+    "Attempts leaving the targeted value unchanged are informative and remain in the data budget."
+  ]
+}

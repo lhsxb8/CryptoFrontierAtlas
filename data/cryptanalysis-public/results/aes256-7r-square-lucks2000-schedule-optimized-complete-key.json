@@ -1,0 +1,178 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-7r-square-lucks2000-schedule-optimized-complete-key",
+  "title": "7-round AES-256: schedule-optimized complete-key claim",
+  "display": {
+    "name": "Schedule-optimized complete-key claim",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "lucks2000-whitening-full-rounds-including-last-mixcolumns",
+    "description": "AES-256 on 128-bit blocks, reduced to 7 rounds, including final MixColumns. Equivalent subkey L^r=ShiftRows^-1(MixColumns^-1(K^r)). The source filters 24 guessed bytes and accepts K7 plus four L6 coordinates, which constrain linear combinations of K6 rather than four literal K6 coordinate bytes. Completing the other 12 L6 coordinates and mapping to K6 permits schedule inversion; the residual completion is not separately priced. The source coordinate/BO print conflicts remain explicit."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key or known-key access.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "A 2^32-text structure. Printed Step 1 uses (0,0),(1,2),(2,2),(3,1), while Step 2 and the earlier construction use (1,3) for the row-one position; this conflict remains explicit.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "A wrong integral subkey guess is modeled as passing an eight-bit balance check with probability about 2^-8; repeated checks use the source's heuristic filtering assumptions.",
+      "For each initial-key guess, select 32 distinct 256-text sets and test them until a balance check rejects. The accepted material is followed by the stated residual key search."
+    ]
+  },
+  "techniques": [
+    "integral-square"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "about 2^200",
+      "log2": 200,
+      "unit": "lucks2000-basic-operations",
+      "qualifier": "estimate",
+      "note": "The source multiplies 2^32 initial guesses, 2^128 final-key guesses, 2^32 inner guesses and about 2^8 work per test. One basic operation is defined as five byte XORs, five inverse S-box evaluations and one inverse MixColumns evaluation; it is not one S-box lookup or AES encryption."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "The 32 internal test sets are selected from the same 2^32-query structure; they do not multiply the acquisition budget."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "128-bit-ciphertext-blocks",
+      "qualifier": "estimate",
+      "note": "Dominant storage is the observed ciphertext structure."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The paper does not separately price setup for this endpoint."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "symbolic-wrong-subkey-acceptance-bound",
+    "value": null,
+    "description": "Section 5 gives probability below 2^-64 of accepting any incorrect 24-byte guess after 32 independent eight-bit tests. This is a symbolic bound under the source model; 1-2^-64 is not rounded to numerical success 1."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "lucks2000-square-aes3",
+      "locator": "Paper pp.11–12 Section 5; p.14 Table 2",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary-source endpoint preserving the stated target, access model, native resource units and recovery scope. Paper-local pagination is distinct from the whole-proceedings PDF page number."
+    },
+    {
+      "source_id": "lucks2000-square-aes3",
+      "locator": "Paper p.11 algorithm, visually checked; paper pp.8–9 definitions",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "The original printed algorithm-index discrepancies remain independent of the source's numerical complexity claim."
+    },
+    {
+      "source_id": "lucks2000-square-aes3",
+      "locator": "CompletechapterPDF215–229 in original AES3volume; chapter1–15, Sections1–7 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Costs and success statements are the authors' analytical claims; no complete attack or third-party implementation was executed.",
+    "The general BO definition on chapter p8 omits the previous inverse ShiftRows column adjustment for a nonzero target row. For SR(A)(i,j)=A(i,j+s*i), BO input column j and row k require the previous L byte at (k,j+s*k). The surrounding row-0 constructions avoid this adjustment. Independent finite controls check local algebra, not a complete attack repair."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/plaintext_model",
+      "label": "Active input positions",
+      "description": "The printed input positions disagree with the adjacent initial-key guess and earlier structure construction. Both lists are retained; the publication has not been silently corrected.",
+      "observations": [
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "Paper p.11, algorithm Step 1",
+          "reported": "Active input positions (0,0), (1,2), (2,2), (3,1)."
+        },
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "Paper p.11, algorithm Step 2; paper p.9 Section 3.3",
+          "reported": "The corresponding initial-key positions and earlier structure use (0,0), (1,3), (2,2), (3,1)."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "ShiftRows formula and diagram coordinates",
+      "description": "Chapterp3 defines left-going SR, B(i,j)=A(i,j+i), but Fig2 and Table1 use right-going coordinates. The later anti-diagonal reaches columns0/2 under the literal left formula and one column under the right diagram. A coherent coordinate convention must be selected before reproducing the printed algorithm. This does not refute the direction-independent integral or establish a standard-key-schedule reflection equivalence.",
+      "observations": [
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "OriginalvolumePDF217–218/chapter3–4, SRformula, Fig2, Eq1 and Table1.",
+          "reported": "Printed formula and drawn/table coordinate directions differ."
+        },
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "OriginalvolumePDF223,225,227/chapter9,11,13. Two independent raw-source reviews accepted2026-10-27.",
+          "reported": "Source anti-diagonal(0,0),(1,3),(2,2),(3,1) maps tocolumns0/2 with standardleftSR, and tocolumn0 with rightSR."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "Basic-operation row argument",
+      "description": "Chapterp8 defines the second BO argument as the target row. Section5 Step10 prints row1 while supplying L5(0,1), which is row0. Preserve the source algorithm/budget and local discrepancy; no silently repaired attack is claimed.",
+      "observations": [
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "OriginalvolumePDF222/chapter8 Section3.2 BOdefinition.",
+          "reported": "BO(Yj,k,Lr_j,L(r-1)_(k,j)) computes rowk."
+        },
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "OriginalvolumePDF225/chapter11 Section5 Step10.",
+          "reported": "Printed BO(A1,1,L6_1,L5_(0,1)) combines row1 argument with a row0 key byte."
+        }
+      ]
+    }
+  ]
+}

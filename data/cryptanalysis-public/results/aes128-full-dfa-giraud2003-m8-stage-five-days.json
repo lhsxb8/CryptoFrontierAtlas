@@ -1,0 +1,158 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-dfa-giraud2003-m8-stage-five-days",
+  "title": "AES-128 conditioned M8 stage with five-day search component (Giraud ePrint revision 2003-05-14)",
+  "display": {
+    "name": "M8 stage: ePrint search timing (conditional)",
+    "method": "fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full AES-128; identify two four-byte pre-MixColumns state columns, then fourteen coordinate bytes of K10 using Eq.(30) and the known K9 tail. This is not a claim of 112 newly independent key bits; two final-key bytes remain to be searched."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "repeat-encryption-fixed-input",
+      "correct-ciphertext-reference",
+      "byte-fault-injection-in-state-or-online-key-schedule"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret AES master key; no related-key oracle.",
+    "key_population": "Keys of the stated AES implementation without a weak-key restriction; fault protections are outside the model.",
+    "plaintext_model": "Repeat encryptions of the same plaintext under the same key; retain its correct ciphertext as a reference. Counts of faulty ciphertexts exclude that reusable reference unless explicitly stated otherwise.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "One byte of the encryption state M8; no key-schedule fault is needed within this conditioned stage.",
+      "granularity": "One initially affected byte, followed by propagation through the key schedule or AES rounds.",
+      "timing": "After round 8 and before the SubBytes of round 9.",
+      "location": "Two useful faults for each of the two state-position classes that reach known K9 columns; unsuitable outputs are excluded.",
+      "value_control": "The byte difference is unknown; its value may be inferred or guessed from correct/faulty outputs.",
+      "sample_pairing": "Every faulty output is matched to the same fixed-input correct reference; useful faults, random-location ciphertexts and physical executions have distinct accounting.",
+      "evidence_scope": "software_experiment"
+    },
+    "assumptions": [
+      "A round key is used correctly for encryption and then faulted before generating the next round key. The implementation expands keys on the fly.",
+      "The reported outcome and data budget use the paper's candidate-filtering model; no numerical whole-key success rate is inferred from a byte-level statistic.",
+      "This is a conditional stage, not an attack starting with no known subkey material."
+    ],
+    "prior_key_knowledge": {
+      "bits": 64,
+      "material": "K9[8..15], obtained by the first two stages.",
+      "cost_accounting": "The listed stage budget excludes acquisition of this prior subkey material; the upstream recovery must be costed separately."
+    }
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "online-key-schedule-fault",
+    "candidate-filtering"
+  ],
+  "resources": {
+    "time": {
+      "status": "qualitative",
+      "reported": "four-byte exhaustive searches: about 5 days on a 1 GHz Pentium",
+      "log2": null,
+      "unit": "wall-clock-time",
+      "qualifier": "estimate",
+      "note": "The ePrint Section 4.3 times only the searches yielding eight intermediate-state bytes. Later inexpensive key-byte derivation and upstream acquisition are not separately timed; this is not full-attack time. The paragraph is absent from the 2005 proceedings."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "4 useful faulty ciphertexts",
+      "log2": 2,
+      "unit": "faulty-ciphertexts",
+      "qualifier": "exact",
+      "note": "Derived count of two useful outputs for each of two target columns explicitly described in the ePrint Section 4.3; not the 2005 chosen-byte remark or a physical-attempt budget."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The article describes counters or candidate lists without a numerical peak-memory budget."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing-time budget is reported. The Appendix A 8×2^8 equation tests per useful output are a component count, not a complete attack cost."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "stated-target-recovery-success-probability",
+    "value": null,
+    "description": "The original PS gives about five days on a1GHz Pentium for this conditioned four-byte exhaustive-search stage, not a numerical state-recovery probability. Prior K9[8..15] knowledge and four useful faults are conditions, not acquisition success. The source asserts a unique intersection without a population rate. The90%/99% figures in Section4.2 apply to one K8 byte at10/13 faults, not this state-search stage; Section5 software/physical experiments use M9 rather than the construction M8. No probability is transferred from those different targets or fault windows. The original PostScript hash identifies the edition; the PDF is only its reading rendition.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit; preserves costs, targets, settings, existing conflicts and full-audit gates. Local author models and conditional candidate retention do not certify whole-output success."
+    },
+    "components": [
+      {
+        "metric": "true-intermediate-state-retained-by-stage-equations",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Section4.3 Equation29: given the correct prior64 bits of K9 and two useful fault outputs in each of the two stated position classes, full enumeration of the four-byte state and nonzero fault value/position includes the actual state in both lists. Inclusion does not prove their intersection is a singleton."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "giraud2003-dfa-eprint-rev20030514",
+      "locator": "Section 4.3, paragraph after the second four-byte search and before deriving K10 bytes; Eq.(29)–(30)",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Early version-specific timing for a search component; never copied into the later proceedings' unpriced whole attack."
+    },
+    {
+      "source_id": "giraud2003-dfa-eprint-rev20030514",
+      "locator": "Complete15-page PS reading rendition, especially Section4.3 PDF11–12.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Original PS hash identifies the edition, not the locally converted PDF; five-day platform timing is retained as a conditioned state-search component."
+    },
+    {
+      "source_id": "giraud2003-dfa-eprint-rev20030514",
+      "locator": "Original PS edition, PDF reading rendition11–12, Section4.3 Equations29–30 and five-day paragraph; Section5 separately concerns M9/physical acquisition.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The original PS gives about five days on a1GHz Pentium for this conditioned four-byte exhaustive-search stage, not a numerical state-recovery probability. Prior K9[8..15] knowledge and four useful faults are conditions, not acquisition success. The source asserts a unique intersection without a population rate. The90%/99% figures in Section4.2 apply to one K8 byte at10/13 faults, not this state-search stage; Section5 software/physical experiments use M9 rather than the construction M8. No probability is transferred from those different targets or fault windows. The original PostScript hash identifies the edition; the PDF is only its reading rendition."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Useful faulty ciphertext counts do not automatically include ineffective physical injections or calibration attempts.",
+    "The article does not supply a measured success frequency, runtime or peak memory for every target and parameter choice.",
+    "The remaining two K10 bytes and complete master-key recovery are outside this partial endpoint."
+  ],
+  "related_problem_ids": []
+}

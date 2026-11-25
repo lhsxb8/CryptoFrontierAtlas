@@ -1,0 +1,121 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-9r-xor-cp-full-bdk2010",
+  "title": "256 9-round BDK+10: aes256-9r-xor-cp-full-bdk2010",
+  "display": {
+    "name": "Related-key differential recovery / xor-cp-full",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "bdk2010-even-start-9r-final-no-mc",
+    "description": "9-round AES-256 variant starting at round 0, with source omitted-final-MixColumns convention. Section 4.1.3 recovers consecutive subkeys K7,K8 and reverses the AES-256 key schedule."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": 2,
+    "target_selection": "designated_target",
+    "key_relation": "K-prime = K XOR (b,b,b,b,a,0,a,0), where alpha is any nonzero byte, beta is its unique probability-2^-6 AES S-box output difference, a=(alpha,0,0,0)^T and b=MC((beta,0,0,0)^T).",
+    "key_population": "general secret key",
+    "plaintext_model": "Source CP accounting at 2^38; plaintext identities, paired related-key queries and total oracle calls are distinguished in the resource note.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The related-subkey relation, where used, is stronger than a fixed XOR master-key relation but all expanded subkeys remain consistent with their master key."
+    ]
+  },
+  "techniques": [
+    "related-key-differential",
+    "master-key-xor-relation",
+    "xor-cp-full"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^39 (headline); processing: 2^45 table lookups",
+      "log2": 39,
+      "unit": "9-round-aes256-encryptions",
+      "qualifier": "estimate",
+      "note": "Source-native heterogeneous accounting: acquisition is 2^39 9-round AES-256 encryptions; processing is 2^21 * 2^8 * 2^16 = 2^45 simple table lookups. A 9-round encryption uses 9*16=144 approximately 2^7 S-box operations, and the source says processing is likely faster. The headline exponent 39 is not an exact sum in one interchangeable unit."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^38",
+      "log2": 38,
+      "unit": "source-counted-chosen-plaintexts",
+      "qualifier": "estimate",
+      "note": "2^38 distinct chosen plaintext identities are encrypted under both keys, giving 2^39 total encryption queries and 2^38 ciphertext pairs. Preserve Table 1 native data convention."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "source-native-memory-units",
+      "qualifier": "estimate",
+      "note": "Table 1 states 2^32 without a storage unit. Section 4.1.3 calls RAM negligible; footnote 2 streams the ciphertext data on disk while each working set fits 1 MByte. Observation B separately allocates 2^17 bytes to the DDT. Retain all storage layers; neither 2^32 bytes nor zero RAM is justified."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^16",
+      "log2": 16,
+      "unit": "sbox-evaluations",
+      "qualifier": "estimate",
+      "note": "Section 4.1.2 DDT setup; 2^17 bytes for this auxiliary table, separate from data storage."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "complete-master-key-recovery",
+    "value": 0.57,
+    "description": "Section 4.1.3 states about 57% full attack success, controlled by four or more right-pair suggestions in step 2(c), with success increased by using additional pairs. Recover K^7 and K^8 and invert the AES-256 key schedule to recover all 256 master-key bits."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-1785e8ec66d6f216-2010",
+      "locator": "PDF p.3 Table 1; pp.5–6 key relation; pp.9–13 Sections 4.1.2–4.2, full-key completion and accounting.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining text checked. Unknown costs are retained rather than preventing extraction."
+    },
+    {
+      "source_id": "aes-paper-1785e8ec66d6f216-2010",
+      "locator": "PDF pp.6–12 / printed pp.304–310 Sections 4.1–4.1.3, especially p.9 Observation B and p.12 complexity plus footnote 2; p.3 Table 1 row 3.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/assessment"
+      ],
+      "interpretation": "Independent complete 21-page exact-edition audit, frozen raw-first inventory and bounded forward/version checks through 2026-10-10. Native resource units and author-reported endpoint preserved; finite component checks are not attack reproduction."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Table 1 memory 2^32 has no stated unit. Section 4.1.3 calls working RAM negligible (fits 1 MByte), with data on disk. These describe different storage layers and are not collapsed into a single byte claim.",
+    "The complete inspected 2010 edition contains ten attack configurations. A distinct author-hosted draft contains an additional multi-key variant; its original PDF version/hash remains an explicit separate evidence task and is not merged into this source."
+  ],
+  "related_problem_ids": []
+}

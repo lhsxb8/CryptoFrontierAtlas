@@ -1,0 +1,145 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-8r-known-key-remove-first-jnp2014",
+  "title": "AES 8-round JNP14: aes-8r-known-key-remove-first-jnp2014",
+  "display": {
+    "name": "Known-key list-merging rebound / remove-first",
+    "method": "rebound"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "jnp2014-8-full-rounds-with-final-mixcolumns",
+    "description": "8 complete AES-like rounds with known expanded AES round keys and MixColumns in every round, including the last. Table 2 standard-size t=4,c=8 endpoint; remove-first refers to truncating the generic nine-round trail, not deleting an AES key schedule."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "public_known_key_permutation_evaluation"
+    ],
+    "related_key_count": null,
+    "target_selection": "fixed_known_key",
+    "key_relation": "One fixed fully known AES master key and its known expanded round keys; no related-key access or chosen weak key.",
+    "key_population": "fixed fully known key; no special weak-key selection",
+    "plaintext_model": "Find a pair in restricted input/output difference spaces of size 2^32 each.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The standard AES dimensions are t=4 and c=8; round keys are incorporated as known constants.",
+      "List-merging analysis uses the stated uniformity assumption for S-box-induced list partitions.",
+      "Complete journal audit confirms known fixed round keys and finalMixColumns. Printed788 conditionT>=C is a local comparison-sign typo; Table2 values56/56/32 versusgeneric64 are unchanged."
+    ],
+    "reference_model": "Known-key restricted differential pair-finding versus a random 128-bit permutation with input/output difference-space sizes IN=OUT=2^32; Eq.18 gives generic work 2^64."
+  },
+  "techniques": [
+    "rebound",
+    "super-sbox-list-merging",
+    "non-fully-active-characteristic",
+    "remove-first"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^56",
+      "log2": 56,
+      "unit": "operations",
+      "qualifier": "estimate",
+      "note": "Eq.17 evaluated at the exact published Table 2 assignment."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The source does not separately quantify this resource for this configuration."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "source-native-list-elements",
+      "qualifier": "estimate",
+      "note": "Section 4.2 memory mB*2^(ct); no byte or AES-block width is specified."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The source does not separately quantify this resource for this configuration."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "restricted-pair-finding-success",
+    "value": null,
+    "description": "No numerical whole restricted-pair-finding success is stated for this eight-round known-key configuration. The merge analysis expects one inbound solution from2^32 assignments under its uniform-list model; this is not certain list existence or successful full-budget output. The conditional2^-24 outbound model does not justify an independent-repetition Poisson recovery curve. Known round keys and a restricted pair output are not secret-key recovery; no generic-reference probability or success normalization is invented.",
+    "components": [
+      {
+        "metric": "one-inbound-list-assignment-merges-source-uniform-model",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "Section4.2 first-case list model after choosing the WLOG cheaper orientation: t=4,c=8,min(mB,mF)=1, so one guessed assignment merges with source probability2^(-c*t*1)=2^-32. The source explicitly assumes uniform S-box-induced partitions.2^32 assignments give expected one solution, not a guaranteed nonempty or unique list."
+      },
+      {
+        "metric": "combined-outbound-transitions-given-conforming-middle-source-model",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "expression": "2^{-24}",
+        "description": "Equation16 and the two t=4,c=8 eight-round Table2 assignments have nB+nF=5: source outbound product2^(-8*(8-5))=2^-24. Its expected2^24 repetitions remain tied to the same known-key pair-finding construction, not a decision-success distribution."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. One-sided AES acceptance, conditional list/collision events and WrongPair incidence stay separate from total decision success or advantage. Existing conflicts, native costs, target variants, settings, parameter assignments and full-audit gates remain unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-d20ae1237c1c4f49-2014",
+      "locator": "PDF p.4 Section 2.1 known round constants and full-round convention; pp.14–16 Section 4.2, Eq.17 and memory derivation; pp.16–18 Eq.18, Section 4.3, Table 2.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining text checked. Unknown costs are retained rather than preventing extraction."
+    },
+    {
+      "source_id": "aes-paper-d20ae1237c1c4f49-2014",
+      "locator": "Journal PDF14–18 / printed785–789 Sections4.2–4.3, uniform list-partition assumption, Equations16–18 and standard t=4,c=8 Table2 assignments.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical whole restricted-pair-finding success is stated for this eight-round known-key configuration. The merge analysis expects one inbound solution from2^32 assignments under its uniform-list model; this is not certain list existence or successful full-budget output. The conditional2^-24 outbound model does not justify an independent-repetition Poisson recovery curve. Known round keys and a restricted pair output are not secret-key recovery; no generic-reference probability or success normalization is invented."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The record covers the stated endpoint; full-paper inventory and later-literature review are tracked separately.",
+    "Full exact-edition inventory checked; numerical attack execution is not claimed."
+  ],
+  "related_problem_ids": []
+}

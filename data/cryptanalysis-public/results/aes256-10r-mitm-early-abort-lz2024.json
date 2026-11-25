@@ -1,0 +1,235 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-10r-mitm-early-abort-lz2024",
+  "title": "10-round AES-256 MITM using the new 6-round distinguisher and early abort",
+  "display": {
+    "name": "New-distinguisher MITM, early abort",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 10,
+    "full_round": false,
+    "round_convention": "lz2024-rounds-1-to-10-whitening-k0-final-no-mixcolumns",
+    "description": "Ten-round AES-256 with whitening K^0, rounds 1 through 10, and no MixColumns in Round 10, as drawn in Figure 2. The attack uses the standard key schedule and finishes by enumerating the missing four bytes of the preceding round key to recover the complete 256-bit user key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "A single unknown AES-256 master key; five key-schedule relations partition the entire key space into 2^64 subspaces that are all searched.",
+    "key_population": "general secret key; weak-key approach means exhaustive sequential key-space partitioning, not a target weak-key promise",
+    "plaintext_model": "2^73 structures of 2^32 chosen plaintexts varying bytes 1,6,11,12, for 2^105 queried blocks in total",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The authors normalize one 10-round AES encryption as 2^8 table lookups; no independent memory-access calibration is claimed.",
+      "The source's final early-abort step tests an initial 192-bit sequence, then extends matches in 16-bit pieces. It retains the precomputed tables of Section 5.2.",
+      "All 2^64 key subspaces are included in the total time, while memory is reused between subspaces.",
+      "Section 5.2 reports an expected one right pair, but does not give a numerical end-to-end recovery probability for this final Section 5.3 attack.",
+      "MixColumns shortcut uses all Fig2 zero-difference conditions, including Delta w7[0,10]=0; a lone guessed Delta z7 byte without those conditions does not determine the remaining bytes."
+    ]
+  },
+  "techniques": [
+    "demirci-selcuk-meet-in-the-middle",
+    "six-round-distinguisher",
+    "key-space-partitioning",
+    "split-precomputation-tables",
+    "key-schedule-constraints",
+    "early-abort-partial-matching"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "approximately 2^253.2, including precomputation",
+      "log2": 253.2,
+      "unit": "10-round-aes256-encryptions",
+      "qualifier": "estimate",
+      "note": "Section 5.3 explicitly prices the total as 2^250.5 plus 2^64 times the optimized online expression. No separately rounded optimized-online exponent is given. Preprocessing below is an included component and must not be added again; the 2^253.2 online estimate in Section 5.2 belongs to the unoptimized attack."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^105",
+      "log2": 105,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "2^73 structures, each containing 2^32 texts. Section 5.3 changes matching only and retains Section 5.2 data collection."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^189",
+      "log2": 189,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Peak H* storage: at most 2^184 sequences, 16 differences of 16 bits each, i.e. 32 bytes per entry. T5 and T6 are smaller. This native byte count is not a 128-bit-block exponent."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "approximately 2^250.5",
+      "log2": 250.5,
+      "unit": "10-round-aes256-encryptions",
+      "qualifier": "estimate",
+      "note": "Section 5.2 prices Steps 2,3,5 over all 2^64 subspaces; Section 5.3 carries this term unchanged into the total. This is an included component, not extra work beyond reported total time."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "conditional-source-model-complete-key-recovery-estimate",
+    "value": null,
+    "description": "Section5 complete256-bit-key recovery under the source Bernoulli/pair-trial approximation:2^136 pairs with characteristic probability2^-136 give the displayed zero-event complement, about63.2%. This transparently inherits the explicit Section4 success model (PDF10), with Section5's changed pair count and probability; it is not a separately printed Section5 percentage or an empirical AES rate. Steps5–6 enumerate the relevant subspaces, key guesses and all compatible table solutions; Step6(d) exhausts the remaining32 key bits to determine the user key. The model assumes complete branch/table coverage and correct full-key completion/validation, with native source expected table costs. Section5.3 prefix matching retains a correct full match. The existing strict sequence-cardinality/average-branching proof obligation remains; no strict resource cap or actual-AES trial-independence theorem is asserted.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Independent source-first and endpoint review verifies this conditional source-model inference, not actual-AES success or a new full-paper audit. The Section4 zero-event law is applied to the Section5 N,p; complete table/branch coverage and full-key verification are explicit model conditions. Native expected costs and the strict support proof obligation remain unchanged."
+    },
+    "components": [
+      {
+        "metric": "specified-six-round-truncated-characteristic",
+        "value": 1.1479437019748901e-41,
+        "basis": "author_model",
+        "expression": "2^{-136}",
+        "description": "PDF14 Step4:2^136 structured pairs times2^(-(3+8+4+2)*8) gives an expected one conforming pair. The source does not separately print a Section5 at-least-one probability; the inherited complete-output model is recorded in the primary metric."
+      },
+      {
+        "metric": "wrong-sequence-per-partition-lookup-source-model",
+        "value": 2.117582368135751e-22,
+        "basis": "author_model",
+        "expression": "2^{-72}",
+        "description": "PDF14 Step5/PDF15 Step6(d):2^184 entries in H* for ONE fixed Theta partition versus a uniformly unrelated256-bit signature. Author average-count model only; the existing branching/support proof obligation remains."
+      },
+      {
+        "metric": "last-round-equality-filter-source-model",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "PDF14 Step6(a):32-bit ciphertext-pair filter for the guessed K10, before the input filter."
+      },
+      {
+        "metric": "input-difference-filter-source-model",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "PDF15 Step6(b): the source about-eight-bit first-round input sieve, reducing expected2^104 pairs to2^96; approximation, not a whole-attack probability."
+      },
+      {
+        "metric": "early-abort-192-bit-prefix-source-model",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "PDF16 Section5.3: the first192-bit prefix lookup has source ratio2^184/2^192=2^-8 in one H* partition. Conditional remaining16-bit checks are not treated as independent guarantees."
+      }
+    ],
+    "basis": "derived_from_source",
+    "expression": "1-(1-2^{-136})^{2^{136}}\\approx 0.6321"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "lz2024-improved-aes256-10r-dcc",
+      "locator": "PDF p.4 / printed p.960, Section 2.2; PDF p.12 / p.968, Figure 2; PDF pp.13-15 / pp.969-971, Section 5.2 Steps 1,4,6(d).",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques"
+      ],
+      "interpretation": "Figure 2 explicitly omits the final MixColumns; the 2^64 key-space partition is exhausted, and Step 6(d) recovers the whole 256-bit user key."
+    },
+    {
+      "source_id": "lz2024-improved-aes256-10r-dcc",
+      "locator": "PDF pp.15-16 / printed pp.971-972, Section 5.2 complexity analysis and Section 5.3 final expression; Table 1 on PDF p.3 / p.959.",
+      "fields": [
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Preserves native memory bytes, included precomputation and the explicit 2^8-table-lookups-per-encryption convention. The final 2^253.2 is a total after early abort, not the unoptimized online component with the same rounded exponent."
+    },
+    {
+      "source_id": "lz2024-improved-aes256-10r-dcc",
+      "locator": "Complete exact primaryPDF1–17, all sections, displayed formulas/tables/algorithms, proofs and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full contribution inventory read; bounded forward checking and finite component validation are separately receipted. Full attack reproduction not attempted."
+    },
+    {
+      "source_id": "lz2024-improved-aes256-10r-dcc",
+      "locator": "Complete PDF1–17/printed957–973, Sections1–5, all formulas, Figure1–2, Table1 and references.",
+      "fields": [
+        "/assessment",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Complete exact primary edition inventory and bounded version/forward checks; source budgets and success/accounting semantics retained."
+    },
+    {
+      "source_id": "lz2024-improved-aes256-10r-dcc",
+      "locator": "PDF5/printed961 Property1; PDF11–13/printed967–969 Proposition2, proof and remark.",
+      "fields": [
+        "/field_conflicts",
+        "/setting/assumptions"
+      ],
+      "interpretation": "Local proof/transcription obligation; no repaired whole attack or replacement headline asserted."
+    },
+    {
+      "source_id": "lz2024-improved-aes256-10r-dcc",
+      "locator": "PDF10/printed966 Section4 success statement; PDF11–15/967–971 Proposition2,Section5.2 Steps4–6; PDF16/972 Section5.3 early abort. Existing average-branching/strict-support proof obligation retained.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical complete-key success is given for this exact Section5 endpoint. Step4 expects one right pair; the about63% success printed on PDF10 belongs to the earlier Section4 construction and its different data budget, not these Section5 configurations. Proposition2 strict sequence-cardinality proof obligations remain. Per-partition source false-match models below do not prove table coverage, correct-key survival, or independent repeated trials."
+    },
+    {
+      "source_id": "lz2024-improved-aes256-10r-dcc",
+      "locator": "PDF10/printed966 Section4 explicit whole-key Bernoulli success; PDF13–15/printed969–971 Section5.2 Steps1–6, especially PDF14 Step4 and PDF15 Step6(d); PDF16/printed972 costs and Section5.3 early abort.",
+      "fields": [
+        "/success",
+        "/success/components",
+        "/success/review"
+      ],
+      "interpretation": "B43 supersedes only the earlier categorical noninheritance conclusion: Section5's N=2^136,p=2^-136 and complete-key steps support the explicitly conditional inherited source model. The percentage is derived across sections, not separately printed in Section5. All relevant branches, tables and key completion must be retained. No empirical success, strict cardinality repair, altered resource budget or actual-cipher independence proof follows."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "No attack implementation was executed. The final optimized online phase is specified symbolically by the authors but has no separately rounded exponent; no scalar was invented.",
+    "The source claims an improvement against earlier publication-specific data and memory counts, not a current global best-known result."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Conditional sequence cardinality proof",
+      "description": "Proposition2 claims at most2^248 sequences, while its state reconstruction invokes Property1, which gives an average solution count, not uniqueness for every difference pair. A strict support bound needs branch multiplicity and filtering aggregation justified. This is a proof obligation, not a demonstrated counterexample to the bound or a substituted attack complexity.",
+      "observations": [
+        {
+          "source_id": "lz2024-improved-aes256-10r-dcc",
+          "locator": "PDF5/printed961 Property1; PDF11–13/printed967–969 Proposition2, proof and remark.",
+          "reported": "Original Proposition2 at-most2^248/support or Section4 printed table index retained; no numerical cost is overwritten."
+        },
+        {
+          "source_id": "lz2024-improved-aes256-10r-dcc",
+          "locator": "PDF5/printed961 Property1; PDF11–13/printed967–969 Proposition2, proof and remark. Fresh independent raw-source review2026-10-27.",
+          "reported": "Proposition2 claims at most2^248 sequences, while its state reconstruction invokes Property1, which gives an average solution count, not uniqueness for every difference pair. A strict support bound needs branch multiplicity and filtering aggregation justified. This is a proof obligation, not a demonstrated counterexample to the bound or a substituted attack complexity."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-mitm-ds2008-improved-selected-subkeys",
+  "title": "7-round AES-192: XOR-improved MITM: selected subkeys",
+  "display": {
+    "name": "XOR-improved MITM: selected subkeys",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "ds2008-key-recovery-boundaries-section5",
+    "description": "Reduced-round AES-192, with initial whitening. Section5's partial-decryption boundary uses the final-round byte positions; Section2 describes omission of final MixColumns. Costs follow that source convention. Steps2–5 identify four whitening-key bytes, one round1 byte and all sixteen final-round-key bytes (168 bits of round-key material); these are not asserted to be independent master-key bits."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One unknown standard AES master key; the source attack derivation treats searched round-key bytes without using schedule relations.",
+    "key_population": "General fixed key; no weak-key restriction.",
+    "plaintext_model": "Source 2^32 chosen-plaintext structure; Step2's diagonal coordinates differ from the cost paragraph's first-column description.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Offline table generation and online search have different native work units and are kept separate.",
+      "The source p.122 converts 2^88 partial decryptions to 2^80 encryption equivalents using its stated factor of 2^8. This conversion is recorded, not independently calibrated.",
+      "Step6's remaining-key enumeration has no separate numerical budget; the online figure describes the matching/search phase.",
+      "Section5.3 removes one guessed transformed-key byte per output sequence by matching S(f(i)) XOR S(f(0))."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "parameterized-functions",
+    "xor-sequence-offset-cancellation"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^72",
+      "log2": 72,
+      "unit": "ds2008-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Online search only under the source's partial-decryption conversion; preprocessing and unitemized completion are separate."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "The source count is preserved with the documented coordinate discrepancy."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^206 AES blocks (=2^210 bytes)",
+      "log2": 206,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Four output tables. The improved variant stores 255 differences per function; Table1 retains the same leading exponent."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^208",
+      "log2": 208,
+      "unit": "ds2008-four-round-byte-function-evaluations",
+      "qualifier": "estimate",
+      "note": "Key-independent setup evaluating 2^200 parameter tuples on 256 byte inputs; amortized/reusable in the source."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "conditional-source-model-unique-partial-subkey-lower-bound",
+    "value": null,
+    "description": "Conditional model for uniquely identifying168bits of selected round-key material: four whitening-key bytes, one round-one byte and sixteen final-round-key bytes. These are not independent master-key bits. Section5.3 stores S(f(i)) XOR S(f(0)) for i=1..255 and removes one guessed byte per target. Adopt the intended corrected factorization/coordinates, Equation7 correct-hit marginals for all four targets, availability of all already acquired n2 structures to every target, and the source matching-phase work model. Also adopt the wrong-sequence uniform law conditional on the precomputed setup; this is a heuristic model premise about AES, not proved by the following algebra. For any bijective byte S-box, each255-byte normalized signature has exactly256preimages among256-byte raw sequences, so the conditional uniform raw law induces a uniform2040-bit normalized law. A normalized table is an image of at most \\(2^{200}/n_1\\) raw function entries; duplicates can only reduce the image size. Its modeled wrong-hit upper bound per test is \\(2^{-1840}/n_1\\), not the basic256-byte value. At most \\(4n_2 2^{72}\\) potential target/guess tests give an aggregate false-hit term \\(2^{-1766}n_2/n_1\\). The same coefficient as the raw construction results from two separate8-bit changes, not transfer of its per-test probability. Combining this with four correct-hit miss marginals gives \\(p_{\\mathcal M,\\mathrm{sel}}\\ge\\max\\{0,1-4(1-n_1^{-1})^{n_2}-2^{-1766}n_2/n_1\\}\\). No inter-target or inter-guess independence is assumed; Equation7 within-target sampling assumptions remain. This stored complete-table member fixes n1=n2=1. The positive failure term remains symbolic, not rounded to100%. A nonempty finite table, positive integer n2 of usable structures and feasible query allocation are required. The model implication is exact within these premises; its interpretation for actual AES is heuristic. Existing source conflicts, finite-domain and native-cost limits remain. Master-key completion, raw/basic models, eight-round extensions and new WLH constructions are excluded.",
+    "components": [
+      {
+        "metric": "correct-sequence-in-intended-complete-table",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Section5 Steps1/4: conditional on the intended complete parameter expansion and correct coordinates, the correct ordered XOR-normalized255-value function is present. This is necessary table membership, not unique identification; existing literal-formula and coordinate conflicts remain."
+      }
+    ],
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Verified only the explicit conditional-model implication: balanced XOR-normalization, table-image cardinality,72-bit guess count, four target marginals and union bounds, and mapping to the already priced168-bit partial-output endpoint. This does not verify actual-AES random laws, printed formulas/coordinates, all parameter feasibility, fixed runtime, cost calibration or complete master-key recovery."
+    },
+    "basis": "derived_from_source",
+    "expression": "p_{\\mathcal M,\\mathrm{sel}}\\ge1-2^{-1766}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Printed p.122 Section5 Steps1–6 and cost paragraph; pp.123–124 Section5.3 and Table1",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts",
+        "/bound"
+      ],
+      "interpretation": "Complete official eleven-page proceedings reviewed; critical equations and Table1 visually checked. Author-reported scope and native units retained."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Complete PDF1–11/printed116–126; AppendixA Proposition6 and Sections4–5.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition inventory reviewed; reviewer finite component validation is separate from attack reproduction."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Proceedings PDF7–9 / printed122–124 Section5 Steps1–6, Section5.2 eight-round extension and Section5.3 improved XOR-normalized255-value sequence.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical aggregate recovery success is established. Section5.3 removes the additive byte and uses255 XOR-normalized values; the basic256-value2^-1848 false-match estimate is not restated for this variant. Step6 remaining-master-key completion is unpriced separately. Retain original coordinate/formula conflicts and200-bit basic versus168-bit improved selected round-key-material scopes."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "PDF5–6 Section4, Propositions4–5; PDF7–9 Section5, Steps2–6, Equation7, Table1 and Section5.3.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: the checked source does not quantify this exact main output at its recorded budget. Separate proof, coordinate, key-schedule and cost obligations remain recorded. All primary probability values, components and scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "PDF5–9/printed120–124: Proposition4 target symmetry; Section5 Steps1–5; Equation7; Section5.3 XOR normalization and Table1. B62 analyst derivation, [local audit reference not distributed]",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Derived conditional selected-material bound, not a probability printed for this improved variant. A bijective S-box makes raw-to-normalized sequence mapping256-to-one. Under the setup-conditional wrong-sequence model this gives2040uniform bits, at most2^200/n1 table images and2^-1840/n1 wrong-hit per test. A fixed superset of4*n2*2^72 tests yields2^-1766*n2/n1, then four right-sequence miss bounds are subtracted without assuming target independence. All targets use the same already acquired structure allocation. The Table1 sampled member uses its actual n1=2^n,n2=4*2^n curve and all original costs. This scoped implication supersedes earlier absence-of-aggregate-inference wording only for the stated conditional model; no author-reported unconditional rate, source-conflict resolution, extra queries or master-key completion is supplied."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Results are transcribed from this source version. Full attack searches, costs and success probabilities have not been reproduced.",
+    "The source's online and offline numbers are not directly summable without a work-unit conversion. Full master-key completion and table lookup/sorting overheads are not individually costed.",
+    "This unsampled baseline is explicitly described as infeasible for AES-192 because its preprocessing exceeds the exhaustive-key-search scale. It is retained as a reported baseline, not an improvement."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/plaintext_model",
+      "label": "Chosen-plaintext coordinates",
+      "description": "Step2 enumerates diagonal whitening-key bytes to arrange one active byte after round1; the following cost paragraph instead describes a varying first plaintext column.",
+      "observations": [
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.122 Section5 Step2",
+          "reported": "Kinit=(K0_11,K0_22,K0_33,K0_44); choose a set with only C1_11 active."
+        },
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.122 paragraph following Step6",
+          "reported": "The 2^32 plaintext structure varies the first column and fixes the rest."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "Printed function expansion",
+      "description": "The recurrence preceding Proposition2 omits the third-round S-boxes. Printed Equation(1) also differs from the second-round diagonal expressions immediately above it. A separately derived 25-parameter AES factorization passes local component tests; the printed expressions are preserved as discrepant. DTCB09 explicitly corrects Equation1 and the C3_22/C3_44 expansions in Equations2/4, while stating that these errors do not affect DS08 attack applicability. Separate corrected AES factorization is supported, not the literal print.",
+      "observations": [
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.119 recurrence preceding Proposition2; p.120 Equation(1)",
+          "reported": "The p.119 recurrence is linear in second-round bytes without S-boxes; Equation(1) uses different coefficients for its c4 and c3 terms."
+        },
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.119 second-round diagonal equations; p.117 AES round definition",
+          "reported": "SubBytes precedes ShiftRows/MixColumns every inner round. C2_22=S(3t11+c4)+c6 and C2_33=2S(t11+c3)+c7 require different nested terms in C3_11."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "PDF5/printed148 Section4, Equations3–6; PDF4/printed147 corrected recurrence.",
+          "reported": "Explicit correction of DS08 Equation1 and C3_22/C3_44; authors state no effect on applicability of DS08 attacks."
+        }
+      ]
+    }
+  ]
+}

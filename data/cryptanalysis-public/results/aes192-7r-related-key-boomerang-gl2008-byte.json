@@ -1,0 +1,131 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-related-key-boomerang-gl2008-byte",
+  "title": "GL08 7-round AES-192 Related-key boomerang / one-byte recovery",
+  "display": {
+    "name": "Related-key boomerang / one-byte recovery",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "gl08-7r-source-boundary",
+    "description": "Seven AES-192 nonlinear rounds; whitening and AK4 included, final round as Section4. The algorithm outputs only byte0 of the seventh-round subkey, eight bits, not the full192-bit master key."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "adaptive-related-key-chosen-plaintext-encryption",
+      "adaptive-related-key-chosen-ciphertext-decryption"
+    ],
+    "related_key_count": 4,
+    "target_selection": "designated_target",
+    "key_relation": "Four unknown master keys Ka,Kb=Ka XOR DeltaK*,Kc=Ka XOR DeltaK-prime,Kd=Ka XOR DeltaK* XOR DeltaK-prime; source-defined master-key differences, no known key.",
+    "key_population": "general secret key",
+    "plaintext_model": "Adaptive chosen plaintext and ciphertext observations across the stated related unknown keys, using the source encryption and decryption oracles.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Source approximates the AES S-box by equiprobable random-permutation transitions and assumes independent/identically distributed false-quartet filtering; not an exact AES-DDT or boomerang-compatibility proof."
+    ]
+  },
+  "techniques": [
+    "related-key-boomerang",
+    "subkey-counter"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^67.5",
+      "log2": 67.5,
+      "unit": "7-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported native resource accounting."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^49.5 * 4 * 2^16",
+      "log2": 67.5,
+      "unit": "aggregate-adaptive-encryption-decryption-queries",
+      "qualifier": "estimate",
+      "note": "Derived literally from Section4 Steps1–4: 2^49.5 structures times four oracles times2^16 queries each; small Step6 re-encryption queries excluded as source-negligible. Headline2^18 is per structure, not the aggregate."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "4 * 2^16",
+      "log2": 18,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Four2^16-text structures held at a time; counters/filtered quartets additional source-negligible storage."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "value": 0.8,
+    "metric": "source-poisson-one-byte-recovery",
+    "description": "Source approximate0.8 for at-least-two correct-key quartets under a Poisson model with mean rounded from2^1.5 to3;8-bit subkey output only. Numerical values0.8008517 at mean3 and0.773718 at unrounded mean2^1.5 explain rounding, not two certified whole-attack successes."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-08826f9ac5081b84-2008",
+      "locator": "PDF pp.6–11 Section4, particularly pp.10–11 algorithm, aggregate query derivation, memory and Poisson success.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete registered proceedings read and AES claim inventory checked2026-10-26; work-level gates remain open as specified in the audit receipt. Source claims and unresolved fields retain their original status."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete proceedings was read; nine-round full-version and later-primary access remain pending at work level. Seven-round total-data discrepancy and approximate quartet assumptions remain unresolved."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/data",
+      "label": "Per-structure versus total queries",
+      "description": "Abstract, Table1 and conclusion state2^18 total, but Steps1–4 require2^49.5 structures and final analysis labels2^18 per structure.",
+      "observations": [
+        {
+          "source_id": "aes-paper-08826f9ac5081b84-2008",
+          "locator": "PDF pp.1–2 abstract and Table1.",
+          "reported": "Seven-round data2^18 adaptive chosen texts."
+        },
+        {
+          "source_id": "aes-paper-08826f9ac5081b84-2008",
+          "locator": "PDF pp.10–11 Section4 Steps1–4 and analysis.",
+          "reported": "2^49.5 structures;2^18 chosen texts for EACH structure."
+        }
+      ]
+    }
+  ]
+}

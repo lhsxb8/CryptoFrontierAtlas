@@ -1,0 +1,131 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-5p5r-impossible-zwzf2007-property",
+  "title": "5.5-round AES-192: Related-key impossible inner-round transition",
+  "display": {
+    "name": "Related-key impossible inner-round transition",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 5.5,
+    "full_round": false,
+    "round_convention": "zwzf2007-after-mixcolumns1-through-addroundkey6",
+    "description": "The source calls this a5.5-round interval: enter immediately after MixColumns of round1, apply AddRoundKey1 and rounds2–6 with their inner MixColumns, and exit after AddRoundKey6. It is not a6-round plaintext-to-ciphertext attack."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": 2,
+    "key_relation": "Two unknown AES-192 master keys K and K'=K XOR Delta, where Delta[0]=Delta[8]=a!=0 and the other22 bytes are0. Initial whitening is k0; round subkeys are k1,... .",
+    "key_population": "General unknown key pair with attacker-chosen nonzero a; b,c are actual key-dependent S-box output differences, not independently chosen subkeys.",
+    "plaintext_model": "Input internal-state difference x1^M has(a,0,0,0) in columns2 and3 and zeros elsewhere.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "related-key",
+    "impossible-differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-or-conditional-statistical-statement",
+    "value": null,
+    "description": "Parameters describe a structural identity or conditional random-elimination model."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "Printed pp.18–19 Section3, impossible transition and forward/backward proof",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal",
+        "/property"
+      ],
+      "interpretation": "Complete original proceedings reviewed. Source-convention boundaries, total queries across the two keys, partial output and native accounting are kept explicit."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Independent local checks cover the AES key schedule and deterministic components. Full cryptanalytic searches, resource calibration and success rates have not been reproduced."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "The specified internal input difference cannot yield an x6^O difference whose last column is(0,0,0,b), with the first three output columns unrestricted.",
+    "quantifier": "For every pair of internal states and every standard AES-192 related-key pair satisfying Table2 and the specified input difference.",
+    "scope": "The forward path forces x5^O byte1 difference nonzero. Reversing the proposed last-column output through ARK6/MC6/SR6 forces that same byte difference zero.",
+    "parameters": [
+      {
+        "name": "Source interval",
+        "reported": "5.5 rounds",
+        "meaning": "From after MC1 through ARK6; exact entry/exit stages define the count."
+      },
+      {
+        "name": "Transition probability",
+        "reported": "0",
+        "meaning": "Deterministic contradiction under the stated related-key schedule."
+      },
+      {
+        "name": "Unrestricted output coordinates",
+        "reported": "first12 bytes",
+        "meaning": "Only the last output column is fixed to(0,0,0,b)."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Symbolic nonzero/zero propagation in Section3.512 independent forward component examples and512 backward target-column checks agree."
+    }
+  }
+}

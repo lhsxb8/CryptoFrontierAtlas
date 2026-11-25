@@ -1,0 +1,213 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-8r-impossible-differential-bahrak-aref-highdata-conflict-ldkk2008",
+  "title": "8-round AES-256 impossible-differential key recovery, improved Bahrak-Aref construction",
+  "display": {
+    "name": "Impossible differential, BA line, high data",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "ldkk2008-rounds-0-to-7-initial-whitening-final-no-mixcolumns",
+    "description": "8 rounds of standard AES-256 with initial AddRoundKey and final MixColumns omitted. The source reports complete master-key recovery, using impossible-differential subkey elimination followed by key-schedule completion or trial encryption."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed unknown AES master key; no related-key oracle.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "source-reported chosen-plaintext budget for the improved Bahrak-Aref construction; Appendix B defers detailed structure and candidate-pair generation to the full online version",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Uses the four-round impossible differential of Proposition 1 with input/output extension and early rejection of wrong key guesses.",
+      "Table 1 and Appendix B state 2^227.8 memory accesses, whereas the conclusion states 2^224.3 for the same 2^111.1-data endpoint. Both printed values are retained and numerical normalization is null.",
+      "Section 2's textual AES-256 key-schedule description includes a rotation in the i=4 mod 8 branch; the canonical AES specification has an unrotated SubWord there. This source description discrepancy remains flagged for full-version checking; no alternative cipher is silently substituted."
+    ]
+  },
+  "techniques": [
+    "impossible-differential",
+    "early-abort",
+    "key-schedule-constraints",
+    "wrong-key-elimination",
+    "data-reuse"
+  ],
+  "resources": {
+    "time": {
+      "status": "conflict",
+      "reported": "2^227.8 (Table 1 / Appendix B); 2^224.3 (conclusion)",
+      "log2": null,
+      "unit": "memory-accesses",
+      "qualifier": "unspecified",
+      "note": "Table 1 and Appendix B state 2^227.8 memory accesses, whereas the conclusion states 2^224.3 for the same 2^111.1-data endpoint. Both printed values are retained and numerical normalization is null."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^111.1",
+      "log2": 111.1,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Final source-reported chosen-plaintext budget for this instance and endpoint; distinct from intermediate pre-optimization counts."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate memory budget is explicitly supplied for this improved instance/endpoint. Older attack memory figures and other-instance storage are not inherited."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Appendix B does not itemize this endpoint's preprocessing. The separate Appendix A elimination-table construction is not automatically assigned to the condensed Bahrak-Aref variant."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "full-master-key-recovery",
+    "value": null,
+    "description": "No numerical finite-budget full-master-key success is established for this exact endpoint. AppendixB gives condensed improvements and explicitly refers the full procedure to the online version. Exact-endpoint wrong-key distribution, repetition accounting and success evidence remain a follow-up task. Its 4/12 output-pattern repetitions are not assumed independent and do not inherit the Phan counter/survival model. Existing resource conflicts remain.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Re-read PDF6-12 and AppendixB PDF14-15. The selected high-data Bahrak-Aref eight-round extension delegates its detailed procedure to the full online version. Do not transfer the distinct Phan completion model or a local deterministic impossible relation to this endpoint. Keep primary unquantified and preserve the2^227.8/2^224.3 time conflict."
+    },
+    "components": [
+      {
+        "metric": "true-key-not-rejected-by-intended-impossible-relation",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF6 Proposition1 and the source elimination rule: a true hypothesis cannot satisfy both conditions of the impossible differential and is not discarded by that mathematical contradiction. This is a local retention relation, not a finite-budget uniqueness or residual-search success rate."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "p.281 Table 1; p.290 conclusion; p.293 Appendix B. pp.282-283 for round convention; pp.291-292 for elimination-table setup.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/resources",
+        "/techniques",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Table 1 and Appendix B state 2^227.8 memory accesses, whereas the conclusion states 2^224.3 for the same 2^111.1-data endpoint. Both printed values are retained and numerical normalization is null."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "Full source PDF pp.1–15 / printed pp.279–293 read 2026-10-27; Table 1/PDF3 and defining Sections 4.1–4.2/PDF7–12 or Appendix B/PDF14–15.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Independent raw-first complete proceedings-edition audit. Whole-key success remains unknown; memory accesses are not converted to encryptions. The separate 2008/540 full-version PDF was not acquired."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF p.5 / printed p.283, AES-256 key-schedule i≡4(mod8) sentence; Sections4.1–4.2.",
+      "fields": [
+        "/setting"
+      ],
+      "interpretation": "The source description rotates SubWord in the AES-256 extra branch, unlike canonical AES. Preserve this localized description caveat; do not redefine the target cipher or infer that all attacks are invalid."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF pp.3,12,15 / printed pp.281,290,293.",
+      "fields": [
+        "/resources/time",
+        "/field_conflicts"
+      ],
+      "interpretation": "Both time figures visually checked in the original PDF. The field remainsconflict withlog2null; faster conclusion value is not promoted as a separate point."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF p.3 / printed p.281 Table 1; PDF p.15 / p.293 Appendix B",
+      "fields": [
+        "/resources/time",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized original/recomputed observation retained under independent review; no silently substituted resource vector or whole-attack refutation."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF p.12 / printed p.290 Section 5 final paragraph",
+      "fields": [
+        "/resources/time",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized original/recomputed observation retained under independent review; no silently substituted resource vector or whole-attack refutation."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "Proceedings PDF6 Proposition1; PDF14–15 / printed292–293 AppendixB and Table1 onPDF3.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical finite-budget full-master-key success is established for this exact endpoint. AppendixB gives condensed improvements and explicitly refers the full procedure to the online version. Exact-endpoint wrong-key distribution, repetition accounting and success evidence remain a follow-up task. Its 4/12 output-pattern repetitions are not assumed independent and do not inherit the Phan counter/survival model. Existing resource conflicts remain."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "PDF14-15 / printed292-293 AppendixB; PDF12 conclusion; contrasted with PDF9-12 separate Phan extension. Targeted success review2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "The exact BA full algorithm, final survivor completion and success accounting remain a full-version evidence task. Source checking is complete for these passages but is not a quantified metric or resolution of the time conflict."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Table 1 and Appendix B state 2^227.8 memory accesses, whereas the conclusion states 2^224.3 for the same 2^111.1-data endpoint. Both printed values are retained and numerical normalization is null.",
+    "The 15-page proceedings edition has been fully read and its AES contributions inventoried. The separate full online edition 2008/540 remains access-pending; independent attack reproduction was not attempted."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "table-appendix-versus-conclusion",
+      "description": "The same high-data D=2^111.1 AES-256 8-round attack is printed with T=2^227.8 MA in Table 1 and Appendix B, and T=2^224.3 MA in Section 5. No resolving full-version primary evidence was acquired; numerical normalization remains null.",
+      "observations": [
+        {
+          "source_id": "ldkk2008-impossible-differential-conference",
+          "locator": "PDF p.3 / printed p.281 Table 1; PDF p.15 / p.293 Appendix B",
+          "reported": "2^227.8 memory accesses at 2^111.1 CP."
+        },
+        {
+          "source_id": "ldkk2008-impossible-differential-conference",
+          "locator": "PDF p.12 / printed p.290 Section 5 final paragraph",
+          "reported": "2^224.3 memory accesses at 2^111.1 CP."
+        }
+      ]
+    }
+  ]
+}

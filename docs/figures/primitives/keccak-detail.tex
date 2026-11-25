@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+  \foreach \x/\name/\label in {0/theta/\theta,2.8/rho/\rho,5.6/pi/\pi,8.4/chi/\chi,11.2/iota/\iota} {
+    \node[accent,minimum width=1.6cm] (\name) at (\x,1.5) {$\label$};
+  }
+  \draw[wire] (theta) -- (rho); \draw[wire] (rho) -- (pi);
+  \draw[wire] (pi) -- (chi); \draw[wire] (chi) -- (iota);
+  \node[note] at (0,.65) {Column parity}; \node[note] at (2.8,.65) {Lane rotation};
+  \node[note] at (5.6,.65) {Lane relocation}; \node[note] at (8.4,.65) {Nonlinearity};
+  \node[note] at (11.2,.65) {Round constant};
+  \node[anchor=west] at (-.7,-.3) {$\theta:\ C_x=\bigoplus_y A[x,y],\quad D_x=C_{x-1}\oplus(C_{x+1}\rotl1),\quad A[x,y]\gets A[x,y]\oplus D_x$};
+  \node[anchor=west] at (-.7,-1.15) {$\rho,\pi:\ B[y,2x+3y]=A[x,y]\rotl r[x,y]$};
+  \node[anchor=west] at (-.7,-2) {$\chi:\ A[x,y]=B[x,y]\oplus\bigl(\neg B[x+1,y]\mathbin{\land}B[x+2,y]\bigr)$};
+  \node[anchor=west] at (-.7,-2.85) {$\iota:\ A[0,0]\gets A[0,0]\oplus\mathrm{RC}[i_r]$};
+  \node[note] at (5.6,-3.65) {Coordinates modulo $5$\quad Lanes contain $64$ bits\quad Rotation offsets and constants follow FIPS 202.};
+\end{tikzpicture}

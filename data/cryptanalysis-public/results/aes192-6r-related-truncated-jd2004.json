@@ -1,0 +1,189 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-6r-related-truncated-jd2004",
+  "title": "JD04 6-round AES-192 Related-key truncated recovery",
+  "display": {
+    "name": "Related-key truncated recovery",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "jd2004-6r-final-no-mc",
+    "description": "Standard AES-192, whitening round0, final analyzed round omitsMC. Procedure determines8 key bytes; source says rest follows by similar methods without separately pricing it."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related_key_chosen_plaintext_encryption"
+    ],
+    "related_key_count": 2,
+    "target_selection": "designated_target",
+    "key_relation": "Two unknown standardAES192 keys k,k XORdelta; delta=(0000)(0000)(0Delta00)(0Delta00)(0000)(0000), Table1.",
+    "key_population": "general secret key",
+    "plaintext_model": "Chosen plaintext observations under two unknown keys with the stated XOR relation.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "related-key-truncated-differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^86",
+      "log2": 86,
+      "unit": "6-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported native resource accounting."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^81",
+      "log2": 81,
+      "unit": "related-key-chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Source total queried blocks; body differential trial count2^80 pairs, each with one block under each key."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "value": null,
+    "metric": "whole-attack-success",
+    "description": "No numerical eight-byte recovery success is given. After2^8 selected trials, the source expects two correct counts versus2^-24 for one wrong tuple. The multi-candidate ranking distribution and qualitative rest-of-key completion are unquantified. The printed k6,3,6 versus k6,3,3 tuple conflict remains.",
+    "components": [
+      {
+        "metric": "desired-truncated-state-difference-under-right-key",
+        "value": 0.0078125,
+        "basis": "author_model",
+        "expression": "2^{-7}",
+        "description": "Section3.2 source probability for the specified four-byte state difference under the related-key construction; a local signal probability."
+      },
+      {
+        "metric": "desired-truncated-state-difference-under-fixed-wrong-guess",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "Section3.2 uniform wrong-state model for one fixed incorrect guess; not the probability that all wrong tuples lose."
+      },
+      {
+        "metric": "outer-ciphertext-pattern-selection",
+        "value": 2.117582368135751e-22,
+        "basis": "author_model",
+        "expression": "2^{-72}",
+        "description": "Section3.2 source nine-constrained-byte selection model. This is a pair filter, not recovery success."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Re-read PDF4–9 Section3, Tables1–4 and all selected native algorithms. Basic/truncated expected two right counts do not determine the correct tuple's ranking among wrong candidates. Seven-round Section3.3 supplies an expected wrong10-tuple count, yielding a conditional model uniqueness bound for that local stage; useful-pair acquisition and qualitative rest-of-key completion are still unquantified. Preserve pair/block, truncated-tuple index and seven/eight-byte output conflicts. No eight-round complete-output bound is borrowed onto seven rounds."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-4c5447890fa7bdb3-2004",
+      "locator": "PDF p.4 standard192-bit instance/boundary; pp.5–6 Section3.2.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-4c5447890fa7bdb3-2004",
+      "locator": "Complete PDF1–14/printed208–221; Sections3–4, tables and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "aes-paper-4c5447890fa7bdb3-2004",
+      "locator": "PDF4–5/printed211–212 Section3 definition and Section3.2 tuple.",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "Primary print inconsistency, independently page-checked; no changed recovery or native cost scalar."
+    },
+    {
+      "source_id": "aes-paper-4c5447890fa7bdb3-2004",
+      "locator": "Proceedings PDF5–6 / printed212–213 Section3.2, selected-pair distribution, counter means and outer filter.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical eight-byte recovery success is given. After2^8 selected trials, the source expects two correct counts versus2^-24 for one wrong tuple. The multi-candidate ranking distribution and qualitative rest-of-key completion are unquantified. The printed k6,3,6 versus k6,3,3 tuple conflict remains."
+    },
+    {
+      "source_id": "aes-paper-4c5447890fa7bdb3-2004",
+      "locator": "PDF4–9 / printed211–216, Sections3.1–3.3 and Tables1–4; PDF7 source wrong10-tuple expectation and qualitative remaining-key completion. Markov/union bound derived from this model, not attack reproduction. Targeted success recheck2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Re-read PDF4–9 Section3, Tables1–4 and all selected native algorithms. Basic/truncated expected two right counts do not determine the correct tuple's ranking among wrong candidates. Seven-round Section3.3 supplies an expected wrong10-tuple count, yielding a conditional model uniqueness bound for that local stage; useful-pair acquisition and qualitative rest-of-key completion are still unquantified. Preserve pair/block, truncated-tuple index and seven/eight-byte output conflicts. No eight-round complete-output bound is borrowed onto seven rounds."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Source-reported result; attack execution and complete proof/forward-literature audit are separate.",
+    "Expected wrong tuple count or right-key vote mean is not whole-attack success. No numerical peak memory reported."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/target/description",
+      "label": "Printed truncated-attack tuple index",
+      "description": "Section3 uses row/column indices0..3, but the Section3.2 guessed tuple includes k6,3,6; the next paragraph instead names k6,3,3. Original page image confirms the print. Keep the eight-byte recovery and author costs; do not silently select a corrected tuple.",
+      "observations": [
+        {
+          "source_id": "aes-paper-4c5447890fa7bdb3-2004",
+          "locator": "PDF4/printed211 Section3 indexing convention.",
+          "reported": "State/key byte indices range over0..3."
+        },
+        {
+          "source_id": "aes-paper-4c5447890fa7bdb3-2004",
+          "locator": "PDF5/printed212 Section3.2 guessed-key tuple and following paragraph.",
+          "reported": "Tuple prints k6,3,6; following text prints k6,3,3."
+        }
+      ]
+    }
+  ]
+}

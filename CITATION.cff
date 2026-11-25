@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use the curated CryptoFrontierAtlas dataset, please cite it using this metadata."
+type: dataset
+title: CryptoFrontierAtlas
+authors:
+  - name: lhsxb8
+repository-code: "https://github.com/lhsxb8/CryptoFrontierAtlas"
+version: 1.0.0
+date-released: "2026-11-25"
+license: CC-BY-4.0

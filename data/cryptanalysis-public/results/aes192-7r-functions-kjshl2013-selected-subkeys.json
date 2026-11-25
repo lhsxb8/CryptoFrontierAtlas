@@ -1,0 +1,198 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-functions-kjshl2013-selected-subkeys",
+  "title": "7-round AES-192: collision-based selected-round-key recovery",
+  "display": {
+    "name": "Precomputed selected round keys",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "kjshl2013-seven-rounds-whitening-final-no-mixcolumns",
+    "description": "Seven-round AES-192, initial whitening and final MixColumns omitted. The explicit procedure returns192 bits of selected round-key material:32 whitening-key bits, all128 bits of the permuted round7 key, and32 bits of the transformed round6 key. A complete master-key reconstruction and its cost are not specified."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key. The article explicitly omits the key schedule from its attack derivation.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "One2^32 chosen-plaintext structure varying diagonal bytes P00,P11,P22,P33 with all other bytes fixed; internal set construction has a documented source discrepancy.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source uses a birthday model for a32-bit internal tuple and a25-sample independent wrong-key match heuristic.",
+      "The explicit key-material output is retained. The paper does not detail a full master-key completion procedure or the cost of the Step4 cross-table matching search.",
+      "Section2.3 Step3 reverses the within/across-set description for the three parameter bytes relative to Section2.2; both statements are documented."
+    ]
+  },
+  "techniques": [
+    "collision-of-functions",
+    "meet-in-the-middle",
+    "precomputed-partial-decryption"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^69.2 (approximately2^32 *2^40 *1/7 *1/4 *4)",
+      "log2": 69.2,
+      "unit": "kjshl2013-seven-round-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Source total headline is justified by Step2 table filling. Sorting, Step4 cross-table candidate matching and master-key completion are not individually costed; no independently verified end-to-end bound is claimed."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "One diagonal four-byte structure."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^74 (approximately4 *2^32 *2^40) bytes",
+      "log2": 74,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Native reported table-storage expression; explicit table-index, sorting-workspace and whole-key completion overheads are not itemized."
+    },
+    "preprocessing": {
+      "status": "qualitative",
+      "reported": "Ciphertext-dependent Step2 tables; included in the source's2^69.2 time headline",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "This is input-dependent table generation, not a reusable key-independent offline table or an additional independent budget."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "selected-round-key-material-recovery",
+    "value": null,
+    "description": "No numerical selected192-bit round-key-material recovery success is given. The internal collision estimate and fixed-witness false-match probability do not quantify the four-column procedure. Preserve both existing internal-set and search-wide witness conflicts; no product of collision marginals or complete-master-key success is assigned.",
+    "components": [
+      {
+        "metric": "sampled-internal-function-collision-baseline",
+        "value": 0.5,
+        "basis": "author_model",
+        "expression": "\\approx\\frac{1}{2}",
+        "description": "Section2.2: sampling2^16 distinct internal triples among2^32 function descriptions has about one-half collision probability in the source birthday model. This is one internal collision, not joint multi-column recovery."
+      },
+      {
+        "metric": "fixed-wrong-guess-and-fixed-pair-pass-twenty-five-inputs",
+        "value": 6.223015277861142e-61,
+        "basis": "author_model",
+        "expression": "2^{-200}",
+        "description": "Section2.2 Equation5: the source uniform per-input2^-8 model gives2^-200 for25 tests of a fixed wrong guess and fixed pair. Search-wide pair-witness multiplicity and the internal projected-set construction remain unresolved."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Independent source-first and endpoint review, PDF2–5: whole selected192-bit-round-key-material success is not quantified. About0.5 is an internal projected-function birthday estimate; fixed-witness2^-200 is not a search-wide key-output law. Four-column joint success, pair-witness multiplicity and the internal set conflict remain. No0.5^4, corrected false-key probability or master-key completion is inferred. Targeted review does not change complete-paper audit gates or close the original missing-success objective."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "kjshl2013-collision-spn-journal",
+      "locator": "Article pp.4–5 Section2.3 Steps1–4, Equation(6), Figure2, cost paragraph and p.4 Table1",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Original article read in full; printed pages3–5 checked visually. Native costs, output scope and documented discrepancies retained."
+    },
+    {
+      "source_id": "kjshl2013-collision-spn-journal",
+      "locator": "PDF4 Section2.2 false-match paragraph and Steps3–4 search scope.",
+      "fields": [
+        "/setting",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact primary passage checked in the full-audit batch; source claims and reviewer component checks are separate."
+    },
+    {
+      "source_id": "kjshl2013-collision-spn-journal",
+      "locator": "Journal PDF3–5 / article pp.3–5 Sections2.2–2.3, Equations4–6,25-input test and selected192-bit round-key material.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical selected192-bit round-key-material recovery success is given. The internal collision estimate and fixed-witness false-match probability do not quantify the four-column procedure. Preserve both existing internal-set and search-wide witness conflicts; no product of collision marginals or complete-master-key success is assigned."
+    },
+    {
+      "source_id": "kjshl2013-collision-spn-journal",
+      "locator": "PDF3–4 Section2.2,Equation5 and birthday paragraph; PDF4 Section2.3 Steps3–4 searches pairs from2^16 sets; PDF5 native time/data/memory accounting.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "The internal collision incidence and fixed-key/fixed-pair false pass remain local. The full selected192-bit output requires the unresolved searched-witness and multi-column joint analysis; its numerical primary remains missing."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Full attack search, total complexity and success probability are not independently reproduced. Component identity checks are documented separately.",
+    "Step4 combination/matching complexity remains unitemized. The2^69.2 figure is the author's reported headline, not a verified total or best-known claim.",
+    "The192 returned round-key bits are not automatically identified with a192-bit master key and do not by themselves constitute the256-bit AES-256 master key.",
+    "Full exact-edition inventory checked; numerical attack execution is not claimed."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Internal set construction",
+      "description": "Section2.2 varies I2_00 while fixing a parameter triple within each function. Step3 says the corresponding three X parameter bytes vary within each set and are the same across all sets, reversing those roles.",
+      "observations": [
+        {
+          "source_id": "kjshl2013-collision-spn-journal",
+          "locator": "Article pp.3–4 Section2.2 collision paragraph",
+          "reported": "For a fixed parameter triple, the equality is tested over active I2_00 values; distinct parameter triples are sought."
+        },
+        {
+          "source_id": "kjshl2013-collision-spn-journal",
+          "locator": "Article p.4 Section2.3 Step3",
+          "reported": "X10,X20,X30 are described as different in each set but the same in all sets."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "Search-wide key-pair witness multiplicity",
+      "description": "Printed2^192*2^-200 covers one fixed pair of structures. If all unordered pairs among2^16 structures are searched, under that same per-key/per-fixed-pair2^-200 model the expected wrong-key/pair witness count is2^192*C(2^16,2)*2^-200=8,388,480 (log2≈23), not2^-8. This is neither a distinct-wrong-key count nor an actual AES false-positive probability; its expectation alone does not establish high error probability. No corrected whole-attack success/time is inferred.",
+      "observations": [
+        {
+          "source_id": "kjshl2013-collision-spn-journal",
+          "locator": "PDF4 Section2.2 false-match paragraph.",
+          "reported": "25-input2^-200 and192-bit guesses yield2^-8."
+        },
+        {
+          "source_id": "kjshl2013-collision-spn-journal",
+          "locator": "PDF4 Steps3–4.",
+          "reported": "2^16 structures; choose two distinct structures for the collision search."
+        }
+      ]
+    }
+  ]
+}

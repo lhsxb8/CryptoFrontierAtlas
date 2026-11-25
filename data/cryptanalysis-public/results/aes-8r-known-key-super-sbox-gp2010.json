@@ -1,0 +1,136 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-8r-known-key-super-sbox-gp2010",
+  "title": "aes-128/aes-192/aes-256, 8 rounds: Super-Sbox known-key distinguisher [GP10]",
+  "display": {
+    "name": "Super-Sbox known-key distinguisher",
+    "method": "rebound"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "source-gp10-8r",
+    "description": "Eight AES rounds with final MixColumns omitted and final AddConstant/key addition, as in Sections2.1/4.2. The source also allows a final MixColumns by taking the corresponding linear image of the output-difference space."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "public_known_key_permutation_evaluation"
+    ],
+    "related_key_count": null,
+    "target_selection": "fixed_known_key",
+    "key_relation": "One randomly drawn AES key revealed to the adversary; the key and its derived round subkeys are fixed during pair construction. No related-key oracle and no attacker choice of the key.",
+    "key_population": "Known random AES key; no weak-key selection.",
+    "plaintext_model": "Construct two distinct plaintexts with four active bytes at prescribed positions at input and output; the remaining twelve bytes of each difference are zero. Nonzero active differences are not prescribed values.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The round construction does not depend on key-schedule relations, so the known-key setting applies to all three standard key lengths.",
+      "Section3.4 heuristically treats restricted Super-Sbox output-difference subsets as having an average of about one half distinct conforming input pairs."
+    ],
+    "reference_model": "Known-key restricted input/output pair construction compared to forward/inverse oracle queries to an ideal random 128-bit permutation; no secret-key recovery."
+  },
+  "techniques": [
+    "super-sbox",
+    "rebound",
+    "restricted-pair-finding"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^48",
+      "log2": 48,
+      "unit": "operations",
+      "qualifier": "estimate",
+      "note": "One pair: 2^(2*c*(r-1)) with r=4,c=8. Two uncontrolled transitions each cost about2^24; lower-order Super-Sbox setup is amortized, not added again."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical budget is stated for this configuration."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "source-native-table-entries",
+      "qualifier": "estimate",
+      "note": "Native Super-Sbox lookup storage2^(r*c)=2^32 entries; no exact entry width or byte count is supplied."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "operations",
+      "qualifier": "estimate",
+      "note": "Lower-order Super-Sbox table setup, included in the source overall work."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "distinguishing-success",
+    "value": null,
+    "description": "The author estimates a valid pair at the stated average work using uncontrolled MixColumns transitions and a freedom-degree argument. No numerical complete pair-finding or distinguishing-game success is given at that cost. Probabilities for deterministic end rounds are not whole-attack success.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit; construction and parameter-specific defining passages, not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "uncontrolled-path-acceptance-per-controlled-candidate",
+        "value": 3.552713678800501e-15,
+        "basis": "author_model",
+        "description": "Two uncontrolled4-to1 MixColumns transitions, each approximately2^-24; the source uses their product2^-48. This is per controlled candidate.",
+        "expression": "\\approx 2^{-48}"
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-3e546db65406af45-2010",
+      "locator": "PDF pp.5–6 / printed369–370 Sections2/2.1; pp.8–13 /372–377 Sections3.1–3.5; pp.13–15 /377–379 Sections4.1/4.2; p.4 Table1.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Complete19page primary read. Known-key scope and all three AES key lengths are explicit. The2^64 generic reference follows from the prescribed96zero bits at each endpoint; source-native costs are preserved. This is a constructive distinguisher, not a minimum-active-S-box structural bound; bound is not applicable."
+    },
+    {
+      "source_id": "aes-paper-3e546db65406af45-2010",
+      "locator": "PDF p.12 /printed376 Section3.4; pp.12–13 Section3.5; pp.14–15 Section4.2 (AES), parameters r=4,c=8.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The author estimates a valid pair at the stated average work using uncontrolled MixColumns transitions and a freedom-degree argument. No numerical complete pair-finding or distinguishing-game success is given at that cost. Probabilities for deterministic end rounds are not whole-attack success."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Native work and table-entry units are retained; no conversion to full AES encryptions or bytes is inferred.",
+    "Whole-attack success probability is not quantified in the primary; local transition probabilities and expected candidate counts are not substituted for it."
+  ],
+  "related_problem_ids": []
+}

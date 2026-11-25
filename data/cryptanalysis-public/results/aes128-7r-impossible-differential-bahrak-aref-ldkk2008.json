@@ -1,0 +1,179 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-7r-impossible-differential-bahrak-aref-ldkk2008",
+  "title": "7-round AES-128 impossible-differential key recovery, improved Bahrak-Aref construction",
+  "display": {
+    "name": "Impossible differential, BA line",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "ldkk2008-rounds-0-to-6-initial-whitening-final-no-mixcolumns",
+    "description": "7 rounds of standard AES-128 with initial AddRoundKey and final MixColumns omitted. The source reports complete master-key recovery, using impossible-differential subkey elimination followed by key-schedule completion or trial encryption."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed unknown AES master key; no related-key oracle.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "source-reported chosen-plaintext budget for the improved Bahrak-Aref construction; Appendix B defers detailed structure and candidate-pair generation to the full online version",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Uses the four-round impossible differential of Proposition 1 with input/output extension and early rejection of wrong key guesses.",
+      "The appendix summarizes improvements to the Bahrak-Aref attack and describes efficient completion by guessing the last three bytes. The full online version is still pending."
+    ]
+  },
+  "techniques": [
+    "impossible-differential",
+    "early-abort",
+    "key-schedule-constraints",
+    "wrong-key-elimination",
+    "data-reuse"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^117.2",
+      "log2": 117.2,
+      "unit": "memory-accesses",
+      "qualifier": "estimate",
+      "note": "The appendix summarizes improvements to the Bahrak-Aref attack and describes efficient completion by guessing the last three bytes. The full online version is still pending."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^112.2",
+      "log2": 112.2,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Final source-reported chosen-plaintext budget for this instance and endpoint; distinct from intermediate pre-optimization counts."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate memory budget is explicitly supplied for this improved instance/endpoint. Older attack memory figures and other-instance storage are not inherited."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Appendix B does not itemize this endpoint's preprocessing. The separate Appendix A elimination-table construction is not automatically assigned to the condensed Bahrak-Aref variant."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "full-master-key-recovery",
+    "value": null,
+    "description": "The acquired21-page full manuscript supplies the previously delegated seven-round AES128 BA procedure and matches its exact headline data/time. No numerical finite-budget complete-key success is supplied. Four related elimination runs share96 key bits and source data, then aggregate suggestions and perform residual completion; expected survivors and modeled fixed-wrong-guess survival are not actual-key recovery probabilities. The2^-13.25 single-run source survival model is retained only at2^112.2 data.Original resource units and unreported coordinates remain unchanged. A newly available procedure is not a new full-paper/forward audit.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted success re-audit with separately hashed independent-mirror supplementary edition. Exact endpoint budgets and output conditions checked; no new full-paper/forward completion or historic official-byte equivalence."
+    },
+    "components": [
+      {
+        "metric": "true-key-not-rejected-by-intended-impossible-relation",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF6 Proposition1 and the source elimination rule: a true hypothesis cannot satisfy both conditions of the impossible differential and is not discarded by that mathematical contradiction. This is a local retention relation, not a finite-budget uniqueness or residual-search success rate."
+      },
+      {
+        "metric": "eight-zero-ciphertext-byte-sieve-at-exact-ba-data-budget",
+        "value": 5.421010862427522e-20,
+        "basis": "author_model",
+        "expression": "2^{-64}",
+        "description": "Section4.1 Step2: eight zero ciphertext-difference bytes give source-model fraction2^-64. At AES128 data2^112.2 the source expects2^79.2 pairs; AES192/AES256 use their own2^113.8 budget. This is a pair filter, not a whole-key event."
+      },
+      {
+        "metric": "wrong-schedule-combination-passes-three-byte-relations-aes128-source-model",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "expression": "2^{-24}",
+        "description": "Section4.1 AES128 aggregation: three explicit schedule relations supply a24-bit wrong-assignment filter before residual24-bit search. This component is only stored for AES128 and is not borrowed for the stronger AES192/AES256 filtering."
+      },
+      {
+        "metric": "fixed-wrong-initial-column-guess-survives-one-ba-run-source-model",
+        "value": null,
+        "basis": "author_model",
+        "expression": "(1-2^{-32})^{2^{35.2}}",
+        "description": "Section4.1: source single-run survival model, printed approximately2^-13.25, for one fixed wrong32-bit initial-column guess at the2^112.2 budget. The four overlapping runs are not multiplied into an independent whole-key success model."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "p.281 Table 1; pp.292-293 Appendix B. pp.282-283 for round convention; pp.291-292 for elimination-table setup.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/resources",
+        "/techniques",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The appendix summarizes improvements to the Bahrak-Aref attack and describes efficient completion by guessing the last three bytes. The full online version is still pending."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "Full source PDF pp.1–15 / printed pp.279–293 read 2026-10-27; Table 1/PDF3 and defining Sections 4.1–4.2/PDF7–12 or Appendix B/PDF14–15.",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Independent raw-first complete proceedings-edition audit. Whole-key success remains unknown; memory accesses are not converted to encryptions. The separate 2008/540 full-version PDF was not acquired."
+    },
+    {
+      "source_id": "ldkk2008-impossible-differential-conference",
+      "locator": "Proceedings PDF6 Proposition1; PDF14–15 / printed292–293 AppendixB and Table1 onPDF3.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical finite-budget full-master-key success is established for this exact endpoint. AppendixB gives condensed improvements and explicitly refers the full procedure to the online version. Exact-endpoint wrong-key distribution, repetition accounting and success evidence remain a follow-up task. Its 4/12 output-pattern repetitions are not assumed independent and do not inherit the Phan counter/survival model. Existing resource conflicts remain."
+    },
+    {
+      "source_id": "ldkk2008-full-author-mirror",
+      "locator": "Mirror full manuscript PDF4 Table1; PDF6 Proposition1; PDF8–12 Section4.1, modified Steps3–6, four-run aggregation, AES192/AES256 adaptations and memory paragraph.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The acquired21-page full manuscript supplies the previously delegated seven-round AES128 BA procedure and matches its exact headline data/time. No numerical finite-budget complete-key success is supplied. Four related elimination runs share96 key bits and source data, then aggregate suggestions and perform residual completion; expected survivors and modeled fixed-wrong-guess survival are not actual-key recovery probabilities. The2^-13.25 single-run source survival model is retained only at2^112.2 data.Original resource units and unreported coordinates remain unchanged. A newly available procedure is not a new full-paper/forward audit."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The appendix summarizes improvements to the Bahrak-Aref attack and describes efficient completion by guessing the last three bytes. The full online version is still pending.",
+    "The 15-page proceedings edition has been fully read and its AES contributions inventoried. The separate full online edition 2008/540 remains access-pending; independent attack reproduction was not attempted."
+  ],
+  "related_problem_ids": []
+}

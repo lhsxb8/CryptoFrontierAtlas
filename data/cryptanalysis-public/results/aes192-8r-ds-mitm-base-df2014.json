@@ -1,0 +1,153 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-ds-mitm-base-df2014",
+  "title": "aes-192, 8 rounds: Differential-enumeration MITM [DF14]",
+  "display": {
+    "name": "Differential-enumeration MITM",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "source-df14-8r",
+    "description": "The source-defined 8-round AES construction, with standard key schedule and the source output-linear-layer convention."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its standard expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "Source structures with one active diagonal.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "demirci-selcuk-meet-in-the-middle",
+    "differential-enumeration",
+    "single-path"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^140",
+      "log2": 140,
+      "unit": "8-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion. Native online AES-equivalent work; no free or zero offline table-generation setup is inferred."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^113",
+      "log2": 113,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^130",
+      "log2": 130,
+      "unit": "128-bit-aes-blocks",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical budget is stated for this configuration."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-master-key-recovery",
+    "value": null,
+    "description": "No numerical complete-master-key success is stated for this exact endpoint. Source expected work, stored-table fractions and wrong-key false positives are kept separate. The parallel variant uses many paths and a larger active-diagonal structure. Its source data saving does not establish independence or a numerical union-success rate. The same per-path2^-144 is not the probability that one of all paths succeeds.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success/probability re-audit. Supporting identities, source-model filters, sampled-table fractions and whole-output success remain separate; no new full-paper/forward audit or conflict resolution."
+    },
+    "components": [
+      {
+        "metric": "one-pair-follows-eight-round-truncated-path-source-model",
+        "value": 4.484155085839415e-44,
+        "basis": "author_model",
+        "expression": "2^{-144}",
+        "description": "PDF17 Section6.1: one structured pair follows the source truncated differential with probability2^-144. Expected one right pair from2^81 structures is not finite-budget success."
+      },
+      {
+        "metric": "ciphertext-pair-sieve-before-early-abort-source-model",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "PDF17 Section6.1:2^63 pairs become2^31 candidates per structure after the initial32-bit ciphertext condition. A local sieve, not recovery success."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-658c6243d634354c-2014",
+      "locator": "PDF p.5 Table 1; p.11 complexity units; pp.16–17 Section 6.1 including data reduction and Key Recovery.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Checked primary abstract, result table and defining passages; native costs and goals retained."
+    },
+    {
+      "source_id": "aes-paper-658c6243d634354c-2014",
+      "locator": "Complete primaryPDF1–20 / printed541–560, all sections, Table1, Algorithms1–2, Figs4–5/11 visually checked and all references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full registered-primary inventory; native grid claims, incomplete per-cell accounting and separate editions remain explicitly tracked."
+    },
+    {
+      "source_id": "df2013-author-preproceedings",
+      "locator": "PDF18 Table1; Section6.1 at PDF13,14,15",
+      "fields": [
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Identical headline costs in the separately fully read author edition. Main-text derivation present in both versions. Primary source, stable ID and its round convention retained."
+    },
+    {
+      "source_id": "aes-paper-658c6243d634354c-2014",
+      "locator": "ProceedingsPDF8–9 Sections3.2/4.1 source tradeoff/multiset model; PDF13–17/printed553–557 Sections5.2–6.1,Table1 onPDF5. Exact Fullver-only rows are kept separate from these constructions.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical complete-master-key success is stated for this exact endpoint. Source expected work, stored-table fractions and wrong-key false positives are kept separate. The parallel variant uses many paths and a larger active-diagonal structure. Its source data saving does not establish independence or a numerical union-success rate. The same per-path2^-144 is not the probability that one of all paths succeeds."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Section 6.1 states master-key completion does not increase the attack complexity; expected right-pair counts are not a numerical end-to-end success."
+  ],
+  "related_problem_ids": []
+}

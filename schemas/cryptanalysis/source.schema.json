@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Version-specific analysis source and publication association",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "authors", "year", "citation_label", "publication", "inspected_version", "url", "accessed_on", "content_sha256", "hash_note", "locators"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "title": {"$ref": "#/$defs/text"},
+    "authors": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+    "year": {"$ref": "#/$defs/year"},
+    "citation_label": {
+      "type": "string",
+      "pattern": "^[A-Za-z]+\\+?[0-9]{2}[a-z]?$",
+      "not": {"pattern": "\\s"},
+      "examples": ["DFJ13", "Gil14", "DGK+24", "Nat23"],
+      "description": "Manually verified ToSC alphabetic citation label without brackets. Source versions of the same publication may share one label; distinct publications require distinct labels."
+    },
+    "publication": {
+      "type": "object", "additionalProperties": false,
+      "required": ["venue", "year", "kind", "url"],
+      "properties": {
+        "venue": {"$ref": "#/$defs/text"},
+        "year": {"$ref": "#/$defs/year"},
+        "event_year": {"$ref": "#/$defs/year", "description": "Conference event year when different from the proceedings publication year."},
+        "kind": {"enum": ["conference", "journal", "standard", "submission", "preprint"]},
+        "url": {"$ref": "#/$defs/httpsUrl"}
+      },
+      "allOf": [{"if": {"properties": {"event_year": {}}, "required": ["event_year"]}, "then": {"properties": {"kind": {"const": "conference"}}}}]
+    },
+    "inspected_version": {"$ref": "#/$defs/text"},
+    "url": {"$ref": "#/$defs/httpsUrl"},
+    "doi": {"type": "string", "pattern": "^10\\.[0-9]{4,9}/\\S+$"},
+    "eprint": {"$ref": "#/$defs/text"},
+    "accessed_on": {"type": "string", "format": "date"},
+    "content_sha256": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]},
+    "hash_note": {"type": "string", "minLength": 10},
+    "artifact_url": {"$ref": "#/$defs/httpsUrl"},
+    "artifact_sha256": {"$ref": "#/$defs/sha256"},
+    "locators": {"type": "array", "items": {"$ref": "#/$defs/text"}}
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "year": {"type": "integer", "minimum": 1, "maximum": 9999},
+    "httpsUrl": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

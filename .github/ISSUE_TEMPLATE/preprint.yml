@@ -1,0 +1,91 @@
+name: Preprint
+description: Add results from a public manuscript with an identifiable version.
+title: "[Preprint] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report a new result, missing result, correction or source update. Related results from one paper belong in one report. Authors and third-party contributors are welcome.
+        Read docs/result-submissions.md in this repository. Reports are public; link to material you can share.
+  - type: dropdown
+    id: collection
+    attributes:
+      label: Collection
+      options:
+        - Cryptanalysis results
+        - Open-question progress or correction
+    validations:
+      required: true
+  - type: dropdown
+    id: purpose
+    attributes:
+      label: Contribution type
+      options:
+        - New or missing result
+        - Correction
+        - Source version update
+        - Additional verification evidence
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Manuscript and inspected version
+      description: Title, authors, ePrint/arXiv identifier or other persistent public link, version number or date, and a link to the exact full text.
+      placeholder: If the public URL changes in place, give the retrieval date and version details. Maintainers compute a hash of the checked bytes.
+    validations:
+      required: true
+  - type: textarea
+    id: claims
+    attributes:
+      label: Results and contribution
+      description: Give each result a short label. State its goal and what is new, missing or corrected. For a question update, give the original question and the exact scope addressed.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Target, setting and assumptions
+      description: For each result, specify the cipher instance, key/block sizes, exact round boundary, recovery scope, key/oracle access and classical/quantum model. Include weak-key, leakage or fault conditions where relevant. For a theorem, give the quantified domain and hypotheses.
+    validations:
+      required: true
+  - type: textarea
+    id: costs
+    attributes:
+      label: Parameters and resource costs
+      description: Give source formulas and feasible domains, or a table of fixed points. Bind time, data, memory and preprocessing to the same assignment. Include units and online/setup accounting. Use not reported or not applicable where appropriate.
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: Success event and probability
+      description: State the primary event, probability or bound, assumptions, repetition budget and theoretical/experimental basis. Experiments need successes/trials and the tested population. Distinguish component probabilities. If unquantified, identify the checked passage; use not applicable for a structural theorem.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence locations
+      description: Map each result's statement, costs and success to exact pages, sections, tables, equations or theorems. Note disagreements between passages.
+    validations:
+      required: true
+  - type: textarea
+    id: related-work
+    attributes:
+      label: Related work and Atlas records
+      description: Link affected Atlas records or previous reports, and relevant prior results. If claiming an improvement, explain compatible targets, settings and cost units. State if no matching record was found.
+    validations:
+      required: true
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Supporting artifacts
+      description: Where a claim depends on computation, link versioned code, certificates or data, with commands and expected outputs. Include a license if asking us to redistribute source or data. Theory-only reports can leave this empty.
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Public submission
+      options:
+        - label: The material I provide is public or I have permission to share it publicly.
+          required: true

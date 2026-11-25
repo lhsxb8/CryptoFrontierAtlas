@@ -1,0 +1,143 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes128-4r-dm-collision-cglsz2025",
+  "title": "SCIS MITM · AES-DM collision",
+  "display": {
+    "name": "SCIS MITM · AES-DM collision",
+    "method": "mitm"
+  },
+  "result_kind": "collision_construction",
+  "goal": "compression_collision",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "cglsz2025-four-round-final-no-mc",
+    "description": "One-block full-output collision in four-round AES-128-DM with predetermined IV; equivalent to fixed-target-plaintext key collision."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "offline_public_cipher_evaluation"
+    ],
+    "related_key_count": null,
+    "key_relation": "The source-defined public key or public round keys.",
+    "key_population": "General standard AES master keys",
+    "plaintext_model": "Two distinct 128-bit message keys; one fixed common 128-bit IV.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "scis",
+    "partial-target-collision-conversion"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{60}",
+      "log2": 60,
+      "unit": "round-reduced-aes-encryptions",
+      "qualifier": "estimate",
+      "note": "Section6 Eq4 with dB=dR=dM=8."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No secret-key oracle data."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^{60}",
+      "log2": 60,
+      "unit": "collision-table-entries",
+      "qualifier": "estimate",
+      "note": "Tdp birthday table; the neutral-word table is smaller."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Setup is included in total work unless separately stated."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "find-one-block-full-output-collision-fixed-iv",
+    "value": null,
+    "description": "The full collision is analyzed by an expected-work birthday model. The reported experiment tests partial-target candidates under one index, not a complete collision-search success rate.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF p.16 Eq4 and pp.22–23 Section6."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "cglsz2025-aes-hashing-owf",
+      "locator": "PDF pp.7–12 Table1/PGV definitions; pp.16,20–23 Section6/Algorithm3.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/experiment",
+        "/bound"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete named output probability is not quantified by the source."
+  ],
+  "related_problem_ids": [],
+  "experiment": {
+    "construction": {
+      "type": "compression_function",
+      "name": "AES-DM",
+      "definition": "CF(h,m)=AES_m(h) xor h",
+      "output_bits": 128
+    },
+    "variables": [
+      {
+        "name": "h",
+        "control": "fixed",
+        "domain": "128-bit chaining value",
+        "condition": "Predetermined initial value; no IV search is allowed."
+      },
+      {
+        "name": "m",
+        "control": "chosen",
+        "domain": "128-bit message",
+        "condition": "Two distinct message values under the same chaining value."
+      }
+    ],
+    "relation": "CF(h,m)=CF(h,m_prime) with m != m_prime",
+    "output": {
+      "scope": "full",
+      "bits": 128,
+      "mask": null
+    },
+    "parameters": [],
+    "distinctness": "m != m_prime; the same h is reused for both evaluations.",
+    "reference": "Ideal 128-bit compression output, birthday work approximately 2^64.",
+    "unresolved": []
+  }
+}

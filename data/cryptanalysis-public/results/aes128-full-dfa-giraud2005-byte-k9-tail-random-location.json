@@ -1,0 +1,192 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-dfa-giraud2005-byte-k9-tail-random-location",
+  "title": "AES-128 K9 four-byte tail: random locations (Giraud, AES2004 proceedings published 2005)",
+  "display": {
+    "name": "K9 four-byte tail: random locations",
+    "method": "fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full AES-128; recover only K9[12..15], a 32-bit group of the penultimate round key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "repeat-encryption-fixed-input",
+      "correct-ciphertext-reference",
+      "byte-fault-injection-in-state-or-online-key-schedule"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret AES master key; no related-key oracle.",
+    "key_population": "Keys of the stated AES implementation without a weak-key restriction; fault protections are outside the model.",
+    "plaintext_model": "Repeat encryptions of the same plaintext under the same key; retain its correct ciphertext as a reference. Counts of faulty ciphertexts exclude that reusable reference unless explicitly stated otherwise.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "A byte of K9 after its correct use in round 9, before online derivation of K10.",
+      "granularity": "One initially affected byte, followed by propagation through the key schedule or AES rounds.",
+      "timing": "After the correct round-9 key addition and before generating K10.",
+      "location": "Random byte of K9; reject outputs whose difference pattern does not identify one of K9[12..15].",
+      "value_control": "The byte difference is unknown; its value may be inferred or guessed from correct/faulty outputs.",
+      "sample_pairing": "Every faulty output is matched to the same fixed-input correct reference; useful faults, random-location ciphertexts and physical executions have distinct accounting.",
+      "evidence_scope": "analytical"
+    },
+    "assumptions": [
+      "A round key is used correctly for encryption and then faulted before generating the next round key. The implementation expands keys on the fly.",
+      "The reported outcome and data budget use the paper's candidate-filtering model; no numerical whole-key success rate is inferred from a byte-level statistic."
+    ]
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "online-key-schedule-fault",
+    "candidate-filtering"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical whole-endpoint runtime is reported for this version and endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "32 on average",
+      "log2": 5,
+      "unit": "faulty-ciphertexts",
+      "qualifier": "estimate",
+      "note": "Section 4.1 gives the mean number of random-location faulty outputs, including position-based rejection; it is not an injection-attempt count."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The article describes counters or candidate lists without a numerical peak-memory budget."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing-time budget is reported. The Appendix A 8×2^8 equation tests per useful output are a component count, not a complete attack cost."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "stated-target-recovery-success-probability",
+    "value": null,
+    "description": "No numerical whole-output recovery probability is supplied for this exact endpoint and sample budget. The K9 two-distinct-byte-fault uniqueness assertion has an existing counterexample; the32-fault tail and240-fault cumulative quantities are acquisition/mean counts, not success probabilities. Existing source conflicts remain unresolved. No byte-level90%/99% rate or product of marginal probabilities is assigned as whole-output success.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-06",
+      "scope": "Exact15-page proceedings edition; Sections4–6 and AppendixA. No probability was added: byte-equation candidate retention, special-byte90%/99% and mean fault counts do not quantify these cumulative or complete outputs. Software250-fault demonstration has no repeated-trial rate. Existing two-fault uniqueness and M8/M9 timing conflicts remain unchanged; not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "true-key-retained-by-modeled-byte-fault-equations",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections4.1–4.3: with effective faults at the modeled windows and correct earlier-stage material, the actual subkey/state satisfies the complete candidate equations. This is conditional candidate inclusion, not unique recovery or physical acquisition success."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "Section 4.1 pp.33–34; Section 5 p.38",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Version-specific endpoint retaining its target, prior information, fault controls and native sample accounting."
+    },
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "Complete proceedingsPDF1–15/printed27–41 and earlyPS15-page reading rendition; Sections3–6, AppendixA and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "PDF7–8/printed33–34 Section4.1 and Eq15.",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "Two independent raw-source component reviews localize the inference failure; retain source-reported budgets and unknown joint success."
+    },
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "Proceedings PDF7–10 / printed33–36 Sections4.1–4.2 Equations14–15/22/27 and cumulative count.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical whole-output recovery probability is supplied for this exact endpoint and sample budget. The K9 two-distinct-byte-fault uniqueness assertion has an existing counterexample; the32-fault tail and240-fault cumulative quantities are acquisition/mean counts, not success probabilities. Existing source conflicts remain unresolved. No byte-level90%/99% rate or product of marginal probabilities is assigned as whole-output success."
+    },
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "PDF7–12 / printed33–38 Sections4.1–6; PDF14–15 / printed40–41 AppendixA concerns the different bit-fault model.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: no numerical success is established for this exact output and budget in the checked passages. Primary probabilities, local components, costs, target and all scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Useful faulty ciphertext counts do not automatically include ineffective physical injections or calibration attempts.",
+    "The article does not supply a measured success frequency, runtime or peak memory for every target and parameter choice.",
+    "Under the explicitly additional iid uniform16-location model, merely collecting two hits on each designated tail byte has expected56.75462963 draws and completion probability0.1108448046 by32. This omits equation ambiguity and is a conditional collection diagnostic, not a corrected attack budget."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Two distinct byte faults do not guarantee uniqueness",
+      "description": "Section4.1 asserts that two different nonzero byte differences leave only the trueK9byte. Independent exact AES enumeration gives x=00,e=01,e′=bc: both Eq15 candidate sets are{00,01,bc,bd}. Master key7397d3478f25232538f49e9f10989845 realizes all-zeroK9. Two observations are not an unconditional uniqueness certificate. Downstream sample counts remain source claims; no replacement cost, success or attack-impossibility conclusion is inferred.",
+      "observations": [
+        {
+          "source_id": "giraud2005-dfa-proceedings",
+          "locator": "PDF8/printed34 Section4.1 Eq15 and following paragraph.",
+          "reported": "Claims uniqueness from two different byte faults at the sameK9location."
+        },
+        {
+          "source_id": "giraud2003-dfa-eprint-rev20030514",
+          "locator": "PDF8 Section4.1 Eq15 and following paragraph.",
+          "reported": "Same two-different-fault uniqueness inference in the early version."
+        },
+        {
+          "source_id": "giraud2005-dfa-proceedings",
+          "locator": "PDF7–8/printed33–34 whole-byte model; independent reviewer AES enumeration accepted2026-10-26.",
+          "reported": "Reviewer counterexample: S00 xor S01=1f and S00 xor Sbc=06; both equations have the same four candidates."
+        }
+      ]
+    }
+  ]
+}

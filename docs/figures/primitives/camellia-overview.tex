@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+  \node (in) at (-.5,0) {$P$};
+  \node[box] (pre) at (1.2,0) {Input\\whitening};
+  \node[accent] (six) at (4.1,0) {$6$ Feistel\\rounds};
+  \node[box] (fl) at (7,0) {$\mathrm{FL}$ / $\mathrm{FL}^{-1}$\\on the two halves};
+  \node[accent] (last) at (10.4,0) {Final $6$\\Feistel rounds};
+  \node[box] (post) at (13.5,0) {Output whitening\\$+$ half swap};
+  \draw[wire] (in) -- (pre); \draw[wire] (pre) -- (six); \draw[wire] (six) -- (fl); \draw[wire] (fl) -- (last); \draw[wire] (last) -- (post);
+  \node[group,fit=(six)(fl),inner sep=9pt] (repeat) {};
+  \node[note] at (5.6,-1.1) {Repeat $\AtlasFLGroups$ times};
+  \node[box] (schedule) at (7,2.3) {Key schedule from $K\in\{0,1\}^{\AtlasKeyBits}$};
+  \foreach \target in {pre,six,fl,last,post} {\draw[keywire] (schedule.south) -- (7,1.25) -| (\target.north);}
+  \node[note] at (7,-2) {$\AtlasBlockBits$-bit block\quad $\AtlasRounds$ Feistel rounds in $\AtlasSixRoundGroups$ groups\quad No FL layer after the last group};
+\end{tikzpicture}

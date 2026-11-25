@@ -1,0 +1,198 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-9r-mitm-first9-stream8-short-ljw2015",
+  "title": "aes-192, 9 rounds: Key-dependent sieve / first9-stream8-short [LJW15]",
+  "display": {
+    "name": "Key-dependent sieve / first9-stream8-short",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "ljw2015-first9-whitening-last-mc-equivalence",
+    "description": "First nine AES rounds: zero-based 0..8 with whitening k_-1; last MixColumns may be omitted by the explicit output equivalence in Section 3.2."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its standard expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "Chosen-plaintext structures with adaptive follow-up32-point queries to candidate delta-sets; the data budget is aggregate across the source trials. Shortened optimization uses16 ordered outputs. All streaming key classes are executed.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Total time includes precomputation; all key-space partitions are processed, so streaming is not a weak-key promise.",
+      "Time is in nine-round encryptions; memory is in 128-bit words."
+    ]
+  },
+  "techniques": [
+    "demirci-selcuk-meet-in-the-middle",
+    "key-dependent-sieve",
+    "stream8-short"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^186.5",
+      "log2": 186.5,
+      "unit": "9-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Source aggregate including setup; rounded totals and native phase sums are not silently recalculated. All20 primary pages reviewed; Table1 totals are retained despite rounded-phase arithmetic differences. No scalar from a later reanalysis replaces this source claim."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^121",
+      "log2": 121,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^177.5",
+      "log2": 177.5,
+      "unit": "128-bit-words",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion. Streaming is peak simultaneous storage, after releasing each processed class; source128-bit-word unit retained."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical budget is stated for this configuration."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-master-key-recovery",
+    "value": null,
+    "description": "No numerical complete-master-key success is given at this source endpoint. The original AES192 key-schedule relations are disputed by LZ24; local source models below do not validate them.Table sampling does not quantify aggregate recovery, and sequential key-space partitions are not a weak-key probability. The original expected candidate counts and probabilistic-repeat language are retained without an independence-based success calculation.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-06",
+      "scope": "Exact20-page FSE2014 proceedings edition published2015; endpoint/budget review of Sections3.1–4.2. No probability was added: sampled-table coverage, sequence rejection, key consistency and streamed partitions do not give a joint recovery curve at this endpoint. Existing AES192 key-schedule and AES256 output-coordinate disputes and all cost units remain; not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "sampled-precomputation-parameter-coverage",
+        "value": 0.00390625,
+        "basis": "derived_from_source",
+        "description": "Source table fraction2^-8; Exact source data exponent binds this fraction:2^121 plaintexts versus2^113 for full tables. Streaming partition bits are NOT this sampling exponent. Per-parameter coverage under the source average/uniform-domain model only, not the probability of completing recovery after repeated online work.",
+        "expression": "2^{-8}"
+      },
+      {
+        "metric": "original-key-overlap-consistency-source-model",
+        "value": 1.262177448353619e-29,
+        "basis": "author_model",
+        "description": "PDF17 Section4.1 prints2^64/2^160=2^-96 for the remaining key-overlap consistency test with the shortened sequence/index. This is the ORIGINAL DISPUTED MODEL, not a validated guarantee for standard AES192.",
+        "expression": "2^{-96}"
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-b3ee60d70aa28d87-2015",
+      "locator": "PDF p.4 Table 1; p.6 Section 2.2 accounting; pp.12–15 Sections 3.2–3.3; pp.15–18 Sections 4–4.2.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Checked primary abstract, result table and defining passages; native costs and goals retained."
+    },
+    {
+      "source_id": "lz2024-aes192-9r-ctrsa",
+      "locator": "LZ24b PDF5–10 Section3/Figure1 andPDF13–15 Property3; original LJW exact20-page source.",
+      "fields": [
+        "/setting/assumptions",
+        "/field_conflicts"
+      ],
+      "interpretation": "Local source-model/accounting obligation; not a replacement whole-attack budget or a claim of complete attack failure."
+    },
+    {
+      "source_id": "aes-paper-b3ee60d70aa28d87-2015",
+      "locator": "PDF pp.9–13 Proposition1 and Section3.2 complete procedure; PDF pp.15–17 Sections4–4.1 streaming and short-sequence procedure; PDF p.4 Table1.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "All20 original PDF pages independently read raw-first; exact versions and conditional/total-cost semantics checked.128 finite master-key component controls do not reproduce the complete attack."
+    },
+    {
+      "source_id": "lz2024-aes192-9r-ctrsa",
+      "locator": "LZ24b PDF5–10 Section3/Figure1 andPDF13–15 Property3; original LJW exact20-page source. Independent raw-source review and finite component checks,2026-10-27.",
+      "fields": [
+        "/setting/assumptions",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact located observation retained independently of unresolved source fields; no silent replacement."
+    },
+    {
+      "source_id": "aes-paper-b3ee60d70aa28d87-2015",
+      "locator": "PDF9–13 /printed135–139 Sections3.1–3.2, original key-dependent sieve, sequence model and fractional table; PDF14–17 /140–143 Sections3.3/4.1; PDF17–18 /143–144 Section4.2 AES256. Existing LZ24 key-schedule correction / output-coordinate conflicts remain.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical complete-master-key success is given at this source endpoint. The original AES192 key-schedule relations are disputed by LZ24; local source models below do not validate them.Table sampling does not quantify aggregate recovery, and sequential key-space partitions are not a weak-key probability. The original expected candidate counts and probabilistic-repeat language are retained without an independence-based success calculation."
+    },
+    {
+      "source_id": "aes-paper-b3ee60d70aa28d87-2015",
+      "locator": "PDF11–13 Sections3.1–3.2; PDF14–15 Section3.3; PDF16–18 Sections4.1–4.2.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: the checked source does not quantify this exact main output at its recorded budget. Separate proof, coordinate, key-schedule and cost obligations remain recorded. All primary probability values, components and scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "All20 primary pages inventoried and bounded official forward/version checks completed.",
+    "Original AES-192 budgets remain source claims affected by the linked LZ24b key-schedule correction; corrected constructions/estimates have distinct IDs.",
+    "No numerical complete-key-recovery success and no complete attack reproduction; finite component tests only."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Later source corrects key relations and accounting",
+      "description": "LZ24b Section3 rejects five independent old AES-192 key relations and re-estimates table generation and stored material. Fresh512-key schedule controls find standard-key counterexamples to each challenged relation and verify all13 new Property3 relations. Original LJW reported costs/units remain the original-source claim; LZ reanalyses are separate configurations, not scalar replacements.",
+      "observations": [
+        {
+          "source_id": "lz2024-aes192-9r-ctrsa",
+          "locator": "LZ24b PDF5–10 Section3/Figure1 andPDF13–15 Property3; original LJW exact20-page source.",
+          "reported": "Printed source statement and source-reported numerical budgets retained."
+        },
+        {
+          "source_id": "lz2024-aes192-9r-ctrsa",
+          "locator": "LZ24b PDF5–10 Section3/Figure1 andPDF13–15 Property3; original LJW exact20-page source. Independent raw-source review and finite component checks,2026-10-27.",
+          "reported": "LZ24b Section3 rejects five independent old AES-192 key relations and re-estimates table generation and stored material. Fresh512-key schedule controls find standard-key counterexamples to each challenged relation and verify all13 new Property3 relations. Original LJW reported costs/units remain the original-source claim; LZ reanalyses are separate configurations, not scalar replacements."
+        }
+      ]
+    }
+  ]
+}

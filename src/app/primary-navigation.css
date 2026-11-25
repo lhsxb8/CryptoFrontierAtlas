@@ -1,0 +1,13 @@
+.atlas-navigation { display: flex; align-self: stretch; margin-left: auto; min-width: 0; }
+.atlas-navigation-toggle { display: none; }
+@media (max-width: 1250px) {
+  .atlas-navigation { order: 3; flex: 0 0 100%; width: 100%; margin: 4px 0 0; }
+  .atlas-navigation { flex-direction: column; }
+  .atlas-navigation-toggle { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 46px; padding: 8px 0; border: 0; background: transparent; color: #c8e8df; text-align: left; font-size: 13px; }
+  .atlas-navigation-toggle > span { min-width: 0; }
+  .atlas-navigation-toggle > svg { flex-shrink: 0; }
+  .atlas-navigation .atlas-primary-nav { display: none; width: 100%; margin: 0; padding: 5px 0 12px; border-top: 1px solid #31424d; }
+  .atlas-navigation[data-open=true] .atlas-primary-nav { display: grid; }
+  .atlas-navigation .atlas-primary-nav a { justify-content: space-between; min-height: 44px; padding: 11px 12px; border: 0; border-left: 2px solid transparent; border-radius: 3px; }
+  .atlas-navigation .atlas-primary-nav a.is-active { border-left-color: #80c9b9; background: #172b35; }
+}

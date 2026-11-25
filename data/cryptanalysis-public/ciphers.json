@@ -1,0 +1,11 @@
+[
+  {
+    "id": "aes",
+    "name": "AES",
+    "primitive_type": "block_cipher",
+    "aliases": [
+      "Advanced Encryption Standard"
+    ],
+    "description": "The standardized 128-bit-block cipher family with AES-128, AES-192 and AES-256 instances."
+  }
+]

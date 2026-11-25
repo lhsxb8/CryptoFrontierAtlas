@@ -1,0 +1,155 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-aes256-5r-yoyo-mitm-lowdata-dkrs2024",
+  "title": "5-round AES-192/256 partial-subkey recovery with yoyo/mitm, low data",
+  "display": {
+    "name": "Yoyo/MITM, low data, partial key",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "dkrs2024-zero-based-rounds-0-to-4-final-no-mixcolumns",
+    "description": "Initial AddRoundKey k_-1 followed by 5 AES rounds, with final MixColumns omitted. The algorithm recovers the 128-bit initial subkey k_-1. For the standard 192-/256-bit master keys this is a partial-key target; completing the remaining master-key material is outside the reported budget."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown secret key with encryption and decryption oracle access; no related-key oracle.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "2^6 chosen plaintext pairs with differences confined to one inverse-shifted column; adaptive decryption of mixture counterparts",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source's Section 4.1 explicitly makes the attack descriptions independent of the AES key schedule.",
+      "Costs and probability estimates follow the journal version's statistical assumptions; Appendix A.5 identifies rigorous probability analysis as further work.",
+      "This record uses the dissection implementation of the MITM matching step; the naive higher-memory table is a separate implementation option."
+    ]
+  },
+  "techniques": [
+    "mixing-retracing-boomerang",
+    "yoyo",
+    "meet-in-the-middle",
+    "dissection"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "<2^23",
+      "log2": 23,
+      "unit": "5-round-AES-encryptions",
+      "qualifier": "upper_bound",
+      "note": "Section 4.3 derives fewer than 2^23 encryption equivalents; Table 1 reports the rounded exponent."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^9",
+      "log2": 9,
+      "unit": "adaptively-chosen-plaintext-and-ciphertext-blocks",
+      "qualifier": "estimate",
+      "note": "Source's rounded dominant ACC count; the description also encrypts the initial 2^6 pairs. This is not asserted to be an exact sum of all calls."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^9",
+      "log2": 9,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Section 4.3 uses dissection to retain the original 2^9 storage, rather than the naive 2^16-entry MITM table."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The source does not separately budget preprocessing for this low-data endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "initial-128-bit-subkey-recovery",
+    "value": null,
+    "description": "The low-data MITM/dissection and naive-table implementations share the Section4.2 source model: one starting pair meets the required round-0 cancellation with probability2^-6. The source does not quantify aggregate recovery for these endpoints; the 64/128-pair fast-endpoint experiments cannot be copied here.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit; construction and parameter-specific defining passages, not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "starting-pair-round-0-cancellation",
+        "value": 0.015625,
+        "basis": "author_model",
+        "description": "Source model for one starting pair producing zero difference in one shifted column after round0. This is not success for recovering the complete initial subkey."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF p.4 Table 1; pp.15-18, Sections 4.1-4.3 and Algorithm 2.",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The record retains the journal version's endpoint and native units. The source's key-schedule-independent recovery of k_-1 is classified as partial recovery for AES-192/256."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "Complete exact primary PDF1–42, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete reading and source inventory; later-literature gates and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF17–21 Sections4.3–4.4.",
+      "fields": [
+        "/setting/key_relation",
+        "/setting/key_population"
+      ],
+      "interpretation": "All three mixing/retracing-MITM implementations use the same unknown key population; table/dissection/friend extraction is the tuning choice."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF pp.15–18 Sections4.1–4.3, Algorithm2; pp.19–22 Sections4.4–4.5 for the distinct fast endpoint.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The low-data MITM/dissection and naive-table implementations share the Section4.2 source model: one starting pair meets the required round-0 cancellation with probability2^-6. The source does not quantify aggregate recovery for these endpoints; the 64/128-pair fast-endpoint experiments cannot be copied here."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This record uses the dissection implementation of the MITM matching step; the naive higher-memory table is a separate implementation option.",
+    "Numerical costs are source-reported estimates; the attack was not independently implemented or reproduced.",
+    "Recovery of the remaining AES-192/256 master-key bits is not assigned the listed partial-subkey costs."
+  ],
+  "related_problem_ids": []
+}

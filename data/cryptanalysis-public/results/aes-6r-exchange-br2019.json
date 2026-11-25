@@ -1,0 +1,291 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-6r-exchange-br2019",
+  "title": "aes-128/aes-192/aes-256, 6 rounds: Exchange-equivalence distinguisher [BR19b]",
+  "display": {
+    "name": "Exchange-equivalence distinguisher",
+    "method": "differential"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "br2019-exchange-6-full-rounds-final-mc",
+    "description": "6 full AES rounds including final MixColumns; source native S-box-lookup encryption-equivalent convention."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its standard expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "Diagonal Cartesian structure |A0|=|A1|=|A2|=2^29.4, |A3|=1; D=2^88.2.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "For six full rounds the source uses 96 S-box lookups per encryption; other papers may count different primitive operations."
+    ],
+    "reference_model": "Distinguish secret-key AES from a random permutation using biased exchange-equivalence classes of chosen-plaintext pairs."
+  },
+  "techniques": [
+    "exchange-equivalence",
+    "secret-key-chosen-plaintext"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^88.2",
+      "log2": 88.2,
+      "unit": "6-round-aes-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^88.2",
+      "log2": 88.2,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^88.2",
+      "log2": 88.2,
+      "unit": "source-native-ciphertext-storage-units",
+      "qualifier": "estimate",
+      "note": "Source says memory dominated by 2^88.2 required ciphertexts; no byte-width normalization imposed."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical budget is stated for this configuration."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "distinguishing-success",
+    "value": null,
+    "description": "No numerical six-round decision success is established. Keep the existing32-bit index versus96-bit costing conflict, out-of-domain P5(3,1) notation and conflicting random expected counts2^-11/2^-10. The2^-94 local column event and2^-22 conditioned transition do not repair these conflicts. Do not certify the disputed2^-38 exchange term, combine it into a new success model, or convert expected one AES event into a detection probability.",
+    "components": [
+      {
+        "metric": "one-active-column-six-round-source-model",
+        "value": 5.048709793414476e-29,
+        "basis": "author_model",
+        "expression": "2^{-94}",
+        "description": "Section5 Equation7: source probability4*2^-96 of one active column in the transformed difference for one ciphertext pair."
+      },
+      {
+        "metric": "one-active-column-round-transition-given-adjacent-one-column-event",
+        "value": 2.384185791015625e-7,
+        "basis": "author_model",
+        "expression": "2^{-22}",
+        "description": "Section5 and Theorem4: source4*2^-24 conditioned round-transition model in either stated direction. It does not establish the disputed P5(3,1) exchange event or whole-test success."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "PDF12–22 Theorems6–8, Eqs6–7 and Algorithm2 rechecked. The source gives expected AES/random double-collision counts, not a complete detection distribution. The P5(3,1) domain issue,32-bit versus96-bit index costing and2^-11 versus2^-10 random expectation discrepancy remain. Local2^-94 and conditional2^-22 models do not justify a Poisson detection probability or a repaired exchange term. No numerical six-round decision success is certified."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-e81232da600bced4-2019",
+      "locator": "PDF p.3 Table 1; p.19 Section 5 six-full-round convention; p.23 Section 5 final complexity including 96-lookups normalization.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Checked primary abstract, result table and defining passages; native costs and goals retained."
+    },
+    {
+      "source_id": "aes-paper-e81232da600bced4-2019",
+      "locator": "Complete exact registered primary PDF1–24, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete raw-first primary inventory; source-local conflicts and bounded controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "aes-paper-e81232da600bced4-2019",
+      "locator": "PDF18–23 Section5/Theorem8/Algorithm2/5.2.",
+      "fields": [
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Six full rounds.96Sbox lookups per encryption. Expected event count1 is not numeric full distinguishing success."
+    },
+    {
+      "source_id": "aes-paper-e81232da600bced4-2019",
+      "locator": "PDF21 Algorithm2 and PDF22–23 Section5.2.",
+      "fields": [
+        "/resources/time",
+        "/field_conflicts"
+      ],
+      "interpretation": "Source-local reconciliation task; not a replacement attack budget."
+    },
+    {
+      "source_id": "aes-paper-e81232da600bced4-2019",
+      "locator": "PDF11–12 Theorems5–6; PDF19 Section5; PDF20 Theorem8.",
+      "fields": [
+        "/setting/assumptions",
+        "/field_conflicts"
+      ],
+      "interpretation": "Source-local reconciliation task; not a replacement attack budget."
+    },
+    {
+      "source_id": "aes-paper-e81232da600bced4-2019",
+      "locator": "PDF15 H definition; PDF20 Theorem8/following prose.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Source-local reconciliation task; not a replacement attack budget."
+    },
+    {
+      "source_id": "aes-paper-e81232da600bced4-2019",
+      "locator": "PDF21 Algorithm2 and PDF22–23 Section5.2.",
+      "fields": [
+        "/resources/time",
+        "/field_conflicts"
+      ],
+      "interpretation": "Located source claim and the attached independent review observations; original reported values retained pending reconciliation."
+    },
+    {
+      "source_id": "aes-paper-e81232da600bced4-2019",
+      "locator": "PDF11–12 Theorems5–6; PDF19 Section5; PDF20 Theorem8.",
+      "fields": [
+        "/setting/assumptions",
+        "/field_conflicts"
+      ],
+      "interpretation": "Located source claim and the attached independent review observations; original reported values retained pending reconciliation."
+    },
+    {
+      "source_id": "aes-paper-e81232da600bced4-2019",
+      "locator": "PDF15 H definition; PDF20 Theorem8/following prose.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Located source claim and the attached independent review observations; original reported values retained pending reconciliation."
+    },
+    {
+      "source_id": "aes-paper-e81232da600bced4-2019",
+      "locator": "Proceedings PDF18–23 / printed364–369 Section5, Equations6–7, Theorem8, Algorithm2 and cost model.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical six-round decision success is established. Keep the existing32-bit index versus96-bit costing conflict, out-of-domain P5(3,1) notation and conflicting random expected counts2^-11/2^-10. The2^-94 local column event and2^-22 conditioned transition do not repair these conflicts. Do not certify the disputed2^-38 exchange term, combine it into a new success model, or convert expected one AES event into a detection probability."
+    },
+    {
+      "source_id": "aes-paper-e81232da600bced4-2019",
+      "locator": "PDF12 Theorems6–7; PDF18–20 Section5 Eqs6–7/Theorem8; PDF21 Algorithm2; PDF22 Section5.2.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Native event expectations and algorithm/cost conflicts rechecked together; a mean of one event is not a detection probability."
+    },
+    {
+      "source_id": "ytq2026-related-differential-eprint-mirror",
+      "locator": "PDF p.4 Table 1: six-round CP Exchange Attack, D=T=M=2^88.2, Succ.63%, reference [6]; p.31 reference [6]; compare pp.25–27 new shifted construction.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "The later comparison table attributes approximately63% AES-side detection to the old reported point, but does not resolve BR19 Algorithm2 32-bit indexing versus96-bit cost accounting, P5(3,1) domain or random expected-count discrepancies. Primary success stays unquantified and all conflicts stay unchanged. The new shifted construction and its success calculation are not a repair of the old algorithm at the original budget."
+    },
+    {
+      "source_id": "sksshhll2026-joint-zero-difference-mirror",
+      "locator": "PDF4 Table1, six-round CP Exchange row D=T=M=2^88.2, Succ.73%, reference[4]; PDF29 reference[4]; compare YTQ26 PDF4 Table1 reference[6] at63%.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "A later comparison table assigns73% to the old reported point, while YTQ26 assigns63%. The old-row probability event and derivation are not specified, so these are retained as divergent attributions, not an established contradiction for one defined event. Neither table repairs the original algorithm/budget/domain/expected-count conflicts. Primary success and all three conflicts remain unchanged. New seven-round75.7%/77.8% equal-prior models and local BR22 quartet probabilities are not transferred."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Reported native headline retained with printed algorithm/counting conflicts; expected event count alone does not establish numerical distinguishing success."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "Six-round table-index and cost reconciliation",
+      "description": "Printed Algorithm2 indexes Tr by one32bit column of L^-1(c), but Section5.2 occupancy uses N=2^96 and at most9items. With D=2^88.2 the printed32bit bucket average is2^56.2, not the96bit model2^-7.8. A three-column collision key may express intended test but is not what the printed table stores. Preserve reported2^88.2E pending source/code reconciliation; do not invent a repaired implementation budget.",
+      "observations": [
+        {
+          "source_id": "aes-paper-e81232da600bced4-2019",
+          "locator": "PDF21 Algorithm2 and PDF22–23 Section5.2.",
+          "reported": "Original source claims and numerical scalars retained."
+        },
+        {
+          "source_id": "aes-paper-e81232da600bced4-2019",
+          "locator": "PDF21 Algorithm2 and PDF22–23 Section5.2. Independent raw review and bounded arithmetic,2026-10-27.",
+          "reported": "Printed Algorithm2 indexes Tr by one32bit column of L^-1(c), but Section5.2 occupancy uses N=2^96 and at most9items. With D=2^88.2 the printed32bit bucket average is2^56.2, not the96bit model2^-7.8. A three-column collision key may express intended test but is not what the printed table stores. Preserve reported2^88.2E pending source/code reconciliation; do not invent a repaired implementation budget."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "Exchanged-diagonal notation outside stated domain",
+      "description": "PDF19 writes P5(3,1)≈2^-38, but Theorem5 requires0<|I|<4-|K|; i3,k1 exchanges all differing diagonals and only reverses the pair. Literal formula gives approximately2^-22 outside its nontrivial domain. Theorem7 correctly uses j1,2 for t3 and P5(1,1),P5(2,1)≈2^-38. The headline may follow intended counting, but this notation is not a valid literal substitution.",
+      "observations": [
+        {
+          "source_id": "aes-paper-e81232da600bced4-2019",
+          "locator": "PDF11–12 Theorems5–6; PDF19 Section5; PDF20 Theorem8.",
+          "reported": "Original source claims and numerical scalars retained."
+        },
+        {
+          "source_id": "aes-paper-e81232da600bced4-2019",
+          "locator": "PDF11–12 Theorems5–6; PDF19 Section5; PDF20 Theorem8. Independent raw review and bounded arithmetic,2026-10-27.",
+          "reported": "PDF19 writes P5(3,1)≈2^-38, but Theorem5 requires0<|I|<4-|K|; i3,k1 exchanges all differing diagonals and only reverses the pair. Literal formula gives approximately2^-22 outside its nontrivial domain. Theorem7 correctly uses j1,2 for t3 and P5(1,1),P5(2,1)≈2^-38. The headline may follow intended counting, but this notation is not a valid literal substitution."
+        }
+      ]
+    },
+    {
+      "field": "/success",
+      "label": "Six-round random expected-count accounting",
+      "description": "Theorem8 states random expectation approximately2^-11, following prose2^-10. Substituting the published m=2^29.4 into H(m,m,m,1)*2^-188 gives0.00024160911384≈2^-12.015, while AES expectationG*2^-138≈0.9954459. Preserve source headline and null numerical distinguishing success; expectation arithmetic does not establish a decision success probability.",
+      "observations": [
+        {
+          "source_id": "aes-paper-e81232da600bced4-2019",
+          "locator": "PDF15 H definition; PDF20 Theorem8/following prose.",
+          "reported": "Original source claims and numerical scalars retained."
+        },
+        {
+          "source_id": "aes-paper-e81232da600bced4-2019",
+          "locator": "PDF15 H definition; PDF20 Theorem8/following prose. Independent raw review and bounded arithmetic,2026-10-27.",
+          "reported": "Theorem8 states random expectation approximately2^-11, following prose2^-10. Substituting the published m=2^29.4 into H(m,m,m,1)*2^-188 gives0.00024160911384≈2^-12.015, while AES expectationG*2^-138≈0.9954459. Preserve source headline and null numerical distinguishing success; expectation arithmetic does not establish a decision success probability."
+        }
+      ]
+    }
+  ]
+}

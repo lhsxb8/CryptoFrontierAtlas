@@ -1,0 +1,150 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-9r-provisional-malhp-kmt2001-property",
+  "title": "KMT01 9-round AES / aes-9r-provisional-malhp-kmt2001-property",
+  "display": {
+    "name": "Provisional maximum average linear hull probability",
+    "method": "linear"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "kmt2001-nine-approximated-core-rounds",
+    "description": "Nine approximated SPN core rounds (T=9), not a completed nine-round master-key attack. Algorithm 2 would prepend a key-guess round (R=T+1). AES S-box/linear layer with independent uniform 128-bit subkeys."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "Probability is averaged over independent uniformly sampled round keys, not the standard master-key schedule.",
+    "key_population": "independently uniform round-key ensemble",
+    "plaintext_model": "Linear input/output mask ensemble and known-plaintext data threshold under the source Matsui attack model; no actual attack execution budget.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Independent uniform subkeys from Section 2; stochastic equivalence from Section 4.3 is required for translating averaged LP to typical-key attack data.",
+      "The inspected computation is unfinished. No unvisited pattern is certified by numerical stabilization between 11% and 43%."
+    ]
+  },
+  "techniques": [
+    "linear"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not an attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not an attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not an attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not an attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-property",
+    "value": null,
+    "description": "Probability in the statement is not an attack success or resource cost."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-612f430e6fe92092-2001",
+      "locator": "PDF pp.1–3 independent-key model and provisional abstract; pp.3–6 LP definition, Table 1, Remark 2 and Eq.3; pp.14–15 Section 7, Figure 4 and promised completion note.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Targeted primary result statements and accounting checked; not a complete-paper proof audit."
+    },
+    {
+      "source_id": "kmt2004-completed-original-postscript",
+      "locator": "PS p2 Section2; p3 Table1 T=9; p4 Table2 T=9.",
+      "fields": [
+        "/property",
+        "/assessment"
+      ],
+      "interpretation": "Direct original PostScript body, not metadata-only. Separate later completed bounds and historical provisional value retained."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The2001endpoint remains provisional for its exact version; the later completed results are separately source-bound.",
+    "Independent-round-key averaging and conditional Matsui/stochastic-equivalence conversion remain explicit; no standard-master-key attack guarantee."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "At 43% computation the authors report a provisional MALHP upper-bound estimate UB=2^-92 for T=9 approximated rounds; completion and global certification are not established in this inspected edition. Under the source Matsui/stochastic-equivalence assumptions N_L=c/ELP_T(a,b) and the conditional conversion N_L>=c/UB gives 2^97 for c=32, with source nominal 96.7% success.",
+    "quantifier": "Maximum over nonzero input/output masks of E_k[LP(a,b;k)], where LP=(2*Pr[a dot X = b dot E_k(X)]-1)^2 and k consists of independent uniformly sampled round keys. Not a bound for each fixed AES master key.",
+    "scope": "Provisional output of Figures 2–3 algorithm after 43% of computation for 2<=T<=10; only the explicitly reported T=9 numerical endpoint is extracted. T=11..15 curve is labeled extrapolation.",
+    "parameters": [
+      {
+        "name": "provisional_upper_bound",
+        "reported": "UB = 2^-92 (43% computation)",
+        "meaning": "Maximum average squared-correlation bound estimate, not a certified attack cost."
+      },
+      {
+        "name": "conditional_data_formula",
+        "reported": "N_L >= c/UB; c in {8,16,32,64}; nominal success {48.6%,78.5%,96.7%,99.9%}",
+        "meaning": "Conditional Matsui Algorithm 2 data thresholds from Table 1 and Eq.3; ensemble-to-key use assumes stochastic equivalence."
+      },
+      {
+        "name": "corrected_prior_conversion",
+        "reported": "32 / 2^-75 = 2^80, not 2^78",
+        "meaning": "Remark 2 corrects a missing factor four in the prior LP-versus-bias success table."
+      },
+      {
+        "name": "completed_followup",
+        "reported": "KMT04 Table1 T=9:2^-92.4; Table2 T=9:2^-95.1",
+        "meaning": "Distinct2004completed report. Do not overwrite the2001provisional2^-92with the later source number. The conditional c=32linear conversion of the rounded later bound is2^97.4, not an attack budget."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "All17pages including proof and both pseudocode figures read. Full LAT row/column distributions and conditional conversion checked; author computation not rerun. Separate2004report original PS acquired and complete6pages read."
+    }
+  }
+}

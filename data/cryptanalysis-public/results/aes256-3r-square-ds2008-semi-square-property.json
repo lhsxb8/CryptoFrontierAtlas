@@ -1,0 +1,134 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-3r-square-ds2008-semi-square-property",
+  "title": "3-round AES-256: Three-round semi-square balance",
+  "display": {
+    "name": "Three-round semi-square balance",
+    "method": "integral"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 3,
+    "full_round": false,
+    "round_convention": "ds2008-inner-rounds-no-whitening-with-mixcolumns",
+    "description": "3 inner AES rounds, without initial whitening and with MixColumns in every round, under fixed round keys. The parameter-independent round argument applies to the standard AES-256 schedule."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "3 fixed round keys; the structural argument does not use key-schedule relations.",
+    "key_population": "General fixed key; no weak-key restriction.",
+    "plaintext_model": "Fix every non-diagonal byte. Fix one chosen bit position in each of the four diagonal bytes and enumerate the other seven bits in each, giving 2^28 inputs.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "semi-square",
+    "integral"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural balance statement; the input cardinality is a property parameter."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural balance statement; the input cardinality is a property parameter."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural balance statement; the input cardinality is a property parameter."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural balance statement; the input cardinality is a property parameter."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "bytewise-xor-balance",
+    "value": null,
+    "description": "A structural balance assertion, not a reported statistical attack-success rate."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Printed p.126 AppendixA Proposition6 and following discussion",
+      "fields": [
+        "/target",
+        "/setting",
+        "/property",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Complete official eleven-page proceedings reviewed; critical equations and Table1 visually checked. Author-reported scope and native units retained."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Complete PDF1–11/printed116–126; AppendixA Proposition6 and Sections4–5.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition inventory reviewed; reviewer finite component validation is separate from attack reproduction."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Results are transcribed from this source version. Full attack searches, costs and success probabilities have not been reproduced.",
+    "Independent semi-square validation covers the algebraic balance, not random-permutation advantage, complete distinguisher cost or an attack reproduction. The two-fixed-bit failure is non-universal, not a claim that every smaller subset fails."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "After three inner AES rounds, the XOR of each output byte over the specified 2^28-input semi-square is zero.",
+    "quantifier": "Source Proposition6 asserts bytewise balance for the full Cartesian set with one bit fixed in each diagonal byte, fixed passive bytes and fixed keys.",
+    "scope": "One fixed bit position shared across four diagonal bytes; fixed values may differ. Fixing two bits is not universally balanced, but some restricted subsets can still balance.",
+    "parameters": [
+      {
+        "name": "Input structure size",
+        "reported": "(2^7)^4 = 2^28",
+        "meaning": "Seven varying bits in each of four diagonal bytes."
+      },
+      {
+        "name": "Balanced outputs",
+        "reported": "16 bytewise XOR sums equal zero",
+        "meaning": "Balance is asserted separately for each of the sixteen output positions."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Proposition6 is stated in the source without a detailed derivation or empirical sample. The present local checker does not enumerate the 2^28-input structure. Fifth-batch reviewer supplies an independent parity-convolution argument using the two equal MixColumns coefficients: A*A=0 and A*Ac=0 for half-byte Sbox image sets. Finite checks cover32 convolutions and128 fixed-bit/value structures. A two-fixed-bit counterexample is computed by exact factorized byte marginals, not exhaustive2^28 evaluation."
+    }
+  }
+}

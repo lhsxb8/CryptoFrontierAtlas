@@ -1,0 +1,142 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-related-key-partial80-bkn2009-weak-pair-first-step",
+  "title": "Eighty-bit partial recovery conditional on a weak AES-256 related-key pair, BKN 2009 first step",
+  "display": {
+    "name": "Differential, conditional first-step 80-bit recovery",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "The complete 14-round AES-256 encryption oracle is attacked, but this standalone first-step endpoint recovers only eight checkerboard bytes of K^0 and bytes K^1_(0,0), K^1_(0,2), totaling 80 bits. It is not full master-key recovery."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related-key-chosen-plaintext-encryption"
+    ],
+    "related_key_count": 2,
+    "target_selection": "conditional_weak_pair",
+    "key_relation": "Fixed master-key XOR relation K and K XOR DeltaK from Appendix A. Five active key-schedule S-box transitions restrict the pair.",
+    "key_population": "A qualifying weak related-key pair of estimated incidence 2^-35; discovering such a pair is excluded from this conditional configuration.",
+    "plaintext_model": "Two 2^64 chosen-plaintext structures per repetition, varying eight checkerboard bytes and retaining the prescribed relation in the other bytes.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The two secret related-key encryption oracles are already available and satisfy the weak key-schedule trail.",
+      "The source uses expected right-pair counts and random wrong-key voting; no numerical end-to-end recovery success is supplied."
+    ]
+  },
+  "techniques": [
+    "related-key-differential",
+    "local-collisions",
+    "weak-key-pair",
+    "plaintext-structures",
+    "key-ranking"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^96",
+      "log2": 96,
+      "unit": "source-reported-work",
+      "qualifier": "estimate",
+      "note": "Section4.2 first step: 2^31 repetitions of two structures of 2^64 texts. Sorting, candidate generation and ranking are included in the source dominant-order estimate; no exact full-AES conversion is supplied."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^96 encryption queries across the selected pair",
+      "log2": 96,
+      "unit": "total-two-key-encryption-queries",
+      "qualifier": "estimate",
+      "note": "2^31 * 2 * 2^64 = 2^96. The per-key Table1 shorthand is not multiplied by two a second time. No decryption is used by this first-step endpoint."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^64 (first-step body)",
+      "log2": 64,
+      "unit": "source-native-storage-units-unspecified",
+      "qualifier": "estimate",
+      "note": "Printed p.243 explicitly assigns 2^64 memory to this first step; the Table1/abstract 2^65 summary belongs to the completed recovery and is not substituted here. The storage unit and precise factor-two peak accounting remain unspecified."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately reusable preprocessing budget is reported for this first-step partial-recovery endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "conditional-80-bit-partial-key-recovery-success",
+    "value": null,
+    "description": "No numerical conditional80-bit first-stage recovery success is supplied. This endpoint is conditional on a qualifying weak pair; acquiring that pair is not included in its primary event. The first stage expects four right pairs,2^31 wrong pairs and2^47 random80-bit votes. Maximal voting does not supply a quantified80-bit output distribution. Expected counts are not converted into primary probabilities.",
+    "components": [
+      {
+        "metric": "first-stage-rounds3-to14-state-trail-given-weak-pair",
+        "value": 1.0097419586828951e-28,
+        "basis": "author_model",
+        "expression": "2^{-93}",
+        "description": "Section4.2 first step: remaining state-trail probability after the structured first two rounds, conditional on an actual qualifying key pair."
+      },
+      {
+        "metric": "first-stage-one-structure-right-pair-source-approximation",
+        "value": 1.862645149230957e-9,
+        "basis": "author_model",
+        "expression": "2^{-29}",
+        "description": "Section4.2: source assigns2^(64-93)=2^-29 to a structure producing a right pair. Retain this as its local first-moment approximation;2^31 repetitions give mean four, not an independently established end-to-end success distribution."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Local pair filters, conditional trails, weak-pair incidence and expected counts keep their own experiment; correlation is not a decision probability. Existing conflicts, resources, targets, settings and full-audit gates remain unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "PDF12–13 / printed pp.242–243, Section4.2 First step, numbered procedure and voting analysis.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "This is the explicit 80-bit endpoint before the source chosen-ciphertext or TA completion. Conditional scope removes only the outer scan over 2^35 candidate pairs."
+    },
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "CRYPTO proceedings PDF12–14 / printed242–244 Sections4.1–4.2 and Figure4; PDF3 Table1 distinguishes weak-pair and pool costs.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical conditional80-bit first-stage recovery success is supplied. This endpoint is conditional on a qualifying weak pair; acquiring that pair is not included in its primary event. The first stage expects four right pairs,2^31 wrong pairs and2^47 random80-bit votes. Maximal voting does not supply a quantified80-bit output distribution. Expected counts are not converted into primary probabilities."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This is an intermediate 80-bit endpoint, not complete recovery of the 256-bit master key.",
+    "Weak-pair discovery and subsequent key completion are outside this configuration.",
+    "Independent bounded S-box/linear-layer/exponent tests do not reproduce the full ranking attack or establish its global success probability."
+  ],
+  "related_problem_ids": []
+}

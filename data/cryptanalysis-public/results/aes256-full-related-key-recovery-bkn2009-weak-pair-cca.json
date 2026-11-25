@@ -1,0 +1,170 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-related-key-recovery-bkn2009-weak-pair-cca",
+  "title": "Full AES-256 key recovery conditional on a weak related-key pair, BKN 2009 encryption/decryption variant",
+  "display": {
+    "name": "Differential, conditional weak-pair recovery",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "Standard full AES-256 key recovery using Section 4.2's first and second steps, conditional on a related-key pair satisfying the weak key-schedule trail."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related-key-chosen-plaintext-encryption",
+      "related-key-chosen-ciphertext-decryption"
+    ],
+    "related_key_count": 2,
+    "target_selection": "conditional_weak_pair",
+    "key_relation": "Fixed master-key XOR relation K and K XOR DeltaK; the Appendix A key-schedule differential imposes five probability-2^-7 S-box transitions.",
+    "key_population": "A qualifying weak related-key pair, whose incidence is estimated as 2^-35; pair discovery is outside this conditional record.",
+    "plaintext_model": "Two 2^64 chosen-plaintext structures per first-step repetition, followed by chosen-ciphertext pairs with the specified output difference for the second step.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Encryption and decryption under the selected weak pair are available.",
+      "The first step's 80 recovered bits are available to filter the chosen-ciphertext pairs in the second step.",
+      "The final 96-bit exhaustive search is included; this is not only an 80-bit partial-key result."
+    ]
+  },
+  "techniques": [
+    "related-key-differential",
+    "local-collisions",
+    "weak-key-pair",
+    "key-ranking",
+    "exhaustive-key-completion"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^96 dominant-order conditional work",
+      "log2": 96,
+      "unit": "source-reported-work",
+      "qualifier": "estimate",
+      "note": "The first step costs 2^96 data and time for one pair, and the final search costs 2^96 steps. Section 6 explicitly summarizes 2^96 time for the weak-key attack. This is the source's dominant-order estimate, not an exact sum of equal-exponent stages."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^96 encryption queries plus 2^91 decryption queries; dominant order 2^96",
+      "log2": 96,
+      "unit": "total-two-key-block-oracle-queries",
+      "qualifier": "estimate",
+      "note": "Section 4.2 p.243 repeats two 2^64-text structures 2^31 times, totaling 2^96 encryptions across the pair; the second step decrypts 2^90 ciphertext pairs, totaling 2^91 decryptions. Table 1's per-key shorthand is not multiplied by two again."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^65",
+      "log2": 65,
+      "unit": "source-native-storage-units-unspecified",
+      "qualifier": "estimate",
+      "note": "Table 1 and Section 6 report 2^65 for the key-recovery attack. The first-step-only 2^64 figure on p.243 is not substituted for the overall summary; no storage-unit conversion is asserted."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately reusable preprocessing budget is stated for this selected encryption/decryption attack."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "conditional-full-key-recovery-success",
+    "value": null,
+    "description": "No numerical full-master-key recovery success is supplied. This endpoint is conditional on a qualifying weak pair; acquiring that pair is not included in its primary event. The first stage expects four right pairs,2^31 wrong pairs and2^47 random80-bit votes. The CCA second stage expects eight right pairs and then prices the remaining12 bytes by2^96 exhaustive search. The source no-wrong-survivor wording does not quantify joint acquisition, uniqueness and full-key output. Expected counts are not converted into primary probabilities.",
+    "components": [
+      {
+        "metric": "first-stage-rounds3-to14-state-trail-given-weak-pair",
+        "value": 1.0097419586828951e-28,
+        "basis": "author_model",
+        "expression": "2^{-93}",
+        "description": "Section4.2 first step: remaining state-trail probability after the structured first two rounds, conditional on an actual qualifying key pair."
+      },
+      {
+        "metric": "first-stage-one-structure-right-pair-source-approximation",
+        "value": 1.862645149230957e-9,
+        "basis": "author_model",
+        "expression": "2^{-29}",
+        "description": "Section4.2: source assigns2^(64-93)=2^-29 to a structure producing a right pair. Retain this as its local first-moment approximation;2^31 repetitions give mean four, not an independently established end-to-end success distribution."
+      },
+      {
+        "metric": "second-stage-rounds3-to14-state-trail-given-first-stage-output",
+        "value": 6.462348535570529e-27,
+        "basis": "author_model",
+        "expression": "2^{-87}",
+        "description": "Section4.2 second step: the source relaxes one2^-6 transition, giving2^-87 for the remaining rounds, conditional on the weak pair and correct first-stage80-bit material. Its2^90 chosen ciphertext pairs give expected eight, not a new primary success."
+      },
+      {
+        "metric": "second-stage-two-column-source-pair-filter",
+        "value": 3.552713678800501e-15,
+        "basis": "author_model",
+        "expression": "2^{-48}",
+        "description": "Section4.2 second step:48-bit partial-encryption filter using correctly recovered first-stage material, reducing2^90 pairs to2^42 source candidates. This filter is not an overall wrong-key or full-key success probability."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Local pair filters, conditional trails, weak-pair incidence and expected counts keep their own experiment; correlation is not a decision probability. Existing conflicts, resources, targets, settings and full-audit gates remain unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "Section 4.1 p.242; Section 4.2 First step pp.242-243 and Second step pp.243-244; Section 6 p.245; Table 1 p.233.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The conditional result removes only the outer scan over 2^35 candidate related-key pairs. Both recovery stages and the final 96-bit exhaustive search remain, supporting a full-key goal with encryption/decryption oracles."
+    },
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "Section 4.2 p.243, numbered first-step procedure and the paragraph beginning 'Second step'; p.244, final exhaustive-search sentence.",
+      "fields": [
+        "/resources/data",
+        "/resources/time",
+        "/setting/oracle_access"
+      ],
+      "interpretation": "The explicit algorithm fixes pair-wide oracle totals and the chosen-ciphertext requirement. Power-of-two totals are leading estimates, not exact accounting of all lower-order work or query terms."
+    },
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "CRYPTO proceedings PDF12–14 / printed242–244 Sections4.1–4.2 and Figure4; PDF3 Table1 distinguishes weak-pair and pool costs.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical full-master-key recovery success is supplied. This endpoint is conditional on a qualifying weak pair; acquiring that pair is not included in its primary event. The first stage expects four right pairs,2^31 wrong pairs and2^47 random80-bit votes. The CCA second stage expects eight right pairs and then prices the remaining12 bytes by2^96 exhaustive search. The source no-wrong-survivor wording does not quantify joint acquisition, uniqueness and full-key output. Expected counts are not converted into primary probabilities."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This conditional two-key record does not include finding a qualifying pair and is not an arbitrary designated-key attack.",
+    "The chosen-ciphertext second stage cannot be used with encryption-only access; the paper's alternative TA completion has a different cost.",
+    "The source's per-key table labels are less precise than its pair-based procedure; normalization follows the explicit procedure.",
+    "No independent recovery or full resource-accounting reproduction was performed.",
+    "Independent2026-10-27 full19-page reread and bounded S-box/linear-layer/exponent checks completed; these are not full attack, global TA distribution or end-to-end success reproductions."
+  ],
+  "related_problem_ids": []
+}

@@ -1,0 +1,159 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-related-key-recovery-bkn2009-pair-pool-cpa-ta",
+  "title": "Full AES-256 key recovery over a related-key-pair pool, BKN 2009 encryption-only TA variant",
+  "display": {
+    "name": "Pair-pool differential, encryption-only TA",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "Standard full AES-256 key recovery using the pair-scanning first step and Section 4.2's alternative triangulation-based key completion, without a chosen-ciphertext oracle."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related-key-chosen-plaintext-encryption"
+    ],
+    "related_key_count": null,
+    "key_budget": {
+      "reported": "2^35 tested related-key pairs",
+      "log2": 35,
+      "unit": "tested_related_key_pairs",
+      "distinct_key_count": null,
+      "note": "The alternative changes only the second step; its first step retains the outer scan over 2^35 related-key pairs. The source does not specify a corresponding distinct-key total."
+    },
+    "target_selection": "any_from_pool",
+    "key_relation": "Each tested pair uses K and K XOR DeltaK with the fixed Appendix A master-key difference; a successful first step identifies a pair satisfying the weak key-schedule condition.",
+    "key_population": "A key from a qualifying weak related-key pair found among 2^35 tested candidate pairs; weak-pair incidence is estimated as 2^-35, not asserted for every designated key.",
+    "plaintext_model": "Chosen-plaintext structures for the first-stage pair scan; retained plaintext/ciphertext information is used for offline key-guess checking.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The attacker has encryption access for the tested pair pool; decryption access is not assumed.",
+      "The first stage supplies 80 recovered key bits, combined with the 35 bits constrained by the weak key-schedule trail.",
+      "The key-schedule triangulation algorithm supplies 17 free bytes and the remaining admissible-value choices for the source's 2^141 assignment enumeration."
+    ]
+  },
+  "techniques": [
+    "related-key-differential",
+    "local-collisions",
+    "weak-key-pair-search",
+    "triangulation-algorithm",
+    "exhaustive-key-completion"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^141 dominant key-assignment enumeration, after a 2^131 first-stage scan",
+      "log2": 141,
+      "unit": "source-native-key-assignment-and-testing-work",
+      "qualifier": "estimate",
+      "note": "Section 4.2 p.244 counts 2^(17*8+5)=2^141 possible assignments for the encryption-only completion. The preceding pair scan costs 2^131; it does not multiply the completion by 2^35 because completion follows a successful first-stage recovery. No exact full-AES-equivalent conversion is asserted."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^131 dominant first-stage encryption queries",
+      "log2": 131,
+      "unit": "total-pool-encryption-queries",
+      "qualifier": "estimate",
+      "note": "Editorial arithmetic from the unchanged first stage: 2^35 tested pairs times 2^31 repetitions times two 2^64-text structures. The TA alternative is offline key completion and does not use the chosen-ciphertext pairs of the other variant."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The first step alone is stated to use 2^64 memory; Table 1 summarizes key recovery with 2^65. The paper does not separately give peak storage for this alternative TA completion, so the encryption/decryption variant's overall memory is not silently copied."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The paper describes running triangulation on the key schedule but does not give a separate reusable preprocessing budget for this alternative; the pair scan remains included in attack time and data."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "pool-selected-full-key-recovery-success",
+    "value": null,
+    "description": "No numerical full-master-key recovery success is supplied. Testing2^35 related-key pairs uses a mean incidence, not a proved pool-hit probability; no independence or Poisson acquisition model is imposed. The first stage expects four right pairs,2^31 wrong pairs and2^47 random80-bit votes. The CPA triangulation variant enumerates2^141 admissible assignments; it does not use the CCA second-stage2^-87 trail/48-bit filter. Enumeration costs are not a success measurement. Expected counts are not converted into primary probabilities.",
+    "components": [
+      {
+        "metric": "uniform-related-key-pair-satisfies-five-schedule-transitions",
+        "value": 2.9103830456733704e-11,
+        "basis": "author_model",
+        "expression": "2^{-35}",
+        "description": "Section4.1: five key-schedule transitions each2^-7 give mean weak-pair incidence2^-35 in the source key model. This is not the probability that a2^35-pair pool contains a qualifying pair; independence between tested pairs is not established."
+      },
+      {
+        "metric": "first-stage-rounds3-to14-state-trail-given-weak-pair",
+        "value": 1.0097419586828951e-28,
+        "basis": "author_model",
+        "expression": "2^{-93}",
+        "description": "Section4.2 first step: remaining state-trail probability after the structured first two rounds, conditional on an actual qualifying key pair."
+      },
+      {
+        "metric": "first-stage-one-structure-right-pair-source-approximation",
+        "value": 1.862645149230957e-9,
+        "basis": "author_model",
+        "expression": "2^{-29}",
+        "description": "Section4.2: source assigns2^(64-93)=2^-29 to a structure producing a right pair. Retain this as its local first-moment approximation;2^31 repetitions give mean four, not an independently established end-to-end success distribution."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Local pair filters, conditional trails, weak-pair incidence and expected counts keep their own experiment; correlation is not a decision probability. Existing conflicts, resources, targets, settings and full-audit gates remain unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "Section 4.1 p.242; Section 4.2 First step pp.242-243; p.244, paragraph headed 'Second step with TA'.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The alternative is expressly introduced to avoid chosen-ciphertext access. It combines the first-stage recovered bits and weak-key constraints through a key-schedule-only triangulation step, followed by 2^141 assignments. The unchanged first-stage pair scan is retained."
+    },
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "CRYPTO proceedings PDF12–14 / printed242–244 Sections4.1–4.2 and Figure4; PDF3 Table1 distinguishes weak-pair and pool costs.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical full-master-key recovery success is supplied. Testing2^35 related-key pairs uses a mean incidence, not a proved pool-hit probability; no independence or Poisson acquisition model is imposed. The first stage expects four right pairs,2^31 wrong pairs and2^47 random80-bit votes. The CPA triangulation variant enumerates2^141 admissible assignments; it does not use the CCA second-stage2^-87 trail/48-bit filter. Enumeration costs are not a success measurement. Expected counts are not converted into primary probabilities."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The selected goal is recovery of a key belonging to a qualifying pair from the pool, not arbitrary designated-key recovery.",
+    "The 2^141 figure counts source-native key-assignment enumeration and is not normalized to an exact number of complete AES-256 encryptions.",
+    "Separate peak memory and preprocessing for the TA variant are not reported.",
+    "No independent implementation or attack-cost reproduction was performed.",
+    "Independent2026-10-27 full19-page reread and bounded S-box/linear-layer/exponent checks completed; these are not full attack, global TA distribution or end-to-end success reproductions."
+  ],
+  "related_problem_ids": []
+}

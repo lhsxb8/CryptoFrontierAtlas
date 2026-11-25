@@ -1,0 +1,164 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-3r-functions-kjshl2013-parameter-collision-property",
+  "title": "3-round AES-192: parameter-collision relation",
+  "display": {
+    "name": "Parameter-collision relation",
+    "method": "collision"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 3,
+    "full_round": false,
+    "round_convention": "kjshl2013-inner-rounds-with-mixcolumns-standard-left-shiftrows",
+    "description": "AES-192: rounds2–4 map I2 to I5; each internal round includes MixColumns and standard left ShiftRows. The article explicitly targets AES-192/256."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_analysis_no_attack_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "Three fixed, unknown round keys. Master-key dependencies are not used in the component argument.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "Fix the12 bytes outside column0 of I2. The active function input is I2_00; (I2_10,I2_20,I2_30) is a three-byte parameter.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Birthday collision estimates assume random-like32-bit internal tuples; the approximate0.5 source estimate is distinct from exact distinguishing advantage."
+    ]
+  },
+  "techniques": [
+    "collision-of-functions",
+    "restricted-byte-dependency"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "component-relation-not-attack-success",
+    "value": null,
+    "description": "The property parameters and quantified relation are recorded separately from attack success and resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "kjshl2013-collision-spn-journal",
+      "locator": "Article pp.2–3 Section2.2 Equations(1)–(3)",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Original article read in full; printed pages3–5 checked visually. Native costs, output scope and documented discrepancies retained."
+    },
+    {
+      "source_id": "kjshl2013-collision-spn-journal",
+      "locator": "PDF3 Equation2 source image and standard-AES component reconstruction.",
+      "fields": [
+        "/property",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact primary passage checked in the full-audit batch; source claims and reviewer component checks are separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Full attack search, total complexity and success probability are not independently reproduced. Component identity checks are documented separately.",
+    "Full exact-edition inventory checked; numerical attack execution is not claimed."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "Equality of the four8-bit parameter-dependent subexpressions is sufficient for equality of I5_00 for every active I2_00 value under the same fixed keys.",
+    "quantifier": "For fixed keys and the other12 input bytes, a pair of parameter triples with the same32-bit internal tuple induces equal functions on all256 input values. Existence among a sampled family is a birthday heuristic, not a universal every-key guarantee.",
+    "scope": "Three internal AES rounds2–4; one-byte projected functions. The article labels the extension through round5 as a four-round distinguisher.",
+    "parameters": [
+      {
+        "name": "Internal parameter tuple",
+        "reported": "4 bytes;32 bits",
+        "meaning": "Tuple equality suffices for the full one-byte function equality."
+      },
+      {
+        "name": "Active function domain",
+        "reported": "256 values of I2_00",
+        "meaning": "Pointwise agreement domain, separate from an attack resource count."
+      },
+      {
+        "name": "Sampled parameter triples",
+        "reported": "2^16 with collision probability approximately0.5",
+        "meaning": "Source birthday estimate; no measured trial count or exact distinguishing advantage is supplied."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Standard AES recurrence independently establishes the intended32-bit parameter-tuple dependence;64 finite component samples and one256-input AES256 function-collision witness pass. PrintedEq2 second outer summand has I2_02 instead ofI2_12 and undefineda_i2; provisionala_i2=a_02 does not fix its state index. This is not full attack reproduction."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property/validation",
+      "label": "Printed Equation2 state index and undefined coefficient",
+      "description": "TypesetEq2 second outer/first inner summand printsI2_02 instead of standardI2_12 and undefineda_i2. For public internal state1300050b5366798c9fb2c5d8ebfe1124, sequential-byteAES192 gives correct/printed-indexI5_00=88/245 andAES256=19/96 even ifa_i2 is provisionallya_02. Intended standard recurrence remains supported.",
+      "observations": [
+        {
+          "source_id": "kjshl2013-collision-spn-journal",
+          "locator": "PDF3 Equation2, original image.",
+          "reported": "PrintedI2_02 and undefineda_i2 in second outer/first inner term."
+        },
+        {
+          "source_id": "kjshl2013-collision-spn-journal",
+          "locator": "Reviewer-written finite component/arithmetic check of the cited source passage; audit report distinguishes it from author statements.",
+          "reported": "Reviewer reconstruction of standard AES recurrence gives I2_12 and public correct/printed-index results88/245(AES192),19/96(AES256); this is a finite component check, not an author correction."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-dfa-giraud2005-byte-physical-smartcard",
+  "title": "AES-128 Optical fault experiment on 8-bit smartcard (Giraud, AES2004 proceedings published 2005)",
+  "display": {
+    "name": "Optical fault experiment on 8-bit smartcard",
+    "method": "fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full AES-128 master-key recovery in the described optical-injection experiment on an 8-bit smartcard with known implementation code; no chip model is specified."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "repeat-encryption-fixed-input",
+      "correct-ciphertext-reference",
+      "byte-fault-injection-in-state-or-online-key-schedule"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret AES master key; no related-key oracle.",
+    "key_population": "Keys of the stated AES implementation without a weak-key restriction; fault protections are outside the model.",
+    "plaintext_model": "Repeat encryptions of the same plaintext under the same key; retain its correct ciphertext as a reference. Counts of faulty ciphertexts exclude that reusable reference unless explicitly stated otherwise.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "AES state and online expanded-key operations on the tested 8-bit smartcard, attacked with a microscope and modified camera flash.",
+      "granularity": "Useful single-byte faults selected from a physical process that often disturbed four or eight bytes.",
+      "timing": "Flash synchronized to the intermediate operations needed by the second attack; exact measured per-stage physical timing windows are not supplied.",
+      "location": "The experiment first located sensitive chip areas and synchronized the flash; many induced errors failed the useful-byte model.",
+      "value_control": "Optical disturbance with no chosen fault difference; multi-byte outputs require rejection.",
+      "sample_pairing": "Every faulty output is matched to the same fixed-input correct reference; useful faults, random-location ciphertexts and physical executions have distinct accounting.",
+      "evidence_scope": "physical_experiment"
+    },
+    "assumptions": [
+      "A round key is used correctly for encryption and then faulted before generating the next round key. The implementation expands keys on the fly.",
+      "The reported outcome and data budget use the paper's candidate-filtering model; no numerical whole-key success rate is inferred from a byte-level statistic.",
+      "The attacker uses known AES implementation code on an 8-bit smartcard. Apparatus cost, calibration effort and chip-to-chip variability are not quantified."
+    ]
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "online-key-schedule-fault",
+    "candidate-filtering"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical whole-endpoint runtime is reported for this version and endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "more than 1000 AES executions",
+      "log2": null,
+      "unit": "fault-injection-acquisition-AES-executions",
+      "qualifier": "lower_bound",
+      "note": "Observed execution count needed in the described physical experiment, including attempts yielding unsuitable faults. It is neither a useful-fault count nor a universal lower bound on AES attack cost.",
+      "relation": ">"
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The article describes counters or candidate lists without a numerical peak-memory budget."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing-time budget is reported. The Appendix A 8×2^8 equation tests per useful output are a component count, not a complete attack cost."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "stated-target-recovery-success-probability",
+    "value": null,
+    "description": "No numerical whole-output recovery probability is supplied for this exact endpoint and sample budget. The smartcard demonstration required more than1000 AES executions, including many unusable multi-byte disturbances. One successful demonstration has no repeated-trial denominator and does not measure whole-key success or useful-fault yield. ",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Theoretical deterministic guarantees require the stated ideal model; local filters, characteristic products, expected counts and physical acquisition are separate. Costs, targets, settings, existing conflicts and full-audit gates are unchanged."
+    },
+    "components": [
+      {
+        "metric": "true-key-retained-by-modeled-byte-fault-equations",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections4.1–4.3: with effective faults at the modeled windows and correct earlier-stage material, the actual subkey/state satisfies the complete candidate equations. This is conditional candidate inclusion, not unique recovery or physical acquisition success."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "Section 6 pp.38–39, physical experiment paragraphs",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Version-specific endpoint retaining its target, prior information, fault controls and native sample accounting."
+    },
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "Complete proceedingsPDF1–15/printed27–41 and earlyPS15-page reading rendition; Sections3–6, AppendixA and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "Proceedings PDF12–13 / printed38–39 Section6; construction PDF7–12 Sections4.1–4.3.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical whole-output recovery probability is supplied for this exact endpoint and sample budget. The smartcard demonstration required more than1000 AES executions, including many unusable multi-byte disturbances. One successful demonstration has no repeated-trial denominator and does not measure whole-key success or useful-fault yield. "
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Useful faulty ciphertext counts do not automatically include ineffective physical injections or calibration attempts.",
+    "The article does not supply a measured success frequency, runtime or peak memory for every target and parameter choice."
+  ],
+  "related_problem_ids": []
+}

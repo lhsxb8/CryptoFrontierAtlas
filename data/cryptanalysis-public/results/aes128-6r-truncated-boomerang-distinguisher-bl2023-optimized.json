@@ -1,0 +1,127 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-6r-truncated-boomerang-distinguisher-bl2023-optimized",
+  "title": "Six-round AES-128 truncated-boomerang secret-key distinguisher, multiple-trail construction",
+  "display": {
+    "name": "Truncated boomerang, multiple trails",
+    "method": "boomerang"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "bl2023-six-rounds-initial-ark-final-no-mixcolumns",
+    "description": "Six-round AES-128 with the initial AddRoundKey and no final MixColumns, following Figure 3 and Section 4.1. The construction permits the ordinary AES key schedule without exploiting it."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed unknown AES-128 key for both forward and inverse queries.",
+    "key_population": "general secret AES-128 key under the paper's probabilistic trail model",
+    "plaintext_model": "chosen diagonal structures and adaptive ciphertext structures, with returning pairs in any single diagonal",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "reference_model": "Distinguish the six-round secret-key permutation and inverse from a uniform random 128-bit permutation and its inverse by the returning-quartet count; no subkey guess is used in the decision rule.",
+    "assumptions": [
+      "The multiple-trail analysis inherits Section 3.1's independent-event and sample approximations.",
+      "Section 4.1 combines four upper trails, sixteen lower trails, and a different returning-pair set; its final parameters are p_b=2^-122, p_random=2^-94, c=4 and Q=2^152.",
+      "Adaptive inverse access is essential to the construction."
+    ]
+  },
+  "techniques": [
+    "truncated-boomerang",
+    "multiple-trails",
+    "secret-key-structural-distinguisher"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^87",
+      "log2": 87,
+      "unit": "six-round-aes-oracle-call-equivalents",
+      "qualifier": "estimate",
+      "note": "Final Section 4.1 result and Table 1 give T=2^87 under the source's oracle-call-dominated time model."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^87",
+      "log2": 87,
+      "unit": "total-chosen-plaintext-and-adaptive-ciphertext-block-queries",
+      "qualifier": "estimate",
+      "note": "Final Section 4.1 result gives D=2^87; Table 1 labels access as ACC, meaning chosen plaintexts plus adaptively chosen ciphertexts."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^66",
+      "log2": 66,
+      "unit": "stored-returned-plaintext-entries",
+      "qualifier": "estimate",
+      "note": "Source Eq6 applied to the final Section4.1 sets, |Din^0|=2^32 and|Dout^1|=2^34: min(2^87,2^66)=2^66 entries. Formula-derived scale; no bytes/overhead conversion."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately reusable preprocessing budget is tabulated."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "correct-distinguishing-decision-probability-normal-approximation",
+    "value": 0.84,
+    "description": "Section 4.1 explicitly sets c=4 in the Section 3.1 statistical model, which gives Phi(sqrt(c)/2), approximately 0.84. This applies the source's stated decision-probability formula to its optimized parameters, not a measured full-scale experiment."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bl2023-truncated-boomerang-full",
+      "locator": "PDF p.4, Table 1; pp.10-12, Section 3.1 statistical decision model; pp.17-18, Section 4.1, especially 'Different Set ... for Returning Pairs' and final T=D=2^87 (c=4).",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The final six-round distinguisher uses three cumulative multiple-trail refinements. Its success estimate follows the paper's explicitly reused formula; intermediate 2^91 and 2^89 costs are not substituted for the final result."
+    },
+    {
+      "source_id": "bl2023-truncated-boomerang-full",
+      "locator": "Complete exact primary PDF1–56, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete reading and source inventory; later-literature gates and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "bl2023-truncated-boomerang-full",
+      "locator": "PDF11 Eq6; PDF17–18 Section4.1 input/output sets for final variant.",
+      "fields": [
+        "/resources/memory"
+      ],
+      "interpretation": "Complete source formula supplies the previously unextracted memory scale."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The statistical model and 2^87-scale construction have not been independently reproduced.",
+    "Later boomerang work is tracked separately; this source-version-specific record carries no current-best claim."
+  ],
+  "related_problem_ids": []
+}

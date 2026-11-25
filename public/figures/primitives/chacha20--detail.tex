@@ -1,0 +1,73 @@
+% Generated from the public primitive catalog. Original Atlas drawing; Apache-2.0.
+% Target: chacha20; view: detail
+\documentclass[border=9pt]{standalone}
+% Original Atlas figure theme. Apache-2.0; see the repository LICENSE.
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,decorations.pathreplacing,matrix}
+\definecolor{atlasInk}{HTML}{172235}
+\definecolor{atlasTeal}{HTML}{0D7B7D}
+\definecolor{atlasMuted}{HTML}{637278}
+\definecolor{atlasFill}{HTML}{EAF4F2}
+\definecolor{atlasLine}{HTML}{B6C8C7}
+\tikzset{
+  every picture/.style={line width=.65pt,draw=atlasInk,>=Latex},
+  every node/.style={text=atlasInk,font=\sffamily\small},
+  box/.style={draw,rounded corners=1.5pt,minimum height=.9cm,minimum width=1.6cm,align=center,inner sep=6pt,fill=white},
+  accent/.style={box,draw=atlasTeal,fill=atlasFill},
+  wire/.style={->,line width=.7pt},
+  keywire/.style={wire,draw=atlasTeal,dashed},
+  xor/.style={draw,circle,fill=white,inner sep=0pt,minimum size=.38cm},
+  add/.style={draw,rectangle,fill=white,inner sep=0pt,minimum size=.38cm},
+  note/.style={font=\sffamily\scriptsize,text=atlasMuted,align=center},
+  phase/.style={font=\sffamily\small\bfseries,text=atlasTeal},
+  group/.style={draw=atlasLine,dashed,rounded corners=2pt,inner sep=8pt}
+}
+\newcommand{\rotl}{\mathbin{\lll}}
+\newcommand{\rotr}{\mathbin{\ggg}}
+\newcommand{\kx}{\operatorname{Keccak}\!\text{-}\!f[1600]}
+
+\newcommand{\AtlasKeyBits}{256}
+\newcommand{\AtlasKeyWords}{8}
+\newcommand{\AtlasRounds}{20}
+\newcommand{\AtlasPriorRounds}{19}
+\newcommand{\AtlasRoundKeys}{21}
+\newcommand{\AtlasDoubleRounds}{10}
+\newcommand{\AtlasSixRoundGroups}{3.3333333333333335}
+\newcommand{\AtlasFLGroups}{2.3333333333333335}
+\newcommand{\AtlasRoundStart}{4}
+\newcommand{\AtlasBlockBits}{b}
+\newcommand{\AtlasOutputBits}{d}
+\newcommand{\AtlasStateBits}{512}
+\newcommand{\AtlasNonceBits}{96}
+\newcommand{\AtlasCounterBits}{32}
+\newcommand{\AtlasStreamBlockBits}{512}
+\newcommand{\AtlasRate}{r}
+\newcommand{\AtlasCapacity}{c}
+\newcommand{\AtlasSteps}{N}
+\newcommand{\AtlasLastStep}{N-1}
+\newcommand{\AtlasWordBits}{64}
+\newcommand{\AtlasHashWords}{16}
+\newcommand{\AtlasFeedForward}{\boxplus}
+\newcommand{\AtlasByteOrder}{big-endian}
+\newcommand{\AtlasDomain}{01}
+\newif\ifAtlasXof
+\AtlasXoffalse
+\begin{document}
+\begin{tikzpicture}
+  \node[phase] at (6,2.5) {Quarter round on $(a,b,c,d)$};
+  \foreach \y/\rot/\a/\b/\c/\d in {1.4/16/a/b/d/a,.3/12/c/d/b/c,-.8/8/a/b/d/a,-1.9/7/c/d/b/c} {
+    \node[box,minimum width=3cm] (add\rot) at (2,\y) {$\a\gets\a\boxplus\b$};
+    \node[box,minimum width=3cm] (xor\rot) at (6,\y) {$\c\gets\c\oplus\d$};
+    \node[accent,minimum width=3cm] (rot\rot) at (10,\y) {$\c\gets\c\rotl\rot$};
+    \draw[wire] (add\rot) -- (xor\rot); \draw[wire] (xor\rot) -- (rot\rot);
+  }
+  \foreach \from/\to in {16/12,12/8,8/7} {
+    \draw[wire] (rot\from.east) -- ++(.45,0) -- ++(0,-.55) -| (add\to.west);
+  }
+  \node[note] at (6,-2.9) {$\boxplus$: addition modulo $2^{32}$\qquad $\oplus$: XOR\qquad $\rotl$: left rotation};
+\end{tikzpicture}
+
+\end{document}

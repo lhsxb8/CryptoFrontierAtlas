@@ -1,0 +1,171 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-full-related-key-boomerang-defn2022",
+  "title": "Full AES-192 four-related-key boomerang recovery",
+  "display": {
+    "name": "Four-related-key boomerang recovery",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 12,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "Full12-round AES-192 including initial whitening and the standard final round, as targeted by Section3/Figure8."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related-key-chosen-ciphertext-decryption",
+      "adaptive-related-key-chosen-plaintext-encryption"
+    ],
+    "related_key_count": 4,
+    "target_selection": "designated_target",
+    "key_relation": "Section3.1/Figure7 and AppendixA Table2: from kA impose the selected difference on the second expanded-key subkey to generate kB; impose the eighth-subkey difference on kA/kB to generate kC/kD. These are six-column AES-192 key-expansion blocks, not ordinary 128-bit round-key indices. The probability-one key-schedule boomerang preserves the matching second-subkey differences. This is an oracle-side, key-dependent generation algorithm, not a fixed known master-key XOR relation.",
+    "key_population": "General unknown target key under the specified algorithmic related-key functions; no weak-key target promise is stated.",
+    "plaintext_model": "Decrypt structured ciphertexts under kA/kC, then adaptively encrypt paired plaintexts under kB/kD.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Both related-key encryption and decryption access are required by Steps1–5.",
+      "The key-schedule-induced quartet construction and source boomerang compatibility assumptions are retained.",
+      "The recovered28-byte intermediate sequence is not the whole key; the source prices a further2^104 key-completion search."
+    ]
+  },
+  "techniques": [
+    "related-key-boomerang",
+    "nonlinear-key-schedule",
+    "MILP-assisted-trail"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2 * 2^109 + 2 * 2^123 + 2^79 ≈ 2^124",
+      "log2": 124,
+      "unit": "source-message-and-counter-work",
+      "qualifier": "estimate",
+      "note": "Section3.2 sums message processing and counter updates using its native cost model. Additional2^104 candidate completion is lower order; not silently normalized to exact full AES encryption equivalents."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2 * 2^109 decryptions + 2 * 2^123 encryptions ≈ 2^124",
+      "log2": 124,
+      "unit": "total-related-key-encryption-and-decryption-queries",
+      "qualifier": "estimate",
+      "note": "Total across4keys: kA/kC ciphertext queries and kB/kD adaptive plaintext queries; not2^124 perkey."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^79.8",
+      "log2": 79.8,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "A2^55-message hash table plus2^79 sequences of28bytes; source native128-bit-block estimate."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately itemized reusable preprocessing budget is given for this configuration; unknown does not mean zero."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "key-recovery-success",
+    "value": null,
+    "description": "Section3.2 repeats until a counter reaches2 and prices about2^69 structures, expecting two useful quartets. It does not give the probability of recovery within that fixed budget, nor the stopping-time distribution. Key-schedule construction probability1, internal boomerang probability and wrong-candidate filtering remain distinct from full-key success; a further2^104 completion is required. Section4.3 computes average transition probabilities without generally quantifying the probability of a nonzero trail.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit of defining construction and parameter passages, not a new full-paper or forward-literature audit. Source local/conditional models, expected counts, key-relation construction and full recovery remain separate."
+    },
+    "components": [
+      {
+        "metric": "key-schedule-quartet-construction-given-key-relations",
+        "value": 1,
+        "basis": "source_proof",
+        "description": "PDF9 Section3.1: the constructed key-schedule boomerang closes with probability1 under the stated subkey-induced relations. This says nothing about the state trail or full recovery and is not a fixed master-key XOR relation."
+      },
+      {
+        "metric": "internal-ten-round-boomerang-source-model",
+        "value": 3.0814879110195774e-33,
+        "basis": "author_model",
+        "expression": "2^{-108}",
+        "description": "PDF9: source2^(-2*(4*6)-2*(5*6)) for the inner distinguisher excluding first and last round."
+      },
+      {
+        "metric": "one-structured-pair-passes-last-round",
+        "value": 9.094947017729282e-13,
+        "basis": "author_model",
+        "expression": "2^{-40}",
+        "description": "PDF10 Step7: the stated last-round source probability2^-40 is used with2^80 pairs and2^-108 to obtain the expected one right quartet per2^68 structures."
+      },
+      {
+        "metric": "quartet-sbox-validity-filter",
+        "value": 0.0009765625,
+        "basis": "author_model",
+        "expression": "2^{-10}",
+        "description": "PDF10 Step6:14 S-box validity checks minus four already used in Step3 give a ten-bit sieve, reducing the expected candidate count2^20 to2^10."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "defn2022-related-key-boomerang-proceedings",
+      "locator": "PDF pp.9–12 / printed76–79, Sections3.1–3.2, Figures7–8 and Steps1–8; p.4 Section2.1; p.3 Table1; AppendixA Table2.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary version reports a large time/memory improvement over BK09 but uses more data and an adaptive encryption/decryption oracle model. Do not assert strict domination: source-reported data is larger and any indexed BK09 oracle/accounting discrepancies require original-source review."
+    },
+    {
+      "source_id": "defn2022-related-key-boomerang-proceedings",
+      "locator": "Complete exact primary PDF1–21, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full reading and result inventory; bounded forward check and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "defn2022-related-key-boomerang-proceedings",
+      "locator": "PDF9 Section3.1; PDF18 AppendixA Table2; PDF11 completion/time.",
+      "fields": [
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Rendered Table2 contains complete4x6-byte schedule states K^1/K^7 (second/eighth), not128bit roundkeys. Reviewer AES192 FIPS KAT and64key controls confirm invertible maps and quartet commutation, with varying induced master-XOR.2^104 completion retained; no numerical full success."
+    },
+    {
+      "source_id": "defn2022-related-key-boomerang-proceedings",
+      "locator": "PDF9–12/printed76–79 Sections3.1–3.2, key-schedule construction,Steps5–8,counter and noisy-quartet analysis; PDF15/82 Section4.3 average-vs-nonzero caveat; PDF18/85 AppendixA Table2.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "Section3.2 repeats until a counter reaches2 and prices about2^69 structures, expecting two useful quartets. It does not give the probability of recovery within that fixed budget, nor the stopping-time distribution. Key-schedule construction probability1, internal boomerang probability and wrong-candidate filtering remain distinct from full-key success; a further2^104 completion is required. Section4.3 computes average transition probabilities without generally quantifying the probability of a nonzero trail."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The source does not report numerical end-to-end full-key success; internal boomerang probabilities and expected quartet counts are separate. The distinct ePrint edition remains access-pending."
+  ],
+  "related_problem_ids": []
+}

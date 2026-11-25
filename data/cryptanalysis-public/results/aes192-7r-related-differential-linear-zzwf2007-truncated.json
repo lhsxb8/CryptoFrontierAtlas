@@ -1,0 +1,143 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-related-differential-linear-zzwf2007-truncated",
+  "title": "ZZWF07 7-round AES-192 Related-key differential-linear / truncated",
+  "display": {
+    "name": "Related-key differential-linear / truncated",
+    "method": "differential_linear"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "zzwf2007-7r-final-no-mc",
+    "description": "First7 AES192 rounds with final MC removed, using the second Table3 relation and truncated Section6 construction. Section7 explicitly adds k7[5,6] guesses and tests possible b/c; earlier first-round guesses are inherited but the paper does not restate a complete independent key reconstruction or price 192-bit completion."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related_key_chosen_plaintext_encryption"
+    ],
+    "related_key_count": 2,
+    "target_selection": "designated_target",
+    "key_relation": "Two unknown master keys with second XOR pattern ((a,0,0,0),0,(a,0,0,0),0,0,0), a chosen nonzero.",
+    "key_population": "general secret key",
+    "plaintext_model": "Chosen plaintext observations under two unknown keys with the stated XOR relation.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The literal procedure selects maximum absolute parity deviation among subkey candidates; source component-count bias and Matsui rule of thumb do not quantify all candidate-ranking failures.",
+      "The exact11/5440 bias is a count over uniformly weighted compatible intermediate tuples, not a proof that every fixed related AES key pair induces that distribution. After SR and equivalent-key addition the signed bias is multiplied by (-1)^{lambda dot (Delta w[13] XOR Delta w[10])}; its absolute model bias is unchanged."
+    ]
+  },
+  "techniques": [
+    "related-key-differential-linear",
+    "partial-subkey-statistical-counting"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^130",
+      "log2": 130,
+      "unit": "7-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Section7 and Table1 report 2^130 seven-round encryption units after repeating possible b/c. Only the fixed endpoint is costed; no source continuous family joining the two 7r attacks is inferred."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^70",
+      "log2": 70,
+      "unit": "related-key-chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Source aggregate block count across both keys; Matsui heuristic and the stated construction."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "value": null,
+    "metric": "whole-attack-success",
+    "description": "No numerical success probability for the recorded partial-key ranking output is supplied. The source uses approximately2^-9 bias and the Matsui rule8*(2^-9)^-2≈2^21 pairs; a sample-size rule is not a finite-budget success probability. Section7 adds fixed six-byte difference constraints but gives no separate population rate for them. No later-paper95% rate is borrowed.",
+    "components": [
+      {
+        "metric": "conditioned-boundary-equal-nonzero-byte-differences",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Equation6 (or the shifted Equation10 construction with its own key relation and input conditions): the designated two byte differences are equal and nonzero at the specified boundary. This deterministic conditioned relation is not key-ranking success."
+      },
+      {
+        "metric": "pre-offset-zero-parity-uniform-compatible-tuples",
+        "value": 0.5020220588235295,
+        "basis": "author_model",
+        "expression": "\\frac{8389632}{2^{24}-2^{16}}=\\frac{1}{2}+\\frac{11}{5440}",
+        "description": "Equation7: exact count for uniformly sampled compatible pre-key-offset tuples. The bias is11/5440 (about2^-9); correlation is twice the bias. A fixed key XOR offset can flip the parity sign, so this is not a universal post-key zero-parity probability or the probability that the correct counter wins."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Local collision, table-hit, conditional retention and filter events are separate from recovery success or distinguishing advantage. Existing costs, targets, settings, conflicts and full-audit gates remain unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-bfc260e0906ffa02-2007",
+      "locator": "PDF p.3 Table1 and p.5 boundary; p.11 Section7.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Complete 13-page independent primary read and bounded forward check completed 2026-10-27; original budget retained as partial-subkey recovery. No complete attack execution or full-key completion is inferred."
+    },
+    {
+      "source_id": "aes-paper-bfc260e0906ffa02-2007",
+      "locator": "Proceedings PDF6–8 / printed78–80 Equations6–10; PDF11 / printed83 Section7 truncated variant.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical success probability for the recorded partial-key ranking output is supplied. The source uses approximately2^-9 bias and the Matsui rule8*(2^-9)^-2≈2^21 pairs; a sample-size rule is not a finite-budget success probability. Section7 adds fixed six-byte difference constraints but gives no separate population rate for them. No later-paper95% rate is borrowed."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Source-reported result; attack execution and complete proof/forward-literature audit are separate.",
+    "Complete 13-page independent primary read and bounded forward-primary review on 2026-10-27. Finite S-box tuple, key-schedule, linear-map and source-exponent checks do not execute or reproduce the whole statistical recovery attack.",
+    "The exact11/5440 bias is a count over uniformly weighted compatible intermediate tuples, not a proof that every fixed related AES key pair induces that distribution. After SR and equivalent-key addition the signed bias is multiplied by (-1)^{lambda dot (Delta w[13] XOR Delta w[10])}; its absolute model bias is unchanged."
+  ],
+  "related_problem_ids": []
+}

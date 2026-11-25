@@ -1,0 +1,179 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-6r-shifting-retracing-dkrs2024",
+  "title": "6-round AES-128 key recovery with shifting retracing boomerang",
+  "display": {
+    "name": "Shifting retracing boomerang",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "dkrs2024-zero-based-rounds-0-to-5-final-no-mixcolumns",
+    "description": "Initial AddRoundKey k_-1 followed by 6 AES rounds, with final MixColumns omitted. The algorithm recovers the 128-bit initial subkey k_-1. For AES-128 this initial subkey is the complete master key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown secret key with encryption and decryption oracle access; no related-key oracle.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "2^20 chosen plaintexts varying bytes 0,5,10,15; eight adaptive ciphertext modifications for each plaintext and each 32-bit last-round-subkey guess",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source's Section 4.1 explicitly makes the attack descriptions independent of the AES key schedule.",
+      "Costs and probability estimates follow the journal version's statistical assumptions; Appendix A.5 identifies rigorous probability analysis as further work.",
+      "Algorithm 6 also guesses four final-round-subkey bytes; no full-master-key completion budget for AES-192 or AES-256 is supplied."
+    ]
+  },
+  "techniques": [
+    "shifting-retracing-boomerang",
+    "meet-in-the-middle",
+    "friend-pairs"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "<2^80",
+      "log2": 80,
+      "unit": "6-round-AES-encryptions",
+      "qualifier": "upper_bound",
+      "note": "Source derives fewer than 2^31*2^32*4*2^15 six-round encryption equivalents."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^55",
+      "log2": 55,
+      "unit": "adaptively-chosen-plaintext-and-ciphertext-blocks",
+      "qualifier": "estimate",
+      "note": "Dominant decryption budget 2^20*8*2^32=2^55; the initial 2^20 encryptions are additional."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^31",
+      "log2": 31,
+      "unit": "stored-pairs",
+      "qualifier": "estimate",
+      "note": "Section 6.3 states 2^31 memory dominated by stored examined pairs. Pair payload size is not normalized to 128-bit blocks."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately itemized preprocessing cost is provided for Algorithm 6."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "full-master-key-recovery",
+    "value": null,
+    "description": "The source expects two useful pairs and calls recovery high-probability, but does not give a numerical aggregate probability. The existing output-coordinate/friend-condition conflict remains unresolved. The stated wrong-pair filtering probability is retained only as a conditional component of the author model.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-06",
+      "scope": "Exact42-page journal edition; Sections5–6.3 and AppendixA.5. No probability was added: expected good pairs, starting-pair2^-6, local wrong-pair2^-32 and negligible consistency language do not quantify these exact recovery outputs. Figure6 empirical success concerns another attack. Homogeneous-system, Algorithm6 condition and long-key completion distinctions remain unchanged; not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "wrong-pair-initial-subkey-filter-survival",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "description": "Author probability of no contradiction in the first 32-bit subkey recovery from a wrong pair after64-bit filtering. This does not resolve the Algorithm6 source-model conflict or measure true-key recovery."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF pp.29-31, Section 6.3 and Algorithm 6; p.15 Section 4.1 for key-schedule scope.",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The record retains the journal version's endpoint and native units. Recovery of k_-1 is complete master-key recovery for AES-128."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "Complete exact primary PDF1–42, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete reading and source inventory; later-literature gates and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF29–31 Section6.3, Algorithm6 lines9/12/17; fresh independent raw derivation and bounded valid-AES components.",
+      "fields": [
+        "/setting/assumptions",
+        "/field_conflicts"
+      ],
+      "interpretation": "Local source-model/accounting obligation; not a replacement whole-attack budget or a claim of complete attack failure."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF pp.29–31 Section6.3 and Algorithm6, especially lines9/12/17 and attack-analysis paragraph.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The source expects two useful pairs and calls recovery high-probability, but does not give a numerical aggregate probability. The existing output-coordinate/friend-condition conflict remains unresolved. The stated wrong-pair filtering probability is retained only as a conditional component of the author model."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF22–26 Section5 and Algorithm4; PDF29–31 Section6.3 and Algorithm6; PDF39–40 AppendixA.5.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: no numerical success is established for this exact output and budget in the checked passages. Primary probabilities, local components, costs, target and all scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Algorithm 6 also guesses four final-round-subkey bytes; no full-master-key completion budget for AES-192 or AES-256 is supplied.",
+    "Numerical costs are source-reported estimates; the attack was not independently implemented or reproduced."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Algorithm6 output-difference/shift condition",
+      "description": "Algorithm6 line9 retains equality of the first output byte, excluding every prescribed shift with nonzero first byte. At the stated E12L super-S-box coordinates, a nonzero inverse-column input propagates through the two-round component to nonzero input in every super-S-box (for r=1..4 active bytes), so the whole-zero output branch is unavailable there. An independent5000-case local check includes an explicit r=3 witness retained by the byte filter but producing no common shifted friend. Resolve final-layer coordinate absorption and line17 shifted/inverse-shifted wording before extending this local result to the whole six-round attack. Published D55/M31/T80 retained.",
+      "observations": [
+        {
+          "source_id": "dkrs2024-retracing-boomerang-journal",
+          "locator": "PDF29–31 Section6.3, Algorithm6 lines9/12/17; fresh independent raw derivation and bounded valid-AES components.",
+          "reported": "Printed source statement and source-reported numerical budgets retained."
+        },
+        {
+          "source_id": "dkrs2024-retracing-boomerang-journal",
+          "locator": "PDF29–31 Section6.3, Algorithm6 lines9/12/17; fresh independent raw derivation and bounded valid-AES components. Independent raw-source review and finite component checks,2026-10-27.",
+          "reported": "Algorithm6 line9 retains equality of the first output byte, excluding every prescribed shift with nonzero first byte. At the stated E12L super-S-box coordinates, a nonzero inverse-column input propagates through the two-round component to nonzero input in every super-S-box (for r=1..4 active bytes), so the whole-zero output branch is unavailable there. An independent5000-case local check includes an explicit r=3 witness retained by the byte filter but producing no common shifted friend. Resolve final-layer coordinate absorption and line17 shifted/inverse-shifted wording before extending this local result to the whole six-round attack. Published D55/M31/T80 retained."
+        }
+      ]
+    }
+  ]
+}

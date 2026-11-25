@@ -1,0 +1,206 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-impossible-boomerang-lu2011",
+  "title": "Lu11 8-round AES-192 Impossible boomerang recovery",
+  "display": {
+    "name": "Impossible boomerang recovery",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "lu11-8r-source-boundary",
+    "description": "Source first8 rounds, initial whitening. Supporting impossible-boomerang interval excludesMC at its terminal round; full attack has the Section5.1 boundary, not an arbitrary stripped suffix. Step7 completes the remaining128 masterkeybits after eight initial bytes; the88-bit combined subkey guess is not88 independent recovered masterkeybits."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related_key_chosen_plaintext_encryption"
+    ],
+    "related_key_count": 2,
+    "target_selection": "designated_target",
+    "key_relation": "Two unknown keys KA=KC and KB=KD; nonzero source XOR master-key relation for E0, zero pair relation for E1. Table2 AES192 related-subkey propagation.",
+    "key_population": "general secret key",
+    "plaintext_model": "Chosen plaintext observations under two unknown keys with the stated XOR relation.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "impossible-boomerang",
+    "quartet-impossible-filter"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^167.7",
+      "log2": 167.7,
+      "unit": "8-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Source total native encryptions; hash-table memory-access subterms are not a memory-capacity estimate. Includes final128-bit exhaustive completion expected2^156.04. Direct summation of native phase expressions is approximately2^167.62; author headline2^167.7 is a conservative rounded estimate. The prose quartet sequence uses133.38/69.38/21.38 while later cost lines use133.48/117.48/69.48/21.48; this local notation mismatch is retained, not escalated into a false headline-cost conflict. Source survival28.04 is reproduced by its coarse log2(e) approximately1.44 approximation."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^122.4",
+      "log2": 122.4,
+      "unit": "related-key-chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Author-reported native resource accounting."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource. Ciphertext-pair/quartet hash-table access counts are operation counts, not a reported peak capacity."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "value": null,
+    "metric": "whole-attack-success",
+    "description": "The source reports expected wrong-key survivor counts and exhaustive completion work, not numerical finite-budget whole-key success. A per-fixed-wrong-guess survival model is not the probability that the correct key is recovered or uniquely remains. ",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success/probability re-audit. Supporting identities, source-model filters, sampled-table fractions and whole-output success remain separate; no new full-paper/forward audit or conflict resolution."
+    },
+    "components": [
+      {
+        "metric": "correct-key-not-rejected-by-impossible-relation",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections5.1–5.2 and the defining impossible-boomerang property: under the valid intended key/structure conditions, a true key cannot produce the contradiction used to discard a guess. This local no-false-rejection event does not bound the cost of residual exhaustive search."
+      },
+      {
+        "metric": "ciphertext-pair-A-zero-coordinate-sieve",
+        "value": 1.925929944387236e-34,
+        "basis": "author_model",
+        "expression": "2^{-112}",
+        "description": "PDF15 Step3(a): fourteen zero byte differences in the first ciphertext pair."
+      },
+      {
+        "metric": "ciphertext-pair-B-zero-coordinate-sieve",
+        "value": 4.930380657631324e-32,
+        "basis": "author_model",
+        "expression": "2^{-104}",
+        "description": "PDF15 Step3(b): thirteen zero byte differences in the second ciphertext pair."
+      },
+      {
+        "metric": "step4a-inverse-mc-local-sieve",
+        "value": 0.015625,
+        "basis": "author_model",
+        "expression": "2^{-6}",
+        "description": "PDF15 Step4(a): source binomial(4,1)*2^-8=2^-6."
+      },
+      {
+        "metric": "step4b-inverse-mc-local-sieve",
+        "value": 0.0000457763671875,
+        "basis": "author_model",
+        "expression": "\\binom{3}{1}2^{-16}\\approx 2^{-14.42}",
+        "description": "PDF15 Step4(b): three admissible two-zero-byte patterns, conditional on Step4(a). Rounded exponent is retained alongside the source exact combinatorial factor."
+      },
+      {
+        "metric": "step5a-two-pair-byte-conditions",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "PDF15 Step5a: both plaintext pairs satisfy an8-bit equation in the source model. For5b/6a this is per iteration, not their whole-loop probability."
+      },
+      {
+        "metric": "step5b-one-iteration-two-pair-byte-conditions",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "PDF15 Step5b-one-iteration: both plaintext pairs satisfy an8-bit equation in the source model. For5b/6a this is per iteration, not their whole-loop probability."
+      },
+      {
+        "metric": "step6a-one-iteration-two-pair-byte-conditions",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "PDF15 Step6a-one-iteration: both plaintext pairs satisfy an8-bit equation in the source model. For5b/6a this is per iteration, not their whole-loop probability."
+      },
+      {
+        "metric": "step6b-two-pair-byte-conditions",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "PDF15 Step6b: both plaintext pairs satisfy an8-bit equation in the source model. For5b/6a this is per iteration, not their whole-loop probability."
+      },
+      {
+        "metric": "fixed-wrong88-bit-guess-survives-final-quartets-source-model",
+        "value": null,
+        "basis": "author_model",
+        "expression": "(1-2^{-16})^{2^{21.38}}",
+        "description": "PDF15: survival factor for one fixed wrong88-bit guessed tuple after the expected2^21.38 final quartets. Source2^28.04 surviving tuples is an expectation, not a probability; residual128-bit exhaustive search has no quantified success at the average budget."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-096557ca864003f9-2011",
+      "locator": "PDF p.4 Table1; pp.13–16 Section5.1, completion p.15 Step7.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-096557ca864003f9-2011",
+      "locator": "Complete PDF1–21 / printed123–143; Theorems1–2 PDF6–9; Properties1–2 PDF10–12; Sections5.1/5.2 PDF13–19; allreferences PDF19–21.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/assessment"
+      ],
+      "interpretation": "Complete journal inventory: five recovery endpoints and three supporting-property points. Fresh independent cost/completion check found no headline underestimation. Only encryption chosen-plaintext oracles used by these concrete attacks. Deferred thesis procedures and source cost units kept separate."
+    },
+    {
+      "source_id": "aes-paper-096557ca864003f9-2011",
+      "locator": "PDF12/printed134 Section4.2 single-key headlines/referral; PDF13–16/135–138 Section5.1 attack and probability accounting; PDF17–19/139–141 Section5.2 attack and probability accounting.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The source reports expected wrong-key survivor counts and exhaustive completion work, not numerical finite-budget whole-key success. A per-fixed-wrong-guess survival model is not the probability that the correct key is recovered or uniquely remains. "
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "CP-only quartets; no adaptive chosen-ciphertext oracle. Numeric global success and peak storage not reported."
+  ],
+  "related_problem_ids": []
+}

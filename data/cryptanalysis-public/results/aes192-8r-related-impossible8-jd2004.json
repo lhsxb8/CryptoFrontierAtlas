@@ -1,0 +1,173 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-related-impossible8-jd2004",
+  "title": "JD04 8-round AES-192 Related-key impossible8 recovery",
+  "display": {
+    "name": "Related-key impossible8 recovery",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "jd2004-8r-final-no-mc",
+    "description": "Standard AES-192, whitening round0, final analyzed round omitsMC. Last-round key and two transformed-key bytes, then remaining master-key material by exhaustive search; no separate completion price."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related_key_chosen_plaintext_encryption"
+    ],
+    "related_key_count": 2,
+    "target_selection": "designated_target",
+    "key_relation": "Two unknown standardAES192 keys k,k XORdelta; delta=(0000)(0000)(Delta000)(Delta000)(0000)(0000), Table3.",
+    "key_population": "general secret key",
+    "plaintext_model": "Chosen plaintext observations under two unknown keys with the stated XOR relation.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "related-key-impossible-differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^183",
+      "log2": 183,
+      "unit": "8-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported native resource accounting."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^88",
+      "log2": 88,
+      "unit": "related-key-chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Source total queried blocks; body differential trial count2^87 pairs, each with one block under each key."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "value": null,
+    "metric": "conditional-source-model-full-key-recovery-lower-bound",
+    "description": "Derived complete AES192 key-recovery lower bound under the Section3.3 source wrong-tuple survival model, conditional on obtaining the stated2^39 qualifying trials and performing its explicit exhaustive completion. The impossible pattern retains the correct tuple. The source supplies E[wrong survivors]<=2^144*(1-2^-32)^(2^39)<2^144*exp(-128)<2^-40. Markov/union bounds therefore give unique correct tuple probability at least1-2^-40, without independence between different wrong tuples. The per-trial survival and acquisition laws remain source-model assumptions. Once K8 and the transformed bytes are recovered, the source explicitly exhaustively completes the master key. FIPS197-upd1 Section5.2 shows four consecutive K8 words plus two guessed words determine the six-word AES192 schedule state, so at most2^64 completions suffice, below the dominant2^183 estimate; the144-bit tuple is not treated as144 independent master-key coordinates. Native2^88 queried blocks is the estimated acquisition cost for the quota, not a strict cap that guarantees2^39 qualifying pairs. This is a conditional source-model recovery bound at the existing estimated-cost semantics, not fixed-cap or empirical success. The source improved2^140 selection, unknown memory and all original resources remain unchanged.",
+    "components": [
+      {
+        "metric": "true-tuple-retained-by-impossible-pattern",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Section3.3: with the stipulated related-key difference, correct boundary and modeled enumeration, the actual tuple cannot satisfy the impossible pattern and is not eliminated. Retention is not uniqueness or complete-key recovery."
+      },
+      {
+        "metric": "one-wrong-tuple-eliminated-by-one-useful-pair",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "Section3.3 source uniform wrong-tuple elimination model for a single useful pair. No independent-trial recovery model is added."
+      },
+      {
+        "metric": "outer-pair-pattern-selection",
+        "value": 3.552713678800501e-15,
+        "basis": "author_model",
+        "expression": "2^{-48}",
+        "description": "Section3.3 source six-constrained-byte pair-selection model; conditional useful-pair production, not output recovery."
+      }
+    ],
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Independently source-first and endpoint reviewed complete-key source-model bound after the qualified-trial quota and exhaustive completion. Acquisition and running costs retain native estimates; no fixed data/time cap,144-independent-bit completion or empirical success is claimed."
+    },
+    "basis": "derived_from_source",
+    "expression": "P_{\\mathrm{key,model}}\\ge 1-2^{-40}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-4c5447890fa7bdb3-2004",
+      "locator": "PDF p.4 standard192-bit instance/boundary; pp.7–9 Section3.3/Table4 improved selection2^140 (discarded naive2^231 is not an endpoint).",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-4c5447890fa7bdb3-2004",
+      "locator": "Complete PDF1–14/printed208–221; Sections3–4, tables and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "aes-paper-4c5447890fa7bdb3-2004",
+      "locator": "Proceedings PDF7–8 / printed214–215 Section3.3, eight-round impossible pattern, wrong-tuple survival and improved pair selection.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical complete-key recovery success is supplied. The source expected wrong-survivor count is2^144*(1-2^-32)^(2^39), approximately2^-40. This is a source-model expectation, not a reported success rate. The144-bit tuple is not144 independent master-key coordinates; remaining-key completion and the improved2^140 selection accounting are unchanged."
+    },
+    {
+      "source_id": "aes-paper-4c5447890fa7bdb3-2004",
+      "locator": "PDF7–8 / printed214–215 Section3.3, eight-round procedure:2^39 qualifying trials, expected wrong survivors2^144*(1-2^-32)^(2^39), explicit exhaustive remaining-key completion, estimated2^87 pairs and improved2^140 selection. B41 applies Markov/union only to the supplied model expectation.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "New conditional complete-key recovery bound at the source qualified quota, using native estimated acquisition semantics and explicit completion; not strict-cap success."
+    },
+    {
+      "source_id": "nist-fips197-upd1",
+      "locator": "PDF25–26 / printed17–18 Section5.2 Algorithm2: w[i]=w[i-6] XOR g_i(w[i-1]) for AES192. Any six consecutive schedule words invert to the master key; four K8 words plus two guessed words give at most2^64 completions.",
+      "fields": [
+        "/success"
+      ],
+      "interpretation": "Supporting standard recurrence bounds the explicitly stated completion search; does not interpret the two transformed tuple bytes as independent master-key bits or change recorded time costs."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Source-reported result; attack execution and complete proof/forward-literature audit are separate.",
+    "Expected wrong tuple count2^-40 is not whole-attack success. No numerical peak memory reported.",
+    "The guessed144bits combine K8 and two intermediate z7bytes; they are not proven144independent master-key bits and do not justify an automatic48-bit completion. Wrong-tuple expectation is not full recovery success."
+  ],
+  "related_problem_ids": []
+}

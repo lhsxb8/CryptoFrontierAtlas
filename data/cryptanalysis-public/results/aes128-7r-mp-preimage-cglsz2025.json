@@ -1,0 +1,149 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes128-7r-mp-preimage-cglsz2025",
+  "title": "MITM · AES-MP preimage",
+  "display": {
+    "name": "MITM · AES-MP preimage",
+    "method": "mitm"
+  },
+  "result_kind": "preimage_attack",
+  "goal": "compression_preimage",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "cglsz2025-seven-round-final-no-mc",
+    "description": "One-block preimage of the full seven-round AES-MP compression output with a predetermined 128-bit IV/public AES key and predetermined output target."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "offline_public_cipher_evaluation"
+    ],
+    "related_key_count": null,
+    "key_relation": "The source-defined public key or public round keys.",
+    "key_population": "General standard AES master keys",
+    "plaintext_model": "One unknown 128-bit message, fixed public chaining value and fixed full output target.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "mitm",
+    "fixed-key-preimage"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{112}",
+      "log2": 112,
+      "unit": "round-reduced-aes-encryptions",
+      "qualifier": "estimate",
+      "note": "2^(128-min(16,16,32)) from Eq3 and Figure19."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No secret-key oracle; the public fixed-key permutation is evaluated offline."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^{32}",
+      "log2": 32,
+      "unit": "neutral-word-table-entries",
+      "qualifier": "estimate",
+      "note": "Figure19: blue words indexed by MC1[1,3]."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Setup is included in total work unless separately stated."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "find-one-block-full-output-preimage-fixed-iv",
+    "value": null,
+    "description": "The checked analysis gives an expected-work or filtering argument without a numeric probability for the complete named output event.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF p.16 Eq3 and p.43 AppendixD.1."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "cglsz2025-aes-hashing-owf",
+      "locator": "PDF pp.7–12 Table1 and definitions; pp.15–16 Eq3; p.43 AppendixD.1/Figure19.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/experiment",
+        "/bound"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete named output probability is not quantified by the source."
+  ],
+  "related_problem_ids": [],
+  "experiment": {
+    "construction": {
+      "type": "compression_function",
+      "name": "AES-MP",
+      "definition": "CF(h,m)=AES_h(m) xor m xor h",
+      "output_bits": 128
+    },
+    "variables": [
+      {
+        "name": "h",
+        "control": "fixed",
+        "domain": "128-bit fixed public AES key",
+        "condition": "Predetermined initial value; no IV search is allowed."
+      },
+      {
+        "name": "m",
+        "control": "chosen",
+        "domain": "128-bit message",
+        "condition": "One message whose full compression output equals the target."
+      },
+      {
+        "name": "y",
+        "control": "fixed",
+        "domain": "128-bit target",
+        "condition": "Predetermined target independent of the searched message."
+      }
+    ],
+    "relation": "CF(h,m)=y",
+    "output": {
+      "scope": "full",
+      "bits": 128,
+      "mask": null
+    },
+    "parameters": [],
+    "distinctness": "One preimage for the fixed target and IV; no IV freedom.",
+    "reference": "Ideal 128-bit compression output, generic classical preimage work approximately 2^128.",
+    "unresolved": []
+  }
+}

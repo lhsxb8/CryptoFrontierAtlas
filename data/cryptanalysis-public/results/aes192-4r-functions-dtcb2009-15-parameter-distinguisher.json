@@ -1,0 +1,190 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-4r-functions-dtcb2009-15-parameter-distinguisher",
+  "title": "4-round AES-192: 15-parameter conditional distinguisher",
+  "display": {
+    "name": "15-parameter conditional distinguisher",
+    "method": "mitm"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "dtcb2009-inner-rounds-no-whitening-with-mixcolumns",
+    "description": "4 inner AES rounds without initial whitening, including MixColumns in every round; fixed keys and explicitly conditioned input structures."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "Fixed standard AES key schedule; component derivations treat its round-key bytes as constants, not as a related-key oracle.",
+    "key_population": "Every fixed AES key; probability is over passive-context selection, not over a weak-key subset.",
+    "plaintext_model": "Choose the fifteen passive plaintext bytes independently and uniformly once; keep them fixed while the active byte takes all 256 values.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The displayed bound uses a uniformly random passive context and complete membership in the corrected 15-byte difference-function family.",
+      "The2^-72 number is a qualifying-parameter event, not a stated distinguishing advantage or complete recovery rate."
+    ],
+    "reference_model": "A uniformly random128-bit permutation under the same classical chosen-plaintext interface."
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "conditional-parameterization"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "No separate standalone resource budget is supplied."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "256 per active-byte structure",
+      "log2": 8,
+      "unit": "chosen-plaintext-blocks-per-structure",
+      "qualifier": "exact",
+      "note": "This is the input size for one property test. No complete constant-advantage repeated-test budget is provided."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "No separate standalone resource budget is supplied."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "No separate standalone resource budget is supplied."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "distinguishing-advantage",
+    "value": null,
+    "description": "Advantage lower bound for COMPLETE corrected 15-byte difference-family membership on one 256-query structure. Fifteen passive bytes are independently uniform before the structure and fixed across it; the key is arbitrary and fixed. The actual AES dependency map gives nine independent byte constraints on twelve uniform external bytes, so the sufficient parameter event has probability exactly 2^-72 without uniform ci or key assumptions. The fourth-round output-key byte cancels, leaving at most2^120 anchored255-byte difference vectors. Finite-permutation sampling without replacement gives the displayed ideal false-alarm upper bound. Use the corrected coefficient1 in Equation9, obtained by substituting Equation7 into correct Equations3–6 and12, not the literal printed table. This is a derived tiny-advantage bound, not the source 50% seven-round key-recovery rate. Standalone computation costs remain unreported; the printed-equation discrepancy and historical local component are retained.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Read all 13 DTCB09 PDF pages. Reconstruct corrected 15-byte difference-family membership and prove Equation7 event probability exactly 2^-72 for every fixed key under uniform passive-context selection using three disjoint rank 3 affine systems. Prove255-coordinate anchored finite-permutation false acceptance at the existing256-query budget. Clarify only input-randomness/key-population/assumption wording; native resources, round boundary, local component, source conflict and audit gates retained. Targeted success proof, not a new full-paper or forward audit."
+    },
+    "components": [
+      {
+        "metric": "fifteen-parameter-reduction-event-source-model",
+        "value": 2.117582368135751e-22,
+        "basis": "author_model",
+        "expression": "2^{-72}",
+        "description": "Proposition4 / Equation7 assigns2^-72 to the byte-parameter equalities under its random-parameter model. The existing reduced-Equation9 coefficient discrepancy is not resolved; the event is not a validated whole-attack recovery probability."
+      }
+    ],
+    "basis": "derived_from_source",
+    "expression": "\\ge 2^{-72}-2^{120}\\prod_{i=1}^{255}\\frac{2^{120}}{2^{128}-i}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Printed pp.149–150 Section4.1 Proposition4",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete official proceedings read and critical page images checked. Original claims remain attributed to DTCB09; later objections have their own source-specific observations."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Complete PDF1–13/printed144–156; Sections3–4 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Raw-first complete inventory and independent component review completed; source costs and whole-attack reproduction remain separate."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Proceedings PDF6–7 / printed149–150 Section4.1 Proposition4, Equations7–13.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical success for this exact distinguishing output is supplied. Preserve the source random-parameter assumption and existing reduced-Equation9 conflict. The2^-72 probability is for the parameter-reduction condition, not the probability of correctly distinguishing after one256-text structure; random-side acceptance and a complete advantage are not provided."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "PDF6–7 / printed149–150 Section4.1, Proposition4 and Equation7; PDF9–10 / printed152–153 Section4.3, Proposition5 and Corollary1.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: no numerical success is established for this exact output and budget in the checked passages. Primary probabilities, local components, costs, target and all scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "PDF3–7/printed146–150: first-round state, corrected Equations3–6, Proposition4 and Equations7–13; fixed-key event derivation2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review",
+        "/setting/plaintext_model",
+        "/setting/key_population",
+        "/setting/assumptions"
+      ],
+      "interpretation": "Supersedes only the absence of a complete statistical bound and clarifies its passive-context randomness. Under uniform passive plaintext selection the 12 external first-round S-box bytes are jointly uniform; Equation7 gives three disjoint rank 3 affine systems, so its sufficient event has exact probability2^-72 for every fixed key, without assuming 20 independent constants. Complete corrected 15-byte family membership accepts on that event. Literal Equation9 uses coefficient3 where substitution in Equation4 requires1; the existing source discrepancy remains and the guarantee does not certify the unmodified printed table."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "PDF6–7/printed149–150 Equations12–13 and normalized difference f(i)+f(0); reviewer finite-permutation derivation2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Normalize all 256 output bytes by the first, yielding255 differences and at most2^120 family vectors. Condition on the first full ideal output; at step i=1,...,255 each required output byte has at most2^120 eligible blocks among 2^128-i remaining blocks. The union bound gives beta=2^120*product_{i=1}^{255}2^120/(2^128-i), hence advantage at least2^-72-beta. This is a derived bound for the explicit256-query corrected-family test, not author-printed success, iid bytes, the 32-difference wrong-key estimate or the later50% recovery rate. Unknown standalone costs remain unknown."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Formal component tests and author-reported budgets are distinct from an end-to-end attack reproduction.",
+    "A key-independent15-parameter table is costed inside Section4.2's seven-round attack, not as a separately optimized standalone distinguisher."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Reduced Equation9 coefficient",
+      "description": "Under Equation7's conditions, substituting c12=3*d1 into corrected Equation4 gives coefficient1 for S(3*x1+3*d1). Printed Equation9 instead uses coefficient3. The conditional15-parameter count survives the corrected substitution; literal precomputation values differ.",
+      "observations": [
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed p.148 Equation4 and p.149 Equation7",
+          "reported": "The last term of C3_22 is S(3*x1+c12); c12=3*d1 leaves coefficient1."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed p.149 Equation9",
+          "reported": "The corresponding reduced term is printed as 3*S(3*x1+3*d1)."
+        }
+      ]
+    }
+  ]
+}

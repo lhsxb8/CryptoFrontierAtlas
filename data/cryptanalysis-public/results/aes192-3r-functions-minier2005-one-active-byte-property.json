@@ -1,0 +1,157 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-3r-functions-minier2005-one-active-byte-property",
+  "title": "3-round AES-192: One-active-byte bottleneck relation",
+  "display": {
+    "name": "One-active-byte bottleneck relation",
+    "method": "collision"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 3,
+    "full_round": false,
+    "round_convention": "minier2005-inner-rounds-with-mixcolumns-standard-left-shiftrows",
+    "description": "AES-192 on 128-bit blocks. Consecutive inner rounds each include MixColumns; the round keys are fixed and unknown. The source explicitly specifies left-going ShiftRows."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_analysis_no_attack_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "Three fixed, unknown 128-bit round keys. The structural argument does not use their master-key dependencies, and therefore also applies to keys derived from any of the standard AES key lengths.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "Fix the other twelve input bytes; vary y at Y_(0,3) and use c=(c0,c1,c2) at Y_(1,3),Y_(2,3),Y_(3,3) as a parameter.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "collision-of-functions",
+    "restricted-byte-dependency"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "component-relation-not-attack-success",
+    "value": null,
+    "description": "The property parameters and quantified relation are recorded separately from attack success and resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Printed pp.18–20 Section3.1 and Property1",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-author",
+      "locator": "Printed pp.18–20 Section3.1 and Property1",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Both complete PDF1–11/printed16–26; Sections3–5 and references.",
+      "fields": [
+        "/assessment",
+        "/property"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Primary-text claims are catalogued by target and scope. Full attacks, cost estimates and global success are not independently reproduced."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "The induced one-byte function s_c(y) is described by five c-independent key-dependent byte parameters and four c/key-dependent byte parameters. Equal parameter tuples give equal functions over all 256 y values.",
+    "quantifier": "For fixed unknown round keys and fixed twelve input bytes, equality of the four internal parameters is sufficient for s_c(y)=s_c'(y) for every y. Finding distinct colliding c values uses a random-function heuristic; no probability-one guarantee for every key is asserted.",
+    "scope": "Three internal AES rounds; projected byte-valued functions, not a collision of complete ciphertext blocks or AES master keys.",
+    "parameters": [
+      {
+        "name": "Fixed key-dependent bytes",
+        "reported": "5",
+        "meaning": "Four first-stage offsets and one final projected-key offset in the source representation."
+      },
+      {
+        "name": "Parameter-dependent bytes",
+        "reported": "4",
+        "meaning": "The internal tuple depending on c and the fixed unknown round keys."
+      },
+      {
+        "name": "Function domain",
+        "reported": "256 y values",
+        "meaning": "One colliding pair agrees pointwise over this domain; this is not an oracle-query budget."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "The published dependency argument is retained with its heuristic collision-existence step. No universal existence theorem or full collision-search reproduction is claimed."
+    }
+  }
+}

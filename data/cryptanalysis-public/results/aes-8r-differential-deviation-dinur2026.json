@@ -1,0 +1,163 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-8r-differential-deviation-dinur2026",
+  "title": "8-round AES round structure: Maximum expected differential deviation",
+  "display": {
+    "name": "Maximum expected differential deviation",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "dinur2026-iterated-aes-round-function-independent-keys",
+    "description": "8 iterated AES rounds on 128-bit blocks in the source's independent-round-key model. The source analyzes 3.5-round structure by omitting the final invertible linear layer when proving its four-round norm bounds. Variant references identify the corresponding round structures/boundaries, not use of the standard master-key schedule."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "One complete cipher key is a tuple of independently uniformly sampled 128-bit round keys, including the independent input key mask. It is not derived by the AES-128, AES-192 or AES-256 master-key schedule.",
+    "key_population": "Uniform independent-round-key ensemble for the AES 128-bit round structure; bounds average over the tuple of round keys, not over standard AES master keys.",
+    "plaintext_model": "For differential statements, any prescribed nonzero input/output difference and the source DDT averaging over input u; the independent input key mask makes averaging over the keys alone equivalent. For pairwise independence, any pair of distinct fixed plaintexts.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The categorical single_secret_key denotes one sampled whole round-key tuple, not a standard 128/192/256-bit AES master key; independence is part of the explicit population definition.",
+      "Expected differential probability is averaged over the independent round-key ensemble. The paper does not prove the same bounds for every fixed round-key tuple, almost all fixed tuples, or the standard AES key schedule.",
+      "The source uses the concrete AES Sbox, ShiftRows and MixColumns, with b=128, k=4 and w=8; generic AES-like auxiliary lemmas are not being promoted to an AES result without its concrete constants."
+    ]
+  },
+  "techniques": [
+    "expected-differential-probability",
+    "functional-analysis",
+    "ddt-norm-contraction",
+    "independent-round-key-markov-model"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural probability or matrix-norm theorem; no cryptanalytic attack resource is being estimated."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural probability or matrix-norm theorem; no cryptanalytic attack resource is being estimated."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural probability or matrix-norm theorem; no cryptanalytic attack resource is being estimated."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural probability or matrix-norm theorem; no cryptanalytic attack resource is being estimated."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "ensemble-structural-property",
+    "value": null,
+    "description": "A probability or statistical-distance bound on the independent-key cipher ensemble; not an attack-success probability."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dinur2026-differentials-proceedings",
+      "locator": "PDF p.4 / printed p.214, Section1.3 Eqs(1)-(2); PDF p.22 / printed p.232, Section4.4.",
+      "fields": [
+        "/property",
+        "/techniques"
+      ],
+      "interpretation": "Published analytical Eq(1), its integer domain and Eq(2) visually checked; source Section4.4 identifies the proof through Theorems1-2 and doubly stochastic matrix results, with missing full details referred to[20]. Source-formula substitution at r=2 was arithmetically checked; no end-to-end proof reproduction."
+    },
+    {
+      "source_id": "dinur2026-differentials-proceedings",
+      "locator": "PDF pp.1-5 / printed pp.211-215, Sections1 and1.3; PDF pp.15-16 / printed pp.225-226, Definition12 and Section3.7; PDF p.22 / printed p.232, Section4.3.",
+      "fields": [
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Independent round-key ensemble and expected DDT probabilities are explicit. Structural result, hence no attack costs, attack success or active-Sbox bound. Exact standard-cipher key schedules are not claimed; omission of the terminal linear layer is an analytical norm simplification."
+    },
+    {
+      "source_id": "dinur2026-differentials-proceedings",
+      "locator": "CompletePDF1–32/printed211–242, allSections1–6, proofs and references; full-version-only material remains access pending.",
+      "fields": [
+        "/assessment",
+        "/property"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Independent-round-key ensemble result, not a fixed-key differential bound or a security theorem for the standard AES key schedule.",
+    "The proceedings states these results but sends several proofs, the stronger spectral lemma and evaluation code to ePrint2025/1326; the ePrint PDF route was access-blocked and those omitted details were not independently checked."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "For every nonzero input/output difference pair in 8-round AES, the expected differential probability lies in 1/(2^128-1) +/- (2^-128/50)*2^(-14.65*(2-2)). This bounds both MEDP and minimum expected differential probability and makes every nonzero differential possible in the averaged model.",
+    "quantifier": "For every prescribed nonzero input/output difference pair, under averaging over independently uniformly sampled round keys; no per-fixed-key quantifier is supplied.",
+    "scope": "Concrete 8-round AES 128-bit round structure. This is a differential (sum of all compatible characteristic probabilities), not a bound on one characteristic. Source Eq(1) is stated for all integers r>=2 at 4r rounds; the stored point uses r=2.",
+    "parameters": [
+      {
+        "name": "Source formula",
+        "reported": "|EDP_(4r)(a,b)-1/(2^128-1)| <= (2^-128/50)*2^(-14.65*(r-2)); integer r>=2",
+        "meaning": "Uniform maximum absolute deviation bound for all nonzero difference pairs in the independent-key expected DDT."
+      },
+      {
+        "name": "Parameter assignment",
+        "reported": "r=2; rounds=4r=8",
+        "meaning": "Fixed round boundary of this evidenced configuration; not an extra key-schedule assumption."
+      },
+      {
+        "name": "Deviation bound",
+        "reported": "2^-128/50",
+        "meaning": "Additive probability error, not an attack cost, distinguishing advantage, or success probability."
+      },
+      {
+        "name": "Ideal probability",
+        "reported": "1/(2^128-1)",
+        "meaning": "Probability of a prescribed nonzero output difference under an ideal keyed permutation."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Published analytical Eq(1), its integer domain and Eq(2) visually checked; source Section4.4 identifies the proof through Theorems1-2 and doubly stochastic matrix results, with missing full details referred to[20]. Source-formula substitution at r=2 was arithmetically checked; no end-to-end proof reproduction."
+    }
+  }
+}

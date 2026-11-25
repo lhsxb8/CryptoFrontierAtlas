@@ -1,0 +1,99 @@
+name: Lean formalization
+description: Add a reproducible formal proof or verification evidence for an existing result.
+title: "[Lean] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Submit an independent formal result or add verification evidence to a paper or Atlas entry. Publication status and proof verification are recorded separately.
+        Read docs/result-submissions.md in this repository. Reports are public; link to material you can share.
+  - type: dropdown
+    id: collection
+    attributes:
+      label: Collection
+      options:
+        - Cryptanalysis results
+        - Open-question progress or correction
+    validations:
+      required: true
+  - type: dropdown
+    id: purpose
+    attributes:
+      label: Contribution type
+      options:
+        - New or missing result
+        - Correction
+        - Additional verification evidence
+        - Source version update
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Public source and fixed revision
+      description: Repository URL, full commit hash, formalization authors and license. Link any associated paper and its version; a paper is optional.
+    validations:
+      required: true
+  - type: textarea
+    id: claims
+    attributes:
+      label: Statements and theorem correspondence
+      description: Give the natural-language result, full Lean statement, fully qualified theorem name and file location. Explain the correspondence between formal definitions and the claimed cryptographic result. Identify whether the artifact covers the full statement, a lemma or a finite check.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Target, setting and assumptions
+      description: Give quantified domains, hypotheses, algorithm instances and round boundaries where applicable. Identify assumptions supplied as hypotheses and the unresolved remainder of any original question.
+    validations:
+      required: true
+  - type: textarea
+    id: costs
+    attributes:
+      label: Parameters and resource costs
+      description: For an attack claim, give parameter domains and time/data/memory/preprocessing costs with units and evidence at the same assignment. For a structural theorem or proof-only evidence, write not applicable. Proof-checking runtime belongs in the replay environment below.
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: Success event and probability
+      description: For an attack, give the event, bound, assumptions and its connection to the cost model. For a structural theorem, write not applicable. Distinguish a conditional theorem from a proof of its hypotheses.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence locations
+      description: Map claims and definitions to source files and declarations at the fixed revision. Include paper pages or formulas for any external cost or success claim.
+    validations:
+      required: true
+  - type: textarea
+    id: replay
+    attributes:
+      label: Reproducible environment and replay
+      description: Provide lean-toolchain, the dependency lockfile, exact clean-build commands and target, expected output, and CPU/RAM/disk/time requirements. Link an existing CI log if available. Avoid dependency updates during replay.
+    validations:
+      required: true
+  - type: textarea
+    id: trust
+    attributes:
+      label: Axiom dependencies and computational evidence
+      description: Give commands and output of "#print axioms" for each claimed theorem. Disclose native_decide and other extra trust, any remaining admissions, and external computation/certificates. For generated data, link versioned inputs, hashes and replay commands.
+    validations:
+      required: true
+  - type: textarea
+    id: related-work
+    attributes:
+      label: Related work and Atlas records
+      description: Link existing records or reports, the source question or paper, and earlier proofs. State what this submission adds. If there is no matching record, say so.
+    validations:
+      required: true
+  - type: checkboxes
+    id: disclosure
+    attributes:
+      label: Public submission
+      options:
+        - label: The material I provide is public or I have permission to share it publicly.
+          required: true

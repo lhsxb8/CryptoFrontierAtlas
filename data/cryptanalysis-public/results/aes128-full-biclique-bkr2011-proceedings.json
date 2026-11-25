@@ -1,0 +1,168 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-biclique-bkr2011-proceedings",
+  "title": "Full-round AES-128 biclique key recovery, 2011 proceedings version",
+  "display": {
+    "name": "Biclique key recovery",
+    "method": "biclique"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "Standard full 10-round AES-128 with its real key schedule and standard final round."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "The biclique uses internal related-key computations; the attacker is not given related-key secret-key oracles.",
+    "key_population": "all keys",
+    "plaintext_model": "obtained by decrypting selected ciphertexts",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Single target secret key and chosen-ciphertext decryption access.",
+      "Sufficient data for the source biclique construction; theoretical computation estimate."
+    ]
+  },
+  "techniques": [
+    "biclique",
+    "meet-in-the-middle"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^126.18",
+      "log2": 126.18,
+      "unit": "aes128-computations-per-success-rate",
+      "qualifier": "estimate",
+      "note": "Table 1 reports computations/success rate; Section 6.4 estimates AES-equivalent work including key scheduling. Source recomputation counts disagree: Table3=56, Section6.3=57, Section6.4=55 S-boxes; reported headline retained."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^88",
+      "log2": 88,
+      "unit": "chosen-ciphertext-blocks",
+      "qualifier": "upper_bound",
+      "note": "Section6.2 fixes four ciphertext bytes and one further byte equality, so the ciphertext codebook budget does not exceed2^88 blocks. This is not a chosen-plaintext label."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^8",
+      "log2": 8,
+      "unit": "stored-full-g-subcipher-computations",
+      "qualifier": "upper_bound",
+      "note": "Section 6.4 counts complete g computations including intermediate states and subkeys, not 128-bit blocks or bytes."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Biclique construction2^7 and matching precomputation2^7 occur per key group and are included in Section6.4 total time. No separately reusable offline setup budget is reported."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "key-recovery-success",
+    "value": 1,
+    "description": "Section 6.4 states success probability one for the complete key-space search."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bkr2011-biclique-proceedings",
+      "locator": "PDF p.4, Table 1, AES-128 10-round row; p.6, Section 2.3, Step 2; p.16, Section 6.4.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Values are taken from this proceedings PDF. The decryption-oracle step supplies the access model; Section 6.4 supplies the success and native-memory interpretation."
+    },
+    {
+      "source_id": "bkr2011-biclique-proceedings",
+      "locator": "Complete publisher proceedings PDF1–28 / printed pp.344–371, including Tables1–6 and AppendixA.",
+      "fields": [
+        "/assessment",
+        "/resources",
+        "/success",
+        "/setting"
+      ],
+      "interpretation": "Fresh independent complete-primary review of an independently acquired publisher edition; byte identity with the formerly hashless IACR route is not asserted."
+    },
+    {
+      "source_id": "bkr2011-biclique-proceedings",
+      "locator": "PDF pp.13,15 / printed pp.356,358; Table3 and Section6.3.",
+      "fields": [
+        "/resources/time",
+        "/field_conflicts"
+      ],
+      "interpretation": "Located source observation retained with independently reviewed local conflict; no replacement of original scalar or whole-attack refutation."
+    },
+    {
+      "source_id": "bkr2011-biclique-proceedings",
+      "locator": "PDF p.16 / printed p.359; Section6.4.",
+      "fields": [
+        "/resources/time",
+        "/field_conflicts"
+      ],
+      "interpretation": "Located source observation retained with independently reviewed local conflict; no replacement of original scalar or whole-attack refutation."
+    },
+    {
+      "source_id": "bkr2011-biclique-proceedings",
+      "locator": "PDF pp.13,15–16 / printed pp.356,358–359; Section6.1, Section6.3, Figures5–6 and Section6.4.",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "B31 local review, not an author-reported correction: inverse AES128 schedule gives K4[3] differences150 and251 for i=1 at j=0 and1 around zero K8; the matching-relevant inverseMC projection gives133 and181. Finite controls and the exact difference identity are in [local audit reference not distributed] Source cost/success and attack-reproduction status are unchanged."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The theoretical attack and its cost have not been executed or independently reproduced.",
+    "This historical source-specific result is not labelled current best-known; later literature coverage is incomplete."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "AES-128 source recomputation counts disagree",
+      "description": "Section6.3 gives41 backward state S-boxes,13 forward state S-boxes and3 forward key-schedule S-boxes (=57); Table3 gives(0.875+2.625)*16=56; Section6.4 uses55. The reported2^126.18 is retained; no independently repaired attack cost is asserted. B31 local standard-AES key-schedule checks refute the literal linear-in-i and j-independent interpretation for a backward-matching-relevant subkey contribution. These checks do not rule out other tables/index remappings or settle an achievable numerator; see [local audit reference not distributed]",
+      "observations": [
+        {
+          "source_id": "bkr2011-biclique-proceedings",
+          "locator": "PDF pp.13,15 / printed pp.356,358; Table3 and Section6.3.",
+          "reported": "Table3 recomputation totals56 S-boxes; Section6.3 component prose totals57."
+        },
+        {
+          "source_id": "bkr2011-biclique-proceedings",
+          "locator": "PDF p.16 / printed p.359; Section6.4.",
+          "reported": "The cost formula uses3.4375 SubBytes=55 S-boxes and states2^126.18 total computations."
+        },
+        {
+          "source_id": "bkr2011-biclique-proceedings",
+          "locator": "PDF p.15 / printed p.358, Section6.3 backward direction and Figure5; key-group definition PDF p.13 / printed p.356, Section6.1.",
+          "reported": "The text describes the relevant backward subkey differences as a linear function of i and therefore precomputable; the group varies round8 bytes8/12 by i and1/9 by j."
+        }
+      ]
+    }
+  ]
+}

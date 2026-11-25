@@ -1,0 +1,24 @@
+\begin{tikzpicture}
+  \foreach \x in {0,...,3} \foreach \y in {0,...,3} {
+    \draw[draw=atlasLine,fill=atlasFill] (.34*\x,1.5-.34*\y) rectangle ++(.34,-.34);
+  }
+  \node[note] at (.68,-.35) {State: $s_{r,c}$\\column-major bytes};
+  \node[box] (sb) at (3, .85) {SubBytes};
+  \node[box] (sr) at (5.4, .85) {ShiftRows};
+  \node[accent] (mc) at (7.8, .85) {MixColumns};
+  \node[xor] (ak) at (10, .85) {$+$};
+  \node (out) at (11.3, .85) {$S'$};
+  \draw[wire] (1.36,.85) -- (sb);
+  \draw[wire] (sb) -- (sr); \draw[wire] (sr) -- (mc);
+  \draw[wire] (mc) -- (ak); \draw[wire] (ak) -- (out);
+  \node (rk) at (10,2) {$K_i$}; \draw[keywire] (rk) -- (ak);
+  \node[note] at (7.8,-.1) {Omitted in the final round};
+  \node[phase,anchor=west] at (0,-1.15) {Key expansion\quad $N_k=\AtlasKeyWords$, $N_r=\AtlasRounds$};
+  \node[anchor=west] at (0,-1.85) {$w_i=w_{i-N_k}\oplus t,\qquad t\gets w_{i-1}$};
+  \node[anchor=west] at (0,-2.85) {$t\gets\begin{cases}
+    \operatorname{SubWord}(\operatorname{RotWord}(t))\oplus\operatorname{Rcon}[i/N_k],&i\bmod N_k=0,\\
+    \operatorname{SubWord}(t),&N_k>6\ \text{and}\ i\bmod N_k=4,\\
+    t,&\text{otherwise}.
+  \end{cases}$};
+  \node[note,anchor=west] at (0,-4.05) {$w_0,\ldots,w_{N_k-1}$ come from $K$; four consecutive words form each round key.};
+\end{tikzpicture}

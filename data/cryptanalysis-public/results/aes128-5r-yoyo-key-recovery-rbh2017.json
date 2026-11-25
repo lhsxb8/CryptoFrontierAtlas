@@ -1,0 +1,220 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-5r-yoyo-key-recovery-rbh2017",
+  "title": "RBH17 5-round AES-128 / aes128-5r-yoyo-key-recovery-rbh2017",
+  "display": {
+    "name": "Yoyo key recovery",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "rbh2017-5r-stripped-external-linear-layers",
+    "description": "5 nonlinear AES rounds in the source enck/deck convention, omitting initial ShiftRows and final ShiftRows/MixColumns. Section 3 explains public linear conjugation to full-round AES. Recovers all four 32-bit words of the 128-bit whitening key; this is the AES-128 master key. The four words called subkeys in Section 3.5 are not four complete round keys."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "adaptive_chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "Yoyo swap-generated adaptive encryption/decryption texts under one unknown key; the source native chosen-text count is not automatically an aggregate oracle-call count.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [],
+    "reference_model": "Complete recovery of the128-bit initial whitening/master key of five-round AES128 under adaptive bidirectional unknown-key access; this is not a random-permutation distinguishing experiment."
+  },
+  "techniques": [
+    "yoyo-game",
+    "zero-difference-pattern"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^31",
+      "log2": 31,
+      "unit": "5-round-aes128-encryptions",
+      "qualifier": "estimate",
+      "note": "Source counts about 2^37.3 S-box lookups, divides by 5*16; remaining whitening words are included at lower order. Source leading2^37.3219S-box lookups divided by80lookups per five-round AES gives2^31; residual subkeys called negligible. This is not wall-clock runtime."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^11.32",
+      "log2": 11.32,
+      "unit": "adaptive-chosen-texts",
+      "qualifier": "estimate",
+      "note": "Section 3.5 final total includes remaining-word recovery; native texts/pairs, not an independently normalized total of all oracle calls. The total is 2560 native texts (log2 approximately 11.3219), from 2 × 256 × 5. Original/prose pair choices and aggregate encryption/decryption queries remain distinct."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Source Table 1 says small; no numerical storage budget supplied."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical resource amount supplied for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-aes128-key-recovery",
+    "value": null,
+    "description": "First 32-bit-word false positive is estimated at 2^-16 with five test pairs; four/five more pairs resolve the other words. Source gives no numerical whole-master-key success.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Checked Section3.5 and Algorithm6: useful-pair existence and first-word filter estimates do not quantify complete master-key recovery. The existing five-returned-versus-five-total-pairs conflict remains."
+    },
+    "components": [
+      {
+        "metric": "first-subkey-per-candidate-false-positive",
+        "value": 9.094947017729282e-13,
+        "expression": "2^{-40}",
+        "basis": "author_model",
+        "description": "The Section3.5 prose estimates five independent returned-pair filters for one wrong first-word candidate. Algorithm6 includes the initial pair among five total pairs; the existing source conflict applies to this estimate."
+      },
+      {
+        "metric": "first-subkey-any-false-positive",
+        "value": 0.0000152587890625,
+        "expression": "2^{-16}",
+        "basis": "author_model",
+        "description": "Source estimate over 2^24 first-word candidates using the prose five-returned-pair argument. This is a local false-positive estimate, not complete-master-key recovery success; the pair-count conflict remains."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+      "locator": "PDF p.4 Table 1; pp.22–25 Section 3.5 Eqs.13–15, Algorithm 6 and final full-whitening-key accounting.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Targeted primary result statements and accounting checked; not a complete-paper proof audit."
+    },
+    {
+      "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+      "locator": "Complete PDF1–27 / printed217–243, all sections, algorithms, cost paragraphs and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-primary inventory, with independent consequential-section review. No author attack code executed."
+    },
+    {
+      "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+      "locator": "PDF23 §3.5, Eq13 and five returned pairs.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Both located source observations retained; no silently repaired resource or success vector."
+    },
+    {
+      "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+      "locator": "PDF24 Algorithm6 initialization S={(p0,p1)}, while len(S)<5.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Both located source observations retained; no silently repaired resource or success vector."
+    },
+    {
+      "source_id": "mrsa2023-yoyo-tosc-primary",
+      "locator": "PDF19–20 §5.2, discussion explicitly separates deterministic yoyo key recovery.",
+      "fields": [
+        "/success",
+        "/setting",
+        "/field_conflicts"
+      ],
+      "interpretation": "Later distinguisher correction explicitly does not invalidate this deterministic recovery construction; the original pseudocode/local-filter accounting remains its own task."
+    },
+    {
+      "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+      "locator": "PDF23 §3.5, Eq13 and five returned pairs.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact source-local or later-primary observation supporting the attached unresolved field."
+    },
+    {
+      "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+      "locator": "PDF24 Algorithm6 initialization S={(p0,p1)}, while len(S)<5.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact source-local or later-primary observation supporting the attached unresolved field."
+    },
+    {
+      "source_id": "mrsa2023-yoyo-tosc-primary",
+      "locator": "CompletePDF1–30 / printed28–57, all algorithms, theory, experiments, tables and references.",
+      "fields": [
+        "/assessment",
+        "/success"
+      ],
+      "interpretation": "MRSA23 now independently read in full; the earlier21-page targeted union was not a full audit. Statistical correction and deterministic key recovery remain separate; original RBH17 resource vectors/conflicts are unchanged."
+    },
+    {
+      "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+      "locator": "PDF23/printed239 Section3.5 Eq13 and prose five returned pairs; PDF24/printed240 Algorithm6 S initialization and len(S)<5; PDF25/printed241 remaining-word verification.",
+      "fields": [
+        "/success/review",
+        "/success/components/0",
+        "/success/components/1"
+      ],
+      "interpretation": "Local source-model probabilities are structured without resolving the existing pseudocode conflict or replacing them by full-key success."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Requires adaptive encryption and decryption under the same unknown key, with the source-defined round boundary."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "First-subkey test pair-count mismatch",
+      "description": "Algorithm6 starts S with the original pair and stops at five total pairs, hence generates four new pairs. The original pair automatically satisfies Eq13 under the candidate relation and is not an additional independent8-bit filter. The prose five-returned-pair/2^-16local false-positive argument is not established by that pseudocode. Do not substitute a reviewer-generated whole-attack success or declare the key-recovery construction broken.",
+      "observations": [
+        {
+          "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+          "locator": "PDF23 §3.5, Eq13 and five returned pairs.",
+          "reported": "Five returned pairs give a2^-40per-candidate test and2^-16local false-positive estimate over2^24candidates."
+        },
+        {
+          "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+          "locator": "PDF24 Algorithm6 initialization S={(p0,p1)}, while len(S)<5.",
+          "reported": "Five total pairs include the original candidate-constructed pair, so only four new pairs are collected."
+        }
+      ]
+    }
+  ]
+}

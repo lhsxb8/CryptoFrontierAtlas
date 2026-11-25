@@ -1,0 +1,110 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes256-7r-low-data-d24-kara2024",
+  "title": "Low-data integral–MITM",
+  "display": {
+    "name": "Low-data integral–MITM",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "kara2024-standard-reduced-final-no-mc",
+    "description": "7-round AES-256, one standard secret master key, initial whitening and no final MixColumns; complete-key attack with 2^24 chosen plaintexts."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintexts"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed standard AES master key and its key schedule.",
+    "key_population": "General standard AES master keys",
+    "plaintext_model": "A complete 2^24 structure varying bytes5,10,15; partition by two whitening-key-byte XORs.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "constant-guessing",
+    "integral-key-space-partitioning"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{182}",
+      "log2": 182,
+      "unit": "two-round-aes-decryptions",
+      "qualifier": "estimate",
+      "note": "Section7 native two-round decryption count; no unsupported full-encryption conversion."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^{24}",
+      "log2": 24,
+      "unit": "chosen-plaintexts",
+      "qualifier": "estimate",
+      "note": "The same data/partition choice is used by all attached costs."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^{170}",
+      "log2": 170,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Source-native byte memory from Table1/Section7, including stored row identifiers."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Setup is included in total work unless separately stated."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-master-key-recovery",
+    "value": null,
+    "description": "The source quantifies wrong-guess matching/survivor expectations, but not a fixed-budget probability of identifying the original full master key. Exhaustive completion is retained as part of the stated attack.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF pp.13,15–17 Section7, all key-space partitions, expected matching/filtering and completion."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "kara2024-lower-data-aes",
+      "locator": "PDF p.3 Table1; pp.13,15–17 Section7/Algorithm3 and constant-guessing/partitioning costs.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/bound"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete named output probability is not quantified by the source."
+  ],
+  "related_problem_ids": []
+}

@@ -1,0 +1,193 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-7r-mitm-ds2008-basic-tradeoff-full-key-headline",
+  "title": "7-round AES-256: Basic MITM tradeoff: full-key headline",
+  "display": {
+    "name": "Basic MITM tradeoff: full-key headline",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "ds2008-key-recovery-boundaries-section5",
+    "description": "Reduced-round AES-256, with initial whitening. Section5's partial-decryption boundary uses the final-round byte positions; Section2 describes omission of final MixColumns. Costs follow that source convention. Author-reported complete key-recovery claim, including Step6's remaining-key search; the paper does not separately price that completion."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One unknown standard AES master key; the source attack derivation treats searched round-key bytes without using schedule relations.",
+    "key_population": "General fixed key; no weak-key restriction.",
+    "plaintext_model": "Source 2^32 chosen-plaintext structure; Step2's diagonal coordinates differ from the cost paragraph's first-column description. Repeat with changed plaintext sets according to the tradeoff parameters.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Offline table generation and online search have different native work units and are kept separate.",
+      "The source p.122 converts 2^88 partial decryptions to 2^80 encryption equivalents using its stated factor of 2^8. This conversion is recorded, not independently calibrated.",
+      "Step6's remaining-key enumeration has no separate numerical budget; the online figure describes the matching/search phase.",
+      "Section5 uses absolute function-value sequences and guesses a transformed penultimate-round-key byte.",
+      "Section5.1 samples a 1/n1 fraction of functions and repeats online search n2 times, with n1,n2>1."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "parameterized-functions",
+    "time-memory-data-tradeoff"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "n2 * 2^80",
+      "log2": null,
+      "unit": "ds2008-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Symbolic online family; no particular n or n1,n2 value is selected."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "n2 * 2^32",
+      "log2": null,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Source repeated-structure budget; distinct-query/reuse constraints require further analysis."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^206 / n1",
+      "log2": null,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Source table-sampling factor applied to baseline storage."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^208 / n1",
+      "log2": null,
+      "unit": "ds2008-four-round-byte-function-evaluations",
+      "qualifier": "estimate",
+      "note": "Source table-sampling factor applied to reusable setup."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-master-key-recovery",
+    "value": null,
+    "description": "No numerical joint recovery success is established for this endpoint. Store the source per-sequence table-hit curve with its own sampling assumptions; no product across four outputs or key hypotheses is supplied. The complete-key headline additionally requires the recorded completion step. Retain the existing coordinate/formula conflicts, native units and same-assignment costs.",
+    "components": [
+      {
+        "metric": "one-correct-sequence-hit-in-sampled-table",
+        "value": null,
+        "basis": "author_model",
+        "expression": "1-\\left(1-\\frac{1}{n_1}\\right)^{n_2}\\approx1-\\exp\\left(-\\frac{n_2}{n_1}\\right)",
+        "description": "Section5.1 Equation7, n1,n2>1: reduce the complete table by n1 and repeat with n2 input sets under the source sampling model. The source rounds its limits to63% at n2=n1 and98% at n2=4n1. The actual finite admissible domain, uniformity and dependence remain unproved; the formula is one table hit, not completed recovery."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-06",
+      "scope": "Exact11-page proceedings edition; endpoint-event review of Propositions4–5, Section5 Steps2–6, Equation7 and Table1. No probability was added: single-target table-hit and wrong-sequence models are not a numerical distinguishing advantage or joint selected-material/master-key identification rate. The98% repetition budget is not borrowed across endpoints. Coordinate, formula and completion-cost conflicts remain; not a new full-paper audit."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Printed p.122 Section5 Steps1–6 and cost paragraph; pp.122–123 Section5.1 Equation(7)",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts",
+        "/bound"
+      ],
+      "interpretation": "Complete official eleven-page proceedings reviewed; critical equations and Table1 visually checked. Author-reported scope and native units retained."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Complete PDF1–11/printed116–126; AppendixA Proposition6 and Sections4–5.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition inventory reviewed; reviewer finite component validation is separate from attack reproduction."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Proceedings PDF7–9 / printed122–124 Section5.1 Equation7, Section5.2 eight-round extension, Section5.3 XOR normalization and Table1 matched resource assignments.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical joint recovery success is established for this endpoint. Store the source per-sequence table-hit curve with its own sampling assumptions; no product across four outputs or key hypotheses is supplied. The complete-key headline additionally requires the recorded completion step. Retain the existing coordinate/formula conflicts, native units and same-assignment costs."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "PDF5–6 Section4, Propositions4–5; PDF7–9 Section5, Steps2–6, Equation7, Table1 and Section5.3.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: the checked source does not quantify this exact main output at its recorded budget. Separate proof, coordinate, key-schedule and cost obligations remain recorded. All primary probability values, components and scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Results are transcribed from this source version. Full attack searches, costs and success probabilities have not been reproduced.",
+    "The source's online and offline numbers are not directly summable without a work-unit conversion. Full master-key completion and table lookup/sorting overheads are not individually costed."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/plaintext_model",
+      "label": "Chosen-plaintext coordinates",
+      "description": "Step2 enumerates diagonal whitening-key bytes to arrange one active byte after round1; the following cost paragraph instead describes a varying first plaintext column.",
+      "observations": [
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.122 Section5 Step2",
+          "reported": "Kinit=(K0_11,K0_22,K0_33,K0_44); choose a set with only C1_11 active."
+        },
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.122 paragraph following Step6",
+          "reported": "The 2^32 plaintext structure varies the first column and fixes the rest."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "Printed function expansion",
+      "description": "The recurrence preceding Proposition2 omits the third-round S-boxes. Printed Equation(1) also differs from the second-round diagonal expressions immediately above it. A separately derived 25-parameter AES factorization passes local component tests; the printed expressions are preserved as discrepant. DTCB09 explicitly corrects Equation1 and the C3_22/C3_44 expansions in Equations2/4, while stating that these errors do not affect DS08 attack applicability. Separate corrected AES factorization is supported, not the literal print.",
+      "observations": [
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.119 recurrence preceding Proposition2; p.120 Equation(1)",
+          "reported": "The p.119 recurrence is linear in second-round bytes without S-boxes; Equation(1) uses different coefficients for its c4 and c3 terms."
+        },
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.119 second-round diagonal equations; p.117 AES round definition",
+          "reported": "SubBytes precedes ShiftRows/MixColumns every inner round. C2_22=S(3t11+c4)+c6 and C2_33=2S(t11+c3)+c7 require different nested terms in C3_11."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "PDF5/printed148 Section4, Equations3–6; PDF4/printed147 corrected recurrence.",
+          "reported": "Explicit correction of DS08 Equation1 and C3_22/C3_44; authors state no effect on applicability of DS08 attacks."
+        }
+      ]
+    }
+  ]
+}

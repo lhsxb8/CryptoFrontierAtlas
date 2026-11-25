@@ -1,0 +1,136 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-dfa-giraud2005-byte-k8-special-byte-10",
+  "title": "AES-128 conditional K8[12] recovery from 10 useful faults (Giraud 2005)",
+  "display": {
+    "name": "K8 special byte: 10 faults (conditional)",
+    "method": "fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full AES-128; recover only the 8-bit byte K8[12], with the K9-tail material already available."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "repeat-encryption-fixed-input",
+      "correct-ciphertext-reference",
+      "byte-fault-injection-in-state-or-online-key-schedule"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret AES master key; no related-key oracle.",
+    "key_population": "Keys of the stated AES implementation without a weak-key restriction; fault protections are outside the model.",
+    "plaintext_model": "Repeat encryptions of the same plaintext under the same key; retain its correct ciphertext as a reference. Counts of faulty ciphertexts exclude that reusable reference unless explicitly stated otherwise.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "Byte K8[12], the case whose fault difference cannot be directly recovered from one output difference.",
+      "granularity": "One initially affected byte, followed by propagation through the key schedule or AES rounds.",
+      "timing": "After the correct K8 addition and before online K9 derivation.",
+      "location": "Count only useful outputs from faults on K8[12]; position acquisition or rejection cost is excluded.",
+      "value_control": "The byte difference is unknown; its value may be inferred or guessed from correct/faulty outputs. Eq19 enumerates unknown fault masks, not key candidates:107–146 possibilities, mean126.50390625 over uniform output deltas; the source≈127 remains an approximation.",
+      "sample_pairing": "Every faulty output is matched to the same fixed-input correct reference; useful faults, random-location ciphertexts and physical executions have distinct accounting.",
+      "evidence_scope": "software_experiment"
+    },
+    "assumptions": [
+      "A round key is used correctly for encryption and then faulted before generating the next round key. The implementation expands keys on the fly.",
+      "The reported outcome and data budget use the paper's candidate-filtering model; no numerical whole-key success rate is inferred from a byte-level statistic.",
+      "This is a conditional stage, not an attack starting with no known subkey material.",
+      "Eq.(19) leaves 107–146 possible fault differences, about 127 on average. These are fault-value candidates, not key candidates."
+    ],
+    "prior_key_knowledge": {
+      "bits": 32,
+      "material": "K9[12..15] from the preceding stage; the local equation uses the corresponding K9[k].",
+      "cost_accounting": "The listed stage budget excludes acquisition of this prior subkey material; the upstream recovery must be costed separately."
+    }
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "online-key-schedule-fault",
+    "candidate-filtering"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical whole-endpoint runtime is reported for this version and endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "10",
+      "log2": 3.321928094887362,
+      "unit": "faulty-ciphertexts",
+      "qualifier": "exact",
+      "note": "Same plaintext and target byte; excludes the upstream K9-tail recovery and acquisition of faults at the desired position."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The article describes counters or candidate lists without a numerical peak-memory budget."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing-time budget is reported. The Appendix A 8×2^8 equation tests per useful output are a component count, not a complete attack cost."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "simulated-conditional-k8-byte12-recovery-frequency",
+    "value": 0.9,
+    "description": "Approximately 90% reported from simulations with 10 useful faulty outputs. Trial count and confidence interval are unspecified; this is not full-key success."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "Section 4.2 pp.35–36 Eq.(22),(27); Section 4.1 pp.33–34",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Version-specific endpoint retaining its target, prior information, fault controls and native sample accounting."
+    },
+    {
+      "source_id": "giraud2005-dfa-proceedings",
+      "locator": "Complete proceedingsPDF1–15/printed27–41 and earlyPS15-page reading rendition; Sections3–6, AppendixA and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Useful faulty ciphertext counts do not automatically include ineffective physical injections or calibration attempts.",
+    "The article does not supply a measured success frequency, runtime or peak memory for every target and parameter choice.",
+    "The exactly-one-zero output test can reject valid tail faults with extra zero differences. Independent finite valid-key cases find94 such rejections among16320 tail faults;48960 sampled non-tail faults give no false accepts, not a universal soundness proof. Keep reported useful-sample versus acquisition counts distinct."
+  ],
+  "related_problem_ids": []
+}

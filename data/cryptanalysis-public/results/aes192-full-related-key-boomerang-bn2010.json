@@ -1,0 +1,170 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-full-related-key-boomerang-bn2010",
+  "title": "BN10 inherited four-key amplified-boomerang estimate on full AES-192",
+  "display": {
+    "name": "Four-key amplified boomerang / inherited rough estimate",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 12,
+    "full_round": true,
+    "round_convention": "bn10-12r-source-boundary",
+    "description": "All12 AES-192 rounds under BN10 Figure3 and inherited BK09 Section6/Figure8 interval, including the standard final-round linear-layer convention. This is separate from the disputed11-round simple characteristic."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": 4,
+    "target_selection": "designated_target",
+    "key_relation": "Four related secret keys in the inherited BK09 Section6.1 quartet construction; BN10 changes the top characteristic and retains the bottom. Relations are source-defined at round-key levels, not four arbitrary fixed-XOR master-key relations.",
+    "key_population": "general secret key",
+    "plaintext_model": "The inherited amplified-boomerang procedure uses chosen plaintext encryptions under four related keys (BK09 Section6.2). BN10 gives a new total data estimate2^116 without a new per-key/structure allocation.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "BN10 Section3.3 gives a rough2^7 improvement by changing the top trail and retaining the bottom framework; its charged pq exponent is48 versus55.",
+      "BK09 Section6.2 uses encryption-only amplified boomerang data. CPA+adaptiveCCA was an incorrect baseline inheritance for this AES-192 endpoint.",
+      "No full new phase-by-phase proof, memory budget, or numerical complete-key success is supplied by BN10."
+    ]
+  },
+  "techniques": [
+    "related-key-boomerang",
+    "ladder-switch",
+    "changed-top-characteristic"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^169",
+      "log2": 169,
+      "unit": "source-native-workload",
+      "qualifier": "estimate",
+      "note": "Author-reported rough estimate2^169, a2^7 improvement over BK09. The local quartet-count formula supports the probability/data scaling, not a separately reproduced implementation."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^116",
+      "log2": 116,
+      "unit": "source-counted-related-key-data",
+      "qualifier": "estimate",
+      "note": "Author-reported rough total2^116 chosen-plaintext encryptions under the inherited four-key amplified framework. No per-key distribution is newly specified."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "BN10 does not recalculate memory for the improved parameters. BK09 Table1 memory2^152 belongs to the earlier attack and is not copied into this point."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The source does not separately quantify this resource for this configuration."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "key-recovery-success",
+    "value": null,
+    "description": "Section3.3 only gives a rough2^7 improvement over the inherited BK09 amplified attack, not a numerical complete-key success. Its printed2^-48 quantity is the charged product of the upper/lower characteristics (pq convention, versus2^-55 before), not an independently justified full rectangle success. The data/time budget and inherited key relations remain unchanged.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit of defining construction and parameter passages, not a new full-paper or forward-literature audit. Source local/conditional models, expected counts, key-relation construction and full recovery remain separate."
+    },
+    "components": [
+      {
+        "metric": "upper-characteristic-charged-source-model",
+        "value": 0.000003814697265625,
+        "basis": "derived_from_source",
+        "expression": "2^{-18}",
+        "description": "PDF13: the changed top characteristic charges three active S-boxes at2^-6. Derived from the explicit3=2+1 count; no independent joint proof."
+      },
+      {
+        "metric": "lower-characteristic-charged-source-model",
+        "value": 9.313225746154785e-10,
+        "basis": "derived_from_source",
+        "expression": "2^{-30}",
+        "description": "PDF13: the bottom characteristic charges five active S-boxes at2^-6. Derived from the explicit1+1+2+1 count."
+      },
+      {
+        "metric": "upper-lower-characteristic-product-source-model",
+        "value": 3.552713678800501e-15,
+        "basis": "author_model",
+        "expression": "2^{-48}",
+        "description": "PDF13: printed2^-(6*(2+1+1+1+2+1)), compared with2^-55 in BK09. This charged pq product is NOT the full amplified rectangle probability or aggregate key-recovery success."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-af8c03e065ed94cd-2010",
+      "locator": "PDF p.4 Table 1; p.13 Section 3.3 (explicit BK09 inheritance and rough estimate); p.21 Figure 3.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining text checked. Unknown costs are retained rather than preventing extraction."
+    },
+    {
+      "source_id": "bk2009-related-key-conference",
+      "locator": "PDF pp.12–13 and16–17, Sections6.1–6.2; PDFp.2 Table1; PDFp.15 Figure8.",
+      "fields": [
+        "/setting",
+        "/target",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Section6.2 expressly encrypts under KA,KC and complements under KB,KD; no ciphertext-decryption queries. The four-key count and chosen-plaintext access follow this primary procedure."
+    },
+    {
+      "source_id": "aes-paper-af8c03e065ed94cd-2010",
+      "locator": "PDF p.13 / printed p.334, Section3.3; PDF p.21 / printed p.342 Figure3.",
+      "fields": [
+        "/resources",
+        "/setting",
+        "/success"
+      ],
+      "interpretation": "The new top contributes18 and bottom30 to pq exponent48; inherited expected-quartet arithmetic preserves2^4 quartets when the data exponent decreases by7. This is bounded arithmetic, not a new full attack proof."
+    },
+    {
+      "source_id": "aes-paper-af8c03e065ed94cd-2010",
+      "locator": "PDF13/printed334 Section3.3 and AppendixFigure3; BK09 Section4 probability conventions for the inherited amplified-boomerang attack.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "Section3.3 only gives a rough2^7 improvement over the inherited BK09 amplified attack, not a numerical complete-key success. Its printed2^-48 quantity is the charged product of the upper/lower characteristics (pq convention, versus2^-55 before), not an independently justified full rectangle success. The data/time budget and inherited key relations remain unchanged."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The11-round31-active simple characteristic is separately reported inconsistent in GMS17; no evidence identifies this correction with BN10 Figure3 full12-round boomerang.",
+    "Time/data remain the authors rough inherited estimates; memory/setup and complete-key success remain unknown.",
+    "Local expected-quartet formulas include the squared amplified probabilities and do not independently certify all key-ranking phases."
+  ],
+  "related_problem_ids": []
+}

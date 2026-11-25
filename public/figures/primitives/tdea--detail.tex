@@ -1,0 +1,73 @@
+% Generated from the public primitive catalog. Original Atlas drawing; Apache-2.0.
+% Target: tdea; view: detail
+\documentclass[border=9pt]{standalone}
+% Original Atlas figure theme. Apache-2.0; see the repository LICENSE.
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,decorations.pathreplacing,matrix}
+\definecolor{atlasInk}{HTML}{172235}
+\definecolor{atlasTeal}{HTML}{0D7B7D}
+\definecolor{atlasMuted}{HTML}{637278}
+\definecolor{atlasFill}{HTML}{EAF4F2}
+\definecolor{atlasLine}{HTML}{B6C8C7}
+\tikzset{
+  every picture/.style={line width=.65pt,draw=atlasInk,>=Latex},
+  every node/.style={text=atlasInk,font=\sffamily\small},
+  box/.style={draw,rounded corners=1.5pt,minimum height=.9cm,minimum width=1.6cm,align=center,inner sep=6pt,fill=white},
+  accent/.style={box,draw=atlasTeal,fill=atlasFill},
+  wire/.style={->,line width=.7pt},
+  keywire/.style={wire,draw=atlasTeal,dashed},
+  xor/.style={draw,circle,fill=white,inner sep=0pt,minimum size=.38cm},
+  add/.style={draw,rectangle,fill=white,inner sep=0pt,minimum size=.38cm},
+  note/.style={font=\sffamily\scriptsize,text=atlasMuted,align=center},
+  phase/.style={font=\sffamily\small\bfseries,text=atlasTeal},
+  group/.style={draw=atlasLine,dashed,rounded corners=2pt,inner sep=8pt}
+}
+\newcommand{\rotl}{\mathbin{\lll}}
+\newcommand{\rotr}{\mathbin{\ggg}}
+\newcommand{\kx}{\operatorname{Keccak}\!\text{-}\!f[1600]}
+
+\newcommand{\AtlasKeyBits}{168}
+\newcommand{\AtlasKeyWords}{5.25}
+\newcommand{\AtlasRounds}{16}
+\newcommand{\AtlasPriorRounds}{15}
+\newcommand{\AtlasRoundKeys}{17}
+\newcommand{\AtlasDoubleRounds}{8}
+\newcommand{\AtlasSixRoundGroups}{2.6666666666666665}
+\newcommand{\AtlasFLGroups}{1.6666666666666665}
+\newcommand{\AtlasRoundStart}{8}
+\newcommand{\AtlasBlockBits}{64}
+\newcommand{\AtlasOutputBits}{d}
+\newcommand{\AtlasStateBits}{8w}
+\newcommand{\AtlasNonceBits}{v}
+\newcommand{\AtlasCounterBits}{q}
+\newcommand{\AtlasStreamBlockBits}{b}
+\newcommand{\AtlasRate}{r}
+\newcommand{\AtlasCapacity}{c}
+\newcommand{\AtlasSteps}{N}
+\newcommand{\AtlasLastStep}{N-1}
+\newcommand{\AtlasWordBits}{w}
+\newcommand{\AtlasHashWords}{h}
+\newcommand{\AtlasFeedForward}{\boxplus}
+\newcommand{\AtlasByteOrder}{big-endian}
+\newcommand{\AtlasDomain}{01}
+\newif\ifAtlasXof
+\AtlasXoffalse
+\begin{document}
+\begin{tikzpicture}
+  \node (l) at (1,2) {$L_{i-1}$}; \node (r) at (8,2) {$R_{i-1}$};
+  \node[accent,minimum width=3.8cm] (f) at (5,0) {Expansion $32\to48$\\$\oplus\,k_i$\quad $8$ S-boxes\quad $P$};
+  \node[xor] (x) at (1,0) {$+$};
+  \draw[wire] (l) -- (x); \draw[wire] (r) -- (8,0) -- (f);
+  \draw[wire] (f) -- (x);
+  \node (key) at (5,1.7) {$k_i\in\{0,1\}^{48}$}; \draw[keywire] (key) -- (f);
+  \node (lo) at (1,-2) {$L_i=R_{i-1}$};
+  \node (ro) at (8,-2) {$R_i=L_{i-1}\oplus f(R_{i-1},k_i)$};
+  \draw[wire] (x) -- (1,-.8) -- (8,-1.45) -- (ro);
+  \draw[wire] (8,0) -- (8,-.8) -- (1,-1.45) -- (lo);
+  \node[note] at (4.5,-2.8) {One DES round; both halves contain $32$ bits.};
+\end{tikzpicture}
+
+\end{document}

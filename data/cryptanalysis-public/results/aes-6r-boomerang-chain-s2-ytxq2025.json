@@ -1,0 +1,161 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-6r-boomerang-chain-s2-ytxq2025",
+  "title": "Six-round AES secret-key boomerang chain, s=2",
+  "display": {
+    "name": "YTXQ25",
+    "method": "boomerang"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "ytxq2025-six-rounds-initial-ark-final-no-mixcolumns",
+    "description": "Six standard 128-bit-block AES rounds with initial AddRoundKey and the last MixColumns omitted. Section 3.2 decomposes them into upper 2.5, middle 1.5 and final 2 rounds. The distinguisher does not use key-schedule relations."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "adaptive_chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed unknown AES master key is used for all encryption and inverse queries; no related-key or chosen-key access.",
+    "key_population": "General single-secret-key AES keys; no weak-key restriction is imposed.",
+    "plaintext_model": "Initial one-diagonal plaintext structures followed by adaptively chosen friend pairs and inverse-diagonal exchanges of observed ciphertext pairs.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "reference_model": "Distinguish the six-round keyed AES permutation and its inverse from a uniformly random 128-bit permutation and its inverse using oracle queries only.",
+    "assumptions": [
+      "Adaptive access in both directions (ACPC in the source) is essential; these are not chosen-plaintext-only, known-key, or chosen-key results.",
+      "The paper estimates boomerang occurrence, friend-pair filtering and repeated-run success probabilistically; rounded analytical predictions are not full-scale reproduced measurements.",
+      "The construction uses the AES round transformations without exploiting master-key schedule relations; the six-round structural distinguisher applies to AES-128, AES-192 and AES-256."
+    ]
+  },
+  "techniques": [
+    "boomerang-chain",
+    "exchanged-boomerangs",
+    "friend-pairs",
+    "boomerang-chain-s2-n-1-2-13-5-w2"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^76.57",
+      "log2": 76.57,
+      "unit": "aes-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Author-reported rounded equivalent number of AES encryptions (E), with oracle calls dominating the six-round construction; no independent normalization to S-box operations or wall-clock time is applied. D1 component accounting is unresolved; see coverage issue ytxq2025-first-boomerang-query-accounting."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^76.57 ACPC",
+      "log2": 76.57,
+      "unit": "adaptively-chosen-plaintext-and-ciphertext-block-queries",
+      "qualifier": "estimate",
+      "note": "Author-reported rounded ACPC block-query budget, summing chosen/adaptive plaintext encryptions and adaptive ciphertext decryptions; it is not a chosen-plaintext-only budget. D1 component accounting is unresolved; see coverage issue ytxq2025-first-boomerang-query-accounting."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The endpoint has no explicit peak-memory budget. The 2^32-entry per-structure hash table in the pseudocode is not promoted to a whole-attack peak estimate."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing cost is reported. The paper's PC search over attack parameters is not priced as an attack setup resource."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "aes-acceptance-probability",
+    "value": 0.6,
+    "description": "Author-reported rounded Pr[output AES | oracle is six-round AES], not distinguishing advantage or the equal-prior average correct-decision probability. Section 4.2 uses Ps=1-[1-ps1*product(psm(ni))*ps2]^w and says the type-II error may be ignored by the Section 4.1 analysis; the rounded AES acceptance probability is retained without substituting a balanced accuracy."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ytxq2025-boomerang-chain-publisher",
+      "locator": "PDF p.4 / printed p.304 (native E and ACPC units); PDF pp.5,10 / printed pp.305,310 (AES key lengths and exact round boundary).",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources/time/unit",
+        "/resources/data/unit",
+        "/bound"
+      ],
+      "interpretation": "The setting is single-secret-key encryption/decryption oracle access, not recovery or knowledge of the key. Grouping all three AES key lengths does not assert master-key recovery."
+    },
+    {
+      "source_id": "ytxq2025-boomerang-chain-publisher",
+      "locator": "PDF p.21 / printed p.321, Table 3 row s=2; PDF pp.20–23 / printed pp.320–323, Section 4.2 and Algorithm 3.",
+      "fields": [
+        "/techniques",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "boomerang-chain-s2-n-1-2-13-5-w2. The native parameter vector (n1,...,n4)=(1,2,13,5) uses s=2 middle boomerangs and w=2 repetitions. Time and data are the paper's rounded w*sum(Di)."
+    },
+    {
+      "source_id": "ytxq2025-boomerang-chain-publisher",
+      "locator": "Complete exact primaryPDF1–29, all sections, displayed formulas/tables/algorithms, proofs and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full contribution inventory read; bounded forward checking and finite component validation are separately receipted. Full attack reproduction not attempted."
+    },
+    {
+      "source_id": "ytxq2025-boomerang-chain-publisher",
+      "locator": "PDF11 Theorem1 andPDF24–25 Appendix proof.",
+      "fields": [
+        "/field_conflicts",
+        "/setting/assumptions"
+      ],
+      "interpretation": "Local source obligation, not an assertion of attack failure or a replacement resource budget."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Targeted result paragraphs and tables were inspected; the full proofs and all references were not audited, and no author attack code was run.",
+    "Memory and separately reusable setup costs are not reported, so the existing all-coordinate Pareto comparator cannot certify domination or a frontier position.",
+    "The source's first-boomerang accounting remains an evidence task: Section 3.3 (PDF p.14) counts 2^70.84 initial chosen plaintexts and 2^74.42 adaptive ciphertexts, whereas Sections 4.1/4.2 (PDF pp.17,20) use D1=2^71.84+2^74.42≈2^74.64. Algorithm 3 (PDF p.23) again gives 2^38.84 structures of 2^32 blocks. The native endpoint is retained without silently correcting or resolving that possible counting-convention discrepancy."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Connection-proof event overlap",
+      "description": "Theorem1/Appendix sums sufficient events indexed by swapped diagonal and column subset without an explicit disjointness/overlap correction. Two independent standard-AES middle-component witnesses satisfy multiple events simultaneously (t0 four events;t1 three). The additive proof needs an extra argument; this does not refute the numerical r lower bound or the complete attack.",
+      "observations": [
+        {
+          "source_id": "ytxq2025-boomerang-chain-publisher",
+          "locator": "PDF11 Theorem1 andPDF24–25 Appendix proof.",
+          "reported": "Original printed statement/pseudocode retained with its original numerical claim; see the field description for the exact local expressions."
+        },
+        {
+          "source_id": "ytxq2025-boomerang-chain-publisher",
+          "locator": "PDF11 Theorem1 andPDF24–25 Appendix proof. Fresh independent raw-source component review2026-10-27.",
+          "reported": "Theorem1/Appendix sums sufficient events indexed by swapped diagonal and column subset without an explicit disjointness/overlap correction. Two independent standard-AES middle-component witnesses satisfy multiple events simultaneously (t0 four events;t1 three). The additive proof needs an extra argument; this does not refute the numerical r lower bound or the complete attack."
+        }
+      ]
+    }
+  ]
+}

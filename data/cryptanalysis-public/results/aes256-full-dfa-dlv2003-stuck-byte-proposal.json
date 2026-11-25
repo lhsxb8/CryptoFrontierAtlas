@@ -1,0 +1,159 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-dfa-dlv2003-stuck-byte-proposal",
+  "title": "AES-256 stuck-byte hardware DFA proposal (DLV2003)",
+  "display": {
+    "name": "stuck-byte hardware DFA proposal",
+    "method": "fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full 14-round AES-256 under the paper's single-byte state-fault model. The budget concerns recovery of the final 128-bit round key K_14. This alone is not recovery of the 256-bit master key; Section 3 also requires K_13, without a separate complete budget."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "paired-correct-and-faulty-encryption-outputs",
+      "single-byte-state-fault-injection"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret AES master key; no related-key oracle.",
+    "key_population": "All master keys in the stated attack model; no weak-key restriction is specified.",
+    "plaintext_model": "Around ten random plaintexts, each re-encrypted under the same key after temporary device modification.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "assumptions": [
+      "Unprotected AES computation admits the stated isolated single-byte state fault and returns its faulty output.",
+      "Correct/faulty output pairing is available under an unchanged master key; knowledge of plaintext is not generally necessary.",
+      "The hardware variant is a proposed attack setting. The article's worked validation uses a software AES program, not a documented physical injection experiment.",
+      "The recorded endpoint is only the final 128-bit round key. The paper names the additional penultimate round key needed for longer master keys but does not separately cost its recovery."
+    ],
+    "fault_model": {
+      "target": "One byte of the AES encryption state, not a round-key schedule fault.",
+      "granularity": "One initial state byte; the byte error may involve several bits.",
+      "timing": "Temporarily force a byte in round 12 (Nr−2), two rounds before the end, so that the earlier-fault propagation pattern applies; the source does not specify a measured physical timing tolerance.",
+      "location": "One byte is forced in the round Nr−2 datapath. Recovery does not require knowing its position; this is a physical-modification proposal, not a demonstrated injection setup.",
+      "value_control": "Temporarily force a byte to 00 or FF; random plaintexts make the effective byte difference variable. Ineffective injections are not assigned a separate acquisition budget.",
+      "sample_pairing": "Observe a correct and a faulty output for the same input and key. A pair is not one ciphertext, and acquisition attempts are not counted.",
+      "evidence_scope": "hardware_proposal"
+    }
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "stuck-byte-proposal",
+    "last-round-subkey-recovery"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The abstract's few-minutes claim and introduction's PC implementation statement are not a per-variant benchmark; no complete time budget for this specific model/instance is tabulated."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "around 10 paired outputs",
+      "log2": null,
+      "unit": "correct-faulty-ciphertext-pairs",
+      "qualifier": "estimate",
+      "note": "Sections 3.1 pp.297–298 propose about ten random plaintexts, first encrypted correctly and then re-encrypted on a temporarily modified device. This counts matched correct/faulty outputs, not total attempts or a measured injection-success rate."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical peak storage requirement is specified for the whole attack."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing cost is tabulated; algebraic candidate-set construction is described without a whole-attack preprocessing budget."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "last-round-subkey-recovery-success-probability",
+    "value": null,
+    "description": "No numerical probability of recovering this exact partial_key_recovery output at the recorded data budget is supplied. Necessary true-key inclusion in the modeled differential-equation candidate sets is separate from unique recovery. The hardware proposal assumes a forced00/FF byte under random plaintexts. No calibrated probability of obtaining an effective nonzero fault or whole-output success is provided; the candidate relation is conditional on an effective modeled fault. The stored target remains only the last-round subkey or a four-byte group, not the AES192/256 master key; no additional key-schedule recovery success is borrowed.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit; preserves costs, targets, settings, existing conflicts and full-audit gates. Local author models and conditional candidate retention do not certify whole-output success."
+    },
+    "components": [
+      {
+        "metric": "true-subkey-in-modeled-fault-equation-candidates",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections3.1–3.2: for a genuine effective nonzero byte fault and the correct location (or the enumerated union of locations), the actual affected subkey bytes satisfy the differential equation and remain among its candidates. It is not uniqueness after five/nine/ten faults or a population recovery guarantee."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "ACNS2003 pp.297–298, Section 3.1 Attack on hardware device; p.296 Section 3 key-recovery scope; p.295 round counts",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The source's Nr-relative attack is instantiated at the standard full round count. Final-round-key recovery is separated from the additional longer-key recovery requirement; descriptive and average sample counts keep their original semantics."
+    },
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "CompletePDF1–14/printed293–306: Sections3.1–3.3, Propositions1–7 and both worked appendices.",
+      "fields": [
+        "/assessment",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "All19existing endpoints checked in their own fault model and instance. Resource/success values preserved; algebraic components are inventoried separately. Longer-instance subkey targets are not relabelled as full master-key recovery."
+    },
+    {
+      "source_id": "dlv2003-dfa-proceedings",
+      "locator": "Proceedings PDF4–5 / printed296–297 Section3/3.1; PDF6–11 / printed298–303 Sections3.2–3.3, Propositions1/6/7.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical probability of recovering this exact partial_key_recovery output at the recorded data budget is supplied. Necessary true-key inclusion in the modeled differential-equation candidate sets is separate from unique recovery. The hardware proposal assumes a forced00/FF byte under random plaintexts. No calibrated probability of obtaining an effective nonzero fault or whole-output success is provided; the candidate relation is conditional on an effective modeled fault. The stored target remains only the last-round subkey or a four-byte group, not the AES192/256 master key; no additional key-schedule recovery success is borrowed."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "A fault-assisted implementation attack, not an ordinary classical chosen-plaintext attack against the AES permutation.",
+    "Data count includes matched correct/faulty outputs. Physical acquisition attempts, device success rate and ineffective faults are not separately priced.",
+    "The article does not establish a universal success probability or wall-clock cost for each listed model.",
+    "No complete AES-192/256 master-key recovery cost is asserted from a final-round-subkey budget.",
+    "The proposed physical intervention is not a published measured hardware experiment in this source."
+  ],
+  "related_problem_ids": []
+}

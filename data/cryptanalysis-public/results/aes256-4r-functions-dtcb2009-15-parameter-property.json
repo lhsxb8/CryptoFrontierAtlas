@@ -1,0 +1,170 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-4r-functions-dtcb2009-15-parameter-property",
+  "title": "4-round AES-256: Conditional15-parameter difference function",
+  "display": {
+    "name": "Conditional15-parameter difference function",
+    "method": "mitm"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "dtcb2009-inner-rounds-no-whitening-with-mixcolumns",
+    "description": "4 inner AES rounds without initial whitening, including MixColumns in every round; fixed keys and explicitly conditioned input structures."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "Fixed standard AES key schedule; component derivations treat its round-key bytes as constants, not as a related-key oracle.",
+    "key_population": "General key under the source's modeled internal-parameter events; no special master-key class is specified.",
+    "plaintext_model": "One active byte and fifteen passive bytes, with further parameter constraints stated below.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Probabilities for internal parameters use the paper's randomness assumptions; they are not independently established for all AES keys.",
+      "The rank-9 incidence argument uses a uniform choice of 12 non-diagonal passive plaintext bytes at a fixed key and fixed other diagonal bytes. Correlations among chosen attack structures and complete success are not established by that argument."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "conditional-parameterization"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "conditional-structural-property",
+    "value": null,
+    "description": "A conditional function or collision statement, not an attack-success experiment."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Printed pp.148–150 Equations3–13, Section4.1 Proposition4",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete official proceedings read and critical page images checked. Original claims remain attributed to DTCB09; later objections have their own source-specific observations."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Complete PDF1–13/printed144–156; Sections3–4 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Raw-first complete inventory and independent component review completed; source costs and whole-attack reproduction remain separate."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "PDF5–7/printed148–150 corrected Equations3–6, Equation7 and Proposition4.",
+      "fields": [
+        "/property",
+        "/setting/assumptions"
+      ],
+      "interpretation": "Reviewer rank-9 proof and realizable AES witnesses refine the validation scope; no scalar attack-success replacement."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Formal component tests and author-reported budgets are distinct from an end-to-end attack reproduction."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "Under the nine byte equalities in Equation7, the within-set function f(a11) XOR f(reference) after four inner rounds is described by15 fixed byte parameters.",
+    "quantifier": "For fixed keys, fixed reference active input and fixed passive bytes satisfying Equation7. For any fixed three other diagonal plaintext bytes, uniformly varying the other 12 passive bytes gives exact incidence 2^-72 by a rank-9 affine system over GF(256); this is not a probability over keys or whole-attack success.",
+    "scope": "Proposition4: four first-layer constants, seven remaining offsets and four third-round diagonal key bytes. The fourth-round output key cancels in the within-set XOR.",
+    "parameters": [
+      {
+        "name": "Input values",
+        "reported": "256",
+        "meaning": "One fully active byte; all other plaintext bytes fixed."
+      },
+      {
+        "name": "Reduced byte parameters",
+        "reported": "15",
+        "meaning": "c1..c4, d1..d7 and four third-round diagonal subkey bytes."
+      },
+      {
+        "name": "Modeled event incidence",
+        "reported": "2^-72",
+        "meaning": "Author random-constant model; independently established as exact incidence over uniform 12 non-diagonal passive bytes for a fixed key and fixed three other diagonal bytes. No independence of the attack’s chosen structures is inferred."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Prior formal substitution checks are supplemented by 24 actual AES contexts and 12 constructed actual contexts satisfying Equation7, each checked for all 256 active inputs. The nine constraints on 12 external S(round1) bytes have GF(256) rank9, proving 2^-72 incidence under the stated uniform-passive distribution. Printed Equation9 retains its coefficient conflict; its corrected formula is validated, not the literal print or whole-attack success."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property/validation",
+      "label": "Reduced Equation9 coefficient",
+      "description": "Under Equation7's conditions, substituting c12=3*d1 into corrected Equation4 gives coefficient1 for S(3*x1+3*d1). Printed Equation9 instead uses coefficient3. The conditional15-parameter count survives the corrected substitution; literal precomputation values differ.",
+      "observations": [
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed p.148 Equation4 and p.149 Equation7",
+          "reported": "The last term of C3_22 is S(3*x1+c12); c12=3*d1 leaves coefficient1."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed p.149 Equation9",
+          "reported": "The corresponding reduced term is printed as 3*S(3*x1+3*d1)."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-9r-mitm-four-relations-fraction8-lz2024",
+  "title": "Lu-Zhou improved first-nine-round AES-192 T4 attack with a 2^-8 sequence fraction",
+  "display": {
+    "name": "Four-relation fractional sequence tables",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "lz2024-aes192-rounds-1-to-9-whitening-k0-final-no-mixcolumns",
+    "description": "First nine AES-192 rounds with whitening K0 and ciphertext x10=SR(y9) XOR K9. The source omits the last MixColumns without loss of generality. This is not the intermediate Rounds 3-11 interval."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown AES-192 master key expanded by the standard schedule; every key-space partition used by a configuration is processed.",
+    "key_population": "general secret key; the source's weak-key approach is exhaustive sequential partitioning, not a promise restricting the target key",
+    "plaintext_model": "Chosen-plaintext structures of 2^32 blocks; tuning-dependent structure counts remain in the data coordinate and construction notes.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source's cost model equates one round with sixteen table lookups, hence a nine-round encryption with 144 lookups.",
+      "Differential enumeration uses an average-one-solution S-box/Super-Sbox model; no universal worst-case solution bound has been reproduced.",
+      "All per-partition work is aggregated over every partition; table reuse does not restrict the target key to a weak-key class."
+    ]
+  },
+  "techniques": [
+    "demirci-selcuk-meet-in-the-middle",
+    "differential-enumeration",
+    "key-dependent-sieve",
+    "key-space-partitioning",
+    "four-byte-key-relations",
+    "ciphertext-indexed-t4-table",
+    "sequential-table-streaming"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^186.8 preprocessing + 2^186.4 online ≈ 2^187.6 total",
+      "log2": 187.6,
+      "unit": "9-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Native aggregate or phase sum. A numeric aggregate absent from the source stays null. Setup is included in total time and must not be added twice."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^121",
+      "log2": 121,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "2^121 chosen plaintexts accompany the 2^-8 H* fraction. Do not mix these time/memory values with the full point's lower data."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^172.3 T4 + 2^165 * 2^-8 H* ≈ 2^172.3",
+      "log2": 172.3,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "T4 is not fractioned in this point. Its 2^172.3 bytes dominate the reduced H* term 2^157 bytes."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^194.8 * 2^-8 ≈ 2^186.8",
+      "log2": 186.8,
+      "unit": "9-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "This is the source's rounded aggregate setup. Global T4 setup 2^165.4 remains lower-order rather than being literally fractioned away. H* creation interleaves with online subattacks."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-master-key-recovery",
+    "value": null,
+    "description": "The source does not state a numerical complete-master-key recovery probability for this exact endpoint. Section3 about63% belongs ONLY to the rejected first-nine unstreamed fraction2^-12.2/2^125.2-data/2^191.6-time point, not the indexed full, fraction8 or fraction9.8 endpoints or the new corrected constructions. Expected one conforming pair, table fractions and wrong-sequence matches stay separate.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit of defining construction and parameter passages; not a new complete-paper/forward audit. Conditional subroutines, expected counts, local author models, sampling coverage and whole recovery are distinguished."
+    },
+    "components": [
+      {
+        "metric": "sampled-precomputation-parameter-coverage",
+        "value": 0.00390625,
+        "basis": "derived_from_source",
+        "description": "Source table fraction2^-8; Sections4.2/5.1: retaining only this fraction of sequence-generation parameters is distinct from exhaustive key-space partitioning. Per-parameter coverage under the source average/uniform-domain model only, not the probability of completing recovery after repeated online work.",
+        "expression": "2^{-8}"
+      },
+      {
+        "metric": "specified-five-round-truncated-characteristic",
+        "value": 4.484155085839415e-44,
+        "basis": "author_model",
+        "description": "PDF15 Section4.2:2^144 structured pairs times2^(-(3+12+3)*8) yields expected one matching pair. This single-pair source model is not the probability of at least one match. Sections4.3/5.1 retain the path.",
+        "expression": "2^{-144}"
+      },
+      {
+        "metric": "unrelated-256-bit-sequence-lookup-source-model",
+        "value": 4.930380657631324e-32,
+        "basis": "author_model",
+        "description": "Section5.1 uses at most2^160 sequence entries in H* for ONE fixed Theta partition, compared with a uniform unrelated256-bit sequence; the fractional point retains a2^-8 parameter subset. This per-partition count model is not a bound for all queries or recovery.",
+        "expression": "2^{-104}"
+      },
+      {
+        "metric": "theta4-wrong-key-consistency-filter",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "description": "PDF20 Step6(b): Eq4 contributes a further8-bit key-consistency sieve after T4 lookup. The six-round variant preserves the same construction with the modified T4 representation. A local candidate filter, not the chance of true-key recovery."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "lz2024-aes192-9r-ctrsa",
+      "locator": "PDF p.3 / printed p.138, Table 1; PDF pp.20-21 / printed pp.155-156, Section 5.1 tradeoff.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The native total adds two comparable phases, not their maximum. Full T4 remains; the separately mentioned unquantified T4-fraction option is not instantiated. The null bound records that this is not a minimum-active-S-box lower-bound result."
+    },
+    {
+      "source_id": "lz2024-aes192-9r-ctrsa",
+      "locator": "PDF pp.4-5 / printed pp.139-140, Section 2.2; PDF pp.15-16 / printed pp.150-151, Section 4.2 online Step 2(a) and lookup normalization.",
+      "fields": [
+        "/target",
+        "/setting"
+      ],
+      "interpretation": "The standard schedule, exact first-nine-round boundary and native nine-round encryption unit define the new constructions; Section 3's intermediate interval remains separately labelled."
+    },
+    {
+      "source_id": "lz2024-aes192-9r-ctrsa",
+      "locator": "Complete exact primary PDF1–24, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete reading and source inventory; later-literature gates and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "lz2024-aes192-9r-ctrsa",
+      "locator": "PDF5–10 Section3; PDF11–21 Sections4–5/Properties1–3.",
+      "fields": [
+        "/setting",
+        "/resources"
+      ],
+      "interpretation": "All partitions/streaming choices remain one general-key attack, not a weak-key promise. Preserve printed rounded budgets: finite phase sums187.7920/187.8057 do not replace187.7. Six-round T4 replacement byte-width/precision remains a layout evidence task, not an independently confirmed conflict."
+    },
+    {
+      "source_id": "lz2024-aes192-9r-ctrsa",
+      "locator": "PDF11–16 /printed146–151 Sections4.1–4.3; PDF18–22 /153–157 Sections5.1–5.2, per-partition tables, characteristic and key-consistency tests.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The source does not state a numerical complete-master-key recovery probability for this exact endpoint. Section3 about63% belongs ONLY to the rejected first-nine unstreamed fraction2^-12.2/2^125.2-data/2^191.6-time point, not the indexed full, fraction8 or fraction9.8 endpoints or the new corrected constructions. Expected one conforming pair, table fractions and wrong-sequence matches stay separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Author-reported analytical estimate; no third-party attack implementation run.",
+    "No setting-and-method frontier assertion. Unknown success, source-native phase sums and any uninspected original endpoints remain unresolved for Pareto comparisons.",
+    "The source's precomputation includes H* creation interleaved with online subattacks, not wholly offline reusable setup.",
+    "The unquantified T4-fraction option at the end of Section 5.1 is not a numerical parameter domain."
+  ],
+  "related_problem_ids": []
+}

@@ -1,0 +1,273 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-full-related-key-amplified-boomerang-bk2009-conference",
+  "title": "Full AES-192 four-related-key amplified-boomerang recovery, 2009 conference version",
+  "display": {
+    "name": "Amplified boomerang, four related keys",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 12,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "Standard full 12-round AES-192 and its actual key schedule, under four key-schedule-induced related secret keys."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related-key-chosen-plaintext-encryption"
+    ],
+    "related_key_count": 4,
+    "key_relation": "Let H_i map a master key to its192-bit expanded-key state K^i. KB=H_1^-1(H_1(KA) XOR DeltaK1); KC=H_4^-1(H_4(KA) XOR NablaK4); KD=H_4^-1(H_4(KB) XOR NablaK4), using Table5. These are not generally fixed-XOR master-key offsets.",
+    "key_population": "no weak-key restriction reported; arbitrary target-key construction (editorial interpretation)",
+    "plaintext_model": "chosen plaintext structures under four related keys",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The attacker can obtain encryptions under the four key relations in Section 6.1.",
+      "Section 6.2 uses encryption access followed by offline quartet processing; a decryption oracle is not required by that algorithm.",
+      "The source presents only a brief ranking analysis and explicitly defers full details to its extended version. Reading this conference edition does not authenticate unpublished/extended details."
+    ],
+    "target_selection": "designated_target"
+  },
+  "techniques": [
+    "related-key-amplified-boomerang",
+    "rectangle",
+    "local-collisions"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "approximately 2^176",
+      "log2": 176,
+      "unit": "source-reported-work",
+      "qualifier": "estimate",
+      "note": "Section 6.2 final estimate; not normalized to an exact count of full AES encryptions."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^123",
+      "log2": 123,
+      "unit": "total-related-key-encryption-queries",
+      "qualifier": "estimate",
+      "note": "Four keys times 2^73 structures times 2^48 plaintexts; conference version only."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^152",
+      "log2": 152,
+      "unit": "source-native-quartet-storage-scale",
+      "qualifier": "estimate",
+      "note": "Table1 PDF2 reports2^152. Section6.2 PDF17 constructs2^152 candidate quartets; this supports native quartet-storage scale, not bytes or128-bit blocks."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately reusable preprocessing resource is extracted from this attack."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "key-recovery-success",
+    "value": null,
+    "description": "Section6.2 expects16 right quartets before key ranking and sketches the final nine-byte completion. It gives no numerical full-key success. The Section6.1 trail/filters below are author models, not a validation of joint compatibility; the existing published probability-justification dispute is unchanged. This conference edition explicitly defers full ranking details to an extended version.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Rechecked exact conference PDF8–17, including first-stage85-bit output, full-key completion, expected right-quartet counts, voting and the native AES192 failure/restart step. No numerical probability for the selected output at its listed native cost is established. Expected counts and local wrong-vote bounds do not fill this gap; published joint-probability, counting and memory disputes remain. Targeted endpoint success review, not a new full audit or attack reproduction."
+    },
+    "components": [
+      {
+        "metric": "upper-effective-amplified-characteristic-source-model",
+        "value": 4.656612873077393e-10,
+        "basis": "author_model",
+        "expression": "2^{-31}",
+        "description": "PDF16: the source effective upper quantity is2^-(3*6+13)=2^-31. Section4 squares amplified upper/lower quantities when counting rectangle quartets; this is not full quartet or recovery success."
+      },
+      {
+        "metric": "lower-characteristic-source-model",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "expression": "2^{-24}",
+        "description": "PDF16: four restricted output S-boxes contribute2^-24. This one-sided source quantity is squared in the quartet expectation, not itself a full success."
+      },
+      {
+        "metric": "round6-effective-amplified-characteristic-source-model",
+        "value": 0.0001220703125,
+        "basis": "author_model",
+        "expression": "2^{-13}",
+        "description": "PDF16: the source rounds the switching-round effective contribution to2^(-6-2*3.5). The3.5 values describe amplified difference-collision quantities, not independent ordinary S-box transitions."
+      },
+      {
+        "metric": "ciphertext-difference-sieve-source-model",
+        "value": 1.0097419586828951e-28,
+        "basis": "author_model",
+        "expression": "2^{-93}",
+        "description": "PDF16: the source ciphertext-difference set has35 bits of entropy among128 bits and is described as a93-bit filter; local wrong-quartet filtering only."
+      },
+      {
+        "metric": "guessed-key-output-difference-sieve-source-model",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "PDF17: the five-byte guess supplies a32-bit filtering step before the grouped key ranking. This conditional local sieve is not recovery probability."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bk2009-related-key-conference",
+      "locator": "p.2, Table 1, AES-192 amplified-boomerang row; Section 6.1 p.13, Related Keys; Section 6.2 pp.16-17.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The selected conference version explicitly gives time about 2^176 and total data 2^123. Its table and quartet construction support the native memory scale. Weak-key scope is recorded as an interpretation, not a quoted universal theorem."
+    },
+    {
+      "source_id": "bk2009-related-key-conference",
+      "locator": "Complete exact primary PDF pp.1–18, all sections, equations, tables, figures, references and colour disclaimer.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Original-first contribution inventory was written before inspecting the baseline; full-paper reading and bounded forward checks are separately recorded."
+    },
+    {
+      "source_id": "murphy2011-boomerang-author-manuscript",
+      "locator": "PDF pp.4–5 / manuscript pp.5–6, SectionsIX–X and Reference11; PDF pp.2–3 SectionsV–VI for the distinct toy counterexample.",
+      "fields": [
+        "/resources/data",
+        "/assessment",
+        "/field_conflicts"
+      ],
+      "interpretation": "The author manuscript is a primary research text, inspected through a PDF mirror via web; original PDF bytes were not obtained and no content hash is invented. Root independently read the same sections and accepted this narrowly scoped dispute."
+    },
+    {
+      "source_id": "bk2009-related-key-conference",
+      "locator": "PDF pp.12–13 Section6.1 and Tables4–5; PDF pp.16–17 Section6.2; PDFp.2 Table1.",
+      "fields": [
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "CPA-only four-key algorithm, source-local K1/K4 maps and original176/123/152 budgets.16 expected right quartets is not overall key-recovery success."
+    },
+    {
+      "source_id": "aes-paper-af8c03e065ed94cd-2010",
+      "locator": "PDF p.13 / printed p.334 Section3.3.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Later source changes the top trail and gives rough169/116 estimates. That point has its own source/ID and does not overwrite this construction."
+    },
+    {
+      "source_id": "defn2022-related-key-boomerang-proceedings",
+      "locator": "PDF pp.1–3 / printed pp.68–70, Introduction and Table1.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Later primary lists original176/123/152 and a new124/124/79.8 point in a different CPA+CCA setting; not all resource dimensions/assumptions improve together."
+    },
+    {
+      "source_id": "aes-paper-e3293f33760bd28f-2023",
+      "locator": "PDF pp.1–4 / printed pp.19–22, contributions, Table1 and Section2.2.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Later primary describes source-related CPA rectangle improvements with native time units. These are separately indexed, not a silent correction of BK09."
+    },
+    {
+      "source_id": "bk2009-related-key-conference",
+      "locator": "PDF pp.5–7 Section4 and Sections5–6 pp.7–17.",
+      "fields": [
+        "/resources/data",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized original/recomputed observation retained under independent review; no silently substituted resource vector or whole-attack refutation."
+    },
+    {
+      "source_id": "murphy2011-boomerang-author-manuscript",
+      "locator": "PDF pp.4–5 / manuscript pp.5–6, SectionsIX–X and Reference11; local AES example PDF pp.2–3 / manuscript pp.3–4, SectionsV–VI.",
+      "fields": [
+        "/resources/data",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized original/recomputed observation retained under independent review; no silently substituted resource vector or whole-attack refutation."
+    },
+    {
+      "source_id": "defn2022-related-key-boomerang-proceedings",
+      "locator": "PDF p.2 / printed p.69, Introduction; p.3 / printed p.70 Table1.",
+      "fields": [
+        "/resources/data",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized original/recomputed observation retained under independent review; no silently substituted resource vector or whole-attack refutation."
+    },
+    {
+      "source_id": "bk2009-related-key-conference",
+      "locator": "PDF5 Sections4/4.1 probability conventions; PDF13–17 Sections6.1–6.2, Figure8 and right-quartet/ranking paragraphs. Existing published probability-justification dispute retained.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "Section6.2 expects16 right quartets before key ranking and sketches the final nine-byte completion. It gives no numerical full-key success. The Section6.1 trail/filters below are author models, not a validation of joint compatibility; the existing published probability-justification dispute is unchanged. This conference edition explicitly defers full ranking details to an extended version."
+    },
+    {
+      "source_id": "bk2009-related-key-conference",
+      "locator": "PDF10–12 Sections5.1–5.2, expected right quartets,85-bit vote and complete-key paragraph; PDF16–17 Sections6.1–6.2,16-right-quartet expectation, voting and nine-byte completion/restart.",
+      "fields": [
+        "/success"
+      ],
+      "interpretation": "Whole selected-output success remains not quantified after targeted source review. Native restart is acknowledged, not newly inserted; no Poisson, independence or success-one law is inferred from expected counts. Existing scientific disputes and resource coordinates remain unchanged."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Full details of the ranking phase are deferred by this proceedings edition; original author estimates are retained as estimates.",
+    "Memory/setup units and numerical complete-key success remain unspecified.",
+    "Murphy explicitly questions the probability justification/data demand; subsequent authors continue to cite the proceedings budget. Neither fact proves a full-round zero-probability counterexample or validates the attack."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/data",
+      "label": "Published probability-justification dispute",
+      "description": "Murphy explicitly questions the probability/data-demand justification of BK09. His concrete zero-probability AES example is a two-round single-key construction, not a counterexample to these full-round related-key trails. DEFN22 later continues to quote the historical BK09 estimates. Preserve the reported point with this dispute; neither automatic validation nor refutation is inferred.",
+      "observations": [
+        {
+          "source_id": "bk2009-related-key-conference",
+          "locator": "PDF pp.5–7 Section4 and Sections5–6 pp.7–17.",
+          "reported": "The source uses its stated boomerang/amplified-boomerang trail probabilities and switching argument for the selected resource budget."
+        },
+        {
+          "source_id": "murphy2011-boomerang-author-manuscript",
+          "locator": "PDF pp.4–5 / manuscript pp.5–6, SectionsIX–X and Reference11; local AES example PDF pp.2–3 / manuscript pp.3–4, SectionsV–VI.",
+          "reported": "Published methodological objection directly identifies BK09 and says the probability analysis/data requirements are unsubstantiated; it does not supply a full-round BK09 zero-probability witness."
+        },
+        {
+          "source_id": "defn2022-related-key-boomerang-proceedings",
+          "locator": "PDF p.2 / printed p.69, Introduction; p.3 / printed p.70 Table1.",
+          "reported": "Distinguishes general boomerang-dependency problems and continues to list BK09 proceedings costs, rather than reporting a BK09 full-round impossibility."
+        }
+      ]
+    }
+  ]
+}

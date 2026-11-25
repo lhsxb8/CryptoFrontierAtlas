@@ -1,0 +1,7 @@
+.problem-explorer .back-button { text-decoration: none; }
+.problem-explorer .question-analysis-link { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--detail-line); color: #8bd2c4; text-decoration: none; }
+.problem-explorer .question-analysis-link > span { display: grid; gap: 7px; min-width: 0; }
+.problem-explorer .question-analysis-link strong { font-size: 13px; line-height: 1.55; font-weight: 550; overflow-wrap: anywhere; }
+.problem-explorer .question-analysis-link > span > span { color: #9bb6b2; font-size: 11px; line-height: 1.5; }
+.problem-explorer .question-analysis-link > svg { flex-shrink: 0; }
+.problem-explorer .question-analysis-link:hover strong { color: #e1fbf2; text-decoration: underline; text-underline-offset: 3px; }

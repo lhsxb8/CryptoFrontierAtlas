@@ -1,0 +1,148 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-3r-square-ds2008-semi-square-distinguisher",
+  "title": "3-round AES-256: Semi-square balance distinguisher",
+  "display": {
+    "name": "Semi-square balance distinguisher",
+    "method": "integral"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 3,
+    "full_round": false,
+    "round_convention": "ds2008-inner-rounds-no-whitening-with-mixcolumns",
+    "description": "3 inner AES rounds, without initial whitening and with MixColumns in every round, under fixed round keys. The parameter-independent round argument applies to the standard AES-256 schedule."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One unknown fixed key; the underlying inner-round property holds independently of schedule relations.",
+    "key_population": "General fixed key; no weak-key restriction.",
+    "plaintext_model": "Fix every non-diagonal byte. Fix one chosen bit position in each of the four diagonal bytes and enumerate the other seven bits in each, giving 2^28 inputs.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [],
+    "reference_model": "Uniformly random permutation of the 128-bit block space, with the same classical chosen-plaintext access."
+  },
+  "techniques": [
+    "semi-square",
+    "integral"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "The paper proposes this distinguisher but gives no complete standalone evaluation budget."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^28",
+      "log2": 28,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "One full structure for the stated property; repeated tests and a target advantage are not specified."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "No separate standalone distinguisher memory budget is stated."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "No separately costed setup is stated."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "distinguishing-advantage",
+    "value": null,
+    "description": "Derived distinguishing-advantage lower bound for one fixed complete 2^28-input semi-square structure and the full 128-bit output-XOR test. Proposition6 makes AES acceptance one, under the stored three-inner-round convention. For one uniform random permutation on Q=2^128 blocks, condition on the first M-1 distinct outputs, M=2^28. At most one remaining block can make the complete XOR zero; its conditional probability is at most1/(Q-M+1). Taking the complement gives the displayed advantage bound. The input constants and common fixed bit position are selected before querying; no search over structures or coordinatewise independence is used. This is a new bound derived from the source construction, not an author-printed probability or balanced classification accuracy. Original unknown evaluation costs remain unknown.",
+    "components": [
+      {
+        "metric": "aes-side-semi-square-zero-sum",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "AppendixA Proposition6: fixing the same bit position in four diagonal input bytes and enumerating the remaining28 bits gives zero XOR in every output byte after three complete AES rounds. This is a deterministic AES-side event, not an advantage against a random permutation."
+      }
+    ],
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Verified exact source experiment, deterministic AES acceptance, ideal-permutation sampling without replacement and conservative whole-decision bound. Independently source-first and endpoint reviewed. This does not certify unknown resources, disputed source claims, attack reproduction or a new full-paper audit."
+    },
+    "basis": "derived_from_source",
+    "expression": "\\operatorname{Adv}\\ge 1-\\frac{1}{2^{128}-2^{28}+1}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Printed p.126 AppendixA Proposition6 and proposed distinguisher",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Complete official eleven-page proceedings reviewed; critical equations and Table1 visually checked. Author-reported scope and native units retained."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Complete PDF1–11/printed116–126; AppendixA Proposition6 and Sections4–5.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition inventory reviewed; reviewer finite component validation is separate from attack reproduction."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Proceedings PDF11 / printed126 AppendixA Proposition6, four semi-active diagonal bytes and three complete rounds.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The source gives the deterministic AES-side zero-sum but no random-permutation false-positive probability or numerical distinguishing advantage. Retain the2^28-input domain and the non-universality when fixing two bits. No2^-8 ideal-world probability is assumed."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "PDF11 / printed126 AppendixA Proposition6; PDF3 defines complete inner rounds without whitening. B40 report proves the conditional-last-block ideal-permutation bound for the full output XOR.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "New source-derived complete-test distinguishing-advantage bound against the exact uniform128-bit permutation. Original costs, target, conditions, components and source conflicts remain unchanged."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Results are transcribed from this source version. Full attack searches, costs and success probabilities have not been reproduced.",
+    "The source supplies no false-positive probability against random permutations for this exact structure.",
+    "Independent semi-square validation covers the algebraic balance, not random-permutation advantage, complete distinguisher cost or an attack reproduction. The two-fixed-bit failure is non-universal, not a claim that every smaller subset fails."
+  ],
+  "related_problem_ids": []
+}

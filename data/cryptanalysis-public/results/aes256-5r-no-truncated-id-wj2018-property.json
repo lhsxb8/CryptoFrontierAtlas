@@ -1,0 +1,139 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-5r-no-truncated-id-wj2018-property",
+  "title": "AES-256 five-round truncated differential feasibility [WJ18]",
+  "display": {
+    "name": "Five-round truncated differential feasibility",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "source-wj18-5r",
+    "description": "Five AES-256 rounds with initial whitening and final MixColumns omitted; fixed AES S-box and the genuine 256-bit master-key schedule. The explicit witness uses two consecutive round keys K2,K3."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "Real standard AES-256 key schedule: two consecutive freely chosen 128-bit round subkeys can be extended backwards/forwards to a master key.",
+    "key_population": "Existence over standard AES-256 keys, not every fixed key.",
+    "plaintext_model": "Source differential/linear patterns and their quantified propagation, not chosen-plaintext attack queries.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Real standard AES-256 key schedule: two consecutive freely chosen 128-bit round subkeys can be extended backwards/forwards to a master key."
+    ],
+    "reference_model": "Zero key-averaged probability means impossibility for every standard AES-256 master key. Positivity establishes existence of a compatible master key and input pair; never all patterns for each fixed key."
+  },
+  "techniques": [
+    "differential",
+    "truncated_difference_support",
+    "finite_field_subspace",
+    "consecutive_roundkey_inversion"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an operational attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an operational attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an operational attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an operational attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-property",
+    "value": null,
+    "description": "A quantified structural property, not attack success."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-a12e134b3ae3f0f6-2018",
+      "locator": "PDF pp.4–5 Definitions3,6,7 (key-averaged probability and existential positivity); PDF pp.9–11 Theorem2 constructive five-round proof; PDF p.11 Property1 and Theorem3 (consecutive AES-256 round-key inversion).",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "All12 primary PDF pages read independently. Nonzero probability signs visually checked; component equation printing issues are separately retained with their source-local resolutions."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Key-averaged support positivity is existential over keys and plaintext pairs, not positivity of every concrete differential or of every pattern under each fixed key.",
+    "The theorem concerns key-independent byte-activity truncation, not key-dependent subspace/integral distinguishers or the attackable round limit.",
+    "The paper explicitly constructs a five-round witness; its maximum-length statement is retained as the source claim. Reviewer finite checks do not exhaust all five-round inputs/keys or independently prove every longer interval.",
+    "Any chosen pair of consecutive128-bit AES-256 round keys extends to exactly one standard master key; this unrestricted pair-selection claim does not hold for AES-128 or AES-192."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "For every pair of nonzero byte-activity input and output patterns, the five-round truncated differential has positive probability after averaging over standard AES-256 master keys.",
+    "quantifier": "For every nonzero input pattern P and nonzero output pattern Q, there exist a standard AES-256 master key K, concrete nonzero difference a with chi(a)=P, and an input x such that chi(E_K(x) XOR E_K(x XOR a))=Q. The key and input may depend on P,Q.",
+    "scope": "Theorem3 standard AES-256 master-key model, explicit five-round construction with last MixColumns omitted. The source also states the maximum key-independent byte-truncated impossible-differential length is4; this is not a theorem on every fixed key or every concrete differential.",
+    "parameters": [
+      {
+        "name": "max_id_rounds",
+        "reported": "4",
+        "meaning": "Source-stated upper bound for key-independent byte-truncated impossible differentials in the stated key model; the explicit support witness targets5 rounds."
+      },
+      {
+        "name": "input_pattern",
+        "reported": "P in {0,1}^16 \\ {0}",
+        "meaning": "Every nonzero byte-activity input pattern."
+      },
+      {
+        "name": "output_pattern",
+        "reported": "Q in {0,1}^16 \\ {0}",
+        "meaning": "Every nonzero byte-activity output pattern."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Complete independent raw-first read of all12 PDF pages. Reviewer-generated exhaustive inverse/S-box support checks, trace-hyperplane checks, finite simultaneous-offset witnesses, MixColumns support controls and AES-256 round-key inversion tests support individual proof steps; not exhaustive five-round AES support reproduction."
+    }
+  }
+}

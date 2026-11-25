@@ -1,0 +1,164 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-8r-mitm-dfj2013-lowmemory",
+  "title": "Eight-round AES-256 single-key MITM key recovery, low-memory tradeoff",
+  "display": {
+    "name": "MITM, low-memory tradeoff",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "dfj2013-zero-based-rounds-0-to-7-final-no-mixcolumns",
+    "description": "Eight-round AES-256, rounds 0 through 7 in the authors' indexing, using the actual AES-256 key expansion. The reduced cipher omits the last MixColumns and ends with AddRoundKey; Section 4.1 also explains the equivalent-subkey change if the last MixColumns is retained."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown secret AES key; the attacker does not select related keys or obtain related-key oracles.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "chosen-plaintext structures under the same designated secret key",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The four-round multiset lookup table of Section 3.2 is reused after adding one final attack round.",
+      "The source uses 2^81 structures of 2^32 chosen plaintexts and enumerates 2^144 within-structure pairs.",
+      "AES-256 key-schedule Proposition 5 supports 2^48 needed-subkey candidates per pair; the output active byte can be anywhere except positions 0, 5, 10 and 15 for the stated cost.",
+      "Expected right-pair and multiset-matching counts follow the source's truncated-differential model; no independent implementation is asserted.",
+      "Low-memory output-active byte excludes0,5,10,15; low-data variant tests y5with one extra table parameter."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "differential-enumeration",
+    "multiset-tables"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^196",
+      "log2": 196,
+      "unit": "aes256-encryptions",
+      "qualifier": "estimate",
+      "note": "Section 4.1 reports 2^196 AES-encryption-equivalent time, with 2^48 needed-subkey candidates for each of 2^144 pairs. The cost is the online key-enumeration/multiset-testing estimate, not an independently audited all-stage total."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^113",
+      "log2": 113,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Section 4.1 explicitly uses 2^81 structures of 2^32 messages, all encrypted under one unknown key; no chosen-ciphertext or related-key access is used."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^82",
+      "log2": 82,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "The unchanged four-round middle lookup table contains about 2^80 multisets, represented by about 2^82 AES blocks. This is the source's table-storage estimate, not a bit count."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "A precomputed table is mandatory. Section 3.2 prices construction of the reused four-round table at about 2^84 AES encryptions, but Section 4.1 does not independently itemize an extension-specific offline budget; the numerical field is left null instead of re-labelling that estimate as a full eight-round preprocessing total."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "key-recovery-success",
+    "value": null,
+    "description": "Section4.1 extends the simple attack with2^113 chosen plaintexts and memory2^82, at time2^172 for AES192 or2^196 for AES256. The differential pair is acquired only in expectation; enumerating candidate subkeys and testing the multiset does not quantify joint completed-key success. The separate2^107-data/2^96-memory parallel-differential variant is not this assignment.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Source-first review of Figure5, the eight-round enumeration, Propositions3–5 and exact Table1 assignment. Useful-pair acquisition and completed-output error remain unquantified. Distinct key-schedule constraints, budgets and the parallel-differential variant are kept separate. No probability transferred from a local filter or another row; audit gates unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF pp.4-5, Section 2.1 (round operations, zero-based indexing and cost units); pp.13-15, Section 4.1 and Figure 5; p.8, Table 1, eight-round row with data 2^113 and memory 2^82.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources/time",
+        "/resources/data",
+        "/resources/memory",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The original construction, not a later survey, reports the AES-256 low-memory point with time 2^196, data 2^113 chosen plaintexts and memory 2^82 128-bit blocks. The derivation uses the real single-key AES-256 schedule. The text supplies no numerical success probability and makes an attack claim rather than a security lower-bound claim."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF p.10, Section 3.2, Precomputation phase; p.13, opening paragraph of Section 4.1.",
+      "fields": [
+        "/resources/preprocessing"
+      ],
+      "interpretation": "Section 3.2 gives an approximate 2^84-AES-encryption setup cost for its 2^80-multiset table. Section 4.1 extends that simple attack by adding a last round and retains its 2^82-block table. Reuse is explicit, but the extension's separate offline accounting is not tabulated; the 2^84 context is retained in the note rather than promoted to a separately reported extension-specific total."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF pp.1–17 complete read; p.5native units; pp.10–13 seven-round costs and completion; pp.14–16 schedule-dependent extensions.",
+      "fields": [
+        "/assessment",
+        "/limitations"
+      ],
+      "interpretation": "Raw-first independent full inventory, original-PDF SHA recheck, bounded official version/successor checks. Existing quoted resource tuple and stableIDpreserved; no author code executed."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF13–15 §4.1 and PDF5 single-key setting; two source differential layouts of the same8round extension.",
+      "fields": [
+        "/setting"
+      ],
+      "interpretation": "Source-supported semantic normalization of existing key-relation wording and designated target; no added oracle or key-control assumption."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF8 Table1; PDF13–15 Section4.1, simple extension and 64 parallel differentials.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Targeted success audit: expected counts and conditional correctness are retained without inventing an end-to-end probability or a Poisson independence assumption."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "Author PDF8 Table1; PDF13–15 Section4.1, Figure5, Steps1–4, Propositions3–5,2^113-data/2^82-memory construction and distinct2^107-data/2^96-memory alternative.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "The exact eight-round assignments retain the expected useful-pair acquisition issue. Enumeration and key-schedule deductions are not a numerical joint success law; different parallel-table resources are not mixed."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The attack and its enormous multiset table have not been independently implemented or reproduced.",
+    "The reported time is tied to the authors' key-testing cost model; extension-specific offline accounting and numerical whole-key success remain unreported.",
+    "Active-byte placement restrictions are part of this low-memory design point; the companion low-data variant uses a larger collection of tables.",
+    "This record preserves the inspected 2013 source version and is not a claim of current best-known cryptanalysis.",
+    "Complete17-page author-edition audit and bounded official version/successor checks completed2026-10-27 through literature cutoff2026-10-10. This records checked scope, not exhaustive absence of later corrections."
+  ],
+  "related_problem_ids": []
+}

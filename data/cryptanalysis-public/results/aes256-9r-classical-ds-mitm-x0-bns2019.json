@@ -1,0 +1,110 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes256-9r-classical-ds-mitm-x0-bns2019",
+  "title": "DS-MITM · reordered storage",
+  "display": {
+    "name": "DS-MITM · reordered storage",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "dfj2013-bns2019-nine-round-ds-mitm",
+    "description": "Nine-round AES-256 DS-MITM, reordered storage at the explicit x=0 endpoint; the source general tradeoff has a Table1/body sign discrepancy."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintexts"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed standard AES master key and its key schedule.",
+    "key_population": "General standard AES master keys",
+    "plaintext_model": "Source-defined input structure under one fixed key.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "ds-mitm",
+    "reordered-storage"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{210}+2^{194}",
+      "log2": null,
+      "unit": "round-reduced-aes-encryptions",
+      "qualifier": "estimate",
+      "note": "Table1 total-work sum at x=0; no coordinate-wise mixing."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^{113}",
+      "log2": 113,
+      "unit": "chosen-plaintexts",
+      "qualifier": "estimate",
+      "note": "Explicit x=0 endpoint."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^{194}",
+      "log2": 194,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Explicit x=0 storage from Section7.1/Table1."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Setup is included in total work unless separately stated."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-master-key-recovery",
+    "value": null,
+    "description": "The checked analysis gives an expected-work or filtering argument without a numeric probability for the complete named output event.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF pp.28–29 Section7.1, inherited DS-MITM verification."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bns2019-quantum-security-aes",
+      "locator": "PDF p.5 Table1; pp.28–29 Section7.1.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/bound"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete named output probability is not quantified by the source."
+  ],
+  "related_problem_ids": []
+}

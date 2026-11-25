@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+  \node[box] (msg) at (1.8,2) {Message block\\$\AtlasBlockBits$ bits};
+  \node[accent] (sched) at (6,2) {Message expansion\\$W_0,\ldots,W_{\AtlasLastStep}$};
+  \draw[wire] (msg) -- (sched);
+  \node[box,minimum width=11cm,minimum height=1.5cm] (step) at (6,-.1) {$T_1=h\boxplus\Sigma_1(e)\boxplus\operatorname{Ch}(e,f,g)\boxplus K_t\boxplus W_t$\\[4pt]
+    $T_2=\Sigma_0(a)\boxplus\operatorname{Maj}(a,b,c)$};
+  \draw[wire] (sched) -- (step);
+  \node at (6,-1.5) {$(a,b,c,d,e,f,g,h)\gets(T_1\boxplus T_2,a,b,c,d\boxplus T_1,e,f,g)$};
+  \draw[wire] (step.south) -- (6,-1.2);
+  \node[note] at (6,-2.3) {$\AtlasWordBits$-bit words\quad $t=0,\ldots,\AtlasLastStep$\quad $\boxplus$: addition modulo $2^{\AtlasWordBits}$};
+\end{tikzpicture}

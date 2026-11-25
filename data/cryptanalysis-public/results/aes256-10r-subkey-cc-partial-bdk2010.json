@@ -1,0 +1,164 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-10r-subkey-cc-partial-bdk2010",
+  "title": "256 10-round BDK+10: aes256-10r-subkey-cc-partial-bdk2010",
+  "display": {
+    "name": "Related-key differential recovery / subkey-cc-partial",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 10,
+    "full_round": false,
+    "round_convention": "bdk2010-odd-start-10r-final-no-mc",
+    "description": "10-round AES-256 variant starting at an odd-numbered round, with source omitted-final-MixColumns convention. The endpoint recovers only the source-stated subkey/key information; no unreported 256-bit completion is appended. Output: 35 bits of information from five subkey bytes. The source explicitly starts at round 1 and ends at round 10; its displayed figure renumbers local rounds."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_ciphertext_decryption"
+    ],
+    "related_key_count": 2,
+    "target_selection": "designated_target",
+    "key_relation": "For the exact rounds 1–10 variant choose Delta(K^2)=(b,b,b,b) and Delta(K^3)=(a,0,a,0), with a=(alpha,0,0,0)^T, b=MC((beta,0,0,0)^T), Pr[alpha -> beta]=2^-6. All round subkeys remain AES-256-schedule-consistent; this nonlinear induced master-key relation is stronger than fixed-XOR related master keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "Source CC accounting at 2^44; plaintext identities, paired related-key queries and total oracle calls are distinguished in the resource note.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The related-subkey relation, where used, is stronger than a fixed XOR master-key relation but all expanded subkeys remain consistent with their master key."
+    ]
+  },
+  "techniques": [
+    "related-key-differential",
+    "nonlinear-related-subkey-relation",
+    "subkey-cc-partial"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^45",
+      "log2": 45,
+      "unit": "source-native-aes-work-units",
+      "qualifier": "estimate",
+      "note": "Source headline/table work; Section 4.1.3 explicitly compares oracle encryptions with simple lookups. Units for other endpoints are not independently normalized."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^44",
+      "log2": 44,
+      "unit": "source-counted-chosen-ciphertexts",
+      "qualifier": "estimate",
+      "note": "Table 1/endpoint native data convention, not silently treated as aggregate oracle queries. Section 5.2 queries 2^44 ciphertexts under each key, so the total number of decryption calls is 2^45."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^33",
+      "log2": 33,
+      "unit": "source-native-memory-units",
+      "qualifier": "estimate",
+      "note": "Table 1 numeric memory; the table does not specify a uniform byte/word unit. Nine-round full recovery separately distinguishes small RAM from external data storage."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The source does not separately quantify this resource for this configuration."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "source-partial-key-recovery",
+    "value": null,
+    "description": "No numerical success is stated for the35-bit partial-subkey endpoint at data2^44. Four right pairs are expected; the source does not specify their joint acquisition/output distribution. The2^-32 wrong-vote statement remains local. Five two-candidate bytes yield the source35-bit information output, not complete master-key recovery. The57% in Section4.1.3 and0.63 in Section6.1 belong to different attacks and budgets.",
+    "components": [
+      {
+        "metric": "terminal-state-zero-difference-source-filter",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "Section5.2: source32-bit terminal-state filter, reducing2^76 cross-pairs to2^44. The cross-pair count is not the query count."
+      },
+      {
+        "metric": "seven-restricted-sboxes-source-transition-product",
+        "value": 2.2737367544323206e-13,
+        "basis": "author_model",
+        "expression": "2^{-42}",
+        "description": "Section5.2: source product for seven specified S-box transitions,2^(-7*6); the resulting four right pairs are an expectation, not a distribution of recovery outcomes."
+      },
+      {
+        "metric": "plaintext-difference-source-filter",
+        "value": 5.421010862427522e-20,
+        "basis": "author_model",
+        "expression": "2^{-64}",
+        "description": "Section5.2: fixed64-bit plaintext-difference test for wrong pairs, leaving source expected2^12 candidates."
+      },
+      {
+        "metric": "four-wrong-pairs-propose-identical-values-source-model",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "Section5.2 explicitly assigns2^-32 to four wrong pairs suggesting the same values in its candidate-vote model. This is a local false-consensus claim, not a bound for all key-difference guesses or a35-bit recovery success probability."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Local pair filters, conditional trails, weak-pair incidence and expected counts keep their own experiment; correlation is not a decision probability. Existing conflicts, resources, targets, settings and full-audit gates remain unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-1785e8ec66d6f216-2010",
+      "locator": "PDF p.3 Table 1; p.13 odd-start round convention; pp.14–15 Sections 5.1–5.2.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining text checked. Unknown costs are retained rather than preventing extraction."
+    },
+    {
+      "source_id": "aes-paper-1785e8ec66d6f216-2010",
+      "locator": "PDF pp.13–15 / printed pp.311–313 Section 5 introduction and Section 5.2; p.3 Table 1 row 6; p.21 Figure 3 right CC.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/assessment"
+      ],
+      "interpretation": "Independent complete 21-page exact-edition audit, frozen raw-first inventory and bounded forward/version checks through 2026-10-10. Native resource units and author-reported endpoint preserved; finite component checks are not attack reproduction."
+    },
+    {
+      "source_id": "aes-paper-1785e8ec66d6f216-2010",
+      "locator": "Proceedings PDF14–15 / printed312–313 Section5.2, fixed data2^44 and expected four right pairs; PDF3 Table1 row6.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical success is stated for the35-bit partial-subkey endpoint at data2^44. Four right pairs are expected; the source does not specify their joint acquisition/output distribution. The2^-32 wrong-vote statement remains local. Five two-candidate bytes yield the source35-bit information output, not complete master-key recovery. The57% in Section4.1.3 and0.63 in Section6.1 belong to different attacks and budgets."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The record covers the stated endpoint; full-paper inventory and later-literature review are tracked separately."
+  ],
+  "related_problem_ids": []
+}

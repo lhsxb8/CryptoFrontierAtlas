@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+  \node (zero) at (0,1) {$C_0=0^{128}$};
+  \node[accent,minimum width=4.5cm] (chain) at (0,-.2) {$C_i=\mathrm{AES}_K(C_{i-1}\oplus M_i)$\\$i=1,\ldots,n-1$};
+  \draw[wire] (zero) -- (chain);
+  \node[box,minimum width=4.5cm] (last) at (0,-2.2) {Complete, nonempty last block:\\$M_n^*=M_n\oplus K_1$\\Otherwise:\\$M_n^*=\operatorname{pad}_{10^*}(M_n)\oplus K_2$};
+  \draw[wire] (chain) -- (last);
+  \node[accent,minimum width=4.5cm] (tag) at (0,-4.5) {$T=\mathrm{AES}_K(C_{n-1}\oplus M_n^*)$};
+  \draw[wire] (last) -- (tag);
+  \node[note,text width=5.7cm] at (0,-5.9) {Key: $\AtlasKeyBits$ bits\quad Full tag: $128$ bits\\Empty message: one padded final block, no preceding chaining blocks.};
+\end{tikzpicture}

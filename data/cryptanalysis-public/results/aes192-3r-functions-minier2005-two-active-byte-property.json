@@ -1,0 +1,198 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-3r-functions-minier2005-two-active-byte-property",
+  "title": "3-round AES-192: Two-active-byte collision claim",
+  "display": {
+    "name": "Two-active-byte collision claim",
+    "method": "collision"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 3,
+    "full_round": false,
+    "round_convention": "minier2005-inner-rounds-with-mixcolumns-standard-left-shiftrows",
+    "description": "AES-192 on 128-bit blocks. Consecutive inner rounds each include MixColumns; the round keys are fixed and unknown. The source explicitly specifies left-going ShiftRows."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_analysis_no_attack_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "Three fixed, unknown 128-bit round keys. The structural argument does not use their master-key dependencies, and therefore also applies to keys derived from any of the standard AES key lengths.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "Vary y=Y_(0,3) and c0=Y_(1,3) jointly; cp=(c1,c2) at Y_(2,3),Y_(3,3) is the two-byte parameter, and the other twelve bytes are fixed.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "collision-of-functions",
+    "restricted-byte-dependency"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "This component relation has no attack-resource budget."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "component-relation-not-attack-success",
+    "value": null,
+    "description": "The property parameters and quantified relation are recorded separately from attack success and resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Printed pp.21–22 Section4, Figure3 and Property3",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property",
+        "/field_conflicts"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-author",
+      "locator": "Printed pp.21–22 Section4, Figure3 and Property3",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property",
+        "/field_conflicts"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Both complete PDF1–11/printed16–26; Sections3–5 and references.",
+      "fields": [
+        "/assessment",
+        "/property"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "PDF6–7/printed21–22 Section4; reviewer fullcp enumeration accepted2026-10-26.",
+      "fields": [
+        "/property",
+        "/property/validation",
+        "/field_conflicts"
+      ],
+      "interpretation": "Original reviewer AES implementation passes three FIPS controls; no universal-key impossibility or whole-attack claim."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Primary-text claims are catalogued by target and scope. Full attacks, cost estimates and global success are not independently reproduced."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "The author reports distinct cp pairs whose induced functions agree for every (y,c0), yielding 256^2 pointwise projected-byte equalities. The printed dependency argument retains five fixed-key and four cp/key-dependent bytes.",
+    "quantifier": "The reported existence/collision claim concerns a fixed-key component family and agreement over all256^2 active-input pairs. The paper reports computer verification without a quantified key distribution or sample count; universal existence for every key is not established.",
+    "scope": "Three inner AES rounds. A projected function relation with a documented literal-dependency issue; no improved four-round distinguisher or seven-round attack budget is derived in the paper.",
+    "parameters": [
+      {
+        "name": "Active function inputs",
+        "reported": "y and c0; 256^2 pairs",
+        "meaning": "Two active bytes define the function domain, not a successful-attack query count."
+      },
+      {
+        "name": "Collision parameter",
+        "reported": "cp=(c1,c2); 256^2 choices",
+        "meaning": "Distinct parameter pairs are sought with identical full active-input functions."
+      },
+      {
+        "name": "Printed dependency count",
+        "reported": "5 fixed-key bytes plus4 cp/key-dependent bytes",
+        "meaning": "Retained as the author's representation; the intermediate dependency statement requires reconciliation."
+      }
+    ],
+    "validation": {
+      "basis": "analytical_and_reported_experiment",
+      "description": "The source states computer verification but gives no sample count, transcript or runtime. Local standard-AES checks find identical named Z quartets and different named R quartets when only c0 changes; this disproves the literal R-from-Z-only dependency, not by itself the broader collision claim. New complete finite certificate: for sequential-byte master key, twelve outside input bytes zero and standard round keys1–3, all65536cp values have distinct8-output S03 signatures at(y,c0)=(0,0),(1,0),(0,1),(1,1),(2,3),(5,8),(13,21),(34,55). Thus that particular key/context has no distinctcp pair with identical full256^2-input functions. This does not prove absence for all keys/contexts or disprove an unspecified existential author experiment."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property/statement",
+      "label": "Two-active-byte dependency",
+      "description": "Section4 keeps the named Z quartet from Section3.1 while saying R is determined by that quartet and cp/key-dependent constants. Under the printed standard left ShiftRows, changing c0 leaves the named Z quartet unchanged but changes R. A local FIPS-controlled component counterexample is documented in the audit; the collision-existence claim remains separately unverified. The new separating-signature certificate strengthens validation only for three specified contexts, one per standard key length; the source gives no experimental transcript or context distribution.",
+      "observations": [
+        {
+          "source_id": "minier2005-three-rounds-proceedings",
+          "locator": "Printed p.18 Section3.1 definitions and p.21 Section4 first paragraph",
+          "reported": "Z0,3 through Z3,3 are the named Z quartet; Section4 retains the same notation, with y and c0 active and cp fixed."
+        },
+        {
+          "source_id": "minier2005-three-rounds-proceedings",
+          "locator": "Printed p.21 Section4 second-round dependency paragraph",
+          "reported": "The named R quartet is described as determined by the Z quartet and four constants depending only on cp and the key."
+        },
+        {
+          "source_id": "minier2005-three-rounds-author",
+          "locator": "Printed p.18 Section3.1 definitions and p.21 Section4 first paragraph",
+          "reported": "Z0,3 through Z3,3 are the named Z quartet; Section4 retains the same notation, with y and c0 active and cp fixed."
+        },
+        {
+          "source_id": "minier2005-three-rounds-author",
+          "locator": "Printed p.21 Section4 second-round dependency paragraph",
+          "reported": "The named R quartet is described as determined by the Z quartet and four constants depending only on cp and the key."
+        }
+      ]
+    }
+  ]
+}

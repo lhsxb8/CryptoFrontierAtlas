@@ -1,0 +1,147 @@
+{
+  "schema_version": "0.10.0",
+  "id": "qin2025-aes192-7r-free-target",
+  "title": "Free-common-input key collision on seven-round AES-192, QBD 2025 full version",
+  "display": {
+    "name": "Guess-and-determine rebound, free common input",
+    "method": "rebound"
+  },
+  "result_kind": "collision_construction",
+  "goal": "key_collision",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "aes_prefix_initial_ark_last_round_without_mc",
+    "description": "Initial AddRoundKey, six full rounds, then a final round without MixColumns; standard AES-192 key expansion. The same freely selected input is used under both keys."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "offline-public-cipher-evaluation"
+    ],
+    "related_key_count": null,
+    "key_relation": "The adversary constructs two distinct keys and one common input; there is no secret-key oracle.",
+    "key_population": "attacker-selected distinct keys",
+    "plaintext_model": "free_common_plaintext",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The attacker can choose the common plaintext/chaining value.",
+      "Equal AES ciphertexts at that common input also yield equal Davies-Meyer outputs after XOR with the same input.",
+      "The DM interpretation is semi-free-start and does not prescribe a fixed hash IV."
+    ]
+  },
+  "techniques": [
+    "guess-and-determine-rebound",
+    "key-collision",
+    "semi-free-start-collision"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "approximately 2^20",
+      "log2": 20,
+      "unit": "source-native-gd-rebound-work",
+      "qualifier": "estimate",
+      "note": "Expected collision work in the source inbound/outbound cost model; no conversion to full-AES encryption units is made."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No independent external-oracle data budget is specified for the offline construction."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Table 1 prints a dash; a quantitative storage bound was not extracted."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing budget is reported."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "find-one-key-collision",
+    "value": null,
+    "description": "The source prices expected work for one collision, not a numerical probability of finding at least one at that fixed budget. Inbound DDT characteristic probability is distinct from the GD-generated starting-point distribution; outbound probability is conditional on an admissible inbound point. Published witness pairs and implementation timings are not a trial-denominated experimental success rate. ",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition targeted success audit of defining constructions and parameter-specific cost/probability passages; not a new full-paper/forward audit. Weak-key/structure fractions, local false matches, raw Grover marked fractions and whole-attack success stay distinct."
+    },
+    "components": [
+      {
+        "metric": "inbound-characteristic-source-model",
+        "value": 2.3182538441796384e-69,
+        "basis": "author_model",
+        "expression": "2^{-228}",
+        "description": "PDF52–57 AppendixD.2: source inbound characteristic model, not the probability that the GD procedure generates a starting point or the whole attack succeeds."
+      },
+      {
+        "metric": "outbound-given-admissible-inbound-point",
+        "value": 9.5367431640625e-7,
+        "basis": "author_model",
+        "expression": "2^{-20}",
+        "description": "PDF52–57 AppendixD.2: source outbound characteristic conditioned on a conforming starting point. Sufficient degrees of freedom or expected one collision does not quantify finite-budget success."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "qbd2025-key-collisions-full",
+      "locator": "Table 1 p.6, AES-192 DM semi-free-start row; Section 7 p.29; Appendix D.2 p.57; Table 7 p.36, first pair; author verifier lines 338-380.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The free-common-input key collision is equivalent to the stated semi-free-start DM collision. Table 7 supplies the raw AES ciphertext; the verifier computes DM output as ciphertext XOR plaintext."
+    },
+    {
+      "source_id": "qbd2025-key-collisions-full",
+      "locator": "Complete exact primaryPDF1–58, all sections, displayed formulas/tables/algorithms, proofs and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full contribution inventory read; bounded forward checking and finite component validation are separately receipted. Full attack reproduction not attempted."
+    },
+    {
+      "source_id": "qbd2025-key-collisions-full",
+      "locator": "PDF52–57 AppendixD.2, defining characteristic,degree-of-freedom and complexity paragraphs.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The source prices expected work for one collision, not a numerical probability of finding at least one at that fixed budget. Inbound DDT characteristic probability is distinct from the GD-generated starting-point distribution; outbound probability is conditional on an admissible inbound point. Published witness pairs and implementation timings are not a trial-denominated experimental success rate. "
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "collision_witness_only",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The local check verifies one pair and its feedforward output, not search cost or attack success statistics.",
+    "A free-common-input seven-round result cannot replace a fixed-zero-input result, or a fixed-IV hash collision claim."
+  ],
+  "related_problem_ids": []
+}

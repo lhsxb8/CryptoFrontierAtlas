@@ -1,0 +1,134 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-7r-known-key-rebound-mpr2009",
+  "title": "aes-128/aes-192/aes-256, 7 rounds: Rebound known-key distinguisher [MPR+09]",
+  "display": {
+    "name": "Rebound known-key distinguisher",
+    "method": "rebound"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "source-mprplus09-7r",
+    "description": "Seven AES rounds with initial whitening and final MixColumns omitted (Sections2.1,5.2,6.2). Active-byte path4→1→4→16→4→1→4→4; fixed known key throughout."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "public_known_key_permutation_evaluation"
+    ],
+    "related_key_count": null,
+    "target_selection": "fixed_known_key",
+    "key_relation": "One randomly drawn AES key revealed to the adversary; the key and its derived round subkeys are fixed during pair construction. No related-key oracle and no attacker choice of the key.",
+    "key_population": "Known random AES key; no weak-key selection.",
+    "plaintext_model": "Construct two distinct plaintexts with four active bytes at prescribed positions at input and output; the remaining twelve bytes of each difference are zero. Nonzero active differences are not prescribed values.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The round construction does not depend on key-schedule relations, so the known-key setting applies to all three standard key lengths."
+    ],
+    "reference_model": "Known-key restricted input/output pair construction compared to forward/inverse oracle queries to an ideal random 128-bit permutation; no secret-key recovery."
+  },
+  "techniques": [
+    "extended-rebound",
+    "start-from-the-middle",
+    "restricted-pair-finding"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^24",
+      "log2": 24,
+      "unit": "aes-round-computations",
+      "qualifier": "estimate",
+      "note": "Section5.2 gives about2^24 AES-round computations on average from the final4→1MixColumns transition; Section6.2 andTable1 give the same exponent. Do not normalize to full-encryption units."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical budget is stated for this configuration."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^16",
+      "log2": 16,
+      "unit": "source-native-table-entries",
+      "qualifier": "estimate",
+      "note": "Table1 explicitly gives2^16 native memory entries. Section6.2 calls this negligible; that qualitative comparison is retained, not interpreted as zero bytes or a different numerical configuration."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical budget is stated for this configuration."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "distinguishing-success",
+    "value": null,
+    "description": "No numerical complete restricted-pair construction or distinguishing-game success is given at the reported average runtime. The rebound final-transition probability and the linearized method’s expected work are not a fixed-budget whole-attack probability.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit; construction and parameter-specific defining passages, not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "last-uncontrolled-mixcolumns-transition",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "description": "Section5.2 probability for one controlled candidate to pass the final4-to1 active-byte transition. Average2^24 round computations do not specify a fixed-budget success rate."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-32003eaa51eb5e46-2009",
+      "locator": "PDF pp.2–3 / printed17–18 Table1 andSection2.1; pp.13–14 /28–29 Section5.2; p.16 /31 Section6.2.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Complete20page primary read; Table1 memory2^16 is visually verified. Body negligible-memory wording does not assert zero. Section6.2 generic reference2^48 is source attribution, not an attack cost; later GP10/DFJ12 analyze the restricted birthday task more tightly. This is a constructive distinguisher, not a minimum-active-S-box structural bound; bound is not applicable."
+    },
+    {
+      "source_id": "aes-paper-32003eaa51eb5e46-2009",
+      "locator": "PDF p.14 /printed29 Section5.2, Extending the Path; p.16 /printed31 Section6.2; pp.10–11 Section4.3 for the linearized method.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical complete restricted-pair construction or distinguishing-game success is given at the reported average runtime. The rebound final-transition probability and the linearized method’s expected work are not a fixed-budget whole-attack probability."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Native work and table-entry units are retained; no conversion to full AES encryptions or bytes is inferred.",
+    "Whole-attack success probability is not quantified in the primary; local transition probabilities and expected candidate counts are not substituted for it."
+  ],
+  "related_problem_ids": []
+}

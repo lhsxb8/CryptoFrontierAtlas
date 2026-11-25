@@ -1,0 +1,128 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-10r-rectangle-64-key-khp2007",
+  "title": "KHP07 10-round AES-192 / aes192-10r-rectangle-64-key-khp2007",
+  "display": {
+    "name": "Related-key rectangle / 64-key",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 10,
+    "full_round": false,
+    "round_convention": "khp07-10r-final-no-mc",
+    "description": "10 nonlinear AES rounds with the initial whitening addition and no final MixColumns. The recovered material is specified below.Output: whitening bytes 1,2,6,7,8,11,12,13 plus last-round K9 bytes 0,7,8,10,12,13; unknown key differences d,e,f are additionally enumerated. These are fourteen subkey bytes, not a recovered 192-bit master key."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": 64,
+    "target_selection": "any_from_pool",
+    "key_relation": "Four groups of sixteen structured unknown keys, Section 4.3: bytes 3 and 11 are equal within each base key (s_i or t_j), distinct across each sixteen-key group; companion keys differ in bytes 1/9 and cross-groups in bytes 8/12.",
+    "key_population": "structured key sets satisfying the Section 4.3 equal-byte conditions",
+    "plaintext_model": "Chosen plaintexts aggregated across the 64 source-related keys; individual data points retain source average accounting.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "This is not unrestricted fixed-XOR related-key access: the prescribed within-key byte equalities and sixteen-key structures are required."
+    ]
+  },
+  "techniques": [
+    "related-key-rectangle",
+    "64-key"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^183",
+      "log2": 183,
+      "unit": "10-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^124",
+      "log2": 124,
+      "unit": "related-key-chosen-plaintext-queries",
+      "qualifier": "estimate",
+      "note": "Source headline aggregate over the required related-key oracles, not a per-key codebook."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical resource budget is supplied for this endpoint."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "PDF p.12 footnote describes an optional table storing 2^64 input pairs; this is not a priced setup or a total-memory estimate."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "selected-subkey-identification",
+    "value": null,
+    "description": "No numerical aggregate success is separately given for the64-key ten-round adaptation. Section4.3 forms256 structured key quartets and expects one to satisfy the unknown b condition; it does not quantify the chance of this event. The0.99 Poisson statement in Section4.2 belongs to the256-key/D2^125 procedure, not automatically to this64-key/D2^124 experiment. A mean-one compatible quartet is not1-exp(-1), and the structured quartets are not established independent.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Theoretical deterministic guarantees require the stated ideal model; local filters, characteristic products, expected counts and physical acquisition are separate. Costs, targets, settings, existing conflicts and full-audit gates are unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-95ab248a25672b7a-2007",
+      "locator": "PDF pp.3–4 round convention; pp.6–13 Sections 4.1–4.3, algorithm output, time/data and success.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining algorithm/accounting passages checked; partial outputs and native units retained."
+    },
+    {
+      "source_id": "aes-paper-95ab248a25672b7a-2007",
+      "locator": "Complete PDF1–17/printed225–241, Sections3–7 and figures/references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete endpoint/support inventory; no extra numeric attack points inferred from internal rectangle probabilities."
+    },
+    {
+      "source_id": "aes-paper-95ab248a25672b7a-2007",
+      "locator": "Proceedings PDF13 / printed237 Section4.3 (structured64-key adaptation); PDF12 / printed236 Section4.2 for the distinct256-key Poisson calculation.",
+      "fields": [
+        "/success"
+      ],
+      "interpretation": "No numerical aggregate success is separately given for the64-key ten-round adaptation. Section4.3 forms256 structured key quartets and expects one to satisfy the unknown b condition; it does not quantify the chance of this event. The0.99 Poisson statement in Section4.2 belongs to the256-key/D2^125 procedure, not automatically to this64-key/D2^124 experiment. A mean-one compatible quartet is not1-exp(-1), and the structured quartets are not established independent."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This record prices the stated endpoint; it does not append an unreported master-key completion budget."
+  ],
+  "related_problem_ids": []
+}

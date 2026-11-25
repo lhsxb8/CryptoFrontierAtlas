@@ -1,0 +1,4 @@
+# Keep byte-addressed Lean artifacts stable across operating systems.
+*.lean text eol=lf
+# Published snapshot hashes address LF-normalized committed bytes.
+data/cryptanalysis-public/** text eol=lf

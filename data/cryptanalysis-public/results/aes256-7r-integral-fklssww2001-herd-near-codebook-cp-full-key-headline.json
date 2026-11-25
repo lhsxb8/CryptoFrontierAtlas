@@ -1,0 +1,157 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-7r-integral-fklssww2001-herd-near-codebook-cp-full-key-headline",
+  "title": "7-round AES-256: reported whole-key herd filter, near-codebook cp",
+  "display": {
+    "name": "Herd filter, near-codebook CP, full-key headline",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "fklssww2001-whitening-rounds-1-to-r-final-no-mixcolumns",
+    "description": "The authors' reported whole-key attack on 7-round AES-256, with initial whitening and final MixColumns omitted. The detailed filter stage is separately recorded as aes256-7r-integral-fklssww2001-herd-near-codebook-cp; its selected subkey material and the broader whole-cipher claim have different scopes."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown master key with the standard AES expansion; no related-key access.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "Selected near-codebook: four plaintext bytes cover 2^32-2^23 chosen values; the remaining twelve bytes cover every value, totaling 2^128-2^119 distinct plaintexts.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Wrong-subkey rejection uses the paper's heuristic model for zero XOR sums; no numerical whole-procedure success rate is supplied.",
+      "Use only undamaged herds after removing the selected 2^23 four-byte values; approximately 2^23 complete three-fixed-byte herds remain.",
+      "This record retains the paper's explicit whole-cipher attack headline. The detailed search first isolates selected subkey material; repeated filtering, reverse expansion or residual search for full master-key completion is not separately costed for every endpoint in this version."
+    ]
+  },
+  "techniques": [
+    "integral-square",
+    "herd-partition",
+    "parity-counting"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "about 2^120",
+      "log2": 120,
+      "unit": "fklssww2001-trial-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "The dominating scan updates one counter for each known/selected text. The paper uses 2^8 memory lookups per trial-encryption equivalent. Data acquisition is not counted as 2^128 new trial encryptions; scan operations and oracle observations remain separate. This whole-key row preserves the authors' attack-level estimate; it does not infer a new constant factor from the separately catalogued filter."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^128-2^119",
+      "log2": 127.99717948093762,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "This is (2^32-2^23)*2^96 selected distinct plaintexts. It is not a random known-plaintext sample. The acquisition budget is the paper's reported attack-level budget."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^64",
+      "log2": 64,
+      "unit": "bits",
+      "qualifier": "estimate",
+      "note": "Section 2.5 gives the dominant 2^64 one-bit parity-counter array; later phases have smaller 2^32 counters. The near-codebook change is stated not to alter the attack complexity."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Table preparation and setup are described within the construction but not separately priced for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "author-reported-whole-key-attack",
+    "value": null,
+    "description": "The exact key_recovery endpoint has no numerical joint success. The zero sum over the entire unpartitioned codebook also holds for wrong guesses and is not a distinguisher; the attack uses correctly partitioned complete herds. The near-codebook construction leaves about half of the herds undamaged, a coverage count rather than a random-selection success rate. The source gives qualitative wrong-hypothesis rejection and an author headline, not a finite-budget probability for all targeted key material. This is an author full-key headline; numerical success of unitemized completion is not inferred from the selected-subkey relation.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit; preserve resource parameters, existing conflicts and full-audit gates. Local source models and conditional relations do not certify whole-output success."
+    },
+    "components": [
+      {
+        "metric": "correct-key-complete-herd-balanced-sum",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF6–9 Sections2.5–2.6: within a complete herd formed using the correct initial key hypothesis, the targeted byte of b5 sums to zero. For near-codebook data this is conditional on selecting an undamaged herd; it is not a claim about randomly choosing one."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Table 1 p.214; Sections 2.3–2.7 pp.215–221; conclusion p.227",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Preserve the explicit reported whole-cipher attack scope as well as the separately catalogued selected-subkey calculation. The source's approximate headline is not promoted to independently verified end-to-end accounting."
+    },
+    {
+      "source_id": "fklssww2001-integral-author",
+      "locator": "Table 1, document p.2; Sections 2.3–2.7, document pp.3–9",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The author-hosted version states the same attack-level scope and endpoints, with its own version fingerprint."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Both complete editions: proceedingsPDF1–18/printed213–230 and authorPDF1–19 including finalblank; Sections2–5, AppendixA and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Proceedings PDF6–9 / printed218–221 Sections2.5–2.6; Table1 onPDF2.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The exact key_recovery endpoint has no numerical joint success. The zero sum over the entire unpartitioned codebook also holds for wrong guesses and is not a distinguisher; the attack uses correctly partitioned complete herds. The near-codebook construction leaves about half of the herds undamaged, a coverage count rather than a random-selection success rate. The source gives qualitative wrong-hypothesis rejection and an author headline, not a finite-budget probability for all targeted key material. This is an author full-key headline; numerical success of unitemized completion is not inferred from the selected-subkey relation."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The whole-key cost is retained as the authors' published attack claim. Per-stage completion accounting is not independently reconstructed and remains a coverage issue.",
+    "The selected-subkey filter is a separate result; these two scopes must not be ranked as if their goals were equal.",
+    "No complete attack implementation or cost reproduction was executed."
+  ],
+  "related_problem_ids": []
+}

@@ -1,0 +1,149 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes192-7r-dm-preimage-skp-cglsz2025",
+  "title": "MITM · single-pair AES key preimage",
+  "display": {
+    "name": "MITM · single-pair AES key preimage",
+    "method": "mitm"
+  },
+  "result_kind": "preimage_attack",
+  "goal": "compression_preimage",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "cglsz2025-7-round-final-no-mc",
+    "description": "7 rounds of AES-192: find a complete key compatible with one predetermined plaintext/ciphertext pair, equivalently a one-block DM preimage. This is not an identification probability for the original long secret key."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "offline_public_cipher_evaluation"
+    ],
+    "related_key_count": null,
+    "key_relation": "The source-defined public key or public round keys.",
+    "key_population": "General standard AES master keys",
+    "plaintext_model": "One predetermined public plaintext/ciphertext pair; search over the AES message-key input.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "mitm",
+    "single-known-plaintext"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{120}",
+      "log2": 120,
+      "unit": "round-reduced-aes-encryptions",
+      "qualifier": "estimate",
+      "note": "Source SKP expected cost for one consistent preimage key, not the two-block OWF cost."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "1",
+      "log2": 0,
+      "unit": "known-plaintext-ciphertext-pairs",
+      "qualifier": "estimate",
+      "note": "One fixed public pair; no chosen-plaintext codebook."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^{72}",
+      "log2": 72,
+      "unit": "neutral-word-table-entries",
+      "qualifier": "estimate",
+      "note": "Table1 and defining SCIS table/index description."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Setup is included in total work unless separately stated."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "find-complete-key-compatible-with-one-given-pair",
+    "value": null,
+    "description": "The checked analysis gives an expected-work or filtering argument without a numeric probability for the complete named output event.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF p.7 Table1; pp.9–12 SKP versus two-block OWF; p.39 AppendixC.2/Figure15."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "cglsz2025-aes-hashing-owf",
+      "locator": "PDF p.7 Table1; pp.9–12 SKP versus two-block OWF; p.39 AppendixC.2/Figure15.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/experiment",
+        "/bound"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete named output probability is not quantified by the source."
+  ],
+  "related_problem_ids": [],
+  "experiment": {
+    "construction": {
+      "type": "compression_function",
+      "name": "AES-DM",
+      "definition": "CF(h,m)=AES_m(h) xor h",
+      "output_bits": 128
+    },
+    "variables": [
+      {
+        "name": "h",
+        "control": "fixed",
+        "domain": "128-bit chaining value",
+        "condition": "Predetermined initial value; no IV search is allowed."
+      },
+      {
+        "name": "m",
+        "control": "chosen",
+        "domain": "192-bit message",
+        "condition": "One message whose full compression output equals the target."
+      },
+      {
+        "name": "y",
+        "control": "fixed",
+        "domain": "128-bit target",
+        "condition": "Predetermined target independent of the searched message."
+      }
+    ],
+    "relation": "CF(h,m)=y",
+    "output": {
+      "scope": "full",
+      "bits": 128,
+      "mask": null
+    },
+    "parameters": [],
+    "distinctness": "One preimage for the fixed target and IV; no IV freedom.",
+    "reference": "Ideal 128-bit compression output, generic classical preimage work approximately 2^128.",
+    "unresolved": []
+  }
+}

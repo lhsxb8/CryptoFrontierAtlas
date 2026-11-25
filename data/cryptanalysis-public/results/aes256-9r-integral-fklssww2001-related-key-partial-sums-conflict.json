@@ -1,0 +1,205 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-9r-integral-fklssww2001-related-key-partial-sums-conflict",
+  "title": "9-round AES-256: related-key partial sums, data conflict for selected subkey recovery",
+  "display": {
+    "name": "Related-key partial sums, data conflict",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "fklssww2001-whitening-rounds-1-to-r-final-no-mixcolumns",
+    "description": "AES-256 reduced to 9 rounds on 128-bit blocks; initial AddRoundKey k^(0), then rounds 1 through 9, with no MixColumns in the final round. The improved filter guesses 19 bytes of expanded-key cycle K^(4), tracks the key-dependent differences, then applies partial sums to the remaining late-round material. This is the explicitly analyzed selected-subkey search."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related_key_chosen_plaintext_encryption"
+    ],
+    "related_key_count": 256,
+    "target_selection": "designated_target",
+    "key_relation": "For an unknown base master key L, L_a XOR L has byte a at zero-based master-key byte indices 21 and 25 and zero elsewhere, for every a in 0,...,255. The a=0 key is the base key; total distinct keys is 256.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "About 32 structures, each containing 2^64 chosen plaintexts under each of 256 related master keys. Body total 2^77 conflicts with Table 1's 2^85.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Wrong-subkey rejection uses the paper's heuristic model for zero XOR sums; no numerical whole-procedure success rate is supplied.",
+      "The paper presents these constructions as attacks on Rijndael. This record prices the explicitly analyzed selected-subkey filter; complete master-key reconstruction and any repeated filter applications are left for a separate completion-budget review.",
+      "Related master keys use a fixed XOR relation, while their expanded-key differences depend on guessed base-key bytes through S-boxes. These are not arbitrary independently selectable subkey oracles."
+    ]
+  },
+  "techniques": [
+    "related-key",
+    "integral-square",
+    "partial-sums",
+    "key-schedule-differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "5*2^224 (detailed estimate); 2^224 (abbreviated summary)",
+      "log2": 226.32192809488737,
+      "unit": "fklssww2001-nine-round-search-steps",
+      "qualifier": "estimate",
+      "note": "Section 4.3 gives 5*2^224 for five dominating structures, each scanning 2^72 ciphertexts for 2^152 outer guesses. Section 4.5 abbreviates this to 2^224 steps. The coefficient five is preserved; the dominant one-round-decryption workload is not silently converted to full AES encryptions."
+    },
+    "data": {
+      "status": "conflict",
+      "reported": "2^85 (Table 1) versus 2^77 (Sections 4.3 and 4.5)",
+      "log2": null,
+      "unit": "related-key-chosen-plaintext-queries",
+      "qualifier": "unspecified",
+      "note": "Both versions print the discrepancy. The body counts 32*(2^64*256)=2^77 total queries; Table 1 states 2^85. The table's extra factor 256 cannot be explained as a per-key/total conversion of the same stated structure count."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Neither the basic nor improved related-key construction provides an explicit complete peak-storage budget."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Table preparation and setup are described within the construction but not separately priced for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "selected-subkey-filter-recovery",
+    "value": null,
+    "description": "No numerical success for this exact partial_key_recovery output is given. Section4.2 says enough sets identify the correct guesses; Section4.3 says about32 structures, without a joint error probability. The source 256-key relation and required plaintext compensation are conditions of the balanced identity. The existing Table1 2^85 versus body 2^77 data conflict remains pending; neither endpoint is silently selected.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Re-read PDF3-5 and11-16 Sections2.1-2.4/4.1-4.5. The improved related-key procedure intends unique guessed-byte output after about32 structures, but supplies no joint wrong-key law for these aggregate structures or explicit master-key completion for the headline. Earlier ordinary Square255/256 rejection is not that law. Retain partial/full separation, balanced-sum component and2^85-versus2^77 data conflict; both primary metrics remain unquantified."
+    },
+    "components": [
+      {
+        "metric": "correct-related-key-hypothesis-balanced-sum",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF13 Section4.2 / Figure2 and PDF15 Section4.3: with correct guessed key bytes and source-defined plaintext compensation under the 256 related keys, the targeted byte of b6 sums to zero. The optimized full-structure sum preserves this relation; unique identification is a separate event."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Sections 4.1–4.3 pp.223–227; Table 1 p.214; Section 4.5 p.227",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The budget is tied to the stated selected-subkey computation and native operation units. Broad headline claims are retained in the audit report without silently converting a selected-subkey budget into complete master-key recovery."
+    },
+    {
+      "source_id": "fklssww2001-integral-author",
+      "locator": "Sections 4.1–4.3, document pp.11–15; Table 1, document p.2; Section 4.5, document p.15",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The corresponding construction and numerical endpoint agree with the proceedings in this author-hosted edition; version identity and page numbering remain separate."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Table 1 p.214 versus Sections 4.3 and 4.5 p.227",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "Both independently retrieved source versions retain the inconsistent total-query counts; preserve both and leave normalization unavailable."
+    },
+    {
+      "source_id": "fklssww2001-integral-author",
+      "locator": "Table 1 document p.2 versus Sections 4.3 and 4.5 document p.15",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "Both independently retrieved source versions retain the inconsistent total-query counts; preserve both and leave normalization unavailable."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Both complete editions: proceedingsPDF1–18/printed213–230 and authorPDF1–19 including finalblank; Sections2–5, AppendixA and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Proceedings PDF11–15 / printed223–227 Sections4.1–4.3/4.5, Figures1–2; Table1 onPDF2.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical success for this exact partial_key_recovery output is given. Section4.2 says enough sets identify the correct guesses; Section4.3 says about32 structures, without a joint error probability. The source 256-key relation and required plaintext compensation are conditions of the balanced identity. The existing Table1 2^85 versus body 2^77 data conflict remains pending; neither endpoint is silently selected."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "PDF11-15 / printed223-227 Sections4.1-4.5, especially nineteen-byte guesses, about32 structures, partial sums and detailed5*2^224 work; PDF3-5 earlier ordinary Square filters. Targeted success review2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Guaranteed balanced sum retains its local meaning. A qualitative unique-guessed-output claim is preserved without inventing an independent32-filter probability or a completed full-master-key search."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The recorded recovery scope is the subkey material explicitly tested by the described procedure. The paper's broader attack headline and completion accounting are tracked separately.",
+    "Resource estimates are analytical; no attack implementation or claimed full-scale experiment was executed for this audit."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/data",
+      "label": "Related-key total data",
+      "description": "The summary table and the detailed construction state different total numbers of related-key chosen-plaintext queries. The discrepancy is present in both inspected versions.",
+      "observations": [
+        {
+          "source_id": "fklssww2001-integral-proceedings",
+          "locator": "Table 1 p.214, Rijndael-9 row",
+          "reported": "2^85 total related-key chosen-plaintext queries"
+        },
+        {
+          "source_id": "fklssww2001-integral-proceedings",
+          "locator": "Sections 4.3 and 4.5 p.227",
+          "reported": "32 structures * 2^72 queries = 2^77 total; each structure already includes all 256 related keys"
+        },
+        {
+          "source_id": "fklssww2001-integral-author",
+          "locator": "Document p.2 Table 1 versus document p.15 Sections 4.3 and 4.5",
+          "reported": "The same 2^85 table / 2^77 body discrepancy remains in the author-hosted edition"
+        }
+      ]
+    }
+  ]
+}

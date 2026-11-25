@@ -1,0 +1,203 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-dfa-pq2003-two-earlier-faults-key-recovery",
+  "title": "AES-128 Two earlier faults: full-key recovery (Piret–Quisquater 2003)",
+  "display": {
+    "name": "Two earlier faults: full-key recovery",
+    "method": "fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full ten-round AES-128. Two useful byte faults before the round-8 diffusion constrain all sixteen last-round-key bytes, followed by AES-128 key-schedule inversion and verification of any surviving complete-key candidates."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "paired-correct-and-faulty-encryption-outputs",
+      "single-byte-state-fault-injection"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unchanged secret AES-128 master key; no related-key or key-schedule-fault oracle.",
+    "key_population": "AES-128 keys in the stated unprotected single-byte-fault model; no weak-key restriction.",
+    "plaintext_model": "A correct ciphertext and its faulty counterpart for each plaintext; different pairs may use different plaintexts. The source's algorithm associates every pair with the same key.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "A byte of the AES encryption state; faults in the key schedule are outside this result.",
+      "granularity": "One initial byte with an unknown nonzero difference; later diffusion may change four or sixteen state bytes.",
+      "timing": "After the round-7 diffusion layer and before the round-8 diffusion layer (theta_(R−3) to theta_(R−2)); theta is ShiftRows followed by MixColumns.",
+      "location": "The byte position is unknown. Propagation through two diffusion layers supplies information about all four last-round-key groups.",
+      "value_control": "The faulty byte value is random and assumed uniformly distributed; no chosen difference or bit-level fault control.",
+      "sample_pairing": "Every faulty ciphertext has its correct counterpart for the same plaintext and key; useful pairs are distinguished from total injection attempts.",
+      "evidence_scope": "software_experiment"
+    },
+    "assumptions": [
+      "Only correct/faulty output pairs satisfying the stated single-byte model and timing window are counted.",
+      "The last-round-key candidate set is computed from differential constraints, and any remaining candidates require a separate check.",
+      "The paper instantiates and tests the 128-bit-block, 128-bit-key variant; its general extension remark is not a quantified AES-192/256 result.",
+      "The 77% statistic measures a singleton full-key candidate list before exhaustive verification of the remaining small list. It is not a universal 77% key-recovery probability.",
+      "In the source theta_r=ShiftRows_r followed by MixColumns_r. The four final-round-key groups in column-majorFIPSindices are{0,13,10,7}, {4,1,14,11}, {8,5,2,15}, {12,9,6,3}; these are affected sets, not ordered inverseMixColumns arguments."
+    ]
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "earlier-byte-fault",
+    "candidate-list-filtering"
+  ],
+  "resources": {
+    "time": {
+      "status": "qualitative",
+      "reported": "a few seconds on a PC",
+      "log2": null,
+      "unit": "wall-clock-time",
+      "qualifier": "unspecified",
+      "note": "The timing is stated directly after the two-earlier-fault PC results on pp.84–85; processor details, trial count and precise timing protocol are not supplied."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2",
+      "unit": "correct-faulty-ciphertext-pairs",
+      "log2": 1,
+      "qualifier": "exact",
+      "note": "Section 3.3 and Table 3 count two useful faults between theta_7 and theta_8, each with its correct ciphertext counterpart."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Section 2 stores differential patterns D and candidate lists L but does not tabulate whole-attack peak memory."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Section 2 forms a table of 255*n single-byte-fault diffusion patterns. For one AES column n=4, this gives 1020 patterns as a derived component count, not a reported total preprocessing-time budget."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "empirical-unique-full-key-candidate-frequency",
+    "value": 0.77,
+    "description": "The PC experiments report a unique full-key candidate in 77% of cases. All reported remaining lists had at most sixteen candidates; trial count and numerical final verification success are unspecified. Giraud–Thillard Section3.2/footnote4 reports approximately92% for the same old two-useful-earlier-fault full-list uniqueness event in1,000,000 simulations, explicitly contrasting the original77%. Both observations are retained; neither is the measured probability of final key verification or physical fault acquisition.",
+    "basis": "reported_experiment",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Verified only that the original77% and later92% are separately reported empirical singleton-list frequencies for the same old two-useful-earlier-fault algorithm. This source-attribution verification does not adjudicate their difference, establish a population rate, or certify final key verification/physical fault acquisition. Experimental protocol/raw-outcome reconciliation remains unresolved in /field_conflicts; the primary77% stays the original observation."
+    },
+    "components": [
+      {
+        "metric": "empirical-unique-full-key-candidate-frequency",
+        "value": 0.92,
+        "basis": "reported_experiment",
+        "expression": "\\approx0.92",
+        "description": "Later remeasurement: GT PDF5 Section3.2/footnote4 reports92% from1,000,000 simulations of the original extended D-filter with two useful earlier faults. Exact successful trial numerator, full sampling protocol and confidence interval are unavailable. Same list-uniqueness event as original77%; not an independent local factor or final-verified-output/acquisition yield."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "pq2003-dfa-ches",
+      "locator": "CHES2003 Section 3.3 pp.84–85; Table 3 p.86",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/candidate_space"
+      ],
+      "interpretation": "The two-pair attack, qualitative time, unique-candidate fraction and observed candidate-list cap keep separate meanings. Additional verification of survivors is not claimed to have a separately measured universal success rate."
+    },
+    {
+      "source_id": "pq2003-dfa-ches",
+      "locator": "Complete PDF1–12/printed77–88, including Section2 model, Section3.3 every AESendpoint, Table3 and AppendixA.",
+      "fields": [
+        "/assessment",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/candidate_space"
+      ],
+      "interpretation": "Exact12-page CHES2003 chapter independently read in full on2026-10-27. Reviewer finite component identities and arithmetic checks do not execute or reproduce the author attack or remeasure its empirical frequencies."
+    },
+    {
+      "source_id": "gt2010-pq-revisited-mirror",
+      "locator": "PDF5 Section3.2/footnote4; PDF4 Section3.1; PDF5 Section3.3 separates the new S-filter.",
+      "fields": [
+        "/success",
+        "/field_conflicts",
+        "/assessment",
+        "/limitations",
+        "/success/components/0"
+      ],
+      "interpretation": "Direct later-author remeasurement of the same old full-list singleton event, at two useful earlier faults. The92% statement has a million-simulation denominator, unlike the original77%; no exact successful numerator is given. Preserve original77%, add later92% as an alternative observation and retain the disagreement. Do not treat0.98^4 as a proved independent product, or replace few-seconds native timing with the new one-fault eight-minute runtime."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Useful correct/faulty pairs exclude acquisition failures and faults outside the model; total physical attempts are not costed.",
+    "Computer experiments in this paper do not establish a measured physical fault-injection setup.",
+    "The reported rejection of mixed right/bad pairs is an observation with no trial count; it is not a proof that every physically malformed pair is rejected.",
+    "Exact12-page CHES2003 chapter independently read in full on2026-10-27. Reviewer finite component identities and arithmetic checks do not execute or reproduce the author attack or remeasure its empirical frequencies.",
+    "B61 acquired and read a distinct independent-mirror copy of ePrint2010/440. Later1036mean/92% remeasurements are retained with explicit provenance; original observations and native costs remain. Official PDF byte/version identity and new-construction inventory remain unverified."
+  ],
+  "related_problem_ids": [],
+  "candidate_space": {
+    "material": "Complete 128-bit final-round key of AES-128, in bijection with the master key under inverse key expansion.",
+    "material_bits": 128,
+    "observations": [
+      {
+        "statistic": "sample_maximum",
+        "sample_count": null,
+        "count": {
+          "status": "reported",
+          "reported": "16",
+          "unit": "key-candidates",
+          "log2": 4,
+          "qualifier": "upper_bound",
+          "note": "Section 3.3 says the full-key list never exceeded sixteen in the reported experiments. This upper bound is restricted to those observations, not all allowed faults."
+        }
+      }
+    ]
+  },
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "Full-key candidate-list uniqueness: original77% versus later92%",
+      "description": "Two reported experiments for the same original two-earlier-fault D-filter give different singleton-list frequencies. The later paper explicitly remeasures the old attack before introducing its new joint-column filter. Preserve both source observations; no protocol-level reconciliation or new experiment has been performed.",
+      "observations": [
+        {
+          "source_id": "pq2003-dfa-ches",
+          "locator": "PDF8–9/printed84–85 Section3.3.",
+          "reported": "Unique whole-key candidate in77% of reported PC cases; trial count unspecified."
+        },
+        {
+          "source_id": "gt2010-pq-revisited-mirror",
+          "locator": "PDF5 Section3.2 and footnote4, before Section3.3.",
+          "reported": "Unique last-round-key candidate in92% of1,000,000 simulations; explicitly contrasts PQ03 Section3.3 value77%."
+        }
+      ]
+    }
+  ]
+}

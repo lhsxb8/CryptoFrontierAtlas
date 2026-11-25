@@ -1,0 +1,150 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-5r-fast-retracing-dkrs2024",
+  "title": "5-round AES-128 key recovery with retracing boomerang, fast",
+  "display": {
+    "name": "Retracing boomerang, fast",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "dkrs2024-zero-based-rounds-0-to-4-final-no-mixcolumns",
+    "description": "Initial AddRoundKey k_-1 followed by 5 AES rounds, with final MixColumns omitted. The algorithm recovers the 128-bit initial subkey k_-1. For AES-128 this initial subkey is the complete master key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown secret key with encryption and decryption oracle access; no related-key oracle.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "specially chosen plaintext pairs differing in bytes 0 and 5, fixed byte-5 difference 01 hex, with 128 friend pairs per initial pair; adaptive decryption of mixture ciphertexts",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source's Section 4.1 explicitly makes the attack descriptions independent of the AES key schedule.",
+      "Costs and probability estimates follow the journal version's statistical assumptions; Appendix A.5 identifies rigorous probability analysis as further work.",
+      "The headline budget and success are the author's endpoint estimates. Intermediate 64-pair and 128-pair variants and their dependencies must remain distinct in any finer-grained reproduction."
+    ]
+  },
+  "techniques": [
+    "mixing-retracing-boomerang",
+    "yoyo",
+    "meet-in-the-middle",
+    "friend-pairs",
+    "difference-distribution-table"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^16.5",
+      "log2": 16.5,
+      "unit": "5-round-AES-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Author-reported estimate. Page 21 converts 98*2^16 S-box-type operations by dividing by 80 and separately mentions 2^14+2^11 full oracle operations. The record does not promote the headline to an independently reconciled exact end-to-end bound."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^15",
+      "log2": 15,
+      "unit": "adaptively-chosen-plaintext-and-ciphertext-blocks",
+      "qualifier": "estimate",
+      "note": "Section 4.4 conclusion associates this budget with success above 50%; its earlier 64-pair analysis and the structured-plaintext optimization use different counts and success estimates."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "<=2^9",
+      "log2": 9,
+      "unit": "128-bit-cells",
+      "qualifier": "upper_bound",
+      "note": "Section 4.4 bounds storage by 2^9 128-bit cells."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^9",
+      "log2": 9,
+      "unit": "simple-operations",
+      "qualifier": "estimate",
+      "note": "Footnote 7: compute the AES S-box DDT row for input difference 01 hex; its storage is much less than 2^9 128-bit cells."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "full-master-key-recovery",
+    "relation": ">",
+    "value": 0.5,
+    "description": "Author-reported success above50% for the2^15-data endpoint in journal Section4.4, retained for this record's output. The64-pair model predicts about0.4 (about0.5 with extra cancellations); Section4.5 reports500-key experimental curves, with64-pair success just above0.3 and128-pair success above0.5. The pinned author artifact tests only initial-key bytes[0,5,10,15] on500 stored256-bit keys, not the entire128-bit initial subkey/master key. Its saved outcome files are absent from the inspected default-branch history. The numerical value remains the journal's overall-output claim, not an artifact-verified full-output recovery fraction."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF p.4 Table 1; pp.18-22, Sections 4.4-4.5, footnote 7 and Algorithm 3.",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The record retains the journal version's endpoint and native units. Recovery of k_-1 is complete master-key recovery for AES-128."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "Complete exact primary PDF1–42, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete reading and source inventory; later-literature gates and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF17–21 Sections4.3–4.4.",
+      "fields": [
+        "/setting/key_relation",
+        "/setting/key_population"
+      ],
+      "interpretation": "All three mixing/retracing-MITM implementations use the same unknown key population; table/dissection/friend extraction is the tuning choice."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF21 Section4.4 time paragraph andPDF22 Figure6.",
+      "fields": [
+        "/resources/time",
+        "/success"
+      ],
+      "interpretation": "Finite exact64-pair sum98*2^16/80+2^14+2^11=98713.6=2^16.5909612413, not a reconciled128-pair success/cost assignment. Author2^16.5 estimate remains unchanged."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "Journal PDF21–22 Sections4.4–4.5 and linked author artifact at commit5149803823d63022d58aba25a8951160809660a7: RetracingBoomerang.py lines44–47,157–192,264–308,310–316; keys500.py lines18–518; plotRB.py lines25–45; softAESr.py lines24–31. Main artifact SHA25609df21ec10119058fbc8785ee3318705fb26c1ef0ebc94ad1dbc6501534f65a4; companion hashes in this batch artifact manifest.",
+      "fields": [
+        "/success"
+      ],
+      "interpretation": "The journal explicitly reports whole-output success above50%. Separately pinned author code tests one four-byte initial-key slice with the AES-256 key schedule and final-round XOR removed. It defines a500-key denominator but commits no outcome arrays; the public code is not a measured complete128-bit recovery dataset. Preserve the author claim, original costs, success metric and conflicts; no new numerical rate, experiment or failure finding follows."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The headline budget and success are the author's endpoint estimates. Intermediate 64-pair and 128-pair variants and their dependencies must remain distinct in any finer-grained reproduction.",
+    "Numerical costs are source-reported estimates; the attack was not independently implemented or reproduced."
+  ],
+  "related_problem_ids": []
+}

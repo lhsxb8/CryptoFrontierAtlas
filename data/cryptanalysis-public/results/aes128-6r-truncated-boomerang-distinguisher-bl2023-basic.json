@@ -1,0 +1,127 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-6r-truncated-boomerang-distinguisher-bl2023-basic",
+  "title": "Six-round AES-128 truncated-boomerang secret-key distinguisher, basic construction",
+  "display": {
+    "name": "Truncated boomerang, basic distinguisher",
+    "method": "boomerang"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "bl2023-six-rounds-initial-ark-final-no-mixcolumns",
+    "description": "Six-round AES-128, including the initial AddRoundKey but omitting the final MixColumns, as depicted in Figure 3 and specified in Section 3.1. The ordinary AES key schedule is allowed; the statistical construction does not use its relations."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed unknown AES-128 key for both forward and inverse queries.",
+    "key_population": "general secret AES-128 key under the paper's probabilistic trail model",
+    "plaintext_model": "chosen main-diagonal structures with adaptively constructed ciphertext structures",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "reference_model": "Distinguish the six-round secret-key permutation and inverse from a uniform random 128-bit permutation and its inverse by the returning-quartet count; no subkey guess is used in the decision rule.",
+    "assumptions": [
+      "Section 3.1 approximates the boomerang probability by p_b+p_random and assumes the trail events and samples behave independently for the statistical estimate.",
+      "The basic construction uses a single fixed-position upper and lower truncated trail, with c=4 and Q=2^162 candidate quartets.",
+      "The attacker can query decryption on ciphertexts derived from preceding encryption outputs."
+    ]
+  },
+  "techniques": [
+    "truncated-boomerang",
+    "secret-key-structural-distinguisher",
+    "plaintext-and-ciphertext-structures"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "approximately 2^99",
+      "log2": 99,
+      "unit": "six-round-aes-oracle-call-equivalents",
+      "qualifier": "estimate",
+      "note": "Section 3.1 and Figure 3 report T=2^99; oracle calls dominate the native model."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^67 encryption queries + 2^99 decryption queries, approximately 2^99 total",
+      "log2": 99,
+      "unit": "total-chosen-plaintext-and-adaptive-ciphertext-block-queries",
+      "qualifier": "estimate",
+      "note": "Both directions are counted. The 2^99 exponent is the paper's approximation to the total, not a chosen-plaintext-only budget."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^64",
+      "log2": 64,
+      "unit": "stored-returned-plaintext-entries",
+      "qualifier": "estimate",
+      "note": "Figure 3 and Equation (6) give M=2^64; Algorithm 1 stores returned plaintexts in a hash table. Hash-table overhead is not separately priced."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately reusable preprocessing budget is tabulated."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "correct-distinguishing-decision-probability-normal-approximation",
+    "value": 0.84,
+    "description": "Section 3.1 explicitly estimates the correct-answer probability as Phi(sqrt(c)/2), approximately 0.84 at c=4, using its sample-independence and normal approximations. This is not a key-recovery probability."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bl2023-truncated-boomerang-full",
+      "locator": "PDF pp.3-4, scope and access-model legend; pp.9-12, Section 3.1, Equations (1)-(6), Figure 3 and Algorithm 1; p.12, explicit query counts and correct-answer probability.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "This is the paper's basic six-round structural distinguisher. Both oracle directions, the explicit hash-table scale and the approximate decision probability are preserved separately from the optimized Section 4.1 result."
+    },
+    {
+      "source_id": "bl2023-truncated-boomerang-full",
+      "locator": "Complete exact primary PDF1–56, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete reading and source inventory; later-literature gates and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "bl2023-truncated-boomerang-full",
+      "locator": "PDF9–12 Section3.1 andPDF17–18 Section4.1.",
+      "fields": [
+        "/setting/reference_model"
+      ],
+      "interpretation": "The cumulative multiple-trail variants retain the basic returning-quartet decision rule; shared wording identifies this equivalence, not a changed access model."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The 2^99-scale experiment and its statistical independence assumptions were not independently reproduced.",
+    "This basic construction is retained alongside the same paper's optimized distinguisher as a distinct source-reported result."
+  ],
+  "related_problem_ids": []
+}

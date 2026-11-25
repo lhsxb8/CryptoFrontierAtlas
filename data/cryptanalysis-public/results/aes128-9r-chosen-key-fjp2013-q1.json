@@ -1,0 +1,160 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-9r-chosen-key-fjp2013-q1",
+  "title": "FJP13 9-round AES-128 Chosen-key distinguisher (one expected solution)",
+  "display": {
+    "name": "Chosen-key distinguisher (one expected solution)",
+    "method": "differential"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "fjp2013-9r-with-final-mc",
+    "description": "Nine full nonlinear rounds, whiteningAK0 and terminalAK9; Figure4 includes finalMC. An omittedMC equivalent requires transformed endpoint subspaces, not silent boundary identity."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "public_chosen_key_pair_evaluation"
+    ],
+    "related_key_count": null,
+    "target_selection": "attacker_selected_pair",
+    "key_relation": "Choose(k,k-prime) with predetermined XORdelta and the Table3 key-schedule differential (about2^27 conforming pairs). Neither key is an unknown target.",
+    "key_population": "Attacker-selected key pair satisfying Table3",
+    "plaintext_model": "Construct messages with input difference in DeltaIN and output difference in DeltaOUT under the two chosen keys.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [],
+    "reference_model": "Two related ideal-cipher permutations, limited-birthday constrained-pair game; generic2^68 queries is a baseline, NOT attack data."
+  },
+  "techniques": [
+    "chosen-key-differential",
+    "keyed-supersbox",
+    "limited-birthday"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^15 * (2^32 + 2^40)",
+      "log2": 55,
+      "unit": "simple-operations",
+      "qualifier": "estimate",
+      "note": "Source expectation forone constructed solutions, including per-key-pair table setup; native simple-operation unit is not converted to AES encryption calls."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "words",
+      "qualifier": "estimate",
+      "note": "Four source SuperSBox arrays, constant factors omitted; no word-to-byte conversion."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The2^32-operation Super-SBox arrays are rebuilt for each selected key pair and already included in the reported total time; no independent global preprocessing amount is given, and no zero/free setup is assumed."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "value": null,
+    "metric": "whole-attack-success",
+    "description": "No numerical probability of returning q=1 required solutions within the recorded budget is supplied. Section4.3 generates compatible key pairs and expects outputs after2^40 middle differences per pair and the source2^-55 outbound fraction. q counts expected constrained-pair outputs, not a success probability; extra key-pair freedom does not prove output independence or distinctness. Do not infer1-exp(-q), import a generic-reference probability, or turn the chosen-related-key pair into secret-key recovery.",
+    "components": [
+      {
+        "metric": "backward-specified-sbox-transition-given-compatible-middle",
+        "value": 0.0078125,
+        "basis": "author_model",
+        "expression": "2^{-7}",
+        "description": "Section4.3: source fraction2^-7 for the unique specified backward S-box transition, after generating a compatible middle pair and related-key pair."
+      },
+      {
+        "metric": "forward-eight-sbox-transitions-given-compatible-middle",
+        "value": 3.552713678800501e-15,
+        "basis": "author_model",
+        "expression": "2^{-48}",
+        "description": "Section4.3: eight source forward transitions are chosen at maximal2^-6, giving the author product2^-48. This is a conditioned characteristic component, not the success of returning all q outputs."
+      },
+      {
+        "metric": "combined-outbound-source-transition-model",
+        "value": 2.7755575615628914e-17,
+        "basis": "author_model",
+        "expression": "2^{-55}",
+        "description": "Section4.3 explicitly multiplies backward2^-7 and forward2^-48, giving source fraction2^-55 of middle solutions. The source simplification that every SuperSBox lookup has exactly one match is explicitly only an average; no independent Bernoulli model for all generated candidates is proved."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition targeted success audit. Conditional list/outbound events, one-sided AES acceptance, quartet probabilities and expected q outputs remain distinct from whole-game decision success. Existing scientific conflicts, source versions, native budgets, targets, settings, parameter membership and full-audit gates are unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-9ed182297743bb01-2013",
+      "locator": "PDF pp.15–17 Section4.3/Figure4/Table3; p.17 expected-work and up-to2^12 solutions.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-9ed182297743bb01-2013",
+      "locator": "Complete PDF pp.1–21 / printed pp.183–203, all Sections1–5, Tables1–3 and AppendicesA–E; independent raw-first full review2026-10-27.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/assessment"
+      ],
+      "interpretation": "Complete result inventory distinguishes abstract-topology minima, instantiated characteristic probabilities and bounds, the chosen-key9r construction, output multiplicity, generic ideal-cipher baseline and offline search-tool resources. No attack/search code executed; bounded forward/version checks do not establish inaccessible revised-PDF contents."
+    },
+    {
+      "source_id": "aes-paper-9ed182297743bb01-2013",
+      "locator": "CRYPTO proceedings PDF15–17 / printed197–199 Section4.3, Figure4, Table3, backward/forward transitions and expected-output q accounting.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical probability of returning q=1 required solutions within the recorded budget is supplied. Section4.3 generates compatible key pairs and expects outputs after2^40 middle differences per pair and the source2^-55 outbound fraction. q counts expected constrained-pair outputs, not a success probability; extra key-pair freedom does not prove output independence or distinctness. Do not infer1-exp(-q), import a generic-reference probability, or turn the chosen-related-key pair into secret-key recovery."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Expected fraction2^-55 of middle candidates satisfies the full characteristic, not whole-game success2^-55. Memory arrays depend on selected key pair; no independent unpriced free setup.",
+    "Official2013/366 metadata identifies a2015-05-11 typo-correction revision, but its full PDF was inaccessible; no correction to this9r endpoint is inferred solely from that metadata."
+  ],
+  "related_problem_ids": []
+}

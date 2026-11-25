@@ -1,0 +1,72 @@
+% Generated from the public primitive catalog. Original Atlas drawing; Apache-2.0.
+% Target: seed-128; view: detail
+\documentclass[border=9pt]{standalone}
+% Original Atlas figure theme. Apache-2.0; see the repository LICENSE.
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,decorations.pathreplacing,matrix}
+\definecolor{atlasInk}{HTML}{172235}
+\definecolor{atlasTeal}{HTML}{0D7B7D}
+\definecolor{atlasMuted}{HTML}{637278}
+\definecolor{atlasFill}{HTML}{EAF4F2}
+\definecolor{atlasLine}{HTML}{B6C8C7}
+\tikzset{
+  every picture/.style={line width=.65pt,draw=atlasInk,>=Latex},
+  every node/.style={text=atlasInk,font=\sffamily\small},
+  box/.style={draw,rounded corners=1.5pt,minimum height=.9cm,minimum width=1.6cm,align=center,inner sep=6pt,fill=white},
+  accent/.style={box,draw=atlasTeal,fill=atlasFill},
+  wire/.style={->,line width=.7pt},
+  keywire/.style={wire,draw=atlasTeal,dashed},
+  xor/.style={draw,circle,fill=white,inner sep=0pt,minimum size=.38cm},
+  add/.style={draw,rectangle,fill=white,inner sep=0pt,minimum size=.38cm},
+  note/.style={font=\sffamily\scriptsize,text=atlasMuted,align=center},
+  phase/.style={font=\sffamily\small\bfseries,text=atlasTeal},
+  group/.style={draw=atlasLine,dashed,rounded corners=2pt,inner sep=8pt}
+}
+\newcommand{\rotl}{\mathbin{\lll}}
+\newcommand{\rotr}{\mathbin{\ggg}}
+\newcommand{\kx}{\operatorname{Keccak}\!\text{-}\!f[1600]}
+
+\newcommand{\AtlasKeyBits}{128}
+\newcommand{\AtlasKeyWords}{4}
+\newcommand{\AtlasRounds}{16}
+\newcommand{\AtlasPriorRounds}{15}
+\newcommand{\AtlasRoundKeys}{17}
+\newcommand{\AtlasDoubleRounds}{8}
+\newcommand{\AtlasSixRoundGroups}{2.6666666666666665}
+\newcommand{\AtlasFLGroups}{1.6666666666666665}
+\newcommand{\AtlasRoundStart}{8}
+\newcommand{\AtlasBlockBits}{128}
+\newcommand{\AtlasOutputBits}{d}
+\newcommand{\AtlasStateBits}{8w}
+\newcommand{\AtlasNonceBits}{v}
+\newcommand{\AtlasCounterBits}{q}
+\newcommand{\AtlasStreamBlockBits}{b}
+\newcommand{\AtlasRate}{r}
+\newcommand{\AtlasCapacity}{c}
+\newcommand{\AtlasSteps}{N}
+\newcommand{\AtlasLastStep}{N-1}
+\newcommand{\AtlasWordBits}{w}
+\newcommand{\AtlasHashWords}{h}
+\newcommand{\AtlasFeedForward}{\boxplus}
+\newcommand{\AtlasByteOrder}{big-endian}
+\newcommand{\AtlasDomain}{01}
+\newif\ifAtlasXof
+\AtlasXoffalse
+\begin{document}
+\begin{tikzpicture}
+  \node[phase] at (6,3) {$F(R,K_i)$ on two $32$-bit words};
+  \node[box,minimum width=11.6cm] (input) at (6,1.8) {$u=R_0\oplus K_{i,0}$\qquad $v=R_1\oplus K_{i,1}$};
+  \node[accent] (g1) at (1.7,0) {$t_1=G(u\oplus v)$};
+  \node[accent] (g2) at (6,0) {$t_2=G(u\boxplus t_1)$};
+  \node[accent] (g3) at (10.3,0) {$t_3=G(t_1\boxplus t_2)$};
+  \draw[wire] (input.south) -- (6,.8) -| (g1.north);
+  \draw[wire] (g1) -- (g2); \draw[wire] (g2) -- (g3);
+  \node[box,minimum width=8cm] (out) at (6,-1.8) {$F(R,K_i)=(t_2\boxplus t_3)\|t_3$};
+  \draw[wire] (g3.south) -- (10.3,-1) -| (out.north);
+  \node[note,text width=12cm] at (6,-3.2) {$G$: four byte substitutions followed by the specified linear mixing.\\$\boxplus$: addition modulo $2^{32}$\quad $\oplus$: XOR\quad $\|$: concatenation\\The $64$-bit output is XORed into the other Feistel half.};
+\end{tikzpicture}
+
+\end{document}

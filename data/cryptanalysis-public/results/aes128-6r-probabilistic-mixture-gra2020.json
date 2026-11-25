@@ -1,0 +1,205 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-6r-probabilistic-mixture-gra2020",
+  "title": "aes-128, 6 rounds: Probabilistic mixture differential [Gra20]",
+  "display": {
+    "name": "Probabilistic mixture differential",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "source-gra20-6r",
+    "description": "The source-defined 6-round AES construction, with standard key schedule and the source output-linear-layer convention."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its standard expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "Source-defined chosen-plaintext structures; data is the aggregate for this configuration.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "probabilistic-mixture-differential",
+    "first-round-extension",
+    "96-bit-key-completion"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^104.92 + 2^96 ≈ 2^104.93",
+      "log2": 104.93,
+      "unit": "6-round-aes128-encryptions",
+      "qualifier": "estimate",
+      "note": "Includes completion of the other three diagonals."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^72.77",
+      "log2": 72.77,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^33",
+      "log2": 33,
+      "unit": "16-byte-texts",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical budget is stated for this configuration."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "complete-master-key-recovery",
+    "value": 0.95,
+    "description": "Disputed source-derived lower bound for complete six-round AES-128 key recovery under the author model. Section6 explicitly claims >95% for selecting the correct first32-bit diagonal at2^72.77 chosen plaintexts, then completes the remaining96 bits by exhaustive search at the same configuration total2^104.92+2^96 approximately2^104.93 six-round encryptions. Under that stated finalization, correct-diagonal recovery suffices for full-key recovery, so the source-model bound propagates without four independent95% factors. The source does not separately print a whole-key percentage. This inference inherits the existing sampling-model arithmetic conflict; it is not an independently established or measured full-key guarantee.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Verified extraction of the author stage claim and its same-budget complete96-bit finalization, independently checked against original Sections6/AppendixE and Algorithm2. Verified does not certify the disputed sampling model, key-search uniqueness, actual success distribution or attack correctness."
+    },
+    "components": [
+      {
+        "metric": "right-diagonal-set-property-source-series",
+        "value": null,
+        "basis": "author_model",
+        "expression": "2^{-13}-524287\\cdot2^{-46}-22370411853\\cdot2^{-77}+\\cdots",
+        "description": "PDF21 Section6: probability that at least one pair in a source 2^17-pair set meets the designated output-coset property when the diagonal guess is correct. This is the printed asymptotic source series, not a whole-attack probability."
+      },
+      {
+        "metric": "wrong-diagonal-set-property-source-series",
+        "value": null,
+        "basis": "author_model",
+        "expression": "2^{-13}-524287\\cdot2^{-46}+45812722347\\cdot2^{-77}+\\cdots",
+        "description": "PDF21: corresponding source series for a wrong diagonal hypothesis. Common texts and the existing sample-model arithmetic conflict remain; no independent-counter theorem is added."
+      },
+      {
+        "metric": "first32-bit-diagonal-minimum-counter-source-claim",
+        "value": 0.95,
+        "relation": ">",
+        "basis": "author_model",
+        "expression": "95\\%",
+        "description": "PDF21–22 claim >95% for finding the first diagonal at about 2^73.343 source sets / 2^72.77 chosen plaintexts. The existing Equation11/sample-count arithmetic conflict applies to this claim, so it remains a disputed component, not a certified whole-key rate."
+      },
+      {
+        "metric": "true-key-in-complete-residual96-bit-enumeration-given-correct-diagonal",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF22: once the correct first 32-bit diagonal is known, complete enumeration of the remaining 96 key bits includes the true key. This conditional inclusion event neither validates the statistical first stage nor quantifies uniqueness at a truncated search budget."
+      }
+    ],
+    "relation": ">",
+    "basis": "derived_from_source"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-2edefd85dcbb2778-2020",
+      "locator": "PDF pp.4,20–22,30–31; Table2, Section6, AppendixE and Algorithm2; exact full-key phase sum.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Independent full-primary read of all 32 PDF pages; author-reported estimates retained, not attack-code reproduction."
+    },
+    {
+      "source_id": "aes-paper-2edefd85dcbb2778-2020",
+      "locator": "PDF pp.16,21–22, Equation11 and Section6",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Located source claim and the attached independent review observations; original reported values retained pending reconciliation."
+    },
+    {
+      "source_id": "aes-paper-2edefd85dcbb2778-2020",
+      "locator": "PDF pp.20–22 Section6; pp.30–31 AppendixE/Algorithm2.",
+      "fields": [
+        "/bound"
+      ],
+      "interpretation": "The six-round key-recovery claim is an attack, not a minimum-active-S-box structural bound; bound is not applicable."
+    },
+    {
+      "source_id": "aes-paper-2edefd85dcbb2778-2020",
+      "locator": "PDF15–16 Equation11; PDF20–22 / printed72–74 Section6; PDF30–31 AppendixE/Algorithm2.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "Historical interpretation, superseded by B22 for the primary success event: The source explicitly claims >95% for one 32-bit diagonal and then uses a 96-bit residual exhaustive search. The existing sample-model arithmetic conflict prevents certifying that first-stage rate at the printed data budget. Source correct/wrong set-property series, the disputed diagonal-rate claim and conditional residual-search inclusion are separate components. Main complete-key probability remains pending; small-scale changing-key tests in Section5.3 are not full-size recovery trials. B22 now records the disputed source-derived full-key bound through the explicitly priced96-bit finalization."
+    },
+    {
+      "source_id": "aes-paper-2edefd85dcbb2778-2020",
+      "locator": "PDF21–22/printed73–74 Section6 Data Cost and Computational Complexity; PDF30–31/printed82–83 AppendixE and Algorithm2 caption.",
+      "fields": [
+        "/success/status",
+        "/success/metric",
+        "/success/value",
+        "/success/relation",
+        "/success/basis",
+        "/success/description",
+        "/success/review"
+      ],
+      "interpretation": "B22 supersedes the previous primary-success omission/event classification, not the historical local observations. Carry the disputed author stage bound through its explicitly priced complete residual search; no independent full-key theorem or repeated-diagonal success multiplication."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The paper uses approximate probability, binomial/normal and wrong-key models. Reviewer arithmetic controls are not a proof of those independence assumptions.",
+    "20 table/S-box look-ups per AES round is the source comparison approximation; lookup-table sizes differ (PDF p.17 footnote10). Native units are not interchangeable with unrelated papers.",
+    "Unreported memory or preprocessing is unknown, not zero; no same-method Pareto conclusion follows from time/data alone.",
+    "More than95% is explicitly stated for the32-bit diagonal; B22 propagates that disputed source-model bound through the same-budget complete96-bit residual search. No separately asserted whole-key percentage or independently established full-key success theorem is claimed. Source costs and the sampling arithmetic conflict are unchanged."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "Sampling model arithmetic conflict",
+      "description": "The published sample counts do not reproduce from the source Equation11 under its stated probability targets. Values below are finite reviewer arithmetic controls, not replacement attack claims or an independently established success theorem.",
+      "observations": [
+        {
+          "source_id": "aes-paper-2edefd85dcbb2778-2020",
+          "locator": "PDF pp.16,21–22, Equation11 and Section6",
+          "reported": "Author reports n>2^71.243 for about95% distinguishing and n≈2^73.343 for >95% diagonal recovery using target0.95^(2^-32)."
+        },
+        {
+          "source_id": "aes-paper-2edefd85dcbb2778-2020",
+          "locator": "PDF pp.8,14–16, Equations3–5,7–11; reviewer controls.py",
+          "reported": "Decimal evaluation of printed probability formulas gives log2(n95)≈71.48865 and log2(n_key95)≈75.53245 under the stated Equation11 model. No production numeric cost is silently replaced."
+        }
+      ]
+    }
+  ]
+}

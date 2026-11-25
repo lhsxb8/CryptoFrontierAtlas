@@ -1,0 +1,151 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-5r-shifting-retracing-distinguisher-dkrs2024",
+  "title": "Five-round AES shifting-retracing boomerang distinguisher, corrected journal version",
+  "display": {
+    "name": "Shifting retracing distinguisher",
+    "method": "boomerang"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "dkrs2024-zero-based-rounds-0-to-4-final-no-mixcolumns",
+    "description": "Five AES rounds with initial whitening and final MixColumns omitted; single-key permutation distinguisher using encryption and inverse queries."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "reference_model": "Uniformly random permutation on 128-bit blocks with consistent forward and inverse oracle access.",
+    "key_relation": "One unknown fixed key; no related-key access.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "2^31.5 plaintexts varying bytes 0,5,10,15; filter ciphertext pairs with a fixed nonzero difference in bytes 0,7,10,13 and decrypt shifted counterparts",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source's Section 4.1 explicitly makes the attack descriptions independent of the AES key schedule.",
+      "Costs and probability estimates follow the journal version's statistical assumptions; Appendix A.5 identifies rigorous probability analysis as further work.",
+      "The fixed 32-bit difference delta_L is nonzero. Page 28 footnote 9 explicitly withdraws the initial version's option of also accepting zero-difference ciphertext pairs."
+    ]
+  },
+  "techniques": [
+    "shifting-retracing-boomerang",
+    "truncated-differential",
+    "ciphertext-pair-filtering"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^31.5",
+      "log2": 31.5,
+      "unit": "5-round-AES-oracle-evaluations",
+      "qualifier": "estimate",
+      "note": "Source's encryption-dominated estimate; hashing/filtering and expected decryptions are not an exact single term."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^31.5",
+      "log2": 31.5,
+      "unit": "adaptively-chosen-plaintext-and-ciphertext-blocks",
+      "qualifier": "estimate",
+      "note": "Source-reported dominant budget: 2^31.5 encryptions, plus an expected 2^31 decryptions from 2^30 surviving pairs. Not an exact total-query count."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^31.5",
+      "log2": 31.5,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Source attributes dominant memory to storing the 2^31.5-block plaintext/ciphertext data set; implementation overhead is not itemized."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate preprocessing budget is reported."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "distinguishing-advantage",
+    "value": null,
+    "description": "After the nonzero-delta ciphertext-pair filter, the source assigns the plaintext predicate probabilities2^-28 for AES and2^-30 for a random permutation. Algorithm5 decides from counter>2 with expectations4 versus1. It supplies no distribution or numerical whole-game success; no Poisson law is inferred.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit; construction and parameter-specific defining passages, not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "aes-predicate-acceptance-per-filtered-pair",
+        "value": 3.725290298461914e-9,
+        "basis": "author_model",
+        "description": "Source probability of the zero inverse-shifted-column plaintext predicate, conditional on the specified nonzero-delta ciphertext-pair filter."
+      },
+      {
+        "metric": "ideal-predicate-acceptance-per-filtered-pair",
+        "value": 9.313225746154785e-10,
+        "basis": "author_model",
+        "description": "Random-permutation predicate probability under the same filter; not the false-positive rate of the final counter>2 decision."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF pp.28-29, Section 6.2, footnote 9 and Algorithm 5; p.15 Section 4.1.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/techniques",
+        "/bound"
+      ],
+      "interpretation": "Uses the corrected nonzero-difference condition and distinguishes the headline data scale from the sum of encryption and decryption queries."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "Complete exact primary PDF1–42, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete reading and source inventory; later-literature gates and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "dkrs2024-retracing-boomerang-journal",
+      "locator": "PDF pp.28–29 Section6.2, footnote9 and Algorithm5 lines7–10.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "After the nonzero-delta ciphertext-pair filter, the source assigns the plaintext predicate probabilities2^-28 for AES and2^-30 for a random permutation. Algorithm5 decides from counter>2 with expectations4 versus1. It supplies no distribution or numerical whole-game success; no Poisson law is inferred."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The two expected counter values do not specify a numerical distinguishing advantage without a distributional analysis.",
+    "Costs use the source's dominant-term accounting; the procedure was not independently reproduced."
+  ],
+  "related_problem_ids": []
+}

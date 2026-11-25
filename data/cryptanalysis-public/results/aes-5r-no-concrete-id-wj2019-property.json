@@ -1,0 +1,127 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-5r-no-concrete-id-wj2019-property",
+  "title": "aes-128/aes-192/aes-256, 5 rounds: Five-round concrete differential feasibility [WJ19]",
+  "display": {
+    "name": "Five-round concrete differential feasibility",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "source-wj19-5r",
+    "description": "Five AES SubBytes layers with actual AES S-box and independent uniformly random round keys; first ShiftRows and final ShiftRows/MixColumns/AddRoundKey omitted by invertible difference-coordinate changes. The standard master-key schedule is not used."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "An independently uniform round-key ensemble, not the distribution induced by the standard AES master-key schedule.",
+    "key_population": "Independent uniform round-key ensemble; averaging/existence quantifier is explicit in the property.",
+    "plaintext_model": "Source differential/linear patterns and their quantified propagation, not chosen-plaintext attack queries.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "An independently uniform round-key ensemble, not the distribution induced by the standard AES master-key schedule."
+    ]
+  },
+  "techniques": [
+    "differential",
+    "dependent_tree"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-property",
+    "value": null,
+    "description": "A quantified structural property, not attack success."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-2667ed44cbd63160-2019",
+      "locator": "PDF p.3 / printed p.3003: models (1)-(3), independent-round-key contribution and fixed-key caveat; PDF p.6 / printed p.3006: five-round decomposition; PDF p.7 / printed p.3007, Theorem 3: principal five-round statement; PDF pp.8-14 / printed pp.3008-3014: supporting Lemmas 1-4 and Theorem 2 proof.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "All 18 PDF pages read independently. EDP nonzero symbols visually verified on PDF p.7. Theorem 3 is the five-round result; Theorem 2 on PDF pp.13-14 is the f1 subfunction lemma, not a separate full five-round theorem."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Round keys are sampled independently and uniformly; neither a per-fixed-key theorem nor a theorem for the standard AES master-key distribution.",
+    "The result establishes support positivity, not a quantitative probability bound, pseudorandomness, or an attack-resource lower bound.",
+    "Supporting finite AES S-box/counting checks and a reviewer expansion of Lemma 4 were performed; no complete 5-round/master-key exhaustive reproduction was attempted."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "Every nonzero concrete input/output differential of five-round AES has positive expected differential probability under independent uniform round keys.",
+    "quantifier": "For every nonzero concrete input/output difference, the expected differential probability over independently uniform round keys is positive; not a statement for each fixed key or the real master-key distribution.",
+    "scope": "The source 5-round AES SPN under independent uniform round keys, applicable to all three block-cipher instances only in this explicit changed-key model.",
+    "parameters": [
+      {
+        "name": "concrete_edp",
+        "reported": "> 0",
+        "meaning": "Existential/ensemble feasibility, stronger than mere truncated-pattern feasibility."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Complete primary read; supporting finite checks verify all nonzero AES S-box row/column support sizes, 65,025 inverse trace support identities, a tight Lemma 1 example, selected complete one/two-active-coordinate predecessor sets, and Lemma 4's abbreviated counting inequalities. These checks do not enumerate all five-round differentials."
+    }
+  }
+}

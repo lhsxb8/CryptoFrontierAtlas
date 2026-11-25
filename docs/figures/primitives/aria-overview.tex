@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+  \node (in) at (0,0) {$P$};
+  \node[accent,minimum width=4.3cm] (rounds) at (3.4,0) {$S\gets A(SL_1(S\oplus ek_i))$ for odd $i$\\$S\gets A(SL_2(S\oplus ek_i))$ for even $i$};
+  \node[box,minimum width=4cm] (last) at (9.1,0) {$SL_2(S\oplus ek_{\AtlasRounds})$\\$\oplus\ ek_{\AtlasRoundKeys}$};
+  \node (out) at (12,0) {$C$};
+  \draw[wire] (in) -- (rounds); \draw[wire] (rounds) -- (last); \draw[wire] (last) -- (out);
+  \node[note] at (3.4,-1.1) {Rounds $1,\ldots,\AtlasPriorRounds$};
+  \node[note] at (9.1,-1.1) {Final round: no diffusion $A$};
+  \node[box] (schedule) at (6.2,2.1) {$\AtlasKeyBits$-bit key $\to$ key schedule};
+  \draw[keywire] (schedule.south) -- (6.2,1.15) -| (rounds.north);
+  \draw[keywire] (schedule.south) -- (6.2,1.15) -| (last.north);
+  \node[note] at (6,-2) {$\AtlasBlockBits$-bit state\quad $\AtlasRounds$ rounds\quad $\AtlasRoundKeys$ encryption round keys};
+\end{tikzpicture}

@@ -1,0 +1,192 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-5r-diagonal-distribution-gr2022-property",
+  "title": "aes-128/aes-192/aes-256, 5 rounds: Diagonal-set collision distribution [GR22]",
+  "display": {
+    "name": "Diagonal-set collision distribution",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "source-gr22-5r",
+    "description": "Five rounds with final MixColumns omitted; a key-independent output-collision distribution statement and a conditional APN-like theoretical model."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its standard expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "A diagonal coset of 2^32 inputs, constant on three diagonals; count output pairs equal in one fixed anti-diagonal.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The mean and complete binomial model use the stated APN-like S-box assumption; they are not unconditional exact moments for the actual AES S-box.",
+      "The source separately explains that the increased variance follows chiefly from the multiple-of-8 property and is less S-box-dependent."
+    ]
+  },
+  "techniques": [
+    "differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-property",
+    "value": null,
+    "description": "Distribution moments are not end-to-end attack success."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-e5ac950ddd0ae90d-2022",
+      "locator": "PDF pp.2–3 Table 1 and Section 1.1: APN-like marker, mean/variance, experiment scope and binomial-model summary.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Checked primary abstract, result table and defining passages; native costs and goals retained."
+    },
+    {
+      "source_id": "aes-paper-e5ac950ddd0ae90d-2022",
+      "locator": "Complete exact primary PDF1–22, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full reading and result inventory; bounded forward check and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "aes-paper-e5ac950ddd0ae90d-2022",
+      "locator": "PDF8–19 Theorem4,Sections4–7,Eqs4/13/15/17/19; PDF12 moment display.",
+      "fields": [
+        "/property",
+        "/setting",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete formula/domain extraction and independent arithmetic; retain reported variance and unknown attack costs."
+    },
+    {
+      "source_id": "aes-paper-e5ac950ddd0ae90d-2022",
+      "locator": "PDF8 Theorem4; PDF12 Section5 moments; PDF16–19 Eqs13/15/17/19 and reported experiment.",
+      "fields": [
+        "/property",
+        "/field_conflicts"
+      ],
+      "interpretation": "Source-local reconciliation task; not a replacement attack budget."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The source binomial model depends on APN-like and independence assumptions; its displayed variance and numerical scalar remain in conflict. Distinct extended editions have not been fully read."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "For a diagonal input coset, the number of ciphertext pairs equal in a fixed anti-diagonal after five rounds differs in distribution from random; under the APN-like model the mean is 2147484685.6 versus 2147483647.5, and the reported variance is 76842293834.905 versus approximately 2^31. Complete model: X=2^3 B(n3,p3)+2^10 B(n10,p10)+2^17 B(n17,p17). n3=2^28*255^4,n10=2^23*255^3,n17=3*2^15*255^2; probabilities are coupled to those class counts by Eqs13,15,17.",
+    "quantifier": "Distribution over the source ensemble of secret keys and diagonal cosets; theoretical APN-like S-box model where required, not a per-fixed-key exact empirical AES mean.",
+    "scope": "Full Theorem4/Eqs4,13,15,17 conditional source distribution and moments;5full rounds with no finalMC, ensemble over keys/cosets, not per-key exact distribution.",
+    "parameters": [
+      {
+        "name": "input_count",
+        "reported": "2^32",
+        "meaning": "Size of one diagonal input coset; not an attack-query claim."
+      },
+      {
+        "name": "mean_model",
+        "reported": "2147484685.6",
+        "meaning": "Conditional theoretical mean under the source APN-like assumption."
+      },
+      {
+        "name": "variance_model",
+        "reported": "76842293834.905",
+        "meaning": "Reported theoretical variance, compared with random approximately 2^31."
+      },
+      {
+        "name": "class_probabilities",
+        "reported": "p17=(2^32/21675)/(2^17*n17); p10=(127^4*2^37/255^5)/(2^10*n10); p3=(64771^4*2^31/255^8)/(2^3*n3)",
+        "meaning": "Source rational formulas. Rounded exponent approximations are not substituted into exact moment checks."
+      },
+      {
+        "name": "distribution_assumptions",
+        "reported": "APN-like solution uniformity, MDS, cross-equation/no-nontrivial-relation and independent binomial classes",
+        "meaning": "Actual AES4uniform Sbox is only approximately APN-like; these are modeled assumptions, not independently proved actualAES distribution."
+      }
+    ],
+    "validation": {
+      "basis": "analytical_and_reported_experiment",
+      "description": "Source analytical summary checked; source reports small-scale mean experiments and full/small-scale variance experiments. No independent experiment run."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property",
+      "label": "Variance formula and numerical reconciliation",
+      "description": "PDF12 final variance line uses2^6,2^10,2^17 rather than squared weights2^6,2^20,2^34 printed immediately above. Exact Eqs13/15/17 and class counts yield mean2147484685.594209 but scaled-binomial variance76841889840.343301, not reported76842293834.905. Eq19 without(1-p) yields76841889858.329379; rounded p exponents do not resolve the gap. Original source moments retained; model-independence assumptions and arithmetic reconciliation remain separate.",
+      "observations": [
+        {
+          "source_id": "aes-paper-e5ac950ddd0ae90d-2022",
+          "locator": "PDF8 Theorem4; PDF12 Section5 moments; PDF16–19 Eqs13/15/17/19 and reported experiment.",
+          "reported": "Original source claims and numerical scalars retained."
+        },
+        {
+          "source_id": "aes-paper-e5ac950ddd0ae90d-2022",
+          "locator": "PDF8 Theorem4; PDF12 Section5 moments; PDF16–19 Eqs13/15/17/19 and reported experiment. Independent raw review and bounded arithmetic,2026-10-27.",
+          "reported": "PDF12 final variance line uses2^6,2^10,2^17 rather than squared weights2^6,2^20,2^34 printed immediately above. Exact Eqs13/15/17 and class counts yield mean2147484685.594209 but scaled-binomial variance76841889840.343301, not reported76842293834.905. Eq19 without(1-p) yields76841889858.329379; rounded p exponents do not resolve the gap. Original source moments retained; model-independence assumptions and arithmetic reconciliation remain separate."
+        }
+      ]
+    }
+  ]
+}

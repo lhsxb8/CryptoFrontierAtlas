@@ -1,0 +1,152 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-8r-statistical-integral-cscw2017",
+  "title": "CSCW17 8-round AES-128 Statistical integral / 8-round known key",
+  "display": {
+    "name": "Statistical integral / known key",
+    "method": "integral"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "cscw2017-8r-final-no-mc",
+    "description": "8 nonlinear rounds including initial whitening; finalMC omitted (Section2.1). Public standard AES-128, with known master key and internal-state bidirectional construction."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "public_known_key_encryption_decryption",
+      "public_internal_state_construction"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One public known AES master key; no XOR-related unknown-key collection.",
+    "key_population": "general secret key",
+    "plaintext_model": "Generate N*Ns input/output pairs by working from middle states with N=Ns; test statistical properties on both ends.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The normal/chi-square error model assumes sufficiently large sample/projection parameters and independent output/structure statistics. Journal PDF9/printed763 footnote2 explicitly notes that strongly related projections can violate this iid condition. Mini-AES moderate-error experiments do not establish the full-AES negligible-error tails."
+    ],
+    "reference_model": "Classical known-key (KK) AES-128 distinguisher: construct N^2 plaintext/ciphertext pairs whose input and output byte-count statistics satisfy a key-independent relation checked directly on the texts, without guessing outer-round offsets. Compare with an adaptive forward/inverse uniform-random-permutation oracle under the source statistical/independence model; account for both construction and statistical verification work."
+  },
+  "techniques": [
+    "statistical-integral",
+    "multi-structure",
+    "chi-square-test"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2 * 2^41.61",
+      "log2": 42.61,
+      "unit": "source-computations",
+      "qualifier": "estimate",
+      "note": "Two passes ofN^2 computations; no automatic conversion into AES encryptions."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "N^2, N=2^20.81",
+      "log2": 41.61,
+      "unit": "constructed-plaintext-ciphertext-pairs",
+      "qualifier": "estimate",
+      "note": "Source rounds N=Ns=2^20.81 but reportsN^2=2^41.61; retain published rounding."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "16 * 2^8 * 2",
+      "log2": 13,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Source uses16*2^8 two-byte counters."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "value": null,
+    "metric": "source-cipher-identification",
+    "description": "Source symbolic Ps=(1-alpha0)^2 approximately1-2^-127, alpha0=alpha1=2^-128. Numeric IEEE754 rounds to1; the symbolic expression, not exact deterministic success, is authoritative."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-e9db95c2f7469e08-2017",
+      "locator": "PDF pp.4–6 Tables1–2/boundary/model; pp.9–10 statistical Eq8; pp.12–13 Section5.1/Algorithm2.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete registered proceedings read and AES claim inventory checked2026-10-26; bounded forward checks complete. Source claims and unresolved fields retain their original status."
+    },
+    {
+      "source_id": "cui-chen-mesnager-sun-wang2018-statistical-integral-journal",
+      "locator": "PDF9/printed763 footnote2 iid/moment typo; PDF10–13/764–767 statistical known-key model; PDF15/769 AES costs and17–18/771–772 secret-S-box attack.",
+      "fields": [
+        "/setting",
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Targeted journal-extension passages checked; AES costs unchanged. Conditional iid assumption explicit; no journal-only non-AES attack ingested."
+    },
+    {
+      "source_id": "grassi-rechberger2020-gilbert-known-key-journal",
+      "locator": "PDF4/printed1404 Table1; PDF9–11/1409–1411 model; PDF16/1416 existential offsets; PDF20/1420 CSCW17; PDF32–33/1432–1433 criterion distinction.",
+      "fields": [
+        "/setting",
+        "/display"
+      ],
+      "interpretation": "Later primary model treatment distinguishes classicalKK8r and GilbertKK10r without changing their source costs; offsets are shared relation witnesses, not recovered keys."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Full conference read-through and bounded forward-primary audit completed. Reported tails remain conditional on iid/normal approximations; mini-AES experiments do not certify full-AES negligible errors. The reciprocal final proof-line typo remains recorded."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "Chi-square scaling and moment derivation",
+      "description": "Proposition1 states decreasing finite-population moments D*f and2*D*f^2, f=(2^s-N)/(2^s-1), consistent with the scaled chi-square sentence, Corollary1 Eq8 and independently recomputed endpoints. The final proof line instead prints reciprocal factors f^-1 and f^-2. Adopt Proposition1/Eq8 as the source model and retain the inconsistent printed line as a typo; iid and normal-tail accuracy are separate model conditions.",
+      "observations": [
+        {
+          "source_id": "aes-paper-e9db95c2f7469e08-2017",
+          "locator": "PDF8/printed409 Proposition1; PDF9/410 Corollary1 Eq8.",
+          "reported": "Mean D*f, variance2*D*f^2 and Eq8 with decreasing finite-population correction."
+        },
+        {
+          "source_id": "aes-paper-e9db95c2f7469e08-2017",
+          "locator": "PDF9/printed410 Proposition1 proof, final moment display.",
+          "reported": "Final proof line instead prints reciprocal factors f^-1 and f^-2."
+        }
+      ]
+    }
+  ]
+}

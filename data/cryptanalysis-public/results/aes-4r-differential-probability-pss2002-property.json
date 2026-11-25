@@ -1,0 +1,139 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-4r-differential-probability-pss2002-property",
+  "title": "aes-128/aes-192/aes-256, 4 rounds: Expected differential probability bound [PSS+02]",
+  "display": {
+    "name": "Expected differential probability bound",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "source-pssplus02-4r",
+    "description": "Four-round source AES SPN under independently uniform round subkeys; final linear layer omitted as a coordinate convention. Not the standard master-key schedule distribution."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "An independently uniform round-key ensemble, not the distribution induced by the standard AES master-key schedule.",
+    "key_population": "Independent uniform round-key ensemble; averaging/existence quantifier is explicit in the property.",
+    "plaintext_model": "Source differential/linear patterns and their quantified propagation, not chosen-plaintext attack queries.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "An independently uniform round-key ensemble, not the distribution induced by the standard AES master-key schedule."
+    ]
+  },
+  "techniques": [
+    "differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "A structural statement, not an attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-property",
+    "value": null,
+    "description": "A quantified structural property, not attack success."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-2aaba439a18c3982-2002",
+      "locator": "CompletePDF1–16/printed176–191; PDF2 independent-key model; PDF7–14 Theorems1–3 and support-count proofs; PDF15 Theorem4, r>=5 and explicit approximate coefficient.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Corrects an ingestion-added <=1.06 inequality to the exact original formula and approximate decimal. This is not a source erratum or an attack improvement."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The bound is averaged over independent uniform round subkeys. Its decimal coefficient is approximate; native source formula is preserved."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "The source bounds the maximum expected differential probability by A(p)=4*p^19+6*p^18+4*p^17+p^16 for 0<p<=2^-3. At p=2^-6 the exact formula is1.0639801025390625*2^-96; the paper writes approximately1.06*2^-96, not a strict inequality with coefficient1.06.",
+    "quantifier": "Maximum over nontrivial input/output masks or differences, with probability averaged over independently uniform round keys; not a per-fixed-master-key guarantee.",
+    "scope": "AES128-bit SPN layer structure, independent uniform round keys. The4rbound extends symbolically to r>=5 in the source model.",
+    "parameters": [
+      {
+        "name": "probability_bound",
+        "reported": "4*p^19+6*p^18+4*p^17+p^16; p=2^-6",
+        "meaning": "Source exact polynomial; the rounded1.06coefficient is an approximation."
+      },
+      {
+        "name": "exact_AES_formula_value",
+        "reported": "1.0639801025390625*2^-96",
+        "meaning": "Direct formula evaluation, not a measured exact AES differential maximum or MELP."
+      },
+      {
+        "name": "general_case_bound",
+        "reported": "max{A(p),B(p)}; B(x)=184*x^22+912*x^21+438*x^20+72*x^19+4*x^18+x^16",
+        "meaning": "Theorems3–4; A dominates B for0<x<=1/8. Both source branches retained."
+      },
+      {
+        "name": "extension_domain",
+        "reported": "r integer>=5, within the applicable AES instance round count",
+        "meaning": "PDF15 explicitly extends the same bound by stochastic convolution; not separate nominal5rattacks."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "All16primary pages and proofs read. Source polynomial, the full case maximum, finite binary-support counts and model assumptions checked; no full attack or complete proof reproduction."
+    }
+  }
+}

@@ -1,0 +1,207 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-8r-id-extension-zwf2007",
+  "title": "ZWF07 8-round AES-256 / aes256-8r-id-extension-zwf2007",
+  "display": {
+    "name": "Impossible differential / extension",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "zwf07-8r-final-no-mc",
+    "description": "8 nonlinear AES rounds with the initial whitening addition and no final MixColumns. The recovered material is specified below.Endpoint: the source counts 25 mixed key bytes, without an explicit whole-master-key completion."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "Source-defined chosen-plaintext structures; query multiplicities are stated with the costs.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "impossible-differential",
+    "extension"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^247.5",
+      "log2": 247.5,
+      "unit": "8-round-aes-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^116.5",
+      "log2": 116.5,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this endpoint."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^45",
+      "log2": 45,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Explicit source memory for this endpoint, dominated by the Hp table."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical resource budget is supplied for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "partial-subkey-recovery",
+    "value": null,
+    "description": "The source gives partial-subkey outputs and expected wrong-candidate counts, not numerical end-to-end recovery success. In particular,2^-17 in Section4.1 and2^-18.5 in Section5 arise by multiplying expected survivors by outer guesses; they are not independently measured attack-failure probabilities. The local per-fixed-wrong-key model is preserved without assuming independent pairs beyond the source heuristic. Section6 invokes the seven-round subroutine after guessing K8; it changes the budget and has an existing guessed-byte-count conflict. Do not copy the Section5 m-prime or2^-18.5 aggregate survivor estimate to this changed endpoint.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Exact12-page proceedings edition; endpoint-specific review of Sections4.1 and6. No primary probability was added: preserve the author-model false-suggestion rate separately for the48-bit six-round output, without copying it to the200-bit eight-round extension. Phan-inherited target scope remains pending. Existing time, guessed-byte and dependency-index conflicts are unchanged; not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "ciphertext-pair-zero-coordinate-sieve-source-model",
+        "value": 5.421010862427522e-20,
+        "basis": "author_model",
+        "expression": "2^{-64}",
+        "description": "Section4.2/5: eight ciphertext byte equalities in the relevant six/seven-round subroutine. For the eight-round extension this is after peeling the guessed eighth-round key, not a direct eight-round ciphertext sieve."
+      },
+      {
+        "metric": "other-eight-ciphertext-bytes-nonzero-source-model",
+        "value": 0.969,
+        "basis": "author_model",
+        "expression": "\\approx 0.969",
+        "description": "PDF9 footnote1: source approximate probability that the other eight differences are nonzero. Source complexity omits this near-one factor; no independence-based exact replacement is imposed."
+      },
+      {
+        "metric": "first-guessed-column-three-zero-bytes-source-model",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "expression": "2^{-24}",
+        "description": "PDF9 Section5 Step3(b): local three-byte sieve under the first four-byte K7 guess."
+      },
+      {
+        "metric": "second-guessed-column-three-zero-bytes-source-model",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "expression": "2^{-24}",
+        "description": "PDF9 Section5 Step3(c)i: additional three-byte sieve under the second four-byte K7 guess."
+      },
+      {
+        "metric": "inverse-mixcolumns-pair-sieve-source-model",
+        "value": 0.015625,
+        "basis": "author_model",
+        "expression": "2^{-6}",
+        "description": "PDF6/9 Sections4.1/5: source4*2^-8 for one of four possible zero-byte patterns, conditional on the guessed terminal key."
+      },
+      {
+        "metric": "one-eligible-pair-eliminates-fixed-whitening-guess-source-model",
+        "value": 2.384185791015625e-7,
+        "basis": "derived_from_source",
+        "expression": "2^{-22}",
+        "description": "Sections4.1–5: about2^10 entries in the32-bit input-difference bin out of2^32 whitening guesses. This source mean-elimination fraction is not a guarantee for each pair or key."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-6a5b4e543d353cad-2007",
+      "locator": "PDF pp.2–4 Table 1 and round convention; pp.6–8 Sections 4.1–4.2; pp.8–10 Section 5 output/analysis; p.10 Section 6; p.11 Section 7 (only the applicable endpoint passages are used).",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining algorithm/accounting passages checked; partial outputs and native units retained."
+    },
+    {
+      "source_id": "aes-paper-6a5b4e543d353cad-2007",
+      "locator": "Complete PDF1–12/printed239–250; Sections3–8 including references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition inventory read; original costs and localized conflicts retained."
+    },
+    {
+      "source_id": "aes-paper-6a5b4e543d353cad-2007",
+      "locator": "PDF10/printed248 Section6 first paragraph and guessed-byte count.",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "The two source statements do not reconcile the number of guessed bytes; native time is retained without an invented correction."
+    },
+    {
+      "source_id": "aes-paper-6a5b4e543d353cad-2007",
+      "locator": "PDF6–11/printed244–249 Sections4.1–7; exact endpoint-specific pair filters and expected wrong-key counts.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The source gives partial-subkey outputs and expected wrong-candidate counts, not numerical end-to-end recovery success. In particular,2^-17 in Section4.1 and2^-18.5 in Section5 arise by multiplying expected survivors by outer guesses; they are not independently measured attack-failure probabilities. The local per-fixed-wrong-key model is preserved without assuming independent pairs beyond the source heuristic. Section6 invokes the seven-round subroutine after guessing K8; it changes the budget and has an existing guessed-byte-count conflict. Do not copy the Section5 m-prime or2^-18.5 aggregate survivor estimate to this changed endpoint."
+    },
+    {
+      "source_id": "aes-paper-6a5b4e543d353cad-2007",
+      "locator": "PDF6–7 / printed244–245 Section4.1 attack and complexity; PDF9–10 / printed247–248 Sections5–6; PDF11 / printed249 Section7.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: no numerical success is established for this exact output and budget in the checked passages. No primary probability was added; existing primary probabilities, local components, costs, targets, settings and all scientific conflicts are unchanged. No scientific conflict was resolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This record prices the stated endpoint; it does not append an unreported master-key completion budget.",
+    "Section 6 says guess all 128 bits of K8 but counts 12+14-1=25 key bytes; the link between that key-schedule calculation and its total time is not expanded. Preserve 2^247.5 as author-reported, not independently reconstructed."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/target/description",
+      "label": "Eight-round guessed-byte count",
+      "description": "Section6 says all128 RK8 bits are guessed, but writes12+14-1=25total bytes. Replacing12by16 would give29 absent an additional unshown elimination. The author time is retained without a fabricated correction or complete-key budget.",
+      "observations": [
+        {
+          "source_id": "aes-paper-6a5b4e543d353cad-2007",
+          "locator": "PDF10/printed248 Section6 first paragraph.",
+          "reported": "Guess all128bits ofK8; oneK6*byte follows fromK8."
+        },
+        {
+          "source_id": "aes-paper-6a5b4e543d353cad-2007",
+          "locator": "PDF10/printed248 Section6 guessed-byte count sentence.",
+          "reported": "Total guessed keybytes12+14-1=25."
+        }
+      ]
+    }
+  ]
+}

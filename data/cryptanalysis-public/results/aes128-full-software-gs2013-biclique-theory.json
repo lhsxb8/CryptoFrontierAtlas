@@ -1,0 +1,110 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-software-gs2013-biclique-theory",
+  "title": "GS13 10-round AES-128 Modified biclique",
+  "display": {
+    "name": "Modified biclique",
+    "method": "biclique"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full AES128, including standard key schedule in computation. Entire2^128-key enumeration, not the average half-space convention."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key oracle.",
+    "key_population": "general secret key",
+    "plaintext_model": "Sixteen chosen plaintext/ciphertext pairs once for the full search; one additional pair verifies a32-bit matching candidate.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Classical software key search. Algorithmic differences among guessed keys do not grant related-key oracle access."
+    ]
+  },
+  "techniques": [
+    "biclique"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^124 * (0.55 + 9.36)",
+      "log2": 127.30888505741176,
+      "unit": "full-aes128-evaluations-including-schedule",
+      "qualifier": "estimate",
+      "note": "Source S-box count normalization:200 S-boxes per full encryption with schedule; source theory, not CPU cycles."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "16 + 1",
+      "log2": 4.087462841250339,
+      "unit": "chosen-plaintext-ciphertext-pairs",
+      "qualifier": "estimate",
+      "note": "Source headline16 data pairs PLUS1 additional verification pair; the latter is separately stated, not silently discarded."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "value": 1,
+    "metric": "source-complete-keyspace-enumeration",
+    "description": "Source scans the entire keyspace with probability1 inclusion of the true key; correctness of unique-key identification also requires verification. Not average2^127-key search."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-61c24d503edb4f3e-2013",
+      "locator": "PDF pp.5–6 Sections3.1–3.2; pp.6/9–11 Section4 including corrected work.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Complete registered proceedings read and AES claim inventory checked2026-10-26; bounded forward checks complete. Source claims and unresolved fields retain their original status."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Section4.3 explicitly revises attributed2^126.89=2^124*(0.3+7.12) to2^127.31=2^124*(0.55+9.36). The former is not stored as an equally valid new endpoint.",
+    "Complete paper and25-cell benchmark table inventoried. Source fullspace/key-inclusion convention is retained; unknown setup/memory and native platform throughput are not silently converted to total AES-search work."
+  ],
+  "related_problem_ids": []
+}

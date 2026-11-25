@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+  \node[phase] at (6,3.1) {Two alternating round functions};
+  \node[accent,minimum width=5.8cm] at (2.8,1.7) {$FO(S,K)=A(SL_1(S\oplus K))$\\$SL_1$: repeat $(S_1,S_2,S_1^{-1},S_2^{-1})$};
+  \node[accent,minimum width=5.8cm] at (9.2,1.7) {$FE(S,K)=A(SL_2(S\oplus K))$\\$SL_2$: repeat $(S_1^{-1},S_2^{-1},S_1,S_2)$};
+  \node[note] at (6,.45) {Substitution acts bytewise on $16$ bytes.\quad $A$: involutory bytewise linear diffusion.};
+  \node[phase] at (6,-.4) {Key-schedule working words};
+  \node[box,minimum width=11.8cm] at (6,-2.2) {$W_0=K_L$\\$W_1=FO(W_0,CK_1)\oplus K_R$\\$W_2=FE(W_1,CK_2)\oplus W_0$\\$W_3=FO(W_2,CK_3)\oplus W_1$};
+  \node[note,text width=12cm] at (6,-4.1) {$K_L$: first $128$ key bits; $K_R$: remaining bits right-padded with zeros to $128$ bits.\\The key length selects the order of the three constants and the number of derived keys.\\Specified rotations and XORs of $W_0,\ldots,W_3$ produce $ek_1,\ldots,ek_{\AtlasRoundKeys}$.};
+\end{tikzpicture}

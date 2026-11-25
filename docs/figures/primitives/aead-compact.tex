@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+  \node (input) at (0,1.2) {$K,N$};
+  \node[accent,minimum width=2.4cm] (otk) at (-1.6,-.2) {ChaCha20\\counter $0$};
+  \node[accent,minimum width=2.4cm] (enc) at (1.6,-.2) {ChaCha20\\counter $1,2,\ldots$};
+  \draw[keywire] (input) -| (otk); \draw[keywire] (input) -| (enc);
+  \node[note,text width=2.5cm] at (-1.6,-1.6) {First $256$ bits:\\one-time key $(r,s)$};
+  \node[box,minimum width=2.4cm] (cipher) at (1.6,-2) {XOR with $P$\\to obtain $C$};
+  \draw[wire] (enc) -- (cipher);
+  \node[box,minimum width=4.8cm] (frame) at (0,-3.85) {Frame AAD, ciphertext\\padding and byte lengths};
+  \draw[wire] (cipher) -- (frame);
+  \node[accent,minimum width=4.8cm] (poly) at (0,-5.6) {Poly1305$_{r,s}$};
+  \draw[wire] (frame) -- (poly);
+  \draw[keywire] (otk.west) -- (-3.1,-.2) |- (poly.west);
+  \draw[wire] (poly) -- (0,-6.7) node[below] {$T$: $128$-bit tag};
+\end{tikzpicture}

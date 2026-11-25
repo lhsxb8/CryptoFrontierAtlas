@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+  \node (kn) at (0,0) {$K,N$};
+  \node[accent,minimum width=3cm] (otk) at (3.4,1.5) {ChaCha20 block\\counter $=0$};
+  \node[accent,minimum width=3cm] (enc) at (3.4,-1.5) {ChaCha20 encrypt\\counter starts at $1$};
+  \draw[keywire] (kn) |- (otk); \draw[keywire] (kn) |- (enc);
+  \node[box,minimum width=3.2cm] (poly) at (10,1.5) {Poly1305\\one-time key $(r,s)$};
+  \draw[keywire] (otk) -- node[above,note] {First $256$ output bits} (poly);
+  \node[box,minimum width=3.2cm] (frame) at (10,-1.5) {Frame AAD, ciphertext\\and byte lengths};
+  \draw[wire] (enc) -- node[above] {$C$} (frame);
+  \draw[wire] (frame) -- (poly);
+  \node (p) at (3.4,-2.9) {$P$}; \draw[wire] (p) -- (enc);
+  \node (ad) at (10,-2.9) {$\mathrm{AAD}$}; \draw[wire] (ad) -- (frame);
+  \node (tag) at (12.6,1.5) {$T$}; \draw[wire] (poly) -- (tag);
+  \node[note] at (6.3,2.7) {IETF construction: $256$-bit key, $96$-bit nonce, $128$-bit tag};
+\end{tikzpicture}

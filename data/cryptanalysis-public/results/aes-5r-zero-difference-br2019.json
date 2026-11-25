@@ -1,0 +1,166 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-5r-zero-difference-br2019",
+  "title": "aes-128/aes-192/aes-256, 5 rounds: Zero-difference distinguisher [BR19a]",
+  "display": {
+    "name": "Zero-difference distinguisher",
+    "method": "differential"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "source-br19a-5r",
+    "description": "Five-round standard AES; the source omits the final MixColumns and ShiftRows as invertible output-linear conventions. The key-independent round construction applies across key lengths."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its standard expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "An initial 2^12.2 chosen-plaintext structure followed by 2^27.2 adaptive chosen-ciphertext queries.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Section3 uses modeled uniform subspace intersections and event-independence approximations; numerical event rates are not per-fixed-key exact probabilities."
+    ],
+    "reference_model": "Distinguish a secret-key five-round AES permutation from a random permutation using both forward chosen plaintexts and adaptive inverse queries."
+  },
+  "techniques": [
+    "zero-difference",
+    "adaptive-exchange"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^26.2",
+      "log2": 26.2,
+      "unit": "xor-operations",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion. Section3 counts XOR tests, separately from forward/inverse oracle computation."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^12.2 CP + 2^27.2 adaptive CC",
+      "log2": null,
+      "unit": "mixed-plaintext-and-ciphertext-block-queries",
+      "qualifier": "estimate",
+      "note": "Both directions are necessary; preserve the vector rather than dropping the initial chosen plaintexts."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical budget is stated for this configuration."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical budget is stated for this configuration."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "source-reported-distinguishing-success",
+    "value": 0.58,
+    "description": "Source calls 0.58 the success probability, following event rates about 0.63 for AES and 0.07 for random. This is not relabelled as balanced classification success."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-26e256082ea0fdb0-2019",
+      "locator": "PDF p.3 Table 1 and Section 1.1; pp.4–5 round notation; p.9 Section 3 data and success analysis.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Checked primary abstract, result table and defining passages; native costs and goals retained."
+    },
+    {
+      "source_id": "aes-paper-26e256082ea0fdb0-2019",
+      "locator": "Complete exact registered primary PDF1–14, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete raw-first primary inventory; source-local conflicts and bounded controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "aes-paper-26e256082ea0fdb0-2019",
+      "locator": "PDF7–10 Section3, three cases/Figures2–4/Algorithm1; PDF9 success paragraph.",
+      "fields": [
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Source combined event56*2^-32; preserve extra CP, adaptiveCC and native XOR units together. No automatic conversion to encryption work."
+    },
+    {
+      "source_id": "aes-paper-26e256082ea0fdb0-2019",
+      "locator": "PDF9 Section3 success paragraph.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Source-local reconciliation task; not a replacement attack budget."
+    },
+    {
+      "source_id": "aes-paper-26e256082ea0fdb0-2019",
+      "locator": "PDF9 Section3 success paragraph.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Located source claim and the attached independent review observations; original reported values retained pending reconciliation."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Source event/decision success is not normalized; native XOR tests exclude oracle AES work. No complete attack reproduction was attempted."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "Distinguishing success semantics",
+      "description": "Source reports0.58 after event probabilities0.63(AES)/0.07(random), but does not define a normalized metric reproducing0.58. Independent direct event computation yields0.6321205612/0.0692770667; neither their difference nor equal-prior classification yields0.58. Author scalar retained without relabelling.",
+      "observations": [
+        {
+          "source_id": "aes-paper-26e256082ea0fdb0-2019",
+          "locator": "PDF9 Section3 success paragraph.",
+          "reported": "Original source claims and numerical scalars retained."
+        },
+        {
+          "source_id": "aes-paper-26e256082ea0fdb0-2019",
+          "locator": "PDF9 Section3 success paragraph. Independent raw review and bounded arithmetic,2026-10-27.",
+          "reported": "Source reports0.58 after event probabilities0.63(AES)/0.07(random), but does not define a normalized metric reproducing0.58. Independent direct event computation yields0.6321205612/0.0692770667; neither their difference nor equal-prior classification yields0.58. Author scalar retained without relabelling."
+        }
+      ]
+    }
+  ]
+}

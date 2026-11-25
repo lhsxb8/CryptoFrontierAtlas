@@ -1,0 +1,126 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-biclique-d16x8-tw2015",
+  "title": "aes-128, 10 rounds: Enlarged independent biclique [TW15]",
+  "display": {
+    "name": "Enlarged independent biclique",
+    "method": "biclique"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "source-tw15-10r",
+    "description": "Full standard AES-128 with its standard expanded master key, initial whitening and final round without MixColumns (Figures1,5,9,10)."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its standard expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "Oracle decryption of the constructed ciphertext set under one designated unknown key; all key-space partitions are enumerated.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Time includes the standard key schedule, with the paper counting 200 S-boxes for a full AES-128 computation.",
+      "Offline differential key differences construct bicliques locally; oracle access remains one designated unknown key.",
+      "Time is the source S-box-count model including key schedule, not measured CPU time; large SIM table-access costs are not calibrated into full-AES units.",
+      "Section6 reports author search in one key-space partition; no independent full-keyspace execution is claimed."
+    ]
+  },
+  "techniques": [
+    "independent-biclique",
+    "enlarged-biclique",
+    "matching-with-precomputation"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^126.13",
+      "log2": 126.13,
+      "unit": "full-aes128-computations-including-key-schedule",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion. Full exact-edition review preserves S-box normalization and native table values; no runtime calibration or zero-cost lookup claim. Section4.5 exact sum:2^104*(3*2^8*56/200+2^8+2*2^16*32/200+3*2^16*20/200+2^24*54/200+2^16*48/200)."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^56",
+      "log2": 56,
+      "unit": "chosen-ciphertext-blocks",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this configuration; no cross-paper unit conversion."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^22.07",
+      "log2": 22.07,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Source Table 1 storage in bytes."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate aggregate setup exponent for the whole key space is assigned here. The source reports per-group key-generation and precomputation phase costs included in total time; AES-128 Section 4.5 includes Ckeys=2^14.36 and Cprec=2^14.26. SIM Section 7 prices the table storage separately."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "complete-master-key-recovery",
+    "value": 1,
+    "description": "Section 4.5 explicitly reports success rate 1 for the AES-128 2^16 by 2^8 attack after complete key-space partition enumeration and full-state verification.",
+    "basis": "author_statement",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Checked complete partition coverage, exact biclique construction, final verification and the stated variant/SIM mapping; existing time, memory and accounting conflicts are unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-4642c02d7efbad23-2015",
+      "locator": "PDF p.2 Table 1; pp.3–4 Section 2 oracle model; pp.9–12 complexity; p.13 Section 7; pp.15–16 Appendix A; pp.16–17 Appendix B.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Complete exact registered publisher edition and result inventory reviewed on2026-10-26; bounded forward passages checked separately. Native units, source conflicts and unknown success are preserved."
+    },
+    {
+      "source_id": "aes-paper-4642c02d7efbad23-2015",
+      "locator": "PDF2/printed40 Table1; PDF3–5/printed41–43 Sections2.1–2.4; PDF7/printed45 Section4.1; PDF11–13/printed49–51 Sections4.5/6/7; PDF13–17/printed51–55 AppendicesA/B for the exact retained variant.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "The base success1 is explicit; the other seven source-owned configurations inherit the same exhaustive key-space and exact matching construction. All four resource coordinates and existing field conflicts are preserved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Full exact-edition inventory checked; numerical attack execution is not claimed."
+  ],
+  "related_problem_ids": []
+}

@@ -1,0 +1,137 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-4r-weak-subspace-k32-grr2021-property",
+  "title": "GLR+21 4-round AES-128 Weak-key subspace-trail property",
+  "display": {
+    "name": "Weak-key subspace-trail property",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "glr+21-4r-source-boundary",
+    "description": "Original standard AES-128 schedule, 4 nonlinear rounds, source Table1 weak-key property. This row specifies applicable key population, NOT a quantitative attack budget."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown weak master key, not a related-key collection; weak-key membership is an assumption, not prior knowledge of the key value.",
+    "key_population": "Source original-AES weak-key set of2^32 keys out of2^128; Eq2 repeated-column whitening keys.",
+    "plaintext_model": "Source-defined plaintext/ciphertext observations under the same key.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Condition on the stated weak-key population; do not compare with an arbitrary-key secret-key attack."
+    ]
+  },
+  "techniques": [
+    "differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "value": null,
+    "metric": "structural-property",
+    "description": "Probability and counts belong to the mathematical statement, not attack success or resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-d63fd1271bb166c3-2021",
+      "locator": "PDF pp.9–15 Eq2/Table1/Sections4.1–4.2; p.21 AppendixB.2 original-AES256 weak-key classes.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-d63fd1271bb166c3-2021",
+      "locator": "CompletePDF1–30 full audit;[local audit reference not distributed]",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Complete registered primary edition read. Inventory/forward gates and scientific correctness are separate; see exact localized conflicts."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Scientific follow-up: Complete30-page publisher read and18indexed points checked. Six AES256 compression-mode endpoints and an all-key8r supporting property remain unrepresented; corrected current ePrint inaccessible. Keep inventory/forward gates open. Chosen-key ideal-reference proof gaps are local scientific issues, not changes to9/12r or2^64 construction cost."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "For x and y EACH in the64-dimensional repeated-column subspace IS (not merely x XOR y in IS), Pr[R4(x) XOR R4(y) in MI]=2^-32 for I={0,2} or{1,3}, versus2^-64 for a random permutation. Proposition1: the complete2^64-text IS populates exactly2^32 cosets of each of M{0,2} and M{1,3}, each containing2^32 ciphertexts.",
+    "quantifier": "For all keys in the specified source weak-key class; not for all standardAES keys.",
+    "scope": "Original AES key schedule only. Table1 intentionally omits distinguisher complexity; do not convert key-set cardinality into time/data.",
+    "parameters": [
+      {
+        "name": "weak_key_count",
+        "reported": "2^32 / 2^128",
+        "meaning": "Number of keys satisfying the source restrictions, not attack success or effort."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Author analytical construction/theorem inspected at the cited primary locator; no independent full proof reproduction."
+    }
+  }
+}

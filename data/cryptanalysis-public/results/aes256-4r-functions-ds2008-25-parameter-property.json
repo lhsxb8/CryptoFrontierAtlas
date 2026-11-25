@@ -1,0 +1,158 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-4r-functions-ds2008-25-parameter-property",
+  "title": "4-round AES-256: 25-byte function parameterization",
+  "display": {
+    "name": "25-byte function parameterization",
+    "method": "mitm"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "ds2008-inner-rounds-no-whitening-with-mixcolumns",
+    "description": "4 inner AES rounds, without initial whitening and with MixColumns in every round, under fixed round keys. The parameter-independent round argument applies to the standard AES-256 schedule."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "4 fixed round keys; the structural argument does not use key-schedule relations.",
+    "key_population": "General fixed key; no weak-key restriction.",
+    "plaintext_model": "One byte takes all 256 values while the other fifteen bytes are fixed.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "parameterized-functions"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural parameter count, not a measured attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural parameter count, not a measured attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural parameter count, not a measured attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural parameter count, not a measured attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "fixed-function-parameterization",
+    "value": null,
+    "description": "A universal structural claim under fixed inputs and keys, rather than an attack-success experiment."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Printed pp.120–121 Section4 Proposition4, Equations(1)–(6); p.119 recurrence",
+      "fields": [
+        "/target",
+        "/setting",
+        "/property",
+        "/field_conflicts",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Complete official eleven-page proceedings reviewed; critical equations and Table1 visually checked. Author-reported scope and native units retained."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Complete PDF1–11/printed116–126; AppendixA Proposition6 and Sections4–5.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition inventory reviewed; reviewer finite component validation is separate from attack reproduction."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Results are transcribed from this source version. Full attack searches, costs and success probabilities have not been reproduced."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "With one active input byte and all other input bytes fixed, each four-round output byte is a function described by at most 25 fixed byte parameters.",
+    "quantifier": "For each fixed choice of passive input bytes and round keys, one parameter tuple describes all 256 active-input values. The parameter count is not a lower bound or a number of independent key bytes.",
+    "scope": "Proposition4 constructs four shared first-round offsets, sixteen second-round offsets, four third-round diagonal key bytes and one fourth-round output key byte.",
+    "parameters": [
+      {
+        "name": "Active input values",
+        "reported": "256",
+        "meaning": "Full byte range in one input position; other fifteen positions fixed."
+      },
+      {
+        "name": "Fixed parameter bytes",
+        "reported": "25",
+        "meaning": "20 key/passive-dependent offsets and 5 selected round-key bytes."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Source symbolic dependency argument. An independent local AES component checker verifies 1536 four/five-round evaluations from a separately derived 25-parameter factorization; literal printed recurrences have documented discrepancies."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property/validation",
+      "label": "Printed function expansion",
+      "description": "The recurrence preceding Proposition2 omits the third-round S-boxes. Printed Equation(1) also differs from the second-round diagonal expressions immediately above it. A separately derived 25-parameter AES factorization passes local component tests; the printed expressions are preserved as discrepant. DTCB09 explicitly corrects Equation1 and the C3_22/C3_44 expansions in Equations2/4, while stating that these errors do not affect DS08 attack applicability. Separate corrected AES factorization is supported, not the literal print.",
+      "observations": [
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.119 recurrence preceding Proposition2; p.120 Equation(1)",
+          "reported": "The p.119 recurrence is linear in second-round bytes without S-boxes; Equation(1) uses different coefficients for its c4 and c3 terms."
+        },
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.119 second-round diagonal equations; p.117 AES round definition",
+          "reported": "SubBytes precedes ShiftRows/MixColumns every inner round. C2_22=S(3t11+c4)+c6 and C2_33=2S(t11+c3)+c7 require different nested terms in C3_11."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "PDF5/printed148 Section4, Equations3–6; PDF4/printed147 corrected recurrence.",
+          "reported": "Explicit correction of DS08 Equation1 and C3_22/C3_44; authors state no effect on applicability of DS08 attacks."
+        }
+      ]
+    }
+  ]
+}

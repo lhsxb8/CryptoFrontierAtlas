@@ -1,0 +1,135 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-elimination-zwzf2007-equality-property",
+  "title": "7-round AES-192: Equality-filter elimination parameter family",
+  "display": {
+    "name": "Equality-filter elimination parameter family",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "zwzf2007-whitening-k0-final-round-without-mixcolumns",
+    "description": "Conditional statistical model for rejecting wrong whitening-key candidates in the source's related-key partial-recovery stage; no new complete-key endpoint."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": 2,
+    "key_relation": "Two unknown AES-192 master keys K and K'=K XOR Delta, where Delta[0]=Delta[8]=a!=0 and the other22 bytes are0. Initial whitening is k0; round subkeys are k1,... .",
+    "key_population": "General unknown key pair with attacker-chosen nonzero a; b,c are actual key-dependent S-box output differences, not independently chosen subkeys.",
+    "plaintext_model": "Two plaintext pools ofm inputs each; total2m related-key queries.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source treats wrong-candidate elimination events as independent uniform hits among2^64 whitening-key candidates. The model is not an exact AES theorem."
+    ]
+  },
+  "techniques": [
+    "related-key",
+    "differential",
+    "mixcolumns-equality",
+    "wrong-key-elimination"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-or-conditional-statistical-statement",
+    "value": null,
+    "description": "Parameters describe a structural identity or conditional random-elimination model."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "Printed pp.25–26 Section6, general m and illustrated budget",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal",
+        "/property"
+      ],
+      "interpretation": "Complete original proceedings reviewed. Source-convention boundaries, total queries across the two keys, partial output and native accounting are kept explicit."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Independent local checks cover the AES key schedule and deterministic components. Full cryptanalytic searches, resource calibration and success rates have not been reproduced."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "For m inputs per pool, the modeled wrong-candidate mean is2^64*(1-2^-64)^((1-2^-8)*m^2).",
+    "quantifier": "Conditional on an incorrect outer-subkey hypothesis and the source's uniform-independent elimination heuristic.",
+    "scope": "The expectation concerns wrong64-bit whitening-key suggestions, not total correct-key candidates or a measured whole-key success probability.",
+    "parameters": [
+      {
+        "name": "Pool size",
+        "reported": "m",
+        "meaning": "Queries under each of two related keys; total2m."
+      },
+      {
+        "name": "Retained pair budget",
+        "reported": "(1-2^-8)*m^2",
+        "meaning": "Filtering-model count; not the total raw cross-key pair count."
+      },
+      {
+        "name": "Illustrated elimination budget",
+        "reported": "2^71",
+        "meaning": "Incorrect-candidate mean is small in the source heuristic; rounded acquisition and processed pairs are distinct."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Source analytical estimate. Local arithmetic separates exact exponential expressions from rounded printed exponents; deterministic component checks do not establish probabilistic independence."
+    }
+  }
+}

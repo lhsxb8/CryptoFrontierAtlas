@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+  \foreach \x in {0,...,4} \foreach \y in {0,...,4} {
+    \draw[draw=atlasLine,fill=atlasFill] (-.9+.36*\x,1-.36*\y) rectangle ++(.36,-.36);
+  }
+  \node[note] at (0,-1.2) {$5\times5$ lanes of $64$ bits};
+  \foreach \y/\name/\label in {-2/theta/\theta,-3.1/rho/\rho,-4.2/pi/\pi,-5.3/chi/\chi,-6.4/iota/\iota} {
+    \node[accent,minimum width=2cm,minimum height=.7cm] (\name) at (0,\y) {$\label$};
+  }
+  \draw[wire] (0,-1.4) -- (theta); \draw[wire] (theta) -- (rho); \draw[wire] (rho) -- (pi);
+  \draw[wire] (pi) -- (chi); \draw[wire] (chi) -- (iota);
+  \draw[decorate,decoration={brace,amplitude=4pt},draw=atlasTeal] (1.4,-1.65) -- (1.4,-6.75);
+  \node[note,align=left] at (2.4,-4.2) {$\AtlasRounds$ rounds\\$i_r=$\\$\AtlasRoundStart,\ldots,23$};
+  \draw[wire] (iota) -- (0,-7.3) node[below] {$A'$};
+\end{tikzpicture}

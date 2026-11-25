@@ -1,0 +1,153 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-bes-embedding-mr2002-property",
+  "title": "MR02 10-round AES-128 AES-to-BES conjugate embedding",
+  "display": {
+    "name": "BES conjugate embedding",
+    "method": "algebraic"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes128-embedded-in-bes",
+    "description": "Standard full10-round AES128 embedded in BES overGF(2^8), restricted to the AES conjugacy image BA. BES alone has a128-byte state, not the16-byte AES state."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One ordinary AES128 master key; embedded schedule must retain conjugacy and the actual AES key-schedule constraints.",
+    "key_population": "general secret key",
+    "plaintext_model": "AES16-byte plaintext/key and their conjugate embeddings; never arbitrary unrelated BES state/key vectors.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "conjugate-embedding",
+    "algebraic-representation"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "value": null,
+    "metric": "structural-property",
+    "description": "Probability and counts belong to the mathematical statement, not attack success or resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-53a83c5f0defe53b-2002",
+      "locator": "PDF pp.4–5 Section3 embedding/conjugacy; pp.5–8 Sections4.1–4.2 commuting diagram and key schedule; p.11 BES-only differential exclusion.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-53a83c5f0defe53b-2002",
+      "locator": "Complete16-page official CRYPTO2002 proceedings read raw-first2026-10-27; PDF pp.1–16, with all defining Sections4–6, equations and references.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/property",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Exact-edition full read and AES contribution inventory. Mathematical counts are not attack costs; no solver or author code executed."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Result-level exclusion (BES only): Section5.2 uses arbitrary alternating scaled round subkeys, not the actual AES master-key schedule. For nonzero embedded states, scalar t outside{0,1} also breaks conjugacy; the trivial zero-state exception does not transfer the effect into an AES related-key attack."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "For each byte a, phi(a)=(a,a^2,a^4,...,a^128); componentwise embedding maps16 AES bytes into128 BES bytes. With pB=phi(pA),kB=phi(kA), the embedded key schedule and every round preserve BA and commute with phi: RoundB(phi(a),phi(ki))=phi(RoundA(a,ki)); the complete encryption commutes as well. Restriction to BA is essential.",
+    "quantifier": "All source AES128 inputs and keys with correctly embedded subkeys; zero inversion follows the original cipher convention.",
+    "scope": "Exact alternate representation of AES128; the larger unrestricted BES domain does not inherit AES security or establish an AES attack.",
+    "parameters": [
+      {
+        "name": "aes_state_bytes",
+        "reported": "16",
+        "meaning": "Original AES128 state size in bytes."
+      },
+      {
+        "name": "bes_state_bytes",
+        "reported": "128",
+        "meaning": "Expanded BES state size in bytes."
+      },
+      {
+        "name": "conjugates_per_byte",
+        "reported": "8",
+        "meaning": "Frobenius coordinates in each embedded byte vector."
+      },
+      {
+        "name": "embedding",
+        "reported": "phi(a)=(a, a², a^4, a^8, a^16, a^32, a^64, a^128)",
+        "meaning": "Additive and inverse-preserving vector conjugates; the complete10-round AES128 and schedule commute with the lifted maps."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Complete exact16-page edition independently read before baseline comparison. Canonical finite checks cover the conjugate embedding, explicit128-dimensional linear operator, parity and count consistency; no full cryptanalytic search or solver executed."
+    }
+  }
+}

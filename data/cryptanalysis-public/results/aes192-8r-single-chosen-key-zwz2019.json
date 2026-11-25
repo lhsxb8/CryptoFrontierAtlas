@@ -1,0 +1,192 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-single-chosen-key-zwz2019",
+  "title": "ZWZ19 8-round AES-192 Chosen-key restricted-pair construction",
+  "display": {
+    "name": "Chosen-key restricted-pair construction",
+    "method": "mitm"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "zwz2019-8r-final-no-mc",
+    "description": "8 rounds with finalMC omitted. Construct(m,m-prime,k) jointly; both messages use the SAME chosen standardAES-192 key. Inverting the schedule constructs a compatible key, not recovery of an externally supplied unknown target."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "public_chosen_key_permutation_evaluation"
+    ],
+    "related_key_count": null,
+    "target_selection": "attacker_selected_pair",
+    "key_relation": "One chosen192-bit key shared by the constructed message pair; no unknown-target key or related-key oracle.",
+    "key_population": "attacker-selected compatible standard AES-192 master key",
+    "plaintext_model": "Construct same-key pair following4→1→4→16→16→4→1→4→4 active-byte path.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Printed witness and pinned authorAES_8.cpp8-bitgetKgaccumulator disagree with standard schedule. No downloadedcode execution or repaired cost claim."
+    ],
+    "reference_model": "Source chosen-key limited-birthday constrained input/output pair game, not the ordinary single-secret-key recovery game."
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "keyed-supersbox",
+    "chosen-single-key"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "1",
+      "log2": 0,
+      "unit": "8-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Author headline for retrieval/compatible-key completion after list setup; not an established all-in budget."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^16",
+      "log2": 16,
+      "unit": "source-native-list-storage",
+      "qualifier": "estimate",
+      "note": "Table1 exponent; four lists each2^16 elements with unspecified item width and constant factors."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "4 * 2^16",
+      "log2": 18,
+      "unit": "basic-operations",
+      "qualifier": "estimate",
+      "note": "Four SuperSBox lists, each2^16 operations per Observation1; literal4*2^16 setup count, not converted to encryption units."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "value": null,
+    "metric": "whole-attack-success",
+    "description": "No numerical whole chosen-key success is stated for this eight-round AES192 endpoint. The headline one-encryption cost follows list setup, whose native4*2^16 basic operations remain separately recorded. The AppendixA standard-schedule witness inconsistency remains; no new guaranteed retention/completion is claimed for the disputed literal construction.Local list and key-completion fractions do not give an end-to-end stopping/output distribution. No author attack code is executed, repaired or treated as a success experiment.",
+    "components": [
+      {
+        "metric": "L0-two-byte-state-consistency-source-model",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "Section3: a selected element from each of L1,L2,L3 determines X3[0,5]; one fixed L0 candidate passes the two-byte consistency test under the source list model. The expected one match among2^16 entries is not guaranteed nonempty or unique output."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Independent source-first and endpoint review, PDF3–15: whole chosen-key triplet success is not quantified. Source expected list occupancy and final-byte compatibility do not specify a restart/stopping law and its expected retry/setup cost. No one-pass or expected-search success1 is assigned. Preserve eight-round standard-schedule/path and nine-round absolute-ciphertext issues, native4*2^16 setup and headline costs; source code is inspected only, not executed or repaired. Targeted success review does not change full-paper audit gates."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-faa6493c8c4a9323-2019",
+      "locator": "PDF pp.3–7 Table1/model/Observation1; pp.7–9 Section3 compatible-key construction.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-faa6493c8c4a9323-2019",
+      "locator": "CompletePDF1–15 full audit;[local audit reference not distributed]",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete registered primary edition read. Inventory/forward gates and scientific correctness are separate; see exact localized conflicts."
+    },
+    {
+      "source_id": "aes-paper-faa6493c8c4a9323-2019",
+      "locator": "ACISP proceedings PDF7–9 / printed579–581 Section3 and Figures2–3; original AppendixA witness conflict retained.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical whole chosen-key success is stated for this eight-round AES192 endpoint. The headline one-encryption cost follows list setup, whose native4*2^16 basic operations remain separately recorded. The AppendixA standard-schedule witness inconsistency remains; no new guaranteed retention/completion is claimed for the disputed literal construction.Local list and key-completion fractions do not give an end-to-end stopping/output distribution. No author attack code is executed, repaired or treated as a success experiment."
+    },
+    {
+      "source_id": "aes-paper-faa6493c8c4a9323-2019",
+      "locator": "PDF3/printed575 Table1; PDF6–8/printed578–580 Observation1,Section3 lists and compatible-key completion; PDF9–11/printed581–583 Section4 sequential lists and final2^8 choices; PDF12–13 AppendicesA–B witnesses.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Expected one match does not specify complete-output yield or verified-restart cost. A witness is not a success denominator. The intended chosen-key target and separate setup remain intact; no numerical primary is inferred."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Reported1.05s/1.14s Corei5-4210M examples are source platform runtimes;8GB is machine capacity, not peak algorithm memory."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "Headline excludes unnormalized list construction",
+      "description": "Table1 calls the construction one reduced encryption, but Observation1 and Sections3–4 first build four2^16-operation lists; no justified unit conversion or proof that setup is included.",
+      "observations": [
+        {
+          "source_id": "aes-paper-faa6493c8c4a9323-2019",
+          "locator": "PDF p.3 Table1 and headline.",
+          "reported": "Time one reduced-round encryption."
+        },
+        {
+          "source_id": "aes-paper-faa6493c8c4a9323-2019",
+          "locator": "PDF pp.6–7 Observation1 and Section3; pp.9–10 Section4.",
+          "reported": "Four lists each2^16 solutions at2^16 basic operations before constant-cost retrieval."
+        }
+      ]
+    },
+    {
+      "field": "/target/description",
+      "label": "AppendixA standard AES192 schedule witness",
+      "description": "Both independent FIPS-validated complete-schedule implementations first disagree atR1 byte8; the supplied key/plaintexts do not follow the printed8r differential fromR3 onward. All printedXORrows are internally consistent, but do not verify encryption. This does not automatically refute the intended symbolic construction.",
+      "observations": [
+        {
+          "source_id": "aes-paper-faa6493c8c4a9323-2019",
+          "locator": "PDF12/584 AppendixA Table2.",
+          "reported": "PrintedR1=d35246552dd41bf0f205d52eeb755c55."
+        },
+        {
+          "source_id": "aes-paper-faa6493c8c4a9323-2019",
+          "locator": "Same source examples independently computed with FIPS-validated full AES192 expansion2026-10-26.",
+          "reported": "StandardR1=d35246552dd41bf07889f02e61f97955; finalDeltaC=a231dc68943ad084564ec7830fd6de00."
+        }
+      ]
+    }
+  ]
+}

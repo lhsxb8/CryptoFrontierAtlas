@@ -1,0 +1,159 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-5r-id-property2-cc-hcgw2019",
+  "title": "HCGW19 5-round AES / aes-5r-id-property2-cc-hcgw2019",
+  "display": {
+    "name": "Key-dependent impossible differential / MC property 2",
+    "method": "differential"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "hcgw2019-5r-final-no-mc-with-ak5",
+    "description": "Five nonlinear AES rounds with whitening, omitted final MixColumns and included final AddRoundKey. Key-dependent subspaces are covered by exhaustive bin/indicator testing, not selected weak master keys."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "Chosen-ciphertext structures with eight intended active bytes; test each of sixteen (s,t) orientations and all 65536 tuples of the unknown whitening-key relations.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The AES-bin existence property is deterministic; random-permutation error estimates use the source statistical approximations. No prior key-byte knowledge or related-key oracle."
+    ],
+    "reference_model": "Distinguish five-round AES under one unknown secret key from a random permutation with the same chosen-plaintext or chosen-ciphertext access; test all key-dependent bins without prior key knowledge."
+  },
+  "techniques": [
+    "key-dependent-impossible-differential",
+    "missing-bin-test"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^80.5",
+      "log2": 80.5,
+      "unit": "memory-accesses",
+      "qualifier": "estimate",
+      "note": "Table 1/Section 4 headline. The text mentions O(2^n log(2^n)) sorting but reports only the leading 2^80.5 memory accesses; retain this author accounting, not an independently reconstructed total."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^76.5",
+      "log2": 76.5,
+      "unit": "chosen-ciphertext-blocks",
+      "qualifier": "estimate",
+      "note": "Source-reported endpoint in native units."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^64",
+      "log2": 64,
+      "unit": "source-native-table-entries",
+      "qualifier": "estimate",
+      "note": "One table for a ciphertext structure; indicator array is additional lower-order storage. No entry width is specified."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical resource amount supplied for this endpoint."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "source-distinguishing-rate",
+    "value": 0.95,
+    "description": "Source calls the 5% random-permutation false acceptance a 95% success rate; the AES structural condition holds deterministically. Cross-orientation independence/union approximations are author assumptions."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-84b60574f3ca2346-2019",
+      "locator": "PDF pp.4–5 round convention; pp.13–16 Section 4, Propositions 6–8 and Algorithm 2; p.18 Appendix B Algorithm 3 (property 2).",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Targeted primary result statements and accounting checked; not a complete-paper proof audit."
+    },
+    {
+      "source_id": "aes-paper-84b60574f3ca2346-2019",
+      "locator": "CompletePDF1–24 full audit;[local audit reference not distributed]",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete registered primary edition read. Inventory/forward gates and scientific correctness are separate; see exact localized conflicts."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Scientific follow-up: Complete24-page publisher read. Add7discrete distinguisher endpoints and3support properties; retain unknown-single-key setting and modified AK0/AK5 targets. Local-normal error arithmetic, counters/sorting, Algorithm3 and AppendixC source conflicts remain. Complete inventory and bounded forward check, not proof certification."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/plaintext_model",
+      "label": "Ciphertext active-byte list",
+      "description": "The intended eight-byte structure is not consistently enumerated in Proposition 8.",
+      "observations": [
+        {
+          "source_id": "aes-paper-84b60574f3ca2346-2019",
+          "locator": "PDF p.16 Proposition 8.",
+          "reported": "Eight listed active positions repeat C[1,2], leaving seven distinct coordinates."
+        },
+        {
+          "source_id": "aes-paper-84b60574f3ca2346-2019",
+          "locator": "PDF p.18 Appendix B Algorithm 3.",
+          "reported": "Each structure contains 2^64 ciphertexts (eight active bytes)."
+        }
+      ]
+    },
+    {
+      "field": "/techniques",
+      "label": "Tuple indicator indexing",
+      "description": "Appendix pseudocode does not implement the two-component missing-tuple test stated in Proposition 8.",
+      "observations": [
+        {
+          "source_id": "aes-paper-84b60574f3ca2346-2019",
+          "locator": "PDF p.16 Proposition 8.",
+          "reported": "Track two-byte tuple (delta1,delta2); probability 2^256 (1-2^-16)^(16N)."
+        },
+        {
+          "source_id": "aes-paper-84b60574f3ca2346-2019",
+          "locator": "PDF p.18 Algorithm 3 Steps 3,7,10.",
+          "reported": "65536 indicators, but update index uses only P[s,t] XOR P[s+1,t+1]; the sorted-coordinate list also misprints (s+2,s+2) instead of (s+2,t+2)."
+        }
+      ]
+    }
+  ]
+}

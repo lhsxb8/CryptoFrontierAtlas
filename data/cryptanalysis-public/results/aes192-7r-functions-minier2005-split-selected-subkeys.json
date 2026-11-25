@@ -1,0 +1,162 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-functions-minier2005-split-selected-subkeys",
+  "title": "7-round AES-192: Split-variable selected-subkey recovery",
+  "display": {
+    "name": "Split-variable selected-subkey recovery",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "minier2005-whitening-final-no-mixcolumns-standard-left-shiftrows",
+    "description": "AES-192 on 128-bit blocks. Seven-round prefix with initial whitening and final MixColumns omitted. The source explicitly specifies left-going ShiftRows. The procedure returns kini (four initial bytes), k_tau1 and k_tau2 (twenty last/penultimate-round bytes or linear combinations). This record covers that selected-key-material output."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key or known-key access.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "A 2^32 chosen-plaintext structure varying four initial bytes with the other twelve fixed.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "A random32-bit model for the four internal parameters supports the birthday estimate. Sixteen-value preliminary matches are checked over all256 y values."
+    ]
+  },
+  "techniques": [
+    "collision-of-functions",
+    "meet-in-the-middle",
+    "split-variables"
+  ],
+  "resources": {
+    "time": {
+      "status": "conflict",
+      "reported": "2^144 AES executions in abstract; about2^144 cheaper operations in Section5.3",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The abstract and detailed body use different native units. Data acquisition additionally executes the chosen-plaintext oracle2^32 times; no scalar end-to-end conversion is selected."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "One four-byte structure, reused throughout the search."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "A2^80-entry table of16-byte tuples, plus observations and lookup storage; peak not priced",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The source describes the split-search table but does not give a complete peak-storage budget."
+    },
+    "preprocessing": {
+      "status": "qualitative",
+      "reported": "Ciphertext-dependent per-kini/per-c-pair tables inside the search",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No independent complete preprocessing budget is separately stated."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "heuristic-selected-key-material-recovery",
+    "value": 0.5,
+    "description": "The source estimates about one-half chance that the sampled c values yield a useful function collision and return kini,k_tau1,k_tau2. This metric concerns the explicitly returned key material."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Printed pp.23–26 Section5, especially the p.25 returned tuple and p.26 budget",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-author",
+      "locator": "Printed pp.23–26 Section5, especially the p.25 returned tuple and p.26 budget",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Both complete PDF1–11/printed16–26; Sections3–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Primary-text claims are catalogued by target and scope. Full attacks, cost estimates and global success are not independently reproduced."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "Headline versus detailed operation units",
+      "description": "Both inspected copies use AES executions in the abstract but cheaper operations in the detailed attack accounting.",
+      "observations": [
+        {
+          "source_id": "minier2005-three-rounds-proceedings",
+          "locator": "Printed p.16 abstract and Introduction",
+          "reported": "The recalled bottleneck attack uses2^144 AES/cipher executions."
+        },
+        {
+          "source_id": "minier2005-three-rounds-proceedings",
+          "locator": "Printed p.26 Section5.3",
+          "reported": "The second step uses about2^144 operations less expensive than AES executions."
+        },
+        {
+          "source_id": "minier2005-three-rounds-author",
+          "locator": "Printed p.16 abstract and Introduction",
+          "reported": "The recalled bottleneck attack uses2^144 AES/cipher executions."
+        },
+        {
+          "source_id": "minier2005-three-rounds-author",
+          "locator": "Printed p.26 Section5.3",
+          "reported": "The second step uses about2^144 operations less expensive than AES executions."
+        }
+      ]
+    }
+  ]
+}

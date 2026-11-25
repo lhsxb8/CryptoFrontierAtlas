@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+  \node[accent,minimum width=2.7cm,minimum height=1.6cm] (init) at (1,0) {$\mathrm{IV}\Vert K\Vert N$\\$p[12]$\\$\oplus(0^{192}\Vert K)$};
+  \node[box,minimum width=2.7cm,minimum height=1.6cm] (ad) at (4.7,0) {Absorb padded AAD\\$p[8]$ after each block\\Skip if AAD is empty};
+  \node[box,minimum width=2.7cm,minimum height=1.6cm] (msg) at (8.4,0) {Absorb plaintext\\Read ciphertext\\$p[8]$ between blocks};
+  \node[accent,minimum width=2.7cm,minimum height=1.6cm] (fin) at (12.1,0) {Inject key\\$p[12]$\\Extract $128$-bit tag};
+  \draw[wire] (init) -- (ad); \draw[wire] (ad) -- (msg); \draw[wire] (msg) -- (fin);
+  \node[note] at (1,1.7) {Initialization}; \node[note] at (4.7,1.7) {Associated data};
+  \node[note] at (8.4,1.7) {Encryption}; \node[note] at (12.1,1.7) {Finalization};
+  \node[note,text width=3.2cm] at (4.7,-1.65) {Then domain separation:\\$S\gets S\oplus(0^{319}\Vert1)$};
+  \node[note,text width=3.2cm] at (8.4,-1.65) {Pad final partial/empty block; no $p[8]$ after it.};
+  \node[note,text width=3.4cm] at (12.1,-1.65) {$S\gets p[12](S\oplus(0^{128}\Vert K\Vert0^{64}))$\\$T=S[192{:}319]\oplus K$};
+  \node[note] at (6.5,-2.8) {NIST 2025: $320$-bit state, $128$-bit rate, little-endian bit order\quad IV $=\mathtt{0x00001000808c0001}$};
+\end{tikzpicture}

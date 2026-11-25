@@ -1,0 +1,182 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-10r-related-key-boomerang-fgl2009",
+  "title": "FGL09 10-round AES-256 / aes256-10r-related-key-boomerang-fgl2009",
+  "display": {
+    "name": "Probabilistic related-key boomerang",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 10,
+    "full_round": false,
+    "round_convention": "fgl09-10r-final-no-mc",
+    "description": "10 nonlinear AES rounds with the initial whitening addition and no final MixColumns. The recovered material is specified below.The explicit filter recovers K0 bytes 0,5,10,15 and 3,4,9,14 plus K9 byte 4 (72 subkey bits). Section 5 additionally guesses K10 bytes 1,4,11,14 and an unknown 8-bit difference f."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "XOR-related key quartets Ka,Kb=Ka XOR delta*,Kc=Ka XOR delta-prime,Kd=Ka XOR delta* XOR delta-prime; Section 4 chooses candidate b differences and repeats over key trials.",
+    "key_population": "general secret key",
+    "plaintext_model": "Section 4.4 requires 2^42.5 plaintext structures of 2^64 elements with adaptive inverse queries; Section 4.5 headline total 2^67 is disputed below.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The prescribed nonlinear key-differential path occurs with probability 2^-14; this is a key-path condition, not attack success.",
+      "The source uniform/Poisson filtering model is used; no independent attack implementation was executed."
+    ],
+    "key_budget": {
+      "reported": "2^15.5",
+      "log2": 15.5,
+      "unit": "distinct_related_keys",
+      "distinct_key_count": null,
+      "note": "Table 1 headline key budget; the fractional exponent is not rounded to a fabricated integer. Section 4.5 separately discusses 2^7.5 key trials and 127 b candidates."
+    }
+  },
+  "techniques": [
+    "related-key-boomerang",
+    "probabilistic-key-differential",
+    "partial-subkey-filter"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^182.67",
+      "log2": 182.67,
+      "unit": "10-round-aes256-encryptions",
+      "qualifier": "estimate",
+      "note": "Ten-round extension filtering headline2^32*2^8*(9/10)*innerT. The inner nine-round procedure has a separate184-bit completion, but the extension adds32 last-round bits and gives no joint completion/dependence budget. Do not transplant184 unchanged into ten-round total work."
+    },
+    "data": {
+      "status": "conflict",
+      "reported": "2^67 (headline); 2^42.5 structures of 2^64 texts in algorithm",
+      "log2": null,
+      "unit": "mixed-adaptive-plaintext-and-ciphertext-queries",
+      "qualifier": "unspecified",
+      "note": "The headline omits the visibly required2^42.5 structure multiplicity. Four oracles per2^64-text structure give2^66; multiplying by2^42.5 gives2^108.5 only under a literal non-reuse, fixed-quartet interpretation. Key-trial/reuse aggregation remains unresolved; no corrected total is assigned."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical resource budget is supplied for this endpoint."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical resource budget is supplied for this endpoint."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "source-poisson-subkey-identification",
+    "value": 0.8,
+    "description": "Source Section 4.5 reports about 0.8 from Pr(Poisson(3)>=2), but Step 3.6.2 accepts more than 2 quartets. Keep the reported value with its unresolved threshold conflict; ten-round analysis inherits the inner attack without a fresh success derivation. Conditional arithmetic: source Poisson(3)>=2 gives0.8008517265; literal algorithm >2 gives0.5768099189. Neither is inserted as independently verified AES success."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-663770622f122fdb-2009",
+      "locator": "PDF pp.2–3 Table 1 and round convention; pp.6–7 key model; pp.10–12 Sections 4.4–5, all filtering/output, completion and budget passages.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Primary table and defining algorithm/accounting passages checked; partial outputs and native units retained."
+    },
+    {
+      "source_id": "aes-paper-663770622f122fdb-2009",
+      "locator": "Complete PDF1–13/printed60–72; PDF10–12 Sections4.4–5 and Table1.",
+      "fields": [
+        "/resources",
+        "/success",
+        "/assessment"
+      ],
+      "interpretation": "Complete text and endpoint inventory checked. Headline values retained; exact conditional arithmetic does not repair accounting or prove actual attack success."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This record prices the stated endpoint; it does not append an unreported master-key completion budget.",
+    "Full-key pricing requires joint analysis of the ten-round added guesses and inner completion; the nine-round184-bit remainder is not an unchanged ten-round completion budget."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/data",
+      "label": "Structure aggregation",
+      "description": "The algorithm and headline do not use the same visibly accounted number of structures; preserve both instead of manufacturing a corrected total.",
+      "observations": [
+        {
+          "source_id": "aes-paper-663770622f122fdb-2009",
+          "locator": "PDF p.10 Section 4.4 Steps 1–3.2; p.11 Section 4.5.",
+          "reported": "2^42.5 structures of 2^64 plaintexts; each quartet of structures analyzed separately."
+        },
+        {
+          "source_id": "aes-paper-663770622f122fdb-2009",
+          "locator": "PDF pp.11–12 Section 4.5; p.2 Table 1.",
+          "reported": "Data computed as 2^2 * 2^64 per structure, final headline 2^67 adaptive chosen plaintexts and ciphertexts."
+        }
+      ]
+    },
+    {
+      "field": "/success",
+      "label": "Acceptance threshold",
+      "description": "The probability derivation and algorithm use different quartet thresholds; neither is silently substituted for the other.",
+      "observations": [
+        {
+          "source_id": "aes-paper-663770622f122fdb-2009",
+          "locator": "PDF p.11 Section 4.4 Step 3.6.2.",
+          "reported": "Accept when more than 2 boomerang quartets pass the test."
+        },
+        {
+          "source_id": "aes-paper-663770622f122fdb-2009",
+          "locator": "PDF p.12 Section 4.5 success paragraph.",
+          "reported": "Poisson mean 3, accept Z>=2, success approximately 0.8."
+        }
+      ]
+    },
+    {
+      "field": "/setting/plaintext_model",
+      "label": "Structure orientation",
+      "description": "The listed forward difference and the attack input structure have complementary variable positions; the source does not reconcile that orientation in the procedure.",
+      "observations": [
+        {
+          "source_id": "aes-paper-663770622f122fdb-2009",
+          "locator": "PDF p.7 Section 4.1 forward input difference.",
+          "reported": "Alpha has nonzero bytes 0,3,4,5,9,10,14,15."
+        },
+        {
+          "source_id": "aes-paper-663770622f122fdb-2009",
+          "locator": "PDF p.10 Section 4.4 Step 1.",
+          "reported": "The same bytes 0,3,4,5,9,10,14,15 are fixed in each structure; the complementary eight bytes vary."
+        }
+      ]
+    }
+  ]
+}

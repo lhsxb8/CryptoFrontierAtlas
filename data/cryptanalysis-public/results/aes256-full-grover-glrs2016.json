@@ -1,0 +1,259 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-grover-glrs2016",
+  "title": "AES-256 logical-circuit Grover key search (GLRS2016)",
+  "display": {
+    "name": "logical-circuit Grover key search",
+    "method": "quantum_search"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full 14-round AES-256 key search from 5 suitable classical known plaintext/ciphertext pairs. Table 5 estimates the complete Grover search, not one reversible AES evaluation or a physical machine."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "classical-known-plaintext-ciphertext-pairs",
+      "local-reversible-aes-computation"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret AES master key; no related-key oracle.",
+    "key_population": "All master keys in the stated attack model; no weak-key restriction is specified.",
+    "plaintext_model": "5 suitable distinct known plaintext/ciphertext pairs under the same key; no superposition access to the secret-key encryption device.",
+    "computation": "quantum",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Approximately floor((pi/4) * 2^128) Grover iterations under the unique-solution assumption.",
+      "The plaintext/ciphertext observations are classical. Reversible evaluation under a trial key is a local computation, not a coherent secret-key oracle.",
+      "The estimates use logical circuit counts. No conversion to seconds, physical qubits or a demonstrated AES attack is made.",
+      "The four-T measurement/feed-forward Toffoli alternative mentioned in the introduction is not the implemented unitary circuit tabulated here."
+    ],
+    "quantum_model": {
+      "query_model": "classically_known_pairs",
+      "cost_level": "logical_circuit",
+      "gate_set": "Clifford+T logical gates, with the unitary seven-T Toffoli decomposition used for AES circuits; controlled phase/comparison gates use the source's separate decompositions.",
+      "routing": "Arbitrary interactions between logical qubits; no nearest-neighbor placement or routing overhead is costed.",
+      "error_correction": "No physical error-correction, magic-state-factory or hardware runtime cost is included.",
+      "oracle_parallelism": "5 parallel AES boxes per candidate-key predicate; compute and uncompute each box. Grover iterations remain sequential.",
+      "solution_assumption": "Exactly one marked key is assumed after using 5 suitable distinct pairs. Section 3.1 motivates uniqueness heuristically; it is not a proof for actual AES."
+    }
+  },
+  "techniques": [
+    "grover-search",
+    "reversible-aes-oracle",
+    "logical-clifford-t-resources"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No physical running time is specified. Logical gate counts and circuit depths are separate resource coordinates, not classical AES-operation equivalents."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "5",
+      "log2": 2.321928094887362,
+      "unit": "classical-known-plaintext-ciphertext-pairs",
+      "qualifier": "exact",
+      "note": "Section 3.1 supplies this pair count for a heuristically unique key. Suitable distinct pairs are assumed; this is not a secret-key quantum query count."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Classical control/storage memory is not separately priced. Logical qubits are recorded as their own coordinate, not as bytes."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing cost is tabulated for the complete attack."
+    },
+    "t_gates": {
+      "status": "conflict",
+      "reported": "1.41 × 2^151",
+      "log2": null,
+      "unit": "logical-T-gates",
+      "qualifier": "estimate",
+      "note": "Table 5 reports 1.41 × 2^151 T gates. On p.32 the phase operation uses 2024 Toffoli gates or 8108 T gates, but p.41 uses 2024 as a T-gate addend. The same accounting mismatch occurs in arXiv v1. These are not interchangeable units; no corrected total is substituted."
+    },
+    "clifford_gates": {
+      "status": "reported",
+      "reported": "1.83 × 2^151",
+      "log2": 151.87184364850933,
+      "unit": "logical-Clifford-gates",
+      "qualifier": "estimate",
+      "note": "Table 5 complete-search estimate; Section 3.4 explicitly omits some Clifford overhead from controlled operations."
+    },
+    "t_depth": {
+      "status": "reported",
+      "reported": "1.44 × 2^144",
+      "log2": 144.52606881166759,
+      "unit": "logical-T-layers",
+      "qualifier": "estimate",
+      "note": "Table 5 complete-search depth; parallel AES boxes are counted by depth rather than summed as serial calls. The source neglects some non-dominant overhead."
+    },
+    "circuit_depth": {
+      "status": "reported",
+      "reported": "1.57 × 2^145",
+      "log2": 145.6507645591169,
+      "unit": "logical-circuit-layers",
+      "qualifier": "estimate",
+      "note": "Table 5 complete-search overall depth, not one AES evaluation or wall-clock time. Some non-dominant overhead is neglected."
+    },
+    "logical_qubits": {
+      "status": "reported",
+      "reported": "6681",
+      "log2": 12.705848343508945,
+      "unit": "logical-qubits",
+      "qualifier": "estimate",
+      "note": "Table 5 simultaneous logical-qubit estimate (5 AES boxes plus one ancilla). This is not a physical-qubit count."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "key-recovery-success-probability",
+    "value": null,
+    "description": "Section 2 states high/constant success under the unique-marked-key assumption, without a numerical whole-attack probability; no success value is inferred from the pair-count heuristic."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "glrs2016-grover-proceedings",
+      "locator": "PQCrypto2016 pp.29–33, Sections 1–3.1; pp.39–41, Section 3.4 and Table 5",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Complete-search resources are kept separate from reversible AES component costs. Gate/depth coefficients, classical observations, unique-solution assumptions and circuit-level exclusions are retained."
+    },
+    {
+      "source_id": "glrs2016-grover-proceedings",
+      "locator": "Printed pp.32 and 41; Table 5 versus the adjacent T-count prose",
+      "fields": [
+        "/resources/t_gates",
+        "/assessment",
+        "/limitations"
+      ],
+      "interpretation": "Rendered publisher pages confirm the T/Toffoli addend mismatch and the additional AES-192 exponent/equality discrepancy. The corpus records the source claims rather than repairing them."
+    },
+    {
+      "source_id": "glrs2015-grover-arxiv-v1",
+      "locator": "arXiv:1512.04965v1, 15 December 2015, pp.3–4 and 10–11; Table 5",
+      "fields": [
+        "/resources/t_gates"
+      ],
+      "interpretation": "Version-comparison passages preserve the same phase-unit mismatch and AES-192 prose/table discrepancy; the preprint does not resolve these conflicts."
+    },
+    {
+      "source_id": "glrs2016-grover-proceedings",
+      "locator": "Complete PDF pp.1–15 / printed pp.29–43; in particular Sections 2–3.4, Eq.(2), Tables 1–5. Independent raw-first full audit, 2026-10-27.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts",
+        "/assessment",
+        "/limitations"
+      ],
+      "interpretation": "Full section/table inventory distinguishes inherited generic Grover search from novel reversible AES/circuit resource estimates. The historical endpoint remains excluded from active consolidation. The pair-count uniqueness argument is heuristic and success remains unknown numerically; no implementation cost is converted to encryption calls."
+    },
+    {
+      "source_id": "glrs2015-grover-arxiv-v1",
+      "locator": "Complete arXiv:1512.04965v1 PDF pp.1–13, 15 December 2015; Sections 2–4 and Tables 1–5. Separate-version independent full read, 2026-10-27.",
+      "fields": [
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts",
+        "/assessment"
+      ],
+      "interpretation": "Separate edition confirms the same algorithmic/implementation division and source conflicts. Rendered proceedings p.41 also floors the Grover iteration count; extracted-text loss of floor brackets is not a version difference."
+    },
+    {
+      "source_id": "glrs2016-grover-proceedings",
+      "locator": "PDF p.4 / printed p.32, Section 2 phase-operation cost",
+      "fields": [
+        "/resources/t_gates",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact source-local or later-primary observation supporting the attached unresolved field."
+    },
+    {
+      "source_id": "glrs2016-grover-proceedings",
+      "locator": "PDF p.13 / printed p.41, Section 3.4 complete-search T-count prose",
+      "fields": [
+        "/resources/t_gates",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact source-local or later-primary observation supporting the attached unresolved field."
+    },
+    {
+      "source_id": "glrs2015-grover-arxiv-v1",
+      "locator": "arXiv v1 PDF pp.3 and 10–11, Sections 2 and 3.4",
+      "fields": [
+        "/resources/t_gates",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact source-local or later-primary observation supporting the attached unresolved field."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "A logical quantum resource estimate, not a classical black-box cryptanalytic shortcut or a physically executed break.",
+    "Gate totals contain a source accounting conflict; T-gate scalar normalization is intentionally absent.",
+    "No physical error correction, routing, state distillation, hardware runtime or exact numerical attack success is supplied.",
+    "Full result inventory covers component circuits, S-box alternatives and mentioned search schedules. Component circuits and complete-search logical resource estimates are outside active implementation scope; unimplemented inherited search alternatives are not new AES attack configurations. No circuit or attack code was executed."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/t_gates",
+      "label": "Diffuser Toffoli count reused as T count",
+      "description": "The body uses a Toffoli-count quantity as a T-gate addend although Section 2 separately gives a different T count. Both checked editions retain this accounting conflict. Original Table 5 values remain unchanged; no revised gate total is substituted.",
+      "observations": [
+        {
+          "source_id": "glrs2016-grover-proceedings",
+          "locator": "PDF p.4 / printed p.32, Section 2 phase-operation cost",
+          "reported": "2024 Toffoli gates; 8108 T gates for key size 256."
+        },
+        {
+          "source_id": "glrs2016-grover-proceedings",
+          "locator": "PDF p.13 / printed p.41, Section 3.4 complete-search T-count prose",
+          "reported": "2024 is used as the diffuser T-count addend."
+        },
+        {
+          "source_id": "glrs2015-grover-arxiv-v1",
+          "locator": "arXiv v1 PDF pp.3 and 10–11, Sections 2 and 3.4",
+          "reported": "The preprint preserves the same Toffoli/T addend mismatch."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+  \node (left) at (0,2) {$D_1$};
+  \node[xor] (key) at (1.6,2) {$+$};
+  \node[accent] (s) at (4.4,2) {$8$ byte S-boxes};
+  \node[box] (p) at (7.6,2) {Linear map $P$};
+  \node[xor] (xor) at (10.2,2) {$+$};
+  \node (out) at (11.7,2) {$D'_2$};
+  \draw[wire] (left) -- (key); \draw[wire] (key) -- (s); \draw[wire] (s) -- (p); \draw[wire] (p) -- (xor); \draw[wire] (xor) -- (out);
+  \node (k) at (1.6,3.3) {$k_i$}; \draw[keywire] (k) -- (key);
+  \node (right) at (10.2,3.3) {$D_2$}; \draw[wire] (right) -- (xor);
+  \node[note] at (6,.9) {Odd rounds update $D_2\gets D_2\oplus F(D_1,k_i)$; even rounds exchange the roles.};
+  \node[phase] at (6,-.1) {Inter-group keyed layers on $64$-bit halves};
+  \node[box,minimum width=5.6cm] at (2.9,-1.7) {$\mathrm{FL}(x_L,x_R;k_L,k_R)$\\$y_R=x_R\oplus((x_L\land k_L)\rotl1)$\\$y_L=x_L\oplus(y_R\lor k_R)$};
+  \node[box,minimum width=5.6cm] at (9.3,-1.7) {$\mathrm{FL}^{-1}(y_L,y_R;k_L,k_R)$\\$x_L=y_L\oplus(y_R\lor k_R)$\\$x_R=y_R\oplus((x_L\land k_L)\rotl1)$};
+  \node[note] at (6,-3.1) {Subscripts $L,R$ in FL denote $32$-bit words.\quad $\rotl$: left rotation\quad $\oplus$: XOR};
+\end{tikzpicture}

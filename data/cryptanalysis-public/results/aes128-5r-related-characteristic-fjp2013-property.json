@@ -1,0 +1,169 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-5r-related-characteristic-fjp2013-property",
+  "title": "FJP13 5-round AES-128 Instantiated related-key characteristic",
+  "display": {
+    "name": "Instantiated related-key characteristic",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "fjp13-5r-source-boundary",
+    "description": "AppendixE source boundary AK0 through AK5: 5 full SB/SR/MC rounds and terminal key addition."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": 2,
+    "target_selection": "designated_target",
+    "key_relation": "Two XOR-related keys with the concrete characteristic differences of the relevant appendix.",
+    "key_population": "general secret key",
+    "plaintext_model": "No online data experiment is asserted: this is a property of the source-defined truncated or instantiated characteristic model.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "value": null,
+    "metric": "structural-property",
+    "description": "Probability and counts belong to the mathematical statement, not attack success or resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-9ed182297743bb01-2013",
+      "locator": "PDF pp.14–15 Theorem3/Table2; related concrete appendix B–E.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-9ed182297743bb01-2013",
+      "locator": "Complete PDF pp.1–21 / printed pp.183–203, all Sections1–5, Tables1–3 and AppendicesA–E; independent raw-first full review2026-10-27.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/property",
+        "/assessment",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete result inventory distinguishes abstract-topology minima, instantiated characteristic probabilities and bounds, the chosen-key9r construction, output multiplicity, generic ideal-cipher baseline and offline search-tool resources. No attack/search code executed; bounded forward/version checks do not establish inaccessible revised-PDF contents."
+    },
+    {
+      "source_id": "aes-paper-9ed182297743bb01-2013",
+      "locator": "PDF p.15 / printed p.197, Table2; PDF p.21 / printed p.203, AppendixE/Figure12",
+      "fields": [
+        "/property/statement",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact located observation retained independently of unresolved source fields; no silent replacement."
+    },
+    {
+      "source_id": "aes-paper-9ed182297743bb01-2013",
+      "locator": "PDF p.15 / printed p.197, first paragraph",
+      "fields": [
+        "/property/statement",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact located observation retained independently of unresolved source fields; no silent replacement."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The published5r probability is source-reported, not independently reproduced from the abbreviated15-of17 explanation. A bounded finite coefficient check is not full trail-probability validation."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "Table2 and AppendixE report a5-round instantiated AES-128 related-key characteristic with17 active S-boxes and maximum log2 probability−105, improving the earlier active-S-box-only estimate−102. The accompanying15-of17 maximal-transition sentence does not by itself reproduce−105; the reported value is retained, not replaced by reviewer arithmetic.",
+    "quantifier": "Source search and concrete difference-system resolution for related-key differential characteristics.",
+    "scope": "A characteristic probability, not a differential-hull bound, numeric attack success, or a recovery budget.",
+    "parameters": [],
+    "validation": {
+      "basis": "analytical",
+      "description": "Author analytical construction/theorem inspected at the cited primary locator; no independent full proof reproduction."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property/statement",
+      "label": "Reported5r probability versus incomplete maximal-transition explanation",
+      "description": "Conference Table2/Figure12 state2^-105, while adjacent prose says15 of17 transitions attain2^-6. If the other two are ordinary nonzero AES S-box transitions of probability2^-7, their simple product is2^-104, not2^-105. This flags an incomplete/inconsistent explanation, not a proved corrected characteristic probability: correlations or additional constraints were not reconstructed. An official2015 ePrint typo-correction revision exists but its PDF was inaccessible on two routes. Keep the published−105 and seek the revised defining passage.",
+      "observations": [
+        {
+          "source_id": "aes-paper-9ed182297743bb01-2013",
+          "locator": "PDF p.15 / printed p.197, Table2; PDF p.21 / printed p.203, AppendixE/Figure12",
+          "reported": "17 active S-boxes; log2(p)=−105."
+        },
+        {
+          "source_id": "aes-paper-9ed182297743bb01-2013",
+          "locator": "PDF p.15 / printed p.197, first paragraph",
+          "reported": "15 out of17 S-boxes can be set to the maximal differential probability; PDF p.14 gives p_max=2^-6."
+        }
+      ]
+    }
+  ]
+}

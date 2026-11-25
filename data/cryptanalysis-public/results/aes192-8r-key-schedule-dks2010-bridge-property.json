@@ -1,0 +1,181 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-key-schedule-dks2010-bridge-property",
+  "title": "8-round AES-192: Distant key-word bridge",
+  "display": {
+    "name": "Distant key-word bridge",
+    "method": "mitm"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "dks-aes192-key-schedule-zero-based",
+    "description": "Standard AES-192 expansion through subkey k7=W32||W33||W34||W35, with whitening k_-1=W0||W1||W2||W3."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed standard AES schedule; no related-key oracle.",
+    "key_population": "General fixed key; no weak-key subset is specified.",
+    "plaintext_model": "Key-schedule identity; no plaintexts or encryption oracle are required.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "key-bridging",
+    "key-schedule-relations"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement, not an attack-resource measurement."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement, not an attack-resource measurement."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement, not an attack-resource measurement."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement, not an attack-resource measurement."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-statement",
+    "value": null,
+    "description": "The statement concerns structure or a conditional statistical model."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dks2010-single-key-proceedings",
+      "locator": "Printed p.169 Section4.3 Observation6 and footnote8",
+      "fields": [
+        "/property",
+        "/target",
+        "/setting",
+        "/field_conflicts",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal"
+      ],
+      "interpretation": "Full source version read and compared. Matching statements share one scoped record; changed claims and source-specific discrepancies retain their own identities."
+    },
+    {
+      "source_id": "dks2015-single-key-journal",
+      "locator": "Printed pp.410–412 Section5.1 Observation6, Equations1–3 and footnote8",
+      "fields": [
+        "/property",
+        "/target",
+        "/setting",
+        "/field_conflicts",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal"
+      ],
+      "interpretation": "Full source version read and compared. Matching statements share one scoped record; changed claims and source-specific discrepancies retain their own identities."
+    },
+    {
+      "source_id": "dks2015-single-key-journal",
+      "locator": "PDF17–18/printed413–414 Section5.2.2 application scope.",
+      "fields": [
+        "/property"
+      ],
+      "interpretation": "Exact primary passage checked in the full-audit batch; source claims and reviewer component checks are separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Local identity/counting tests cover components; full attack searches and success rates have not been reproduced.",
+    "Full exact-edition inventory checked; numerical attack execution is not claimed."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "W27=W32 XOR W33, W23=W33 XOR W35 and W3=W27 XOR SB(ROTL8(W23)) XOR RCON4.",
+    "quantifier": "For every standard AES-192 expanded key. This is an exact word dependency; the printed footnote byte example is assessed separately.",
+    "scope": "Three distant schedule words determine whitening word3. In the specified eight-round attack, the bridge saves8 guessed bits on top of24 other schedule bits.",
+    "parameters": [
+      {
+        "name": "Distant supplied words",
+        "reported": "W32,W33,W35",
+        "meaning": "Columns0,1,3 of k7 in the paper's zero-based convention."
+      },
+      {
+        "name": "Recovered whitening word",
+        "reported": "W3",
+        "meaning": "One full32-bit master-key word."
+      },
+      {
+        "name": "Attack guessing reduction",
+        "reported": "2^32",
+        "meaning": "24bits from nearby schedule relations plus8bits from the distant bridge."
+      },
+      {
+        "name": "External related-key applications",
+        "reported": "First variant data2^64.5→2^64.43; other two only qualitative small benefits.",
+        "meaning": "Section5.2.2 studies two-related-secret-key ZWZF07 attacks. First two whitening bytes can be bridged, other variants one; no general eight-bit whole-attack speedup or extra exact vector."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "512 valid random AES-192 schedules and the expanded Eq1 family pass. A separate valid-key pair witnesses the printed footnote coordinate problem."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property/validation",
+      "label": "Key-bridge footnote byte coordinates",
+      "description": "The word recurrence is verified, but footnote8 lists k7 bytes0,4,7,15. For whitening byte15 used in Section7, the recurrence instead requires k7[3],k7[7],k7[4],k7[12]. A local pair of valid AES-192 schedules preserves the four footnote bytes and changes whitening byte15.",
+      "observations": [
+        {
+          "source_id": "dks2010-single-key-proceedings",
+          "locator": "Printed p.169 Observation6 proof",
+          "reported": "W3=W27 XOR SB(ROTL8(W23)) XOR RCON4; W27=W32 XOR W33; W23=W33 XOR W35."
+        },
+        {
+          "source_id": "dks2015-single-key-journal",
+          "locator": "Printed p.411 footnote8 and p.419 whitening-byte15 check",
+          "reported": "Footnote8 lists0,4,7,15 of k7, whereas Section7 checks byte15 of k_-1 against the bridge."
+        }
+      ]
+    }
+  ]
+}

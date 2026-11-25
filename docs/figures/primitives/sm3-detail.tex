@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+  \node[phase] at (6,4.1) {Compression step $j=0,\ldots,\AtlasLastStep$ on $(A,B,C,D,E,F,G,H)$};
+  \node[box,minimum width=11.8cm] (ss) at (6,2.9) {$SS_1=((A\rotl12)\boxplus E\boxplus(T_j\rotl(j\bmod32)))\rotl7$\\$SS_2=SS_1\oplus(A\rotl12)$};
+  \node[accent,minimum width=5.4cm] (left) at (2.9,1.15) {$TT_1=FF_j(A,B,C)\boxplus D$\\$\phantom{TT_1={}}\boxplus SS_2\boxplus W'_j$};
+  \node[accent,minimum width=5.4cm] (right) at (9.1,1.15) {$TT_2=GG_j(E,F,G)\boxplus H$\\$\phantom{TT_2={}}\boxplus SS_1\boxplus W_j$};
+  \draw[wire] (ss.south) -- ++(0,-.35) -| (left.north);
+  \draw[wire] (ss.south) -- ++(0,-.35) -| (right.north);
+  \node[box,minimum width=5.4cm] (lu) at (2.9,-.5) {$(A,B,C,D)$\\$\gets(TT_1,A,B\rotl9,C)$};
+  \node[box,minimum width=5.4cm] (ru) at (9.1,-.5) {$(E,F,G,H)$\\$\gets(P_0(TT_2),E,F\rotl19,G)$};
+  \draw[wire] (left) -- (lu); \draw[wire] (right) -- (ru);
+  \node[note,text width=12cm] at (6,-1.8) {$P_0(x)=x\oplus(x\rotl9)\oplus(x\rotl17)$\qquad $P_1(x)=x\oplus(x\rotl15)\oplus(x\rotl23)$\\For $j<16$: $FF_j=GG_j=X\oplus Y\oplus Z$; thereafter $FF_j=\mathrm{Maj}$, $GG_j=\mathrm{Ch}$.};
+  \node[box,minimum width=11.8cm] at (6,-3.2) {$W_j=P_1(W_{j-16}\oplus W_{j-9}\oplus(W_{j-3}\rotl15))\oplus(W_{j-13}\rotl7)\oplus W_{j-6}$\\$16\le j\le67$; $W_0,\ldots,W_{15}$ from the message; $W'_j=W_j\oplus W_{j+4}$};
+  \node[note] at (6,-4.25) {$\boxplus$: addition modulo $2^{32}$\quad $\rotl$: left rotation\quad All tuple assignments use the pre-step words.};
+\end{tikzpicture}

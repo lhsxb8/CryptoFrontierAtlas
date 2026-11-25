@@ -1,0 +1,156 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-integral-fklssww2001-herd-near-codebook-cp",
+  "title": "8-round AES-192: herd partial sums, ordered aes-192 for selected subkey recovery",
+  "display": {
+    "name": "Herd partial sums, ordered columns",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "fklssww2001-whitening-rounds-1-to-r-final-no-mixcolumns",
+    "description": "AES-192 reduced to 8 rounds on 128-bit blocks; initial AddRoundKey k^(0), then rounds 1 through 8, with no MixColumns in the final round. The chosen-byte test uses four initial-key bytes, all 16 bytes of k^(8), and two additional bytes of k'^(7); the remaining needed bytes follow from the AES-192 schedule."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown master key with the standard AES expansion; no related-key access.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "Selected near-codebook of 2^128-2^119 distinct plaintexts, forming about 2^23 undamaged herds of 2^104 texts.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Wrong-subkey rejection uses the paper's heuristic model for zero XOR sums; no numerical whole-procedure success rate is supplied.",
+      "The paper presents these constructions as attacks on Rijndael. This record prices the explicitly analyzed selected-subkey filter; complete master-key reconstruction and any repeated filter applications are left for a separate completion-budget review.",
+      "Guess three final-round columns first, derive two useful equivalent round-seven bytes, and apply the counter reduction before guessing the fourth column. The alternative ordering is slower."
+    ]
+  },
+  "techniques": [
+    "integral-square",
+    "partial-sums",
+    "herd-partition",
+    "key-schedule-dependencies"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "about 2^188",
+      "log2": 188,
+      "unit": "fklssww2001-trial-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "The source's carefully interleaved AES-192 key guessing gives a 2^16 reduction from the AES-256 2^204 estimate. The separate 2^196 figure belongs to an inferior ordering."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^128-2^119",
+      "log2": 127.99717948093762,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "The near-codebook is acquired once. Testing multiple herds does not mean re-acquiring this codebook once per herd."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "Uses the eight-round herd/counter construction; specialized AES-192 peak not separately re-stated",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The general construction quotes 2^104 bits, then the AES-192 variant changes the order of intermediate counter reductions. The specialized peak is not separately quantified, so no new numeric peak is inferred."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Table preparation and setup are described within the construction but not separately priced for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "selected-subkey-filter-recovery",
+    "value": null,
+    "description": "The exact partial_key_recovery endpoint has no numerical joint success. The zero sum over the entire unpartitioned codebook also holds for wrong guesses and is not a distinguisher; the attack uses correctly partitioned complete herds. The near-codebook construction leaves about half of the herds undamaged, a coverage count rather than a random-selection success rate. The source discusses about26 herd checks for a unique candidate and different AES192/256 schedule costs, without a quantified wrong-key distribution or full-output probability.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit; preserve resource parameters, existing conflicts and full-audit gates. Local source models and conditional relations do not certify whole-output success."
+    },
+    "components": [
+      {
+        "metric": "correct-key-complete-herd-balanced-sum",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF6–9 Sections2.5–2.6: within a complete herd formed using the correct initial key hypothesis, the targeted byte of b5 sums to zero. For near-codebook data this is conditional on selecting an undamaged herd; it is not a claim about randomly choosing one."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Section 2.6 pp.219–221; Table 1 p.214",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The budget is tied to the stated selected-subkey computation and native operation units. Broad headline claims are retained in the audit report without silently converting a selected-subkey budget into complete master-key recovery."
+    },
+    {
+      "source_id": "fklssww2001-integral-author",
+      "locator": "Section 2.6, document pp.7–9; Table 1, document p.2",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The corresponding construction and numerical endpoint agree with the proceedings in this author-hosted edition; version identity and page numbering remain separate."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Both complete editions: proceedingsPDF1–18/printed213–230 and authorPDF1–19 including finalblank; Sections2–5, AppendixA and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Proceedings PDF6–9 / printed218–221 Sections2.5–2.6; Table1 onPDF2.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The exact partial_key_recovery endpoint has no numerical joint success. The zero sum over the entire unpartitioned codebook also holds for wrong guesses and is not a distinguisher; the attack uses correctly partitioned complete herds. The near-codebook construction leaves about half of the herds undamaged, a coverage count rather than a random-selection success rate. The source discusses about26 herd checks for a unique candidate and different AES192/256 schedule costs, without a quantified wrong-key distribution or full-output probability."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The recorded recovery scope is the subkey material explicitly tested by the described procedure. The paper's broader attack headline and completion accounting are tracked separately.",
+    "Resource estimates are analytical; no attack implementation or claimed full-scale experiment was executed for this audit."
+  ],
+  "related_problem_ids": []
+}

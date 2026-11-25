@@ -1,0 +1,159 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-4r-functions-gm2000-birthday-distinguisher",
+  "title": "4-round AES-192: birthday function-collision distinguisher",
+  "display": {
+    "name": "Birthday function-collision distinguisher",
+    "method": "collision"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "gm2000-four-inner-rounds-final-mixcolumns-reflected-columns",
+    "description": "AES-192 on 128-bit blocks, reduced to 4 rounds. The collision is between internal byte-valued functions under the same unknown round keys, not between two AES master keys. Four consecutive inner rounds include MixColumns in every round, under any fixed unknown round-key values. This component applies to each AES key length but is not a prefix-cipher key-recovery result."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "chosen_input_four_inner_round_permutation"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "Four fixed, unknown 128-bit round keys. The structural argument does not use their master-key dependencies, and therefore also applies to keys derived from any of the standard AES key lengths.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "About 2^16 distinct three-byte c values and sixteen distinct y values per c, with the other twelve state bytes fixed.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source describes right-going ShiftRow. Standard AES uses left-going shifts. Reindexing columns by J(r,c)=(r,-c mod 4) conjugates the independent-round-key construction; inputs, outputs and recovered round keys are reflected consistently before standard key expansion. This coordinate normalization is a local structural interpretation, not a complete attack reproduction.",
+      "The four c-dependent internal constants are modeled heuristically as a random 32-bit function of the chosen three-byte c value; collision probabilities use this model."
+    ],
+    "reference_model": "Chosen-input access to four fixed-key inner rounds is compared with a uniformly random permutation on 128-bit blocks, using the same input structures and projected output tests."
+  },
+  "techniques": [
+    "collision-of-functions"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "less than 2^20",
+      "log2": 20,
+      "unit": "gm2000-rijndael-encryption-equivalents",
+      "qualifier": "upper_bound",
+      "note": "The source bounds the distinguisher work by 2^20 reference Rijndael encryptions. Preserve the strict upper-bound statement, not an equality.",
+      "relation": "<"
+    },
+    "data": {
+      "status": "reported",
+      "reported": "about 2^20",
+      "log2": 20,
+      "unit": "chosen-inner-round-input-blocks",
+      "qualifier": "estimate",
+      "note": "About 2^16 choices of c times sixteen y values; these are inputs to the four-round component."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "Lists of sixteen projected bytes for each selected c; peak not itemized",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The collision detector forms and compares the projected output lists. The paper does not state a complete peak-storage count."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The paper does not separately price setup for this endpoint."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "conditional-source-model-distinguishing-advantage-lower-bound",
+    "value": null,
+    "description": "Uses m=2^16 distinct c values and sixteen distinct y values, selected before oracle access, for2^20 queries at the source representative budget. Declare AES when two projected sixteen-byte lists coincide. Under the source random32-bit internal-function heuristic, a birthday collision forces acceptance with probability at least1-exp(-(1-2^-16)/2). This interprets the heuristic literally as jointly independent uniform internal32-bit values at distinct c, not a proven law for the actual structured AES expressions. For the ideal128-bit permutation, balanced byte projection and a union over list pairs bound complete-test false acceptance below2^-96 without assuming independent output lists. Their difference gives the displayed advantage lower bound, approximately0.3934647128. This is distinguishing advantage, not equal-prior classification success. The bound is derived under the author heuristic, not a measured AES rate or a theorem about actual AES. The later seven-round about-one-half claim is not used.",
+    "components": [
+      {
+        "metric": "fixed-two-c-tuples-share-four-internal-constants-source-heuristic",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "Chapter6 Property3: the four c-dependent bytes are heuristically treated as a random32-bit function of c; a fixed pair of distinct c tuples collides with probability2^-32 under that model. Birthday sampling of about2^16 tuples is not a stated numerical whole-test success."
+      },
+      {
+        "metric": "equal-internal-constant-tuples-produce-equal-output-functions",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Properties3–4: for the same actual key constants, equality of the four internal c-dependent bytes makes the y-indexed functions identical, so the16 sampled output combinations match. This is conditional collision transfer, not acquisition of such a pair or random false-alarm probability."
+      }
+    ],
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Exact AES3 chapter PDF230–241, especially PDF235–236/chapter6–7 Section3.3 Properties3–4 and the three-step birthday decision. Verified joint random-function model attribution, deterministic collision transfer,32-distinct-output ideal-permutation exposure and complete two-world lower-bound derivation at m=2^16 and16 y values. Existing native costs, fixed-round-key setting, target convention and both local components unchanged. Targeted success review, not a new full-paper/forward audit."
+    },
+    "basis": "derived_from_source",
+    "expression": "\\ge 1-\\exp\\!\\left(-\\frac{1-2^{-16}}{2}\\right)-2^{-96}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "Paper pp.3–7 Section 3, especially p.7; Figure 1 p.4",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary-source endpoint preserving the stated target, access model, native resource units and recovery scope. Paper-local pagination is distinct from the whole-proceedings PDF page number."
+    },
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "CompletechapterPDF230–241 in original AES3volume; chapter1–12, allSections1–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    },
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "Original complete AES3 proceedings PDF232–236 / chapter3–7 Sections3.1–3.3, Properties1–4 and birthday/constant-enumeration tests. Source hash identifies the358-page volume, not a chapter rendition.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical total distinguishing advantage is stated. The source birthday heuristic calls function-collision acquisition non-negligible and16-byte false alarms negligible, without a quantified combined decision experiment. Keep the fixed-pair32-bit heuristic and deterministic collision transfer separate. Do not import approximately one-half from the later seven-round key-search endpoint or assume all sampled functions independent."
+    },
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "AES3 original complete-volume PDF235–236/chapter6–7 Section3.3 Properties3–4 and birthday decision; PDF232–234/chapter3–5 for fixed-key input/output and projected-byte definitions. Targeted success review2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Supersedes the earlier no-aggregate attribution: the explicitly stated random32-bit-function model plus the random-permutation reference support a combined distinguishing-advantage bound. Internal birthday acquisition and ideal-world false alarms are both accounted for at the same2^20-query representative point. This is not an actual-AES guarantee, measured rate, equal-prior success percentage or a transfer of the seven-round about-one-half claim."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Costs and success statements are the authors' analytical claims; no complete attack or third-party implementation was executed."
+  ],
+  "related_problem_ids": []
+}

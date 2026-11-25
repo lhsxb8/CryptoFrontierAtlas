@@ -1,0 +1,190 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-bes-mq-key-schedule-mr2002-property",
+  "title": "MR02 10-round AES-128 Sparse quadratic AES key-schedule system",
+  "display": {
+    "name": "Sparse quadratic key-schedule system",
+    "method": "algebraic"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes128-embedded-in-bes",
+    "description": "Standard full10-round AES128 embedded in BES overGF(2^8), restricted to the AES conjugacy image BA. BES alone has a128-byte state, not the16-byte AES state."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One ordinary AES128 master key; embedded schedule must retain conjugacy and the actual AES key-schedule constraints.",
+    "key_population": "general secret key",
+    "plaintext_model": "AES16-byte plaintext/key and their conjugate embeddings; never arbitrary unrelated BES state/key vectors.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "No zero inversion in encryption OR key schedule, as required by Section6.1.",
+      "Source separately estimates53% encryptions and85% AES128 keys satisfy respective no-zero conditions; no independent joint probability is asserted.",
+      "AES conjugacy constraints included; encryption and schedule share1408 basic key coordinates.",
+      "The displayed53%/85% fractions agree numerically with independent-byte heuristics (255/256)^160 and (255/256)^40, but this local arithmetic does not prove independence or a joint attack success probability."
+    ]
+  },
+  "techniques": [
+    "conjugate-embedding",
+    "algebraic-representation",
+    "multivariate-quadratic-system"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not a measured attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "value": null,
+    "metric": "structural-property",
+    "description": "Probability and counts belong to the mathematical statement, not attack success or resource costs."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-53a83c5f0defe53b-2002",
+      "locator": "PDF pp.12–13 Section6.1 nonzero conditions, AES conjugacy and sparse-system counts; pp.13–14 Section6.2 solver-estimate qualification.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-53a83c5f0defe53b-2002",
+      "locator": "Complete16-page official CRYPTO2002 proceedings read raw-first2026-10-27; PDF pp.1–16, with all defining Sections4–6, equations and references.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/property",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Exact-edition full read and AES contribution inventory. Mathematical counts are not attack costs; no solver or author code executed."
+    },
+    {
+      "source_id": "cl2005-xsl-asiacrypt",
+      "locator": "PDF1–2 / printed333–334 introduction; PDF8–10 / printed340–342 Section5; PDF13 / printed345 conclusion.",
+      "fields": [
+        "/property/scope",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Targeted later-primary check: compact XSL and modifiedsXL scope; no efficient solving cost is inferred for MR02."
+    },
+    {
+      "source_id": "lk2007-xsl-bes-fse",
+      "locator": "PDF1–2 / printed242–243 introduction; PDF7–12 / printed248–253 Section3 and conclusion.",
+      "fields": [
+        "/property/scope",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Distinct ePrint-XSL/BES counting analysis; its necessary lower estimates are not MR02 attack costs, nor an implemented attack."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "PDF pp.13–14 Section6.2 offers a speculative2^100 XSL estimate and immediately notes the independent-equation estimate appears inaccurate. It is not admitted as a feasible AES attack or attack time. No AES192/256 numeric projection.",
+    "Later primary analyses distinguish compact XSL from ePrint-XSL/BES and identify deficient independence/solvability estimates. They do not invalidate the existence of this representation or establish that every algebraic solver is ineffective."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "The source sparse AES128 key-schedule system has2560 equations overGF(2^8):960 quadratic+1600 linear,2368 terms and2048 variables=1408 basic-key+640 auxiliary variables. The1408 key variables overlap those of the encryption system, so naive addition would double-count them.",
+    "quantifier": "Source AES128 GF(2^8) representation with conjugacy and no-zero inversions in encryption and key schedule.",
+    "scope": "Equation/term/variable counts describe an algebraic system. No efficient solved-system algorithm or key-recovery resource bound is established.",
+    "parameters": [
+      {
+        "name": "equations",
+        "reported": "2560",
+        "meaning": "Total number of source system equations overGF(2^8)."
+      },
+      {
+        "name": "quadratic_equations",
+        "reported": "960",
+        "meaning": "Number of sparse quadratic equations."
+      },
+      {
+        "name": "linear_equations",
+        "reported": "1600",
+        "meaning": "Number of linear equations in the system."
+      },
+      {
+        "name": "expression_terms",
+        "reported": "2368",
+        "meaning": "Source equation term count, not operation complexity."
+      },
+      {
+        "name": "state_or_aux_variables",
+        "reported": "640",
+        "meaning": "Key-schedule auxiliary variable count."
+      },
+      {
+        "name": "shared_key_variables",
+        "reported": "1408",
+        "meaning": "Basic key variables shared between encryption and key schedule."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Complete exact16-page edition independently read before baseline comparison. Canonical finite checks cover the conjugate embedding, explicit128-dimensional linear operator, parity and count consistency; no full cryptanalytic search or solver executed."
+    }
+  }
+}

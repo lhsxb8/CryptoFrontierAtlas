@@ -1,0 +1,198 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-mixture-memory40-bdkrs2020",
+  "title": "Seven-round AES-192 mixture recovery, memory2^40",
+  "display": {
+    "name": "Mixture recovery with dissection",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "bdkrs2020-rounds-0-to-n-minus1-final-no-mixcolumns",
+    "description": "Initial whitening k_-1, followed by source rounds 0 through 6, ending with AddRoundKey and omitting the final MixColumns (Section2.1). Recover k6 and the necessary u5 material, then invert the actual AES key schedule to the full master key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES-192 master key; no related-key oracles.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "chosen-plaintext structures under the designated unknown key",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source uses a2^26-plaintext structure and13 mixture-related pairs in total: one good special pair plus12 mixture counterparts."
+    ]
+  },
+  "techniques": [
+    "mixture-differentials",
+    "internal-mitm-key-reconstruction",
+    "dissection"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^146.3",
+      "log2": 146.3,
+      "unit": "reduced-round-aes-encryptions",
+      "qualifier": "estimate",
+      "note": "Source charges a lookup as one AES round and derives2^32 * 2^32 * 2^80 *5 =2^146.3; dissection leaves the same time exponent."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^26",
+      "log2": 26,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "One source-defined four-active-byte structure, under a single secret key."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^40",
+      "log2": 40,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Section6.2 tables hold2^40 104-bit values, below2^40 128-bit blocks."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately itemized reusable preprocessing budget is given for this configuration; unknown does not mean zero."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "mixture-structure-availability",
+    "value": 0.95,
+    "description": "Section6.2 reports about95%: the modeled probability that the structure contains a suitable special pair with12 mixture counterparts. Inherited structural-success condition is retained for the refinements, not claimed independently measured full-key success. LaterYT26Section4.3/Remark3 revises this structural availability to about78% without changing complexity; unresolved historical source claim retained."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bdkrs2020-mixture-journal",
+      "locator": "PDF p.4 Table2; pp.19–27 / printed1021–1029, Sections6.1–6.3 (Algorithm5 dissection); p.5 Section2.1.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "One coherent data/time/memory tuple of the mixture-based key-recovery construction; its dissection optimization is not an unrelated attack coordinate. Earlier unoptimized storage is retained as its own configuration."
+    },
+    {
+      "source_id": "bdkrs2020-mixture-journal",
+      "locator": "CompletePDF1–41 full audit;[local audit reference not distributed]",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete registered primary edition read. Inventory/forward gates and scientific correctness are separate; see exact localized conflicts."
+    },
+    {
+      "source_id": "yang-tian2026-revisiting-mixture-dcc",
+      "locator": "PDF16–18 Section4.3/Revisions/Remark3;Section4.4.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Later primary explicitly revises source structural availability, not original attack costs. Source95% preserved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Scientific follow-up: Complete41-page journal read. Add36configurations (25attack refinements/data-success assignments and11support properties),5table families and one7r family extension. YT26 explicit Prop4/5/7 and7r-success correction read from original publisher bytes; retain old95% plus later78% estimate with unchanged original costs. Printed phase, pseudocode and storage issues remain."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "Later mixture-group availability correction",
+      "description": "BDK Section6.2 inherits about95% availability of13pairs in a good giant group. YT26 Section4.3/Remark3 revises the underlying group mean3→1.5 and corresponding availability to1-exp(-1.5)≈78%, explicitly without changing attack complexity. Retain historical95% as author value and the later qualified model estimate, not a new whole-key success certificate.",
+      "observations": [
+        {
+          "source_id": "bdkrs2020-mixture-journal",
+          "locator": "PDF19–23 Section6.2;PDF32/1034 Proposition5.",
+          "reported": "At least95% structural availability used for7r mixture attacks."
+        },
+        {
+          "source_id": "yang-tian2026-revisiting-mixture-dcc",
+          "locator": "PDF16–17 Section4.3 Propositions4–5/Revisions and Remark3.",
+          "reported": "Mean1.5, at leastone probability1-e^-1.5≈78%;7r success should be78%, complexity unaffected."
+        }
+      ]
+    },
+    {
+      "field": "/resources/time",
+      "label": "External MITM lookup count versus total",
+      "description": "Section6.2 prints2*2^80lookups within each external40-bit a guess, whereas the final2^32*2^32*2^40*2^40*5 total does not include that literal per-guess workload. Both readings confirmed in original PDF; do not infer a replacement exponent or change headline2^146.3.",
+      "observations": [
+        {
+          "source_id": "bdkrs2020-mixture-journal",
+          "locator": "PDF23/1025 Section6.2.",
+          "reported": "For each external2^40a guess,2*2^80lookups; finaltotal2^32*2^32*2^40*2^40*5=2^146.3."
+        },
+        {
+          "source_id": "bdkrs2020-mixture-journal",
+          "locator": "PDF23/1025 final total formula",
+          "reported": "Literal per40-bitguess lookup factor would require a different product than the printed total; no replacement cost selected."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "Algorithm5 join relation and printed indices",
+      "description": "Algorithm5 stores c0 XOR a_j and queries c1 XOR a_j, which cancels a_j in the equality join instead of implementing Eq4 c0 XOR c1=a_j; second join repeats this issue and several state subscripts are printed0. These are unresolved printed-pseudocode details, not a reproduced failure of the intended mathematical attack.",
+      "observations": [
+        {
+          "source_id": "bdkrs2020-mixture-journal",
+          "locator": "PDF22/1024 Algorithm5Steps19/21/26/28;PDF21Eq4.",
+          "reported": "Both sidesXORa_j; Eq4 requires unmatchedXORa_j relation; repeatedx5,0subscripts."
+        },
+        {
+          "source_id": "bdkrs2020-mixture-journal",
+          "locator": "PDF21/1023 Eq4",
+          "reported": "Join must enforce c0 XOR c1=a_j; double equal XORa_j cancels the intended nonzero difference."
+        }
+      ]
+    },
+    {
+      "field": "/resources/memory",
+      "label": "Algorithm5 payload width versus104-bit summary",
+      "description": "Step24 directly lists64bits a6…a13 plus80bits of two k6 columns and two u5 bytes, totaling144bits, whereas the prose says104-bit values. Unspecified compression/reconstruction could matter; retain source block exponent and do not silently change peak storage.",
+      "observations": [
+        {
+          "source_id": "bdkrs2020-mixture-journal",
+          "locator": "PDF22Algorithm5Step24;PDF23memory paragraph.",
+          "reported": "Listedpayload64+80=144bits; printedtable-entrywidth104bits."
+        },
+        {
+          "source_id": "bdkrs2020-mixture-journal",
+          "locator": "PDF23/1025 memory summary",
+          "reported": "Summary calls each stored value104bits, versus directly listed144bits; unspecified compression/reconstruction remains possible."
+        }
+      ]
+    }
+  ]
+}

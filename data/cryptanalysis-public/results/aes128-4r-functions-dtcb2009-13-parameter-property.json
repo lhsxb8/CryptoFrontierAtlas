@@ -1,0 +1,187 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-4r-functions-dtcb2009-13-parameter-property",
+  "title": "4-round AES-128: Conditional13-parameter cross-set difference",
+  "display": {
+    "name": "Conditional13-parameter cross-set difference",
+    "method": "collision"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "dtcb2009-inner-rounds-no-whitening-with-mixcolumns",
+    "description": "4 inner AES rounds without initial whitening, including MixColumns in every round; fixed keys and explicitly conditioned input structures."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "Fixed standard AES key schedule; component derivations treat its round-key bytes as constants, not as a related-key oracle.",
+    "key_population": "General key under the source's modeled internal-parameter events; no special master-key class is specified.",
+    "plaintext_model": "Corollary1 specifies 2^80 sets of 32 active-byte values: 2^16 combinations in other first-column entries and 2^64 choices for remaining entries. The p147 description reverses which constants these coordinates affect; this alone does not invalidate first-column collision sampling.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Probabilities for internal parameters use the paper's randomness assumptions; they are not independently established for all AES keys.",
+      "At a fixed key and common active input, the source’s sufficient equality c1..c16 forces identical passive plaintext contexts. A useful distinct-set collision cannot be certified by that equality. Other function collisions with unequal parameter descriptions are not ruled out."
+    ]
+  },
+  "techniques": [
+    "collision-of-functions",
+    "conditional-parameterization"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "conditional-structural-property",
+    "value": null,
+    "description": "A conditional function or collision statement, not an attack-success experiment."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Printed pp.152–153 Section4.3 Corollary1, proof and Equation14; p.147 coordinate assertion",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete official proceedings read and critical page images checked. Original claims remain attributed to DTCB09; later objections have their own source-specific observations."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Complete PDF1–13/printed144–156; Sections3–4 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Raw-first complete inventory and independent component review completed; source costs and whole-attack reproduction remain separate."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "PDF3–5 and9–10/printed146–148 and152–153; corrected Equations3–6, Proposition5 and Corollary1.",
+      "fields": [
+        "/field_conflicts",
+        "/property"
+      ],
+      "interpretation": "Two raw-source independent derivations and primary acceptance establish the local injectivity problem. Reviewer inference is not an author erratum or a proof against all collision constructions."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Formal component tests and author-reported budgets are distinct from an end-to-end attack reproduction."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "When the first three third-round diagonal functions coincide across two sets, the fourth-round first-byte cross-set difference is \\(S(C_{44}^{(3)}) \\oplus S(\\widetilde{C}_{44}^{(3)})\\), described by13 shared/pair-specific byte parameters.",
+    "quantifier": "The source claims distinct sets sharing c1..c16 and the same fixed key. The conditional identity survives, but independent analysis finds only identical AES contexts under that sufficient certificate; no useful distinct-set occurrence probability is established.",
+    "scope": "Cross-set f(a11) XOR g(a11), unlike the within-set 15-parameter difference. The formal cancellation identity holds, but the proof’s equal-c1..c16 certificate forces the same fixed-key AES context and yields only a trivial zero difference.",
+    "parameters": [
+      {
+        "name": "Byte parameters",
+        "reported": "13",
+        "meaning": "Four shared first-layer offsets, eight fourth-diagonal offsets from the two sets, and one shared third-round key byte."
+      },
+      {
+        "name": "Collection cardinality",
+        "reported": "2^80 sets of32 plaintexts",
+        "meaning": "Corollary1's proposed search collection; finding and testing a pair has no complete cost budget."
+      },
+      {
+        "name": "Claimed occurrence",
+        "reported": "non-negligible probability",
+        "meaning": "Qualitative existence estimate, not a quantified distinguisher advantage."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Formal equal-parameter substitutions verify the cancellation identity. Two independent GF(256) derivations find rank 12 for c5..c16 as an affine map of the 12 non-first-column S(round1) bytes, and rank 3 for c1..c4 on the other diagonal inputs. Thus equal c1..c16 implies identical first-round states and identical passive plaintexts. The derivation is exact; finite source-graph checks are not an end-to-end attack reproduction."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property/scope",
+      "label": "Reversed parameter-dependency description",
+      "description": "With standard ShiftRows, changing passive first-column input bytes leaves c1..c4 fixed and can change c5..c8, reversing the p147 dependency explanation. An actual AES equal-c1..c8 pair has identical C3_11 functions for all 256 active values. This local discrepancy does not require replacing first-column sampling with diagonal coordinates.",
+      "observations": [
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed p.147 Proposition2 preceding paragraph; p.152 Corollary1",
+          "reported": "The other first-column plaintext entries a21,a31,a41 are varied to obtain parameter collisions."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed pp.145–146 ShiftRows definition and first-round state expression",
+          "reported": "The first MixColumns column depends on diagonal input bytes a11,a22,a33,a44. First-column passive changes instead affect later offsets; a finite actual-AES C3_11 collision witness confirms first-column sampling is possible."
+        }
+      ]
+    },
+    {
+      "field": "/property/quantifier",
+      "label": "Equal-parameter proof admits only identical AES contexts",
+      "description": "For fixed round keys and a common active input, c5..c16 is a rank-12 affine map of the 12 external S(round1) bytes. Together with c1..c4 equality, this fixes the whole first-round state; AES invertibility forces the same passive plaintext context. All four third-round functions then coincide, so the cross-set difference is zero. This challenges only the source’s literal distinct-set equal-parameter certificate and its 2^-64 generation model, not the formal conditional identity or every possible function collision.",
+      "observations": [
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "PDF9–10/printed152–153 Proposition5 proof, Corollary1 proof and Equation14.",
+          "reported": "The proof assumes c1..c8 equal, then models c9..c16 equal with probability 2^-64 to obtain a nontrivial 13-parameter cross-set description."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "PDF3–5/printed146–148 first-round state, corrected Equations3–6; independent reviewer derivation accepted 2026-10-26.",
+          "reported": "Reviewer-derived map consists of four nonsingular 3-by-3 MixColumns submatrices, total rank12. The literal certificate forces identical fixed-key, aligned-input AES contexts; unequal-parameter function collisions remain outside this conclusion."
+        }
+      ]
+    }
+  ]
+}

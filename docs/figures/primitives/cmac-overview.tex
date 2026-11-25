@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+  \node (iv) at (0,0) {$0^{128}$};
+  \node[xor] (x1) at (1.5,0) {$+$}; \node[accent] (e1) at (3.3,0) {$\mathrm{AES}_K$};
+  \node[xor] (xn) at (7.3,0) {$+$}; \node[accent] (en) at (9.1,0) {$\mathrm{AES}_K$};
+  \node (tag) at (11.6,0) {$T$};
+  \draw[wire] (iv) -- (x1); \draw[wire] (x1) -- (e1);
+  \draw[wire] (e1) -- node[above,note] {$\cdots\ C_{n-1}$} (xn); \draw[wire] (xn) -- (en); \draw[wire] (en) -- (tag);
+  \node (m1) at (1.5,1.5) {$M_1$}; \draw[wire] (m1) -- (x1);
+  \node[box,minimum width=5.5cm] (last) at (7.3,1.6) {$M_n^*=\begin{cases}M_n\oplus K_1,&\text{complete, nonempty},\\ \operatorname{pad}_{10^*}(M_n)\oplus K_2,&\text{otherwise}.\end{cases}$};
+  \draw[wire] (last) -- (xn);
+  \node[note] at (6,-1.1) {All blocks use the same AES key: $\AtlasKeyBits$ bits.\quad Full tag: $128$ bits.};
+  \node[note] at (6,-1.8) {For a single block or an empty message, $C_{n-1}=C_0=0^{128}$; the final branch still applies.};
+\end{tikzpicture}

@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+  \node[box,minimum width=4cm] (pad) at (0,0) {Message $M$\\$1\,0^*\,\|\,\operatorname{len}_{64}(M)$};
+  \node[box,minimum width=4cm] (blocks) at (0,-1.65) {$M_1,\ldots,M_m$\\$\AtlasBlockBits$ bits per block};
+  \node[accent,minimum width=4cm] (compress) at (0,-3.4) {Compression \& feed-forward\\$\AtlasSteps$ steps per block};
+  \node[box,minimum width=4cm] (out) at (0,-5.15) {Serialize $H_m$: $\AtlasOutputBits$ bits};
+  \draw[wire] (pad) -- (blocks); \draw[wire] (blocks) -- (compress); \draw[wire] (compress) -- (out);
+  \node[note,text width=6.3cm] at (0,-6.5) {$H_i=H_{i-1}\AtlasFeedForward F(H_{i-1},M_i)$\\$H_0=\mathrm{IV}$; $\AtlasHashWords\times32$-bit state; \AtlasByteOrder\\$\oplus$: XOR; $\boxplus$: wordwise addition modulo $2^{32}$};
+\end{tikzpicture}

@@ -1,0 +1,168 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-6r-consistent-patterns-ss2003",
+  "title": "SS03 6-round AES-128 Consistent-pattern key recovery",
+  "display": {
+    "name": "Consistent-pattern key recovery",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "ss2003-6r-final-no-mc",
+    "description": "Standard128-bit Rijndael block and128-bit key; 6 rounds, finalMC omitted. Recover full terminal round key, use backward key expansion and consistency checks to obtain the complete master key."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key oracle.",
+    "key_population": "general secret key",
+    "plaintext_model": "Two complete2^32-text structures varying the source two diagonal byte sets.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "consistent-differential-patterns",
+    "subkey-enumeration",
+    "key-schedule-consistency"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "(2^68 + 2^65) / 6",
+      "log2": 65.58496250072116,
+      "unit": "6-round-source-encryption-estimate",
+      "qualifier": "estimate",
+      "note": "Source native work:2*2^32*2^32 one-round decryptions plus2^76 S-box lookups; published conversion gives(2^68+2^65)/6."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2 * 2^32",
+      "log2": 33,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Exactly the source data choice for the stated time; lower data prose does not preserve this budget."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "value": null,
+    "metric": "whole-attack-success",
+    "description": "The exact6-round data/time endpoint has no reported numerical end-to-end master-key success. Correct-key retention by a necessary deterministic pattern is separate from uniqueness and expected work. Source accidental-pattern probabilities are heuristic wrong-key filters, not false-negative or recovery rates. The second structure validates proposed key components; the final key-schedule check is not given a numerical success rate. The existing S-box conversion conflict remains.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Re-read PDF5–14 Sections3.2 and4.1–4.4. Five-round Section4.3 explicitly invokes Section4.2's final four-difference false-key argument; a conservative all2^128-key union bound gives conditional complete-output correctness under that source heuristic, without using the disputed2^16 worst-case candidate cap. Six rounds still lacks an assembled false-output distribution. Neither result gets a hard native-work-cap guarantee. Preserve expected-versus-worst-case and S-box conversion conflicts and both original components per endpoint."
+    },
+    "components": [
+      {
+        "metric": "correct-candidate-retention-by-necessary-pattern",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Section4.4: a correct key satisfies the required consistent-difference/balanced pattern and is not rejected by that necessary-condition test, assuming exhaustive candidate enumeration. This does not prove unique identification or the stated finite work budget."
+      },
+      {
+        "metric": "wrong-key-four-byte-pattern5-validation-source-model",
+        "value": 5.421010862427522e-20,
+        "basis": "author_model",
+        "expression": "2^{-64}",
+        "description": "PDF14 Section4.4 Checking the Key Components: source1/2^64 for an erroneous candidate to satisfy Pattern5 on the second data set. This is not a final master-key recovery probability."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-fc5f7ea80c518957-2003",
+      "locator": "PDF pp.2–3 Table1/128-bit scope; pp.12–14 Section4.4.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete registered proceedings read and AES claim inventory checked2026-10-26; bounded forward checks complete. Source claims and unresolved fields retain their original status."
+    },
+    {
+      "source_id": "aes-paper-fc5f7ea80c518957-2003",
+      "locator": "PDF9–14/printed157–162 Sections4.1–4.4; exact6-round candidate and verification paragraphs.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The exact6-round data/time endpoint has no reported numerical end-to-end master-key success. Correct-key retention by a necessary deterministic pattern is separate from uniqueness and expected work. Source accidental-pattern probabilities are heuristic wrong-key filters, not false-negative or recovery rates. The second structure validates proposed key components; the final key-schedule check is not given a numerical success rate. The existing S-box conversion conflict remains."
+    },
+    {
+      "source_id": "aes-paper-fc5f7ea80c518957-2003",
+      "locator": "PDF5–14 / printed153–162, Sections3.2 and4.1–4.4; especially PDF11–14 selected endpoint tests and completion. Targeted success recheck2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Re-read PDF5–14 Sections3.2 and4.1–4.4. Five-round Section4.3 explicitly invokes Section4.2's final four-difference false-key argument; a conservative all2^128-key union bound gives conditional complete-output correctness under that source heuristic, without using the disputed2^16 worst-case candidate cap. Six rounds still lacks an assembled false-output distribution. Neither result gets a hard native-work-cap guarantee. Preserve expected-versus-worst-case and S-box conversion conflicts and both original components per endpoint."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Complete source inventory and bounded forward check retained. Source S-box/round conversion remains unresolved; the5r candidate worst-case bound is not established by the per-byte expectation. No replacement total cost is inferred."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "S-box lookup to round conversion",
+      "description": "Defining source equates2^76 S-box lookups with2^68 full-state one-round decryptions, a factor256; ordinary AES has16 state S-box evaluations per full round. Keep native work and source estimate without a normalized frontier claim.",
+      "observations": [
+        {
+          "source_id": "aes-paper-fc5f7ea80c518957-2003",
+          "locator": "PDF p.14 defining work.",
+          "reported": "2^76 S-box lookups."
+        },
+        {
+          "source_id": "aes-paper-fc5f7ea80c518957-2003",
+          "locator": "PDF p.14 conversion and Table1 PDFp2.",
+          "reported": "2^68 one-round decryptions, then (2^68+2^65)/6 reduced encryptions."
+        }
+      ]
+    }
+  ]
+}

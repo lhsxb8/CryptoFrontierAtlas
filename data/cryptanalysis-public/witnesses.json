@@ -1,0 +1,99 @@
+{
+  "schema_version": "0.1.0",
+  "scope": "witness_only",
+  "known_answer_source_id": "nist-fips197-2001-kat",
+  "scope_note": "Validate five concrete reduced-round AES collision witnesses; do not validate attack-search procedures, resource estimates, success probabilities, or best-known claims.",
+  "source": {
+    "title": "Guess-and-Determine Rebound: Applications to Key Collisions on AES (Full Version)",
+    "authors": [
+      "Lingyue Qin",
+      "Wenquan Bi",
+      "Xiaoyang Dong"
+    ],
+    "version_date": "2025-05-22",
+    "retrieved_date": "2026-10-08",
+    "repository_commit": "3660d2e20f58d565af8ff3f2840a12cdd13a8ede",
+    "pdf_url": "https://raw.githubusercontent.com/biwenquan/Guess-and-determine-Rebound/3660d2e20f58d565af8ff3f2840a12cdd13a8ede/key_collision_CRYPTO_2025_Full_Version.pdf",
+    "pdf_sha256": "8341c5699d6879ea720d1836e17f419eea309d7336b3db595b378cd8a33d5d1e",
+    "author_verifier_url": "https://raw.githubusercontent.com/biwenquan/Guess-and-determine-Rebound/3660d2e20f58d565af8ff3f2840a12cdd13a8ede/key_collision_verify.c",
+    "author_verifier_sha256": "78a130987f59e846cc64ef40c07d58add70f51b591726986beba5810f905b0f9",
+    "author_verifier_note": "Listed only as witness provenance and a round-convention reference; the independent Python verifier neither downloads nor executes it."
+  },
+  "round_convention": {
+    "id": "aes_prefix_initial_ark_last_round_without_mc",
+    "initial_add_round_key": true,
+    "key_schedule": "standard_aes",
+    "round_selection": "first_r_rounds",
+    "last_round_mix_columns": false,
+    "description": "Initial AddRoundKey, then r-1 rounds of SubBytes/ShiftRows/MixColumns/AddRoundKey, then SubBytes/ShiftRows/AddRoundKey using round key r.",
+    "source_locator": "Author key_collision_verify.c:338-380"
+  },
+  "witnesses": [
+    {
+      "id": "witness-qin2025-aes128-2r-fixed-zero",
+      "result_id": "qin2025-aes128-2r-fixed-zero",
+      "key_bits": 128,
+      "rounds": 2,
+      "plaintext_control": "fixed_zero",
+      "plaintext": "00000000000000000000000000000000",
+      "key1": "377008630096ccb134256ba749694717",
+      "key2": "eb700840dc4ad4b1340d738449694717",
+      "expected_ciphertext": "b6446d21185c641fb8919d7a9b317fa7",
+      "paper_locator": "Table 6, p.35, 2-round AES-128 block, first pair",
+      "code_locator": "key_collision_verify.c:400 key1; :406 key2; :415-416 zero plaintext"
+    },
+    {
+      "id": "witness-qin2025-aes128-3r-fixed-zero",
+      "result_id": "qin2025-aes128-3r-fixed-zero",
+      "key_bits": 128,
+      "rounds": 3,
+      "plaintext_control": "fixed_zero",
+      "plaintext": "00000000000000000000000000000000",
+      "key1": "0f6eef4eea138a1b60057a26d30bedfa",
+      "key2": "d76ec74dcc138ad460057a26d30bed36",
+      "expected_ciphertext": "87c494f5d33621b65ad032992b8f6def",
+      "paper_locator": "Table 6, p.35, 3-round AES-128 block, first pair",
+      "code_locator": "key_collision_verify.c:464 key1; :468 key2; :475-476 zero plaintext"
+    },
+    {
+      "id": "witness-qin2025-aes192-5r-fixed-zero",
+      "result_id": "qin2025-aes192-5r-fixed-zero",
+      "key_bits": 192,
+      "rounds": 5,
+      "plaintext_control": "fixed_zero",
+      "plaintext": "00000000000000000000000000000000",
+      "key1": "44d96d845d5312c8f19c3600814ba03196f3705625a24502",
+      "key2": "6bf638da727c4780deb3475eae64d17996f3704025a24502",
+      "expected_ciphertext": "4b49ed9c3ccc1a9dd3dcaa16f22165ce",
+      "paper_locator": "Table 6, p.35, 5-round AES-192 block, first pair",
+      "code_locator": "key_collision_verify.c:525 key1; :533 key2; :543-544 zero plaintext"
+    },
+    {
+      "id": "witness-qin2025-aes256-6r-fixed-zero",
+      "result_id": "qin2025-aes256-6r-fixed-zero",
+      "key_bits": 256,
+      "rounds": 6,
+      "plaintext_control": "fixed_zero",
+      "plaintext": "00000000000000000000000000000000",
+      "key1": "cc642ac6ef0e7385009b145cd43c0606997c122e7ec132621604eedc0013e201",
+      "key2": "e8722dd2ef0e7385009b145cd4850606202ec2477c713660afd23eb50215e603",
+      "expected_ciphertext": "3dea345ea340d0a3e4dd1a7c28d6babc",
+      "paper_locator": "Table 6, p.35, 6-round AES-256 block, first pair",
+      "code_locator": "key_collision_verify.c:593 key1; :592 XOR difference deriving key2; :602-603 zero plaintext"
+    },
+    {
+      "id": "witness-qin2025-aes192-7r-free-target",
+      "result_id": "qin2025-aes192-7r-free-target",
+      "key_bits": 192,
+      "rounds": 7,
+      "plaintext_control": "free_common_plaintext",
+      "plaintext": "64d66875c60b79e2e68073168f38cd68",
+      "key1": "70496db77bb5888702db85c405b090700753b5f50ff32437",
+      "key2": "70416db77bb57d8702db85c405b090700753b5f50ff3d137",
+      "expected_ciphertext": "909987f518b5eda72b0fd6912066b853",
+      "paper_locator": "Table 7, p.36, first pair; C is raw AES ciphertext before DM feedforward",
+      "code_locator": "key_collision_verify.c:651 plaintext; :659 key1; :667 key2",
+      "interpretation": "The same freely chosen plaintext is used under both chosen keys. C XOR P gives a semi-free-start AES-DM collision at this freely chosen chaining value, not a collision for a prescribed hash IV."
+    }
+  ]
+}

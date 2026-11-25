@@ -1,0 +1,175 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-7r-mitm-dks2010-tradeoff-selected-subkeys",
+  "title": "7-round AES-128: Online/data/memory tradeoff: selected subkeys",
+  "display": {
+    "name": "Online/data/memory tradeoff: selected subkeys",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "dks-whitening-final-round-without-mixcolumns",
+    "description": "Reduced 7-round AES-128 with whitening k_-1, final MixColumns omitted, and u_i=MC^-1(k_i). Selected round-key material as in the parallel/altered stage; n controls retained-table coverage. Selected-subkey goal is distinct from master-key recovery."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed standard AES schedule; no related-key oracle.",
+    "key_population": "General fixed key; no weak-key subset is specified.",
+    "plaintext_model": "Retain2^-n of the special table and repeat with2^n more delta-sets. Source writes n>=0; finite128-bit input space imposes n<=25 as a necessary fresh-data constraint, not a sufficiency proof.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The four-round one-byte differential is modeled at2^-120; Observation5 enumerates middle states using an average S-box count.",
+      "Wrong-key multisets are modeled random. The journal's separate probability proof has documented count/max-probability issues.",
+      "Reported time is the online stage; preprocessing is explicit and key-independent. Partial-encryption conversion factors are author estimates."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "multiset-tabulation",
+    "differential-enumeration"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^(103+n)",
+      "log2": null,
+      "unit": "dks-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Online stage only; complete-key headlines do not individually price the remaining-key search."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^(103+n)",
+      "log2": null,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Expected pair collection and retained-table coverage under the source assumptions."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^(129-n)",
+      "log2": null,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Special-multiset table: approximately512 bits per entry."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^(132-n)",
+      "log2": null,
+      "unit": "dks-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Source base2^127×2^8×2^-3=2^132; retained-table factor2^-n. Canonicalization, sorting and auxiliary-table overheads are not fully itemized."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "selected-round-key-recovery",
+    "value": null,
+    "description": "The journal does not quantify overall recovery success for this exact endpoint. Preserve its recovery scope and source-native resource budget; no probability is borrowed from another AES variant, tradeoff, or the2010 proceedings. The n=13 table fraction and additional delta-sets compensate in expected work; they do not establish finite-budget success. The existing average-versus-uniform middle-state enumeration issue and the documented original multiset-proof limitations remain.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-06",
+      "scope": "Exact26-page journal edition, separately from the proceedings. No probability was added: Sections6.1–6.4 do not quantify recovery at the n=13 sampled-table budget; Section5.2.2 gives a wrong-guess estimate for2^64.5 data before changing the endpoint to2^64.43. No earlier-budget or other-edition success is transplanted. Existing multiset, notation, cost and correctness obligations remain; not a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "four-round-expected-probability-differential-source-model",
+        "value": 7.52316384526264e-37,
+        "basis": "author_model",
+        "expression": "\\approx 2^{-120}",
+        "description": "PDF12/13: source random-permutation expectation for the one-byte-output four-round core. It is not experimentally checked; parallel byte choices and a larger input structure do not give independent trials."
+      },
+      {
+        "metric": "ciphertext-twelve-byte-zero-sieve-source-model",
+        "value": 1.262177448353619e-29,
+        "basis": "author_model",
+        "expression": "2^{-96}",
+        "description": "PDF19 Section6.1 PhaseAii and Section6.2: the96-bit initial pair sieve remains in the modified construction. A local wrong-pair model, not aggregate success."
+      },
+      {
+        "metric": "precomputed-special-table-fraction-at-n13",
+        "value": 0.0001220703125,
+        "basis": "derived_from_source",
+        "expression": "2^{-13}",
+        "description": "PDF21 Section6.4: retain a2^-n fraction of the table at the exact balanced pointn=13, then use2^n more delta-sets. A retained-table fraction is not the probability a right multiset is included without a distribution assumption."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dks2015-single-key-journal",
+      "locator": "Printed pp.417–418 Section6.4 and Table2",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/goal",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Full source version read and compared. Matching statements share one scoped record; changed claims and source-specific discrepancies retain their own identities."
+    },
+    {
+      "source_id": "dks2015-single-key-journal",
+      "locator": "PDF3–4/printed399–400 Table1/AES-IND claim; PDF12–13/408–409 expected differential and footnotes5–7; PDF17–18/413–414 Sections5.2.1–5.2.2; PDF19–22/415–418 Sections6.1–6.4/Table2.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The journal does not quantify overall recovery success for this exact endpoint. Preserve its recovery scope and source-native resource budget; no probability is borrowed from another AES variant, tradeoff, or the2010 proceedings. The n=13 table fraction and additional delta-sets compensate in expected work; they do not establish finite-budget success. The existing average-versus-uniform middle-state enumeration issue and the documented original multiset-proof limitations remain."
+    },
+    {
+      "source_id": "dks2015-single-key-journal",
+      "locator": "PDF12–13 Section5, Observation5 and footnotes5–7; PDF17–18 Section5.2.2; PDF19–21 Sections6.1–6.4.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: the checked source does not quantify this exact main output at its recorded budget. Separate proof, coordinate, key-schedule and cost obligations remain recorded. All primary probability values, components and scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Local identity/counting tests cover components; full attack searches and success rates have not been reproduced.",
+    "Full exact-edition inventory checked; numerical attack execution is not claimed."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Average solution count versus asserted uniform enumeration bound",
+      "description": "Observation5 uses one S-box solution on average to assert an at-most2^64 middle-state count. Its own footnote gives0/2/4 solutions. The mean does not by itself prove the stated bound for every structured difference tuple; the global count remains under review.",
+      "observations": [
+        {
+          "source_id": "dks2010-single-key-proceedings",
+          "locator": "Printed pp.167–168 Observation5 and footnote6",
+          "reported": "At most2^64 prescribed states is argued using one solution on average; actual S-box counts can be0,2,4."
+        },
+        {
+          "source_id": "dks2015-single-key-journal",
+          "locator": "Printed pp.408–409 Observation5 proof and footnote6",
+          "reported": "The journal retains the same average-to-at-most step and0/2/4 qualification."
+        }
+      ]
+    }
+  ]
+}

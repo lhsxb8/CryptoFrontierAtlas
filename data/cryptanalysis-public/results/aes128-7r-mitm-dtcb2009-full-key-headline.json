@@ -1,0 +1,164 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-7r-mitm-dtcb2009-full-key-headline",
+  "title": "7-round AES-128: Conditional-table complete-key claim",
+  "display": {
+    "name": "Conditional-table complete-key claim",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "dtcb2009-whitening-final-round-no-mixcolumns",
+    "description": "Reduced-round AES-128 with initial whitening and final MixColumns omitted. The source's key-search stages and whole-key headline are separated.Step8 proposes exhaustive search for remaining key material. The source's headline budgets do not separately itemize that completion; later literature disputes the running-time analysis."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "Fixed standard AES key schedule; component derivations treat its round-key bytes as constants, not as a related-key oracle.",
+    "key_population": "General key under the source's modeled internal-parameter events; no special master-key class is specified.",
+    "plaintext_model": "2^48 structures of2^32 plaintexts varying the four diagonal bytes; under a guessed first-round key they split into2^72 active-byte sets. Matching uses33 inputs/32 differences, or65 inputs/64 differences for eight rounds.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Probabilities for internal parameters use the paper's randomness assumptions; they are not independently established for all AES keys.",
+      "Step3 andStep4 each enumerate2^40 partial-key guesses over2^80 blocks. The source's2^113 figure prices these partial-decryption/encryption passes; the joint Step5–6 matching and Step8 completion are not separately costed.",
+      "The source treats2^8 partial encryptions/decryptions as one encryption and four byte-function evaluations as one seven-round encryption. These are source conventions, not independent calibration.",
+      "The conditional15-parameter table must use the corrected substitution; printed Equation9 has a coefficient discrepancy.",
+      "DKS2010 disputes the cost analysis. The original claim is retained with no normalized running-time exponent."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "conditional-parameterization",
+    "precomputed-short-difference-sequences",
+    "rare-parameter-event"
+  ],
+  "resources": {
+    "time": {
+      "status": "conflict",
+      "reported": "2^113 claimed; DKS10 says running time is about2^32 greater",
+      "log2": null,
+      "unit": "dtcb2009-source-encryption-equivalents",
+      "qualifier": "unspecified",
+      "note": "Original online claim and later critique remain distinct. No corrected end-to-end encryption exponent is certified here."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^80",
+      "log2": 80,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "2^48 diagonal structures of2^32 blocks. Eight-round extension retains this data count."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^122 AES blocks (=2^126 bytes)",
+      "log2": 122,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Two precomputed target-function tables; eight rounds double the sequence length. Complete online lookup/storage accounting remains under review."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^123 encryption equivalents (2^125 byte-function evaluations)",
+      "log2": 123,
+      "unit": "dtcb2009-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Reusable key-independent table. Source convention uses approximately four function evaluations per seven-round encryption; no replacement work calibration is inferred."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "source-reported-attack-success",
+    "value": 0.5,
+    "description": "Section4.2 states approximately50% success for its average-case seven-round attack figures. This is the original author claim; formulas and running-time analysis have documented discrepancies."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Printed pp.150–152 Section4.2 Steps1–8, complexity/success paragraph and p.154 Table1",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete official proceedings read and critical page images checked. Original claims remain attributed to DTCB09; later objections have their own source-specific observations."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Complete PDF1–13/printed144–156; Sections3–4 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Raw-first complete inventory and independent component review completed; source costs and whole-attack reproduction remain separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Formal component tests and author-reported budgets are distinct from an end-to-end attack reproduction.",
+    "The2^-136 false-match heuristic for32-byte sequences is not an end-to-end success probability. Sixty-four-byte matching is a distinct extension.",
+    "Later DKS10 correction observations are attached through field_conflicts with their own source and locator; they are not attributed to the original DTCB09 authors."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Reduced Equation9 coefficient",
+      "description": "Under Equation7's conditions, substituting c12=3*d1 into corrected Equation4 gives coefficient1 for S(3*x1+3*d1). Printed Equation9 instead uses coefficient3. The conditional15-parameter count survives the corrected substitution; literal precomputation values differ.",
+      "observations": [
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed p.148 Equation4 and p.149 Equation7",
+          "reported": "The last term of C3_22 is S(3*x1+c12); c12=3*d1 leaves coefficient1."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed p.149 Equation9",
+          "reported": "The corresponding reduced term is printed as 3*S(3*x1+3*d1)."
+        }
+      ]
+    },
+    {
+      "field": "/resources/time",
+      "label": "Later running-time objection",
+      "description": "DKS2010 explicitly disputes DTCB2009's cost analysis and its sub-exhaustive AES-128 conclusion. Preserve the original2^113 claim and the later about2^32 factor without certifying a corrected end-to-end exponent.",
+      "observations": [
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed pp.151–152 Section4.2 and p.154 Table1",
+          "reported": "Online attack complexity is claimed as2^113 encryption equivalents."
+        },
+        {
+          "source_id": "dks2010-single-key-proceedings",
+          "locator": "Printed p.164 footnote3",
+          "reported": "The authors state that DTCB09's analysis is flawed, its running time is about2^32 greater than claimed, and it exceeds exhaustive search for AES-128."
+        },
+        {
+          "source_id": "dks2015-single-key-journal",
+          "locator": "Printed pp.420–421 AppendixA, matching Steps5–6 analysis",
+          "reported": "AppendixA explicitly counts the omitted joint matching as at least2^40×2^40×2^80=2^160 operations; these are not encryption units."
+        }
+      ]
+    }
+  ]
+}

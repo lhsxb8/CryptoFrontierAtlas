@@ -1,0 +1,211 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-related-key-id-3-columns-bdk2006",
+  "title": "BDK06 8-round AES-192 / aes192-8r-related-key-id-3-columns-bdk2006",
+  "display": {
+    "name": "Related-key impossible differential / 168 subkey bits",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "bdk2006-rounds2-9-final-no-mc",
+    "description": "Shifted AES-192 interval, original rounds 2–9, with the preceding subkey and no final MixColumns. Explicit output is 168 mixed boundary-subkey bits, not a separately completed 192-bit master key. It guesses 3 last-round columns plus one preceding subkey byte and filters the eight-byte earlier subkey list; the output width changes with g."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": 32,
+    "target_selection": "any_from_pool",
+    "key_relation": "Two structures of16 secret AES-192 keys each, inducing256 cross pairs. Across a pair the master-key XOR has DeltaK[3]=f and DeltaK[8]=DeltaK[12]=DeltaK[16]=DeltaK[20]=a, other bytes0. The attacker chooses nonzero a; f is varied by the structures, while b,c and for8r d are actual nonlinear schedule differences, handled as in Sections3.3/4.2.",
+    "key_population": "general secret key",
+    "plaintext_model": "Aggregate related-key chosen-plaintext queries under thirty-two structured keys; Section 3.3 gives 2^52 plaintext identities each under sixteen keys, while Section 4 gives per-key pools.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Section 3.3 estimates 0.63 probability that the key structures contain a suitable pair. This is not automatically a numerical complete-key success probability.",
+      "Output widths count named selected-subkey values, not proved independent master-key bits. The remaining key-recovery completion is not priced.",
+      "This endpoint recovers 168 named subkey bits; other widths are not equivalent recovery goals.",
+      "The source conversion 2^6 memory accesses per encryption equivalent is an accounting convention, not a calibrated implementation measurement.",
+      "ZWZF07 Section5.1 identifies an error in all three BDK06 eight-round extensions; preserve these historical quotations with an explicit source conflict."
+    ]
+  },
+  "techniques": [
+    "related-key-impossible-differential",
+    "structured-key-nonlinearity",
+    "last-round-column-tradeoff"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^184",
+      "log2": 184,
+      "unit": "8-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^68.5",
+      "log2": 68.5,
+      "unit": "related-key-chosen-plaintext-queries",
+      "qualifier": "estimate",
+      "note": "Aggregate chosen-plaintext calls over the thirty-two related keys, not per-key data."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^69",
+      "log2": 69,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Source quantifies about 2^69 bytes for the seven-round algorithm and the detailed three-column eight-round endpoint."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical resource budget is supplied for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "partial-subkey-recovery",
+    "value": null,
+    "description": "No valid numerical recovery success is established for this historical eight-round endpoint. ZWZF07 Section5.1 already contradicts the backward-extension filter; retain that published correction and the original resource quotations. The original2^-120 is a conditional wrong-list bound under one terminal guess;2^-16 is an expected full suggestion count, neither an independently valid recovery rate. The32-key suitable-pair model is not success of the disputed168/136/104-bit output.",
+    "components": [
+      {
+        "metric": "historical-outer-terminal-zero-filter",
+        "value": 2.3283064365386963e-10,
+        "basis": "author_model",
+        "expression": "2^{-32}",
+        "description": "Section4.1 source fraction of pairs satisfying zero difference in 1 unguessed terminal columns. Historical filter quantity only: the existing ZWZF07 backward-extension correction invalidates using this as a valid complete attack."
+      },
+      {
+        "metric": "historical-any-wrong-whitening-guess-remains-given-terminal-guess",
+        "value": null,
+        "basis": "author_model",
+        "expression": "\\leq2^{64}\\exp(-128)\\approx2^{-120}",
+        "description": "Section4.2 historical source bound for some wrong64-bit whitening guess remaining under ONE fixed104-bit terminal guess after2^71 pairs. The source then multiplies by2^104 to obtain expected suggestion count about2^-16. This model does not repair the independently documented invalid backward extension."
+      },
+      {
+        "metric": "key-structure-contains-suitable-pair-source-model",
+        "value": 0.6328402451084638,
+        "basis": "author_model",
+        "expression": "1-\\left(\\frac{255}{256}\\right)^{256}\\approx0.63",
+        "description": "Section3.3: two16-key structures induce256 cross pairs. This is the source approximately independent/uniform256-trial model for at least one suitable subkey-difference pair. Pair dependence is not independently proved, and this event does not quantify candidate uniqueness or output recovery."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Re-read BDK06 PDF4-12 and ZWZF07 PDF7-9 Section5.1. The published backward-extension correction affects all three column variants and the known-differences internal core. Withdraw the raw-first proposed Markov recovery bounds: their true-candidate-retention premise fails for the historical zero filter. Preserve all author components, original costs and correction conflicts; primary remains unquantified."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-6a5f9893fd05a6f0-2006",
+      "locator": "PDF pp.2–4 Table 1 and round convention; pp.6–9 Sections 3.2–3.3, explicit 72-bit output and structured keys; pp.9–12 Section 4, column variants and final aggregate budgets.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining algorithm/accounting passages checked; partial outputs and native units retained."
+    },
+    {
+      "source_id": "aes-paper-6a5f9893fd05a6f0-2006",
+      "locator": "Complete13-page CT-RSA2006 proceedings read raw-first on2026-10-27; PDF pp.2–3/Table1 and round convention, pp.4–9/Section3, pp.9–12/Section4.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/goal",
+        "/bound"
+      ],
+      "interpretation": "Original costs and units are preserved. Exact shifted boundaries, structured keys, selected-subkey widths and setup/success semantics were checked in the complete edition."
+    },
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "PDF pp.7–9 / printed pp.21–23, Section5.1 and Figure1.",
+      "fields": [
+        "/setting/assumptions",
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Direct primary correction of the eight-round backward extension. BDK06 historical resource values remain unchanged; ZWZF07 corrected-construction costs are separate records."
+    },
+    {
+      "source_id": "aes-paper-6a5f9893fd05a6f0-2006",
+      "locator": "PDF pp.10–12 / printed pp.30–32, Sections4.1–4.2, especially the zero filter in bytes1,4,11,14 and subsequent impossible-core test.",
+      "fields": [
+        "/setting/assumptions",
+        "/field_conflicts"
+      ],
+      "interpretation": "Localized source observation or independently checked formula discrepancy; historical values retained. This is not an unscoped whole-attack refutation."
+    },
+    {
+      "source_id": "aes-paper-6a5f9893fd05a6f0-2006",
+      "locator": "Proceedings PDF9–12 / printed29–32 Sections3.3/4.1/4.2, original filter and wrong-guess estimates; existing ZWZF07 correction remains attached.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No valid numerical recovery success is established for this historical eight-round endpoint. ZWZF07 Section5.1 already contradicts the backward-extension filter; retain that published correction and the original resource quotations. The original2^-120 is a conditional wrong-list bound under one terminal guess;2^-16 is an expected full suggestion count, neither an independently valid recovery rate. The32-key suitable-pair model is not success of the disputed168/136/104-bit output."
+    },
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "PDF7-9 / printed21-23 Section5.1 and Figure1; compared with BDK06 PDF10-12 Sections4.1-4.2. Targeted success review2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "The published nonzero-versus-zero input8 contradiction invalidates using the historical false-output mean as a valid success bound, even when round-key differences are supplied. Historical source-model components and native resource quotations remain unchanged."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This record prices the stated endpoint; it does not append an unreported master-key completion budget.",
+    "All13 pages of the exact conference edition were fully read; unreported auxiliary completion/setup and attack reproduction remain separate scientific tasks.",
+    "Published correction contradicts the backward-extension filter; the historical resource quotation is not a valid SOTA cost claim."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "published-eight-round-backward-extension-error",
+      "description": "ZWZF07 Section5.1 identifies an error in all three BDK06 eight-round extensions. In the detailed first variant, the zero-difference filter in the unguessed terminal column forces a nonzero input8 byte4 after the equivalent-key addition, contradicting the zero value required by the impossible core. Historical cost quotations remain unchanged; they are not established valid attack costs.",
+      "observations": [
+        {
+          "source_id": "aes-paper-6a5f9893fd05a6f0-2006",
+          "locator": "PDF pp.10–12 / printed pp.30–32, Sections4.1–4.2, especially the zero filter in bytes1,4,11,14 and subsequent impossible-core test.",
+          "reported": "First variant guesses12 bytes of k9 plus w8[11], treats zero difference in the other four terminal bytes, and quotes T=2^184, D=2^68.5; other variants quote T=2^159/D=2^92 and T=2^134/D=2^116."
+        },
+        {
+          "source_id": "zwzf2007-related-key-proceedings",
+          "locator": "PDF pp.7–9 / printed pp.21–23, Section5.1 and Figure1.",
+          "reported": "For the first BDK06 variant, zero terminal column1 implies nonzero Delta x8^I[4] because MC^-1(Delta k8 Col1) has a nonzero byte4, whereas the core requires Delta x8^I[4]=0. Section5.1 states similar errors for the second and third variants."
+        }
+      ]
+    }
+  ]
+}

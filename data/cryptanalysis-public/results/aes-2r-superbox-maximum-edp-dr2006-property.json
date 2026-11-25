@@ -1,0 +1,132 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-2r-superbox-maximum-edp-dr2006-property",
+  "title": "DR06 2-round AES / aes-2r-superbox-maximum-edp-dr2006-property",
+  "display": {
+    "name": "Two-round maximum expected differential probability",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 2,
+    "full_round": false,
+    "round_convention": "dr2006-two-sb-superbox-external-linear-equivalence",
+    "description": "Two AES nonlinear layers reduced to four parallel 32-bit SB -> MC -> ARK(k32) -> SB superboxes by commuting/removing external linear layers. The reported maximum is for one active superbox and inactive others, not a product of four nontrivial maxima."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "Probability is averaged over independent uniformly sampled round keys, not the standard master-key schedule.",
+    "key_population": "independently uniform round-key ensemble",
+    "plaintext_model": "Differential pair probabilities averaged over uniform inputs and intermediate superbox key; no attack queries.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not an attack resource."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not an attack resource."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not an attack resource."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Mathematical property, not an attack resource."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-property",
+    "value": null,
+    "description": "Probability in the statement is not an attack success or resource cost."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-0dacaad8c4254239-2006",
+      "locator": "Complete PDF pp.1–17 / printed78–94; Sections2–9 and AppendicesA–C; maximum PDF pp.13–14 / printed90–91 Section9.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/property",
+        "/bound"
+      ],
+      "interpretation": "Full primary, result inventory, original maximum attribution and bounded forward checks complete. Twelve finite witnesses each have75 trails and EDP13.25×2^-32; this does not independently prove a global maximum. The source credits Keliher–Sui[4] for that proof."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The EDP averages over independent intermediate round keys; it is not a fixed standard-master-key probability.",
+    "Self-written enumeration confirms the twelve listed witnesses, not exhaustive maximization. Local stochastic-model discrepancies in separate properties do not change this endpoint."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "The maximum two-round AES-superbox EDP is 2^-30 + 74*2^-35 = 13.25*2^-32. Exactly twelve maximizing differentials form three fourfold-rotation classes; each has 75 trails with all five double S-box differentials on the same trail.",
+    "quantifier": "Maximum over nonzero 32-bit input/output differences, EDP averaged over the uniformly distributed 32-bit intermediate superbox key. Other full-state superboxes can have zero input/output differences.",
+    "scope": "Standard AES S-box and MixColumns; 32-bit superbox lifted through the external-linear equivalence, not a fixed-master-key differential guarantee.",
+    "parameters": [
+      {
+        "name": "maximum_edp",
+        "reported": "13.25 * 2^-32",
+        "meaning": "Expected differential probability, not a time/data exponent."
+      },
+      {
+        "name": "maximizing_differentials",
+        "reported": "12 = 3 * 4",
+        "meaning": "Three difference shapes with four cyclic rotations, not twelve distinct attacks."
+      },
+      {
+        "name": "difference_shapes",
+        "reported": "(x,0,0,0) -> (L^-1(y/2),L^-1(y),L^-1(y),L^-1(y/3)); (x,x,0,0) -> (L^-1(y),L^-1(y/3),0,L^-1(y/2)); (x,x,x,0) -> (0,0,L^-1(y/2),L^-1(y/3)); x=0x75, y=0x41",
+        "meaning": "Source Section 9 difference representatives; arithmetic is in GF(2^8)."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Section 9 explains the maximum previously established by Keliher–Sui [4], ePrint 2005/321; not a new DR06 maximum proof reproduction."
+    }
+  }
+}

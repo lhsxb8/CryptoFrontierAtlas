@@ -1,0 +1,180 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-9r-single-chosen-key-grr2021",
+  "title": "GLR+21 9-round AES-128 Chosen-key simultaneous multiple-of-n candidate",
+  "display": {
+    "name": "Chosen-key simultaneous multiple-of-n candidate",
+    "method": "differential"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "glr+21-9r-source-boundary",
+    "description": "Source-defined 9 nonlinear AES rounds; exact entry/exit and key material are specified in the result."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "public_chosen_key_permutation_evaluation"
+    ],
+    "related_key_count": null,
+    "target_selection": "attacker_selected_pair",
+    "key_relation": "One chosen key used for all2^64 plaintext/ciphertext pairs; no related keys.",
+    "key_population": "2^32 permitted source-selected standardAES-128 keys",
+    "plaintext_model": "Inside-out generation of2^64 same-chosen-key plaintext/ciphertext pairs: for every I,J subset of{0,1,2,3}, plaintext differences in DI and ciphertext differences in MJ have pair counts divisible by128; for every proper byte-coordinate I,J, plaintext differences in XJ and ciphertext differences in MC(XI) have pair counts divisible by2.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [],
+    "reference_model": "Source simultaneous multiple-of-n output relation versus ideal keyed random permutations, with fixed2^64-query argument; broader generic-efficiency lower bound is conjectural."
+  },
+  "techniques": [
+    "structural-differential",
+    "weak-key-subspace-trails",
+    "chosen-single-key"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^64",
+      "log2": 64,
+      "unit": "source-computations",
+      "qualifier": "estimate",
+      "note": "Source Table2 computation cost to generate2^64 pairs; no numerical peak memory budget supplied."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^64",
+      "log2": 64,
+      "unit": "constructed-plaintext-ciphertext-pairs",
+      "qualifier": "estimate",
+      "note": "Output cardinality, not a secret encryption-oracle budget."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "value": 1,
+    "metric": "chosen-key-simultaneous-set-construction-success",
+    "description": "Success1 for constructing the complete source-defined set of2^64 distinct same-key plaintext/ciphertext pairs satisfying the simultaneous multiple-of-n relations. Section5.3 explicitly states that these properties hold with probability1: choose fourth-round subkey k4 in Kweak, enumerate all2^64 states of IS, decrypt four rounds and encrypt five rounds. The construction meets the source Table2 budget2^64 computations and2^64 constructed pairs. This is the complete relation-construction task defined in Section5.2, not merely retention of a randomly sampled pair. It is not an empirical100% measurement, a random-key weak-class incidence, a key-recovery probability, or a numerical full distinguishing-game rate. The existing AppendixF ideal-reference proof conflict and candidate status remain.",
+    "components": [
+      {
+        "metric": "simultaneous-multiple-of-n-aes-acceptance-given-selected-weak-subkey",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Section5.3: choose the fourth-round subkey in Kweak and enumerate the prescribed2^64-element IS set, propagating four rounds backward and five forward. The simultaneous multiple-of-n relations hold with probability1 on this AES-generated set. This is one-sided property acceptance, not a proved ideal-cipher query bound or total decision success."
+      }
+    ],
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Verified source extraction and complete output-event applicability, with fresh raw-first independent review. Success1 is for deterministic chosen-key relation construction only. No ideal-reference proof gap, full-game advantage, attack reproduction or full-paper completion gate is resolved."
+    },
+    "relation": "=",
+    "basis": "author_statement"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-d63fd1271bb166c3-2021",
+      "locator": "PDF pp.16–20 Section5/Table2 forAES128; p.21 AppendixB.3 forAES256.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-d63fd1271bb166c3-2021",
+      "locator": "CompletePDF1–30 full audit;[local audit reference not distributed]",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete registered primary edition read. Inventory/forward gates and scientific correctness are separate; see exact localized conflicts."
+    },
+    {
+      "source_id": "aes-paper-d63fd1271bb166c3-2021",
+      "locator": "SAC proceedings PDF16–20 / printed156–160 Sections5.2–5.4 and Table2; PDF21 / printed161 AppendixB.3 for the twelve-round AES256 key class. AppendixF ideal-reference conflict remains.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "Historical primary-event interpretation, superseded by B23 for construction success: No numerical full distinguishing-game success is supplied for this nine-round AES128 candidate at2^64 work. One-sided AES acceptance of the intended chosen weak-subkey construction is deterministic. Keep the existing AppendixF joint-independence/conditional-query proof conflict: Proposition2 value2^-65618 is an ideal-reference claim, not this AES construction success. No random-key weak-class probability is charged to an attacker who chooses the key, and no conjectured generic-search advantage is certified. B23 retains the unknown full-game rate but records the complete source-defined relation-construction event separately."
+    },
+    {
+      "source_id": "aes-paper-d63fd1271bb166c3-2021",
+      "locator": "PDF9–10/printed149–150 Section3.2 Equations1–2; PDF16/printed156 Table2; PDF17–18/printed157–158 Sections5.2–5.3, explicit probability1 and four-back/five-forward construction.",
+      "fields": [
+        "/success/status",
+        "/success/value",
+        "/success/metric",
+        "/success/relation",
+        "/success/basis",
+        "/success/description",
+        "/success/review"
+      ],
+      "interpretation": "B23 corrects the primary success-event classification: the source defines returning a complete chosen-key relation witness, with success1 under its deterministic invariant-subspace construction. All indexed local events are preserved; neither the ideal-reference2^-65618 claim nor a full-game classification probability is certified."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Source explicitly calls these candidate distinguishers; Section5.4 conjectures no efficient strategy beyond the fixed2^64-query argument, not a universal proven generic lower bound."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/reference_model",
+      "label": "AppendixF joint-independence and conditional-query proof",
+      "description": "All pair-collision indicators sharing texts are not jointly independent; non-implication of subspace events does not prove joint independence. The conditional last-query argument needs the rarity of a prefix admitting completion: any nonempty favorable response set for a fixed compatible query has probability at least1/(2^128-N+1), so the claimed2^-65618 cannot follow from final-response uniformity alone. This is a proof gap in the numerical ideal-reference claim, not a changed AES construction or repaired full-game bound.",
+      "observations": [
+        {
+          "source_id": "aes-paper-d63fd1271bb166c3-2021",
+          "locator": "PDF18–20 Proposition2;PDF26–28 AppendixF.",
+          "reported": "Idealprobability<=2^-65618 with querybudget2^64; pair indicators modeled independent."
+        },
+        {
+          "source_id": "aes-paper-d63fd1271bb166c3-2021",
+          "locator": "Same AppendixF, two-reviewer finite/combinatorial check.",
+          "reported": "Three iidtexts/twocosets collision-count law differs from Binomial(3,1/2); fixed-prefix final-response uniformity alone gives no such bound."
+        }
+      ]
+    }
+  ]
+}

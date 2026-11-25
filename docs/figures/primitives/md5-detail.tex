@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+  \node[phase] at (5.8,3.2) {Four rounds of $16$ steps: $j=0,\ldots,\AtlasLastStep$};
+  \node[accent,minimum width=11.6cm] (step) at (5.8,1.8) {$T=b\boxplus((a\boxplus f_j(b,c,d)\boxplus M[g_j]\boxplus K_j)\rotl s_j)$};
+  \node[box,minimum width=8cm] (update) at (5.8,.2) {$(a,b,c,d)\gets(d,T,b,c)$};
+  \draw[wire] (step) -- (update);
+  \node[box,minimum width=11.6cm] at (5.8,-2.25) {$\begin{array}{c|c|c|c}
+    j & f_j(b,c,d) & g_j\pmod{16} & s_j\text{ (repeat)}\\\hline
+    0\text{--}15 &(b\land c)\lor(\neg b\land d)&j&7,12,17,22\\
+    16\text{--}31 &(b\land d)\lor(c\land\neg d)&5j+1&5,9,14,20\\
+    32\text{--}47 &b\oplus c\oplus d&3j+5&4,11,16,23\\
+    48\text{--}63 &c\oplus(b\lor\neg d)&7j&6,10,15,21
+  \end{array}$};
+  \node[note,text width=12cm] at (5.8,-4.3) {$K_j=\lfloor2^{32}|\sin(j+1)|\rfloor$; message words and digest use little-endian encoding.\\$\boxplus$: addition modulo $2^{32}$\quad $\rotl$: left rotation\quad Feed-forward adds the four input chaining words.};
+\end{tikzpicture}

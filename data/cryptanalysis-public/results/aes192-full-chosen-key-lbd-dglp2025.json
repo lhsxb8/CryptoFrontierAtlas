@@ -1,0 +1,212 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-full-chosen-key-lbd-dglp2025",
+  "title": "Full-round AES-192 chosen-key limited-birthday distinguisher, DGLP 2025",
+  "display": {
+    "name": "DGLP25",
+    "method": "rebound"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 12,
+    "full_round": true,
+    "round_convention": "aes_prefix_initial_ark_last_round_without_mc",
+    "description": "Full 12-round AES-192 with the standard key schedule, initial AddRoundKey, and no final MixColumns; Section 2.1 and Figure 6/Table 3."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "offline-public-cipher-evaluation"
+    ],
+    "related_key_count": null,
+    "target_selection": "attacker_selected_pair",
+    "reference_model": "Source Definition 2 and Theorem 1 use a limited-birthday relation and a generic black-box 128-bit permutation with forward and inverse access. Section 4.2.1 uses source dimensions din=7 and dout=14 and reports max(2^((129-max(7,14))/2),2^(129-(7+14))) = 2^108 encryption queries to construct one acceptable pair.",
+    "key_relation": "Attacker constructs (K,K XOR DeltaK) conforming to the entire Table 3 standard key-schedule characteristic; DeltaK = 2D3D06BB 0C000000 3D9D9DBC 00000000 0C000000 2D9D9DBC, obtained from the first six master-key words in Tables 3-4. This is chosen-key construction, not a related-secret-key oracle.",
+    "key_population": "Attacker-selected XOR-related key pairs satisfying the stated full key-schedule characteristic; not arbitrary unknown keys.",
+    "plaintext_model": "Two attacker-constructed, generally distinct inputs P,P' satisfying the prescribed input-difference set, with AES-192_K(P) XOR AES-192_{K XOR DeltaK}(P') in the prescribed output-difference set.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Chosen-key/open-key limited-birthday witness construction under Section 2.3 Definition 2; not the ordinary single-secret-key PRP game and not key recovery.",
+      "The standard AES key schedule is respected; the keys and internal starting points are deliberately constructed to satisfy the trail.",
+      "The ideal-case figures are the authors' relation-specific comparison, not interchangeable with exhaustive secret-key search.",
+      "The attacker generates 2^61 conforming key pairs for the inbound search. This is not a secret-key-oracle count; no distinct-key total or pair-overlap count is reported."
+    ]
+  },
+  "techniques": [
+    "related-key-differential",
+    "limited-birthday-distinguisher",
+    "rebound",
+    "super-sbox",
+    "triangulation",
+    "constraint-programming"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^89 + 2^100 approximately 2^100",
+      "log2": 100,
+      "unit": "source-native-rebound-work",
+      "qualifier": "estimate",
+      "note": "Section 4.2.1 includes generation of 2^61 conforming key pairs at 2^28 work per pair (2^89 total), plus 2^39 inbound starting points per key pair and 2^100 outbound trials. Table 1 reports 2^100. The paper does not provide a full-encryption conversion for all rebound/key-generation operations. The supply of 2^61 conforming key pairs remains an evidence task; see coverage issue dglp2025-aes192-key-pair-supply."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No independent external-oracle data budget is given for this offline chosen-key construction. Inbound starting-point counts and generated key pairs are not silently relabeled as chosen-plaintext queries."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "super-sbox-table-entries",
+      "qualifier": "estimate",
+      "note": "Table 1 and Section 4.2.1 report 2^32 memory for Super-Sbox lookup storage. Entry size is not normalized to bytes or 128-bit blocks."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing budget is reported. Attack-specific conforming-key generation costs 2^89 and is included in total time; Section 4.2.1 Step 3 builds 2^32-value Super-Sbox tables for selected differences and keys."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "find-one-chosen-key-limited-birthday-witness",
+    "value": null,
+    "description": "Section4.2.1 prices an expected single chosen-key limited-birthday witness, with2^61 conforming key pairs and2^39 inbound starting points each. The source states conditional outbound and key-characteristic probabilities, but no numerical probability of finding at least one witness at that finite budget. Section2.6 explicitly uses1/p for an expected event, not an independently repeated-trial success formula.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit of defining construction and parameter passages, not a new full-paper or forward-literature audit. Source local/conditional models, expected counts, key-relation construction and full recovery remain separate."
+    },
+    "components": [
+      {
+        "metric": "unconditioned-key-characteristic-source-model",
+        "value": 2.2958874039497803e-41,
+        "basis": "author_model",
+        "expression": "2^{-135}",
+        "description": "PDF16: the key characteristic has20 active S-boxes, five at2^-6 and15 at2^-7. This is the source unrestricted-key differential model, not the cost or success of triangulation."
+      },
+      {
+        "metric": "outbound-given-conforming-key-and-inbound-point",
+        "value": 7.888609052210118e-31,
+        "basis": "author_model",
+        "expression": "2^{-100}",
+        "description": "PDF16: conditional on a key pair satisfying the characteristic and an inbound starting point, the remaining state trail has source probability2^-100. Reusing starting points or keys does not establish independent trials."
+      },
+      {
+        "metric": "forward-outbound-active-sboxes",
+        "value": 2.117582368135751e-22,
+        "basis": "author_model",
+        "expression": "2^{-72}",
+        "description": "PDF16: rounds4–10 contribute2^-72 to the conditional outbound characteristic."
+      },
+      {
+        "metric": "backward-outbound-active-sboxes",
+        "value": 3.725290298461914e-9,
+        "basis": "author_model",
+        "expression": "2^{-28}",
+        "description": "PDF16: the round1 active S-boxes contribute2^-28 to the conditional outbound characteristic."
+      },
+      {
+        "metric": "residual-key-test-after-triangulation",
+        "value": 3.725290298461914e-9,
+        "basis": "author_model",
+        "expression": "2^{-28}",
+        "description": "PDF16: after fixing16 of20 active key S-boxes, four residual transitions each have source probability2^-7. This2^-28 is the local remaining test in the chosen-key construction, distinct from the unrestricted2^-135 key characteristic."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dong-guo-li-pham2025-chosen-key-tosc",
+      "locator": "Printed pp.400-403 / PDF pp.1-4, abstract, Section 1.1, Table 1 and Section 2.1.",
+      "fields": [
+        "/target",
+        "/result_kind",
+        "/goal",
+        "/resources/time",
+        "/resources/memory"
+      ],
+      "interpretation": "Abstract inventory and the authors' own full-round CK-distinguishing rows, not prior works' RK key-recovery or multicollision rows."
+    },
+    {
+      "source_id": "dong-guo-li-pham2025-chosen-key-tosc",
+      "locator": "Printed pp.405 and 408 / PDF pp.6 and 9, Definition 2, Theorem 1 and Sections 2.6-2.7.",
+      "fields": [
+        "/setting",
+        "/techniques",
+        "/success"
+      ],
+      "interpretation": "The goal is an input/output difference-relation witness in an open-key model; rebound is the construction technique and does not imply key recovery."
+    },
+    {
+      "source_id": "dong-guo-li-pham2025-chosen-key-tosc",
+      "locator": "Printed pp.414-417 / PDF pp.15-18, Section 4.2.1, Figure 6 and Table 3; printed p.434 / PDF p.35, Table 4.",
+      "fields": [
+        "/setting/key_relation",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Read the native key-generation, inbound and outbound accounting and retain the 2^108 ideal reference separately. Reviewer-written key expansion now reproduces Table4; this is not a complete attack reproduction."
+    },
+    {
+      "source_id": "dong-guo-li-pham2025-chosen-key-tosc",
+      "locator": "PDF p.16 / printed p.415, Section 4.2.1 key characteristic and key-pair count; PDF p.35 / printed p.434, Table 4.",
+      "fields": [
+        "/setting/key_relation",
+        "/resources/time",
+        "/limitations"
+      ],
+      "interpretation": "Fresh review confirms 13 printed key-pair XOR rows and their Table 3 differences, now independently confirmed by key expansion, but not a complete attack. The 2^-135 versus 2^61 counting-domain question remains open."
+    },
+    {
+      "source_id": "dong-guo-li-pham2025-chosen-key-tosc",
+      "locator": "Complete publisher PDF1–44; [local audit reference not distributed]",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Full primary source read; inventory and scientific correctness are tracked separately. Numerical source claims retained unless explicitly field-conflicted."
+    },
+    {
+      "source_id": "dong-guo-li-pham2025-chosen-key-tosc",
+      "locator": "PDF6/printed405 Definitions1–2 and Theorem1; PDF9/408 Section2.6; PDF15–19/414–418 Sections4.2.1–4.2.2; PDF35–36/434–435 Tables4–5 and Figure11.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "Section4.2.1 prices an expected single chosen-key limited-birthday witness, with2^61 conforming key pairs and2^39 inbound starting points each. The source states conditional outbound and key-characteristic probabilities, but no numerical probability of finding at least one witness at that finite budget. Section2.6 explicitly uses1/p for an expected event, not an independently repeated-trial success formula."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The claim is a chosen-key distinguisher and does not recover a secret AES key or establish a single-secret-key attack.",
+    "No numerical end-to-end success probability, standalone oracle-data budget, or separately reusable preprocessing cost is supplied.",
+    "The reported attack work and Super-Sbox-entry memory remain native units; no normalization unsupported by the source was made.",
+    "Section 4.2.1 reports a key-characteristic probability of 2^-135 and requires 2^61 conforming pairs. Interpreting that probability as an exact fraction of all 192-bit keys for fixed DeltaK would suggest 2^57 pairs. Whether the probability is only a local S-box-product estimate or the construction ranges over a larger difference/counting domain remains to be explained; no corrected attack exponent is inferred.",
+    "Complete44-page publisher reviewed;4AES points retained. AES192 schedule witness independently recomputed, AES256 whitening and W9 recurrence conflict preserved.6rMMO/MP compression collisions lack a target contract; author-identified ePrint2023/1095 extended version remains inaccessible. Gates for inventory/forward closure remain open."
+  ],
+  "related_problem_ids": []
+}

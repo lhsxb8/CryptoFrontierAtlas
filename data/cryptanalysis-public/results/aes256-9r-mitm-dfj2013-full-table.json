@@ -1,0 +1,136 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-9r-mitm-dfj2013-full-table",
+  "title": "Nine-round AES-256 single-key MITM key recovery, full-table baseline",
+  "display": {
+    "name": "MITM, full-table baseline",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "dfj2013-zero-based-rounds-0-to-8-final-no-mixcolumns",
+    "description": "Nine-round AES-256, rounds 0 through 8 in the authors' indexing, with the real AES-256 key schedule, a final AddRoundKey, and the reduced cipher's final MixColumns omitted. Section 4.2 inserts one round in the middle of the eight-round construction, as drawn in Figure 6."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown secret AES key; the attacker does not select related keys or obtain related-key oracles.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "chosen-plaintext structures under the same designated secret key",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The Section 4.2 extension keeps the eight-round outer key-enumeration structure while adding one round to the middle multiset computation.",
+      "Forty byte parameters describe the extended multiset; the source enumerates 2^208 admissible parameter values rather than unrestricted 2^320 values.",
+      "The full extended lookup table is precomputed before online key enumeration. Its construction cost is not separately priced in Section 4.2.",
+      "The truncated-differential and table-hit analysis uses expected counts and does not specify a numerical final key-recovery probability."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "differential-enumeration",
+    "multiset-tables"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^196",
+      "log2": 196,
+      "unit": "aes256-encryptions",
+      "qualifier": "estimate",
+      "note": "Section 4.2 explicitly retains the eight-round 2^196 estimate for online processing. The same paragraph requires a 2^210-block table; its larger setup cost is not included in an independently established total, so this is not a 2^196 end-to-end attack bound."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^113",
+      "log2": 113,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Section 4.2 explicitly retains the eight-round 2^113 chosen-plaintext budget under one secret key."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^210",
+      "log2": 210,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Section 4.2 explicitly reports about 2^210 128-bit blocks for multisets corresponding to 2^208 admissible parameter values. The table is not measured in bytes or elementary operations."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The full table must be constructed and stored. Section 4.2 gives its parameter count and storage but not a separate setup-time estimate. In particular, the reported 2^196 time does not establish the cost of constructing a 2^210-block table."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "key-recovery-success",
+    "value": null,
+    "description": "The construction inherits the expected suitable-pair/table-hit analysis of the eight-round attack. Section 4.2 does not quantify the probability of complete key recovery.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "The defining section and table give expected right-pair/table-hit counts, conditional filtering and completion, but no numerical complete-key recovery probability at this retained parameter choice."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF pp.4-5, Section 2.1, conventions and units; pp.15-16, Section 4.2 and Figure 6.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Before its fractional-table optimization, the body explicitly gives 2^113 chosen plaintexts, 2^196 time and approximately 2^210 128-bit blocks. This baseline is not a Table 1 row. Its online-time estimate and the unpriced offline table construction are kept distinct; it is an attack design point, not a security lower bound."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF pp.1–17 complete read; p.5native units; pp.10–13 seven-round costs and completion; pp.14–16 schedule-dependent extensions.",
+      "fields": [
+        "/assessment",
+        "/limitations"
+      ],
+      "interpretation": "Raw-first independent full inventory, original-PDF SHA recheck, bounded official version/successor checks. Existing quoted resource tuple and stableIDpreserved; no author code executed."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF7 Section2 fractional-table success condition; PDF15–16 Section4.2, full table and 2^-7 fractional-table repetition.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Targeted success audit: expected counts and conditional correctness are retained without inventing an end-to-end probability or a Poisson independence assumption."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The attack and extended multiset enumeration have not been independently implemented or reproduced.",
+    "The reported time does not establish an end-to-end bound including table generation; preprocessing remains null rather than zero.",
+    "The source's expected-hit argument does not provide a numerical final success probability or justify automatic frontier comparison.",
+    "This record preserves the inspected 2013 source version and is not a claim of current best-known cryptanalysis.",
+    "Complete17-page author-edition audit and bounded official version/successor checks completed2026-10-27 through literature cutoff2026-10-10. This records checked scope, not exhaustive absence of later corrections."
+  ],
+  "related_problem_ids": []
+}

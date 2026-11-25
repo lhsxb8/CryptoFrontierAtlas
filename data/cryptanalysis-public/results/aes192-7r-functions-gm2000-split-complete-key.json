@@ -1,0 +1,163 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-functions-gm2000-split-complete-key",
+  "title": "7-round AES-192: split-variable collision attack, complete key",
+  "display": {
+    "name": "Split-variable collision attack, complete key",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "gm2000-whitening-final-no-mixcolumns-reflected-columns",
+    "description": "AES-192 on 128-bit blocks, reduced to 7 rounds. The collision is between internal byte-valued functions under the same unknown round keys, not between two AES master keys. Recover the initial four guessed bytes and twenty late-round bytes; peel the recovered final round, apply the six-round method and continue until the entire master key is recovered, with additional work described as negligible. The standard target is AES-192; the source repeatedly prints 196 despite listing 192 among the permitted key lengths in its introduction."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key or known-key access.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "All 2^32 values of four plaintext bytes, with twelve others fixed. For each initial-key guess use about 2^16 induced c values and sixteen y values per c.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source describes right-going ShiftRow. Standard AES uses left-going shifts. Reindexing columns by J(r,c)=(r,-c mod 4) conjugates the independent-round-key construction; inputs, outputs and recovered round keys are reflected consistently before standard key expansion. This coordinate normalization is a local structural interpretation, not a complete attack reproduction.",
+      "The four c-dependent internal constants are modeled heuristically as a random 32-bit function of the chosen three-byte c value; collision probabilities use this model."
+    ]
+  },
+  "techniques": [
+    "collision-of-functions",
+    "meet-in-the-middle",
+    "split-variables",
+    "round-peeling-key-completion"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "about 2^140",
+      "log2": 140,
+      "unit": "gm2000-unspecified-complexity-units",
+      "qualifier": "estimate",
+      "note": "Section 4.1's heading reports approximately 2^140 complexity without explicitly naming its operation unit there. No exact conversion from the pair loops, table sorting or partial computations to full AES encryptions is asserted."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "The same acquired structure is reused for the collision search and subsequent round peeling."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "Two families of 2^80 sixteen-byte lists per c, and a sorted pair table; peak not priced",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Keep the source's precomputation shapes. A 2^80-entry temporary table alone is not the whole peak when all c-dependent tables are retained."
+    },
+    "preprocessing": {
+      "status": "qualitative",
+      "reported": "Ciphertext-dependent tables for each c and both ten-byte key halves",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The source describes these precomputations inside the search but does not separately price a complete setup budget."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "master-key-recovery-for-a-sampled-c-set",
+    "value": 0.5,
+    "description": "Section 4.1 states about one-half probability that the selected c-set yields a useful internal-function collision and hence the correct key material; full-key recovery then follows by round peeling. This is a heuristic estimate, not a physical or software trial frequency."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "Paper pp.9–11 Section 4.1; the complete-key continuation crosses paper pp.10–11",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary-source endpoint preserving the stated target, access model, native resource units and recovery scope. Paper-local pagination is distinct from the whole-proceedings PDF page number."
+    },
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "Paper pp.1–2 and pp.9–10; p.10 visually checked",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "Preserve the actual printed differences independently of the stated whole-key result."
+    },
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "CompletechapterPDF230–241 in original AES3volume; chapter1–12, allSections1–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Costs and success statements are the authors' analytical claims; no complete attack or third-party implementation was executed."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/plaintext_model",
+      "label": "Sixteen-value test range",
+      "description": "The procedure uses sixteen y* values and sixteen-byte lists, but one explanatory line includes both endpoints of 0 through 16.",
+      "observations": [
+        {
+          "source_id": "gm2000-collision-aes3",
+          "locator": "Paper p.10, precomputation bullets and tuple subscripts",
+          "reported": "Sixteen y* values, indexed 0 through 15, form each sixteen-byte list."
+        },
+        {
+          "source_id": "gm2000-collision-aes3",
+          "locator": "Paper p.10, explanatory line after the match equation",
+          "reported": "The same initial test is described as y*=0 through 16."
+        }
+      ]
+    },
+    {
+      "field": "/target/description",
+      "label": "192/196 key-size label",
+      "description": "The source's allowed key-length list and repeated long-key label disagree. The catalog uses the standard 192-bit AES instance and explicitly preserves the spelling discrepancy.",
+      "observations": [
+        {
+          "source_id": "gm2000-collision-aes3",
+          "locator": "Paper p.1, Introduction parameter list",
+          "reported": "Allowed block/key lengths are stated as 128, 192 or 256 bits."
+        },
+        {
+          "source_id": "gm2000-collision-aes3",
+          "locator": "Paper pp.1–2 abstract/body and p.9 Section 4.1 heading",
+          "reported": "The middle key length is repeatedly printed as 196 bits."
+        }
+      ]
+    }
+  ]
+}

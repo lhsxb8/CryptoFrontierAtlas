@@ -1,0 +1,136 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-4r-auto-4cp-bdf2011",
+  "title": "BDF11 4-round AES-128 Automated low-data recovery / 4 CP",
+  "display": {
+    "name": "Automated low-data recovery / 4 CP",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "bdf2011-4full",
+    "description": "Source Table1 labels 4 rounds: 4 complete SB/SR/MC/AK rounds. Standard AES-128 schedule; solve all key/state variables and check resulting key candidates."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key oracle.",
+    "key_population": "general secret key",
+    "plaintext_model": "4 chosen plaintexts with the source differential constraints under one unknown key.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Subsystem solution-count heuristic |S(E(X))| approximately2^(8(|X|-dimE(X))); table budgets are estimates, not numerical recovery-success certificates."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "automated-solver-search",
+    "guess-and-determine-subsolvers"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "source-reduced-aes-encryptions",
+      "qualifier": "estimate",
+      "note": "Table1 encryption-unit estimate for this exact round convention; tool search/solver generation not included."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "4",
+      "log2": 2,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "Table1 observed data for this row."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^24",
+      "log2": 24,
+      "unit": "source-native-memory-units",
+      "qualifier": "estimate",
+      "note": "Table1 says memory measured approximately; no byte/block width assigned."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "value": null,
+    "metric": "whole-attack-success",
+    "description": "The solvers enumerate assignments compatible with the supplied data; the source supplies heuristic candidate counts and selected implementations, not numerical whole-attack success at each Table1 endpoint. One plaintext/ciphertext pair does not establish a unique secret key; exhaustive candidate enumeration is not silently relabelled probability1 for unique-key recovery.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit; construction and parameter-specific defining passages, not a new full-paper audit."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-6d12e67e699e3ac5-2011",
+      "locator": "PDF p.4 Table1 and its r.5 definition; pp.5–10 Sections2–4 model/heuristic; pp.12–14 low-data example.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-6d12e67e699e3ac5-2011",
+      "locator": "Full original PDF pp.1–19 independently read; p.4 Table 1 and r.5 footnote, p.5 Section 2 round/key model, pp.9–10 Section 4.1 heuristic solution counts; pp.13–14 Section 5.1 examples.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Fresh raw-first full-text review, followed by a current-baseline comparison and bounded forward/version checks through 2026-10-10. Native approximate units and unreported whole-attack success are retained; no attack or solver executed."
+    },
+    {
+      "source_id": "aes-paper-6d12e67e699e3ac5-2011",
+      "locator": "PDF pp.4–10 Table1 and Sections3–4; pp.13–14 Section5.1; one-pair versus multiple-pair solver and validation accounting.",
+      "fields": [
+        "/success"
+      ],
+      "interpretation": "The solvers enumerate assignments compatible with the supplied data; the source supplies heuristic candidate counts and selected implementations, not numerical whole-attack success at each Table1 endpoint. One plaintext/ciphertext pair does not establish a unique secret key; exhaustive candidate enumeration is not silently relabelled probability1 for unique-key recovery."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Rows credited to reference[8] are rediscovered results, not claimed first inventions by this paper. One pair may leave multiple compatible keys; extra validation data not separately priced.",
+    "All 19 original pages read and result inventory independently checked; bounded version/forward checks completed. No author solver, attack code, or numerical success experiment executed."
+  ],
+  "related_problem_ids": []
+}

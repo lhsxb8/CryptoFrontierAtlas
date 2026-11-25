@@ -1,0 +1,221 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-mitm-dks2010-basic-early-abort-stage",
+  "title": "8-round AES-192: Unrefined early-abort candidate stage",
+  "display": {
+    "name": "Unrefined early-abort candidate stage",
+    "method": "mitm"
+  },
+  "result_kind": "key_space_reduction",
+  "goal": "candidate_reduction",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "dks-whitening-final-round-without-mixcolumns",
+    "description": "Reduced 8-round AES-192 with whitening k_-1, final MixColumns omitted, and u_i=MC^-1(k_i). Pair-filtering stage returns candidate subkeys; it stops before multiset membership and complete recovery."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed standard AES schedule; no related-key oracle.",
+    "key_population": "General fixed key; no weak-key subset is specified.",
+    "plaintext_model": "2^113 chosen plaintexts yield approximately2^144 pairs to examine.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The four-round one-byte differential is modeled at2^-120; Observation5 enumerates middle states using an average S-box count.",
+      "Wrong-key multisets are modeled random. The journal's separate probability proof has documented count/max-probability issues.",
+      "Reported time is the online stage; preprocessing is explicit and key-independent. Partial-encryption conversion factors are author estimates."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "multiset-tabulation",
+    "differential-enumeration"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^176 (=2^144×2^40×2^-8)",
+      "log2": 176,
+      "unit": "dks-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Unrefined PhaseA only; later consistency table reduces the full attack headline to2^172."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^113",
+      "log2": 113,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Input collection feeding the stage."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate resource budget for this scope."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^40 admissible actual-value pairs per column table",
+      "log2": 40,
+      "unit": "column-pair-enumerations",
+      "qualifier": "estimate",
+      "note": "Component table enumeration; conversion to encryption work is not supplied."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "conditional-source-model-candidate-retention-lower-bound",
+    "value": null,
+    "description": "True AES192 k7/u6/whitening tuple retained in the complete unrefined PhaseA candidate lists within named model M_pair. This is candidate retention, not unique subkey identification or full-master-key recovery. M_pair assumes that the JOINT right-pair indicators on the fixed true-key delta-set partition have the law induced by a uniform permutation on \\(N=2^{128}\\) states. This joint extension is stronger than the source marginal random-permutation approximation of Section4.2/footnote5; it is an explicit heuristic premise, not an actual-AES theorem. No assertion that every AES output or wrong-key multiset is uniformly random is made. The existing \\(2^{81}\\) disjoint structures of \\(2^{32}\\) plaintexts partition, after the true round0, into \\(S=2^{105}\\) disjoint delta-sets of \\(q=256\\) states. This is only an analytical partition of the same \\(2^{113}\\) already queried blocks. Let X count within-set pairs agreeing in the15 inactive output bytes. Exactly \\(e=Sq(q-1)/2\\) edges are tested; \\(a=Sq(q-1)(q-2)\\) ordered distinct-edge pairs share a vertex. Define \\(p=(q-1)/(N-1)\\), \\(p_A=(q-1)(q-2)/((N-1)(N-2))\\), and \\(p_D=p(N(q-1)-4q+6)/((N-2)(N-3))\\). Then \\(\\mu=ep\\) and \\(\\nu=ap_A+(e(e-1)-a)p_D\\) are the exact first and second factorial moments. The pointwise Bonferroni inequality gives \\(\\Pr_{\\mathcal M_{\\mathrm{pair}}}[X>0]\\ge\\max\\{0,\\mu-\\nu/2\\}>49/100\\), verified by exact integer arithmetic. This accounts for shared plaintexts and sampling without replacement, with no independent-pair or Poisson assumption and no conversion of expected one into63%. If X is positive, native exhaustive per-column lookup and aggregation include the actual tuple, and exact key-schedule identities retain it. Therefore the bound concerns the stated candidate-list output. Complete untruncated enumeration is required; estimated list lengths and the source work conversion do not certify a hard runtime cap. No multiset-table or Observation5 cardinality bound, wrong-key rejection, extra data/repetition, late-stage filtering or remaining-master-key search enters this event. Original native time/data/setup units, candidate counts and source conflicts remain unchanged. Earlier unquantified acquisition statements remain historical source observations; this is only a subsequent derived conditional model bound.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Verified the explicit M_pair implication: native query partition, exact shared/disjoint-edge moments under the stated joint finite-permutation indicator law, Bonferroni inequality, rational49/100 lower bound and retention by complete unrefined PhaseA. This does not prove the joint law for concrete AES, unique or full-key recovery, a fixed runtime, source cost calibration, Observation5 or candidate-list concentration."
+    },
+    "components": [
+      {
+        "metric": "inner-four-round-one-byte-output-differential-source-model",
+        "value": 7.52316384526264e-37,
+        "basis": "author_model",
+        "expression": "2^{-120}",
+        "description": "Section4.2 / footnote5 models the original inner four-round one-byte-in/one-byte-out differential at about2^-120 under a random-permutation approximation. This is per eligible pair, not probability of finding a pair, table inclusion, or key recovery."
+      },
+      {
+        "metric": "true-aes192-key-passes-key-bridging-identities",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections4.3/6: actual AES192 round-key bytes satisfy the16-bit u6-to-k7 consistency and8-bit whitening-to-k7 identity. This is true-key retention by schedule consistency, conditional on the correct pair/hypothesis, not an independent random-key acceptance or a complete recovery guarantee."
+      },
+      {
+        "metric": "source-model-per-test-true-key-retention",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Section6 basic PhaseA: given an examined pair satisfying the original four-round inner differential under the true AES192 key, exhaustive column lookup includes its actual intermediate values, aggregation includes the actual k7/u6/whitening tuple, and true key-schedule identities do not discard it. The complete per-pair candidate list therefore contains the true tuple. This extends the existing schedule-only retention event to the whole unrefined PhaseA lookup/filter procedure. Condition on complete enumeration, with no list truncation or hard runtime cutoff. Finding a right pair among the native2^144 examined pairs at2^113 chosen plaintexts is not quantified; the estimated2^24 output count is not a worst-case bound. No multiset-table coverage assumption is needed for this PhaseA-only event. This is conditional candidate retention, not whole-stage success or unique/full-key recovery."
+      }
+    ],
+    "basis": "derived_from_source",
+    "expression": "p_{\\mathcal M_{\\mathrm{pair}},\\mathrm{retain}}\\ge\\frac{49}{100}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dks2010-single-key-proceedings",
+      "locator": "Printed p.173 Section6 early-abort procedure",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/goal",
+        "/bound",
+        "/field_conflicts",
+        "/candidate_space"
+      ],
+      "interpretation": "Full source version read and compared. Matching statements share one scoped record; changed claims and source-specific discrepancies retain their own identities."
+    },
+    {
+      "source_id": "dks2015-single-key-journal",
+      "locator": "Printed p.419 Section7 early-abort procedure",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/goal",
+        "/bound",
+        "/field_conflicts",
+        "/candidate_space"
+      ],
+      "interpretation": "Full source version read and compared. Matching statements share one scoped record; changed claims and source-specific discrepancies retain their own identities."
+    },
+    {
+      "source_id": "dks2010-single-key-proceedings",
+      "locator": "Proceedings PDF10–12 / printed167–169 Observations5–6; PDF14–17 / printed171–174 Section6 and Table1.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical finite-budget success is supplied for this exact candidate_reduction endpoint. Expected right-pair counts, table coverage and wrong-key rejection are distinct from complete-output success. The existing Observation5 average-to-uniform enumeration conflict remains. Section6 keeps the original inner differential and2^113-data scale. The quoted2^24/2^32 per-pair key suggestions and optimized2^-8 table nonemptiness estimate are intermediate counts/models, not final success. The basic early-abort candidate-reduction point is not a completed attack; the same distinction also applies to selected-subkey and full-key headlines."
+    },
+    {
+      "source_id": "dks2010-single-key-proceedings",
+      "locator": "PDF9–11 / printed166–168 Section4.2 and footnotes5–7; PDF14–16 / printed171–173 Section6 basic PhaseA enumeration before the consistency-table refinement. Targeted success recheck2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Expected-one acquisition is separate from deterministic conditional retention by complete PhaseA lookup and schedule filtering. The new component does not quantify whole-stage acquisition, list-size concentration or completed recovery."
+    },
+    {
+      "source_id": "dks2010-single-key-proceedings",
+      "locator": "PDF4–5 round/delta-set definitions; PDF9 Section4.2/footnote5; PDF13–16 Sections5.1/6, same query collection and unrefined PhaseA lookup/aggregation. B64 derived finite-permutation model, [local audit reference not distributed]",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Derived conditional true-candidate retention bound, not a rate printed by DKS or a complete-key success claim. A joint finite-permutation right-pair law extends the source marginal heuristic explicitly. The native2^113 queries give2^105 disjoint256-state cliques in analysis. Exact shared-vertex/disjoint-edge factorial moments and Bonferroni prove acquisition greater than49/100 without independent pairs. Exhaustive native PhaseA then retains the true tuple. This supersedes absence-of-aggregate-inference wording only within M_pair; all original components, source conflicts and cost estimates remain."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Local identity/counting tests cover components; full attack searches and success rates have not been reproduced.",
+    "Full exact-edition inventory checked; numerical attack execution is not claimed."
+  ],
+  "related_problem_ids": [],
+  "candidate_space": {
+    "material": "Full k7, four u6 bytes and four whitening bytes; dependent schedule relations apply.",
+    "material_bits": 192,
+    "observations": [
+      {
+        "statistic": "reported_estimate",
+        "sample_count": null,
+        "count": {
+          "status": "reported",
+          "reported": "2^24 per examined pair",
+          "log2": 24,
+          "unit": "key-candidates",
+          "qualifier": "estimate",
+          "note": "Intermediate suggestions before the special-multiset test."
+        }
+      }
+    ]
+  },
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Average solution count versus asserted uniform enumeration bound",
+      "description": "Observation5 uses one S-box solution on average to assert an at-most2^64 middle-state count. Its own footnote gives0/2/4 solutions. The mean does not by itself prove the stated bound for every structured difference tuple; the global count remains under review.",
+      "observations": [
+        {
+          "source_id": "dks2010-single-key-proceedings",
+          "locator": "Printed pp.167–168 Observation5 and footnote6",
+          "reported": "At most2^64 prescribed states is argued using one solution on average; actual S-box counts can be0,2,4."
+        },
+        {
+          "source_id": "dks2015-single-key-journal",
+          "locator": "Printed pp.408–409 Observation5 proof and footnote6",
+          "reported": "The journal retains the same average-to-at-most step and0/2/4 qualification."
+        }
+      ]
+    }
+  ]
+}

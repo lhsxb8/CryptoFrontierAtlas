@@ -1,0 +1,235 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes128-7r-fixed-key-preimage-dds2025",
+  "title": "MITM · fixed-key preimage",
+  "display": {
+    "name": "MITM · fixed-key preimage",
+    "method": "mitm"
+  },
+  "result_kind": "preimage_attack",
+  "goal": "compression_preimage",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "dds2025-initial-whitening-final-no-mc",
+    "description": "7-round AES-128 compression preimage with fixed public AES key. The figure has rounds0 through6, no final MixColumns, and terminal key addition."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "offline_public_cipher_evaluation"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed public AES-128 master key and its standard key schedule.",
+    "key_population": "One fixed public AES-128 key",
+    "plaintext_model": "One chosen 128-bit message; the public key/IV and full128-bit target are fixed.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Unit-cost access to a large sorted table; native time is reduced-primitive computations.",
+      "All key bytes are fixed; Figure6 recovers the CGLSZ25 fixed-key construction."
+    ]
+  },
+  "techniques": [
+    "simplified-mitm",
+    "virtual-grey-variables",
+    "key-cancelations"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{112}",
+      "log2": 112,
+      "unit": "reduced-compression-function-computations",
+      "qualifier": "estimate",
+      "note": "Eqs4–7 include episode loops, key-path enumeration and matching; source-native reduced-primitive computation estimate."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Offline public compression problem; no secret oracle data collection."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^{32}",
+      "log2": 32,
+      "unit": "mitm-table-entries",
+      "qualifier": "estimate",
+      "note": "Source Table1/Figure path memory; not bytes, encryption counts or physical qubits."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately trusted precomputation exponent is extracted for this path."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "find-full-output-fixed-key-compression-preimage",
+    "value": null,
+    "description": "The classical cost is an expected-solution MITM estimate; the source does not quantify a fixed-budget probability for the complete preimage event.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF pp.17–18 Section5.1/Figure6; pp.4–6 fixed-key row and MMO definition. Algorithm1 whole-output condition and expected episode count checked."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dds2025-simplified-mitm-preimage",
+      "locator": "PDF pp.17–18 Section5.1/Figure6; pp.4–6 fixed-key row and MMO definition.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/bound",
+        "/experiment"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together."
+    },
+    {
+      "source_id": "cglsz2025-aes-hashing-owf",
+      "locator": "PDF p.43 AppendixD.1/Figure19; pp.15–16 Eq3.",
+      "fields": [
+        "/assessment",
+        "/limitations"
+      ],
+      "interpretation": "DDS Section5.1 explicitly reproduces this fixed-public-key preimage construction at the same time/memory exponents. The new source edition is retained without claiming a new improvement."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete named output probability is not quantified by the source."
+  ],
+  "related_problem_ids": [],
+  "experiment": {
+    "construction": {
+      "type": "compression_function",
+      "name": "AES-MMO",
+      "definition": "CF(h,m)=AES_h(m) xor m",
+      "output_bits": 128
+    },
+    "variables": [
+      {
+        "name": "h",
+        "control": "fixed",
+        "domain": "128-bit fixed public AES key",
+        "condition": "Predetermined initial value; no IV search is allowed."
+      },
+      {
+        "name": "m",
+        "control": "chosen",
+        "domain": "128-bit message",
+        "condition": "One message whose full compression output equals the target."
+      },
+      {
+        "name": "y",
+        "control": "fixed",
+        "domain": "128-bit target",
+        "condition": "Predetermined target independent of the searched message."
+      }
+    ],
+    "relation": "CF(h,m)=y",
+    "output": {
+      "scope": "full",
+      "bits": 128,
+      "mask": null
+    },
+    "parameters": [
+      {
+        "name": "skB",
+        "value": 0,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter skB"
+      },
+      {
+        "name": "skR",
+        "value": 0,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter skR"
+      },
+      {
+        "name": "cB",
+        "value": 0,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter cB"
+      },
+      {
+        "name": "cR",
+        "value": 0,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter cR"
+      },
+      {
+        "name": "dB",
+        "value": 14,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter dB"
+      },
+      {
+        "name": "dR",
+        "value": 14,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter dR"
+      },
+      {
+        "name": "dBR",
+        "value": 14,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter dBR"
+      },
+      {
+        "name": "v",
+        "value": 10,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter v"
+      },
+      {
+        "name": "e",
+        "value": 80,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter e"
+      },
+      {
+        "name": "lB",
+        "value": 32,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter lB"
+      },
+      {
+        "name": "lR",
+        "value": 32,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter lR"
+      },
+      {
+        "name": "lM",
+        "value": 32,
+        "domain": "Fixed source figure assignment; key and state dimensions in bytes, e/lB/lR/lM are bit exponents.",
+        "meaning": "Source Algorithm1/Figure path parameter lM"
+      }
+    ],
+    "distinctness": "One preimage for the fixed target and IV; no IV freedom.",
+    "reference": "Ideal 128-bit compression output, generic classical preimage work approximately 2^128.",
+    "unresolved": []
+  }
+}

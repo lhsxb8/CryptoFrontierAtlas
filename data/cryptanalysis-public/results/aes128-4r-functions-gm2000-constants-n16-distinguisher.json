@@ -1,0 +1,151 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-4r-functions-gm2000-constants-n16-distinguisher",
+  "title": "4-round AES-128: ten-constant distinguisher, sixteen inputs",
+  "display": {
+    "name": "Ten-constant distinguisher, sixteen inputs",
+    "method": "collision"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "gm2000-four-inner-rounds-final-mixcolumns-reflected-columns",
+    "description": "AES-128 on 128-bit blocks, reduced to 4 rounds. The collision is between internal byte-valued functions under the same unknown round keys, not between two AES master keys. Four consecutive inner rounds include MixColumns in every round, under any fixed unknown round-key values. This component applies to each AES key length but is not a prefix-cipher key-recovery result."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "chosen_input_four_inner_round_permutation"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "Four fixed, unknown 128-bit round keys. The structural argument does not use their master-key dependencies, and therefore also applies to keys derived from any of the standard AES key lengths.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "Fix c and the other twelve input bytes; vary y over N distinct values, where N<=256. The selected concrete endpoint uses N=16; the source does not claim a uniform advantage for every smaller N.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source describes right-going ShiftRow. Standard AES uses left-going shifts. Reindexing columns by J(r,c)=(r,-c mod 4) conjugates the independent-round-key construction; inputs, outputs and recovered round keys are reflected consistently before standard key expansion. This coordinate normalization is a local structural interpretation, not a complete attack reproduction.",
+      "Enumerate ten unknown byte constants describing the partial function. The paper calls N=16 sufficient in practice but supplies no numerical distinguishing advantage or proof for all N."
+    ],
+    "reference_model": "Chosen-input access to four fixed-key inner rounds is compared with a uniformly random permutation on 128-bit blocks, using the same input structures and projected output tests."
+  },
+  "techniques": [
+    "functional-constant-enumeration"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^80*16 = 2^84",
+      "log2": 84,
+      "unit": "gm2000-constant-enumeration-operations",
+      "qualifier": "estimate",
+      "note": "The source prices 2^80 parameter guesses times N observations in unspecified elementary operations. The N=16 exponent is an algebraic substitution, not a conversion to AES encryptions."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "16",
+      "log2": 4,
+      "unit": "chosen-inner-round-input-blocks",
+      "qualifier": "exact",
+      "note": "The text gives a parameter family and separately identifies N=16 as sufficient; no success guarantee is assigned to every small N."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No complete peak-storage budget is stated."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The paper does not separately price setup for this endpoint."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "distinguishing-advantage",
+    "value": null,
+    "description": "Derived ideal-permutation distinguishing-advantage bound for the complete ten-byte constant-enumeration test, with one fixed c triplet, other fixed input bytes, and N distinct preselected active-byte values, 1<=N<=256. Property4 determines the observed nonzero rank8 output projection by at most2^80 constant choices, fixed independently of the oracle. The actual AES constants are included, so AES acceptance is one. For a uniform128-bit permutation a fixed ordered projected signature has probability at most2^(-8N)*product(j=0..N-1)(1-j/2^128)^-1. The product is less than2 for this domain; union over all constants gives false-positive probability at most min(1,2^(81-8N)). Thus Adv>=max(0,1-2^(81-8N)), and N=16 gives Adv>=1-2^-47. The bound is vacuous for N<=10 and positive for N>=11. Neither independent guesses, iid output bytes, birthday acquisition nor key recovery is assumed. This is a new conservative counting inference, not an author-printed advantage; native operation counts and unknown costs are unchanged.",
+    "components": [
+      {
+        "metric": "complete-ten-byte-constant-enumeration-includes-actual-aes-function",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Chapter6–7 Property4: complete enumeration of all ten unknown byte constants contains the actual values for this fixed unknown key, so the genuine function has a matching signature for every sampled y. This is one-sided AES acceptance; it neither bounds wrong signatures nor gives a total distinguishing advantage."
+      }
+    ],
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Verified exact source experiment, deterministic AES acceptance, ideal-permutation sampling without replacement and conservative whole-decision bound. Independently source-first and endpoint reviewed. This does not certify unknown resources, disputed source claims, attack reproduction or a new full-paper audit."
+    },
+    "basis": "derived_from_source",
+    "expression": "\\operatorname{Adv}\\ge 1-2^{-47}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "Paper pp.3–7 Section 3, especially p.7; Figure 1 p.4",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary-source endpoint preserving the stated target, access model, native resource units and recovery scope. Paper-local pagination is distinct from the whole-proceedings PDF page number."
+    },
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "CompletechapterPDF230–241 in original AES3volume; chapter1–12, allSections1–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    },
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "Original complete AES3 proceedings PDF232–236 / chapter3–7 Sections3.1–3.3, Properties1–4 and birthday/constant-enumeration tests. Source hash identifies the358-page volume, not a chapter rendition.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical distinguishing advantage is stated for the fixed N=16 exhaustive ten-byte constant test. Actual-constant coverage makes AES acceptance deterministic, but the source does not give an ideal-permutation whole-search false-positive rate. Six key-only bytes and four c-dependent bytes are enumerated constants, not a master-key recovery output. Do not invent2^(80-8N) as an exact permutation bound or transfer birthday acquisition to this different test."
+    },
+    {
+      "source_id": "gm2000-collision-aes3",
+      "locator": "AES3 whole-volume PDF232–236 / chapter3–7 Section3, Properties1–4; PDF236 final Section3.3 paragraph, ten constants, N<=256, 2^80*N operations and N=16. B40 report includes finite-population union accounting.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "New source-derived complete-test distinguishing-advantage bound against the exact uniform128-bit permutation. Original costs, target, conditions, components and source conflicts remain unchanged."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Costs and success statements are the authors' analytical claims; no complete attack or third-party implementation was executed."
+  ],
+  "related_problem_ids": []
+}

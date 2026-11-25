@@ -1,0 +1,176 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-related-key-id-72bit-bdk2006",
+  "title": "BDK06 7-round AES-192 / aes192-7r-related-key-id-72bit-bdk2006",
+  "display": {
+    "name": "Related-key impossible differential / 72 subkey bits",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "bdk2006-rounds2-8-final-no-mc",
+    "description": "Shifted AES-192 interval, original rounds 2–8, with the preceding subkey and no final MixColumns. Explicit output is 72 mixed boundary-subkey bits, not a separately completed 192-bit master key."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": 32,
+    "target_selection": "any_from_pool",
+    "key_relation": "Two structures of16 secret AES-192 keys each, inducing256 cross pairs. Across a pair the master-key XOR has DeltaK[3]=f and DeltaK[8]=DeltaK[12]=DeltaK[16]=DeltaK[20]=a, other bytes0. The attacker chooses nonzero a; f is varied by the structures, while b,c and for8r d are actual nonlinear schedule differences, handled as in Sections3.3/4.2.",
+    "key_population": "general secret key",
+    "plaintext_model": "Aggregate related-key chosen-plaintext queries under thirty-two structured keys; Section 3.3 gives 2^52 plaintext identities each under sixteen keys, while Section 4 gives per-key pools.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Section 3.3 estimates 0.63 probability that the key structures contain a suitable pair. This is not automatically a numerical complete-key success probability.",
+      "Output widths count named selected-subkey values, not proved independent master-key bits. The remaining key-recovery completion is not priced.",
+      "This endpoint recovers 72 named subkey bits; other widths are not equivalent recovery goals.",
+      "The source conversion 2^6 memory accesses per encryption equivalent is an accounting convention, not a calibrated implementation measurement."
+    ]
+  },
+  "techniques": [
+    "related-key-impossible-differential",
+    "structured-key-nonlinearity",
+    "seven-round-filter"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^94",
+      "log2": 94,
+      "unit": "7-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported native cost for this endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^56",
+      "log2": 56,
+      "unit": "related-key-chosen-plaintext-queries",
+      "qualifier": "estimate",
+      "note": "Aggregate chosen-plaintext calls over the thirty-two related keys, not per-key data."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^69",
+      "log2": 69,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Source quantifies about 2^69 bytes for the seven-round algorithm and the detailed three-column eight-round endpoint."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Section 3.2 gives about 2^62 encryptions for known a,b,c,f; the final repeated unknown-difference setup is not separately repriced."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "partial-subkey-recovery",
+    "value": null,
+    "description": "No separate numerical success is established for this72-bit named-subkey endpoint. The source0.63 statement models finding a suitable pair in the32-key structure; conditioned on it, small expected wrong lists are used to argue recovery. Pair incidence and wrong-candidate uniqueness are separate, with no independently quantified joint distribution. The source expectation is not converted into exact recovery success or complete192-bit master-key recovery.",
+    "components": [
+      {
+        "metric": "true-subkey-retained-by-seven-round-impossible-core",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections3.1–3.2: with the actual Table2 differences and correct boundary, the actual72-bit named tuple is not removed by the impossible-pattern test. This is conditional candidate retention, not a uniqueness or acquisition guarantee."
+      },
+      {
+        "metric": "three-byte-hash-filter",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "expression": "2^{-24}",
+        "description": "Section3.2 Step4 source24-bit pair-filter model. This records a pair fraction, not a count in one particular hash bin."
+      },
+      {
+        "metric": "additional-byte-filter-given-terminal-byte-guess",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "Section3.2 Step5c source conditional8-bit pair-filter model for one terminal-byte guess."
+      },
+      {
+        "metric": "one-fixed-wrong-whitening-candidate-survives-source-model",
+        "value": 1.603810890548638e-28,
+        "basis": "author_model",
+        "expression": "(1-2^{-64})^{2^{70}}",
+        "description": "Section3.2 source uniform-elimination model: survival of ONE fixed wrong64-bit whitening guess after2^70 useful pairs. Multiplying by2^64 gives a source expected wrong-candidate count, approximatelyexp(-20), not a joint72-bit recovery probability."
+      },
+      {
+        "metric": "key-structure-contains-suitable-pair-source-model",
+        "value": 0.6328402451084638,
+        "basis": "author_model",
+        "expression": "1-\\left(\\frac{255}{256}\\right)^{256}\\approx0.63",
+        "description": "Section3.3: two16-key structures induce256 cross pairs. This is the source approximately independent/uniform256-trial model for at least one suitable subkey-difference pair. Pair dependence is not independently proved, and this event does not quantify candidate uniqueness or output recovery."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Suitable-key incidence, conditional retention, wrong-list survival, random-function bounds and quartet filters retain their own experiments. Existing correction evidence, native resources, targets, settings and full-audit gates remain unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-6a5f9893fd05a6f0-2006",
+      "locator": "PDF pp.2–4 Table 1 and round convention; pp.6–9 Sections 3.2–3.3, explicit 72-bit output and structured keys; pp.9–12 Section 4, column variants and final aggregate budgets.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary table and defining algorithm/accounting passages checked; partial outputs and native units retained."
+    },
+    {
+      "source_id": "aes-paper-6a5f9893fd05a6f0-2006",
+      "locator": "Complete13-page CT-RSA2006 proceedings read raw-first on2026-10-27; PDF pp.2–3/Table1 and round convention, pp.4–9/Section3, pp.9–12/Section4.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/goal",
+        "/bound"
+      ],
+      "interpretation": "Original costs and units are preserved. Exact shifted boundaries, structured keys, selected-subkey widths and setup/success semantics were checked in the complete edition."
+    },
+    {
+      "source_id": "aes-paper-6a5f9893fd05a6f0-2006",
+      "locator": "Proceedings PDF6–9 / printed26–29 Sections3.1–3.3, impossibility, local pair filters, whitening survival and key structures.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No separate numerical success is established for this72-bit named-subkey endpoint. The source0.63 statement models finding a suitable pair in the32-key structure; conditioned on it, small expected wrong lists are used to argue recovery. Pair incidence and wrong-candidate uniqueness are separate, with no independently quantified joint distribution. The source expectation is not converted into exact recovery success or complete192-bit master-key recovery."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This record prices the stated endpoint; it does not append an unreported master-key completion budget.",
+    "All13 pages of the exact conference edition were fully read; unreported auxiliary completion/setup and attack reproduction remain separate scientific tasks."
+  ],
+  "related_problem_ids": []
+}

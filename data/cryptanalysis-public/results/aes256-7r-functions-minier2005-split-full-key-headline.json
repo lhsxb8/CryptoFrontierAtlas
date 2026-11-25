@@ -1,0 +1,196 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-7r-functions-minier2005-split-full-key-headline",
+  "title": "7-round AES-256: reported whole-key bottleneck headline",
+  "display": {
+    "name": "Bottleneck attack, full-key headline",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "minier2005-whitening-final-no-mixcolumns-standard-left-shiftrows",
+    "description": "The author's attack-level claim for7-round AES-256, with standard left ShiftRows, initial whitening and final MixColumns omitted. The explicit selected-subkey procedure is separately catalogued as aes256-7r-functions-minier2005-split-selected-subkeys."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key or known-key access.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "A 2^32 chosen-plaintext structure varying four initial bytes with the other twelve fixed.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "A random32-bit model for the four internal parameters supports the birthday estimate. Sixteen-value preliminary matches are checked over all256 y values.",
+      "This record preserves the complete-cipher attack headline. Master-key completion is not separately reconstructed or priced in this paper; GM00's round-peeling argument is discussed in the audit, not silently added to this budget."
+    ]
+  },
+  "techniques": [
+    "collision-of-functions",
+    "meet-in-the-middle",
+    "split-variables"
+  ],
+  "resources": {
+    "time": {
+      "status": "conflict",
+      "reported": "2^144 AES executions in abstract; about2^144 cheaper operations in Section5.3",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The abstract and detailed body use different native units. Data acquisition additionally executes the chosen-plaintext oracle2^32 times; no scalar end-to-end conversion is selected."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "One four-byte structure, reused throughout the search."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "A2^80-entry table of16-byte tuples, plus observations and lookup storage; peak not priced",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The source describes the split-search table but does not give a complete peak-storage budget."
+    },
+    "preprocessing": {
+      "status": "qualitative",
+      "reported": "Ciphertext-dependent per-kini/per-c-pair tables inside the search",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No independent complete preprocessing budget is separately stated."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "author-reported-whole-key-attack",
+    "value": null,
+    "description": "The Section5.3 one-half success statement supplies selected last/penultimate-round material and four initial bytes; no complete-master-key completion cost or success is quantified. Preserve the original abstract/body2^144 cost-unit conflict and keep the existing selected-subkey endpoint probability unchanged.",
+    "components": [
+      {
+        "metric": "sampled-internal-function-collision-baseline",
+        "value": 0.5,
+        "basis": "author_model",
+        "expression": "\\approx\\frac{1}{2}",
+        "description": "Section5.3 BASELINE split search: a random2^16 sample among2^32 internal function descriptions gives about one-half collision probability and supplies kini,k_tau1,k_tau2 under the source model. The stated probability belongs to the selected-key-material procedure, not unpriced complete-key completion."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Re-read PDF3–11 Sections3–5, especially PDF8–11 Section5.1–5.4. The printed approximately1/2 success explicitly returns initial four bytes and selected last/penultimate material; the ending says20 bytes of round-key information. This is not a complete AES192/256 master-key output distribution. Section5.4 only sketches schedule-based reduction, with no new full completion probability/accounting. Preserve the local0.5 component, separate selected-subkey endpoints and abstract/body2^144 native-unit conflict."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Printed p.16 abstract/Introduction and pp.23–26 Section5: attack-level headline versus explicit tuple",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-author",
+      "locator": "Printed p.16 abstract/Introduction and pp.23–26 Section5: attack-level headline versus explicit tuple",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Both complete PDF1–11/printed16–26; Sections3–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Proceedings PDF10–11 / printed25–26 Section5.3 split-search collision and selected key material; PDF11 / printed26 Section5.4 AES192 schedule extension.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The Section5.3 one-half success statement supplies selected last/penultimate-round material and four initial bytes; no complete-master-key completion cost or success is quantified. Preserve the original abstract/body2^144 cost-unit conflict and keep the existing selected-subkey endpoint probability unchanged."
+    },
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "PDF8–11 / printed23–26, Sections5.1–5.4, Section5.3 procedure/one-half statement and ending20-byte information. Targeted success recheck2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Re-read PDF3–11 Sections3–5, especially PDF8–11 Section5.1–5.4. The printed approximately1/2 success explicitly returns initial four bytes and selected last/penultimate material; the ending says20 bytes of round-key information. This is not a complete AES192/256 master-key output distribution. Section5.4 only sketches schedule-based reduction, with no new full completion probability/accounting. Preserve the local0.5 component, separate selected-subkey endpoints and abstract/body2^144 native-unit conflict."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Primary-text claims are catalogued by target and scope. Full attacks, cost estimates and global success are not independently reproduced.",
+    "Complete-key scope is an author-reported headline; completion accounting remains open. The selected-subkey stage has a separate record."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "Headline versus detailed operation units",
+      "description": "Both inspected copies use AES executions in the abstract but cheaper operations in the detailed attack accounting.",
+      "observations": [
+        {
+          "source_id": "minier2005-three-rounds-proceedings",
+          "locator": "Printed p.16 abstract and Introduction",
+          "reported": "The recalled bottleneck attack uses2^144 AES/cipher executions."
+        },
+        {
+          "source_id": "minier2005-three-rounds-proceedings",
+          "locator": "Printed p.26 Section5.3",
+          "reported": "The second step uses about2^144 operations less expensive than AES executions."
+        },
+        {
+          "source_id": "minier2005-three-rounds-author",
+          "locator": "Printed p.16 abstract and Introduction",
+          "reported": "The recalled bottleneck attack uses2^144 AES/cipher executions."
+        },
+        {
+          "source_id": "minier2005-three-rounds-author",
+          "locator": "Printed p.26 Section5.3",
+          "reported": "The second step uses about2^144 operations less expensive than AES executions."
+        }
+      ]
+    }
+  ]
+}

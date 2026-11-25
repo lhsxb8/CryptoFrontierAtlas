@@ -1,0 +1,184 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-related-key-recovery-bkn2009-pair-pool-cca",
+  "title": "Full AES-256 key recovery by scanning 2^35 related-key pairs, BKN 2009 encryption/decryption variant",
+  "display": {
+    "name": "Pair-pool differential, encryption/decryption",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "Standard full AES-256 key recovery for a qualifying weak pair found in a large pool of candidate related-key pairs, using Section 4.2's encryption/decryption procedure."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related-key-chosen-plaintext-encryption",
+      "related-key-chosen-ciphertext-decryption"
+    ],
+    "related_key_count": null,
+    "key_budget": {
+      "reported": "2^35 tested related-key pairs",
+      "log2": 35,
+      "unit": "tested_related_key_pairs",
+      "distinct_key_count": null,
+      "note": "Section 4.2 explicitly iterates over 2^35 related-key pairs. The paper's Table 1 uses a # keys heading, but neither that heading nor this pair budget establishes the total number of distinct secret keys or the overlaps among pairs."
+    },
+    "target_selection": "any_from_pool",
+    "key_relation": "Within every candidate pair, the master keys are K and K XOR DeltaK for the fixed Appendix A difference. The attack seeks a pair satisfying the five active key-schedule S-box transitions; relations and overlap among different tested pairs are not normalized further.",
+    "key_population": "A pool of 2^35 candidate related-key pairs; the paper estimates weak-pair incidence 2^-35 and recovers a key belonging to a qualifying pair, not an arbitrary predesignated target key.",
+    "plaintext_model": "For each tested pair, 2^31 repetitions of two 2^64 chosen-plaintext structures; chosen-ciphertext pairs are used after a qualifying pair's first-stage recovery.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The attacker can access the full pool of candidate related-key pairs and perform first-stage encryption queries for each pair.",
+      "After recovering the first 80 bits for a qualifying pair, the attacker can query decryption under that pair to complete recovery.",
+      "The authors' average weak-pair incidence is used; no guarantee that every concrete pool contains a qualifying pair is asserted."
+    ]
+  },
+  "techniques": [
+    "related-key-differential",
+    "local-collisions",
+    "weak-key-pair-search",
+    "key-ranking",
+    "exhaustive-key-completion"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^131",
+      "log2": 131,
+      "unit": "source-reported-work",
+      "qualifier": "estimate",
+      "note": "Section 4.2 p.244 explicitly gives 2^(96+35)=2^131, dominated by the first-step scan over candidate pairs. The later recovery and exhaustive-completion steps are included at lower order."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^131 dominant first-stage encryption queries, followed by 2^91 decryption queries for a selected pair",
+      "log2": 131,
+      "unit": "total-pool-block-oracle-queries",
+      "qualifier": "estimate",
+      "note": "Editorial arithmetic from the explicit algorithm: 2^35 tested pairs times 2^96 encryption queries per pair equals 2^131. The selected pair's second stage decrypts 2^90 ciphertext pairs. No distinct-key count is inferred from either query total."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^65",
+      "log2": 65,
+      "unit": "source-native-storage-units-unspecified",
+      "qualifier": "estimate",
+      "note": "The abstract and Table 1 report 2^65 overall memory. The scan processes candidate pairs using the stated working-memory estimate; memory is not multiplied by the number of tested pairs."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The candidate-pair scan is part of attack time and data, not a free or amortized preprocessing stage. No separate reusable preprocessing budget is reported."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "pool-selected-full-key-recovery-success",
+    "value": null,
+    "description": "No numerical full-master-key recovery success is supplied. Testing2^35 related-key pairs uses a mean incidence, not a proved pool-hit probability; no independence or Poisson acquisition model is imposed. The first stage expects four right pairs,2^31 wrong pairs and2^47 random80-bit votes. The CCA second stage expects eight right pairs and then prices the remaining12 bytes by2^96 exhaustive search. The source no-wrong-survivor wording does not quantify joint acquisition, uniqueness and full-key output. Expected counts are not converted into primary probabilities.",
+    "components": [
+      {
+        "metric": "uniform-related-key-pair-satisfies-five-schedule-transitions",
+        "value": 2.9103830456733704e-11,
+        "basis": "author_model",
+        "expression": "2^{-35}",
+        "description": "Section4.1: five key-schedule transitions each2^-7 give mean weak-pair incidence2^-35 in the source key model. This is not the probability that a2^35-pair pool contains a qualifying pair; independence between tested pairs is not established."
+      },
+      {
+        "metric": "first-stage-rounds3-to14-state-trail-given-weak-pair",
+        "value": 1.0097419586828951e-28,
+        "basis": "author_model",
+        "expression": "2^{-93}",
+        "description": "Section4.2 first step: remaining state-trail probability after the structured first two rounds, conditional on an actual qualifying key pair."
+      },
+      {
+        "metric": "first-stage-one-structure-right-pair-source-approximation",
+        "value": 1.862645149230957e-9,
+        "basis": "author_model",
+        "expression": "2^{-29}",
+        "description": "Section4.2: source assigns2^(64-93)=2^-29 to a structure producing a right pair. Retain this as its local first-moment approximation;2^31 repetitions give mean four, not an independently established end-to-end success distribution."
+      },
+      {
+        "metric": "second-stage-rounds3-to14-state-trail-given-first-stage-output",
+        "value": 6.462348535570529e-27,
+        "basis": "author_model",
+        "expression": "2^{-87}",
+        "description": "Section4.2 second step: the source relaxes one2^-6 transition, giving2^-87 for the remaining rounds, conditional on the weak pair and correct first-stage80-bit material. Its2^90 chosen ciphertext pairs give expected eight, not a new primary success."
+      },
+      {
+        "metric": "second-stage-two-column-source-pair-filter",
+        "value": 3.552713678800501e-15,
+        "basis": "author_model",
+        "expression": "2^{-48}",
+        "description": "Section4.2 second step:48-bit partial-encryption filter using correctly recovered first-stage material, reducing2^90 pairs to2^42 source candidates. This filter is not an overall wrong-key or full-key success probability."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Local pair filters, conditional trails, weak-pair incidence and expected counts keep their own experiment; correlation is not a decision probability. Existing conflicts, resources, targets, settings and full-audit gates remain unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "Abstract p.231; Section 4.1 p.242; Section 4.2 pp.242-244, especially 'for each of the 2^35 related-key pairs' and final 2^(96+35)=2^131 sentence.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The body supports a candidate-pair scan and key recovery from a qualifying pair. It does not support relabeling the result as an all-key two-related-key attack or identifying 2^35 as an established distinct-key count."
+    },
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "p.243, Section 4.2 First step, numbered procedure and complexity paragraph; pp.243-244, Second step.",
+      "fields": [
+        "/resources/data",
+        "/setting/key_budget",
+        "/setting/target_selection"
+      ],
+      "interpretation": "The data estimate is explicit multiplication of the per-pair encryption procedure by its outer pair loop; later decryption uses the selected qualifying pair. These query counts are not distinct secret-key counts."
+    },
+    {
+      "source_id": "bkn2009-weak-keys-conference",
+      "locator": "CRYPTO proceedings PDF12–14 / printed242–244 Sections4.1–4.2 and Figure4; PDF3 Table1 distinguishes weak-pair and pool costs.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical full-master-key recovery success is supplied. Testing2^35 related-key pairs uses a mean incidence, not a proved pool-hit probability; no independence or Poisson acquisition model is imposed. The first stage expects four right pairs,2^31 wrong pairs and2^47 random80-bit votes. The CCA second stage expects eight right pairs and then prices the remaining12 bytes by2^96 exhaustive search. The source no-wrong-survivor wording does not quantify joint acquisition, uniqueness and full-key output. Expected counts are not converted into primary probabilities."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Recovery is for a key from a qualifying pair in the pool, not a guarantee for an independently designated target key.",
+    "The source supplies a pair-testing budget but does not establish a distinct-key total; the table's # keys shorthand is not imported as that total.",
+    "The pair-wide 2^96 query count follows the explicit algorithm, not an additional factor-two multiplication of the summary table's per-key label.",
+    "The attack needs chosen-ciphertext access, and its estimates have not been independently reproduced.",
+    "Independent2026-10-27 full19-page reread and bounded S-box/linear-layer/exponent checks completed; these are not full attack, global TA distribution or end-to-end success reproductions."
+  ],
+  "related_problem_ids": []
+}

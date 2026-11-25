@@ -1,0 +1,113 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes192-7r-two-block-owf-key-recovery-cglsz2025",
+  "title": "MITM · two-block AES OWF key recovery",
+  "display": {
+    "name": "MITM · two-block AES OWF key recovery",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "cglsz2025-7-round-final-no-mc",
+    "description": "Recover a full AES-192 key compatible with two fixed plaintext/ciphertext pairs in the source single-use AES OWF; costs include iterating the single-pair attack until the second pair is satisfied."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "known_plaintext_ciphertext_pairs"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed standard AES master key and its key schedule.",
+    "key_population": "General standard AES master keys",
+    "plaintext_model": "Two distinct predetermined plaintext blocks and their complete ciphertexts, under the same unknown master key.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source conversion repeats the SKP inversion until both public pairs are satisfied."
+    ]
+  },
+  "techniques": [
+    "mitm",
+    "single-use-aes-owf",
+    "second-block-verification"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{184}",
+      "log2": 184,
+      "unit": "round-reduced-aes-encryptions",
+      "qualifier": "estimate",
+      "note": "Table1 dagger and Section3.1: includes repetition for the second block."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2",
+      "log2": 1,
+      "unit": "known-plaintext-ciphertext-pairs",
+      "qualifier": "estimate",
+      "note": "Two fixed public pairs."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^{72}",
+      "log2": 72,
+      "unit": "neutral-word-table-entries",
+      "qualifier": "estimate",
+      "note": "Same peak table as SKP subroutine."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Setup is included in total work unless separately stated."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "find-complete-key-compatible-with-two-given-pairs",
+    "value": null,
+    "description": "The checked analysis gives an expected-work or filtering argument without a numeric probability for the complete named output event.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF p.7 Table1; pp.9–12 SKP versus two-block OWF; p.39 AppendixC.2/Figure15."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "cglsz2025-aes-hashing-owf",
+      "locator": "PDF p.7 Table1; pp.9–12 SKP versus two-block OWF; p.39 AppendixC.2/Figure15.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/bound"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete named output probability is not quantified by the source."
+  ],
+  "related_problem_ids": []
+}

@@ -1,0 +1,159 @@
+{
+  "schema_version": "0.10.0",
+  "related_problem_ids": [],
+  "id": "aes192-full-fault-bs2003-biased-bit-family",
+  "title": "AES-192: Biased reset: single-bit parameter family (Blömer–Seifert, FC2003)",
+  "display": {
+    "name": "Biased reset: single-bit parameter family",
+    "method": "ineffective_fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 12,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "One bit of the initial128-bit master-key portion of AES-192, under the biased-reset model."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen-plaintext-encryption-with-fault-attempt",
+      "observable-encryption-correctness"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret master key; no related-key oracle.",
+    "key_population": "Arbitrary key of the stated AES instance in an implementation meeting the fault and feedback assumptions.",
+    "plaintext_model": "Repeat the all-zero128-bit plaintext m times, targeting the same initial state bit.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "State bits immediately after a selected AddRoundKey operation.",
+      "granularity": "One selected state bit per fault-injection attempt.",
+      "timing": "After initial AddRoundKey, before first SubBytes, at a known exact time.",
+      "location": "The attacker targets the required individual state-bit locations and can move between them.",
+      "value_control": "Known p1>1/2 for changing1 to0 and p0<1/2 for changing0 to1; the sampled fault process satisfies the concentration assumptions.",
+      "sample_pairing": "Each attempted injection yields a correct/incorrect outcome. Ciphertext-comparison feedback additionally needs a correct reference for the same input, outside the stated attempt count.",
+      "feedback": "Observable correct-versus-incorrect encryption outcome. Section1 permits alternatives: a device reset/error flag; comparison with a fault-free ciphertext; or detectable recomputation timing. Only the binary outcome is required, not the faulty ciphertext bytes.",
+      "evidence_scope": "analytical"
+    },
+    "assumptions": [
+      "Successful localization and the stipulated fault-value effect are model assumptions, not measured acquisition success rates.",
+      "The ciphertext-validity alternatives are interchangeable only as a binary observation; the source does not cost each feedback channel's calibration or reference executions separately.",
+      "Recovery target: One bit of the initial128-bit master-key portion of AES-192, under the biased-reset model.",
+      "The Bernoulli-trial concentration model and known p0,p1 are assumed. The printed threshold branches have a source discrepancy."
+    ]
+  },
+  "techniques": [
+    "ineffective-fault-analysis",
+    "bit-reset",
+    "correctness-feedback",
+    "statistical-threshold",
+    "bernstein-bound"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical complete-attack offline runtime is reported."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "m",
+      "log2": null,
+      "unit": "fault-injection-encryption-attempts",
+      "qualifier": "unspecified",
+      "note": "Parameterized number of attempted encryptions for one target bit. The source does not specify integer rounding; p0,p1 and m are not numerically fixed."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical whole-attack peak-memory budget is supplied."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical preprocessing time is supplied."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "theoretical-single-key-bit-recovery-symbolic-lower-bound",
+    "value": null,
+    "description": "Author's symbolic bound: success >=1-exp(-m(p1-p0)^2/16), under the stated concentration model. No scalar value is selected; printed decision-rule conflict remains."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Section1 p.164; Section4.1 pp.171–172",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary-version result with explicit target, feedback model and native fault-attempt accounting; AES means128-bit blocks and the stated standard key size."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Section4.1 p.171, threshold and two-hypothesis analysis",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "Preserve the printed decision-rule discrepancy separately from the authors' probability-bound claim."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Complete PDF1–20/printed162–181; Sections4–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The paper supplies attack-model reasoning, not a physical experiment with measured chip-level success, time and calibration cost.",
+    "Attempts leaving the targeted value unchanged are informative and remain in the data budget."
+  ],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Decision rule",
+      "description": "The printed threshold rule guesses1 in both branches; the following analysis treats separate0/1 hypotheses. The intended complementary decision is not silently substituted.",
+      "observations": [
+        {
+          "source_id": "bs2003-fault-fc",
+          "locator": "Section4.1 p.171, paragraph after the threshold",
+          "reported": "Both the at-least-threshold and the otherwise branch are printed as guessing bit1."
+        },
+        {
+          "source_id": "bs2003-fault-fc",
+          "locator": "Section4.1 p.171, following probability analysis",
+          "reported": "Separate key-bit1 and key-bit0 error probabilities are bounded using opposite threshold events."
+        }
+      ]
+    }
+  ]
+}

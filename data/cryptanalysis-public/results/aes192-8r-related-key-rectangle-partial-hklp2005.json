@@ -1,0 +1,113 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-related-key-rectangle-partial-hklp2005",
+  "title": "aes-192, 8 rounds: Rectangle / five-byte subkey quartet recovery [HKLP05]",
+  "display": {
+    "name": "Rectangle / five-byte subkey quartet recovery",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "source-hklp05-8r",
+    "description": "Initial whitening and AES192 rounds0–7, with finalMC7omitted. Source7rrectangle includesMC6; algorithm recovers five bytes of each round7 subkey, specifically K7bytes[3,5,6,9,12] for each related key, not the192-bit master keys."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": 4,
+    "target_selection": "designated_target",
+    "key_relation": "Four related secret master keys K,K*,K-prime,K-prime* form an XOR parallelogram: K XOR K*=K-prime XOR K-prime*=DeltaK*, and K XOR K-prime=K* XOR K-prime*=DeltaK-prime. In column-major master-key byte positions, DeltaK* is a at9,13 and DeltaK-prime is a at1,17; other bytes are zero, with fixed a in1,...,255. These are master-key XOR differences, not chosen round keys.",
+    "key_population": "General related secret-key parallelogram under the exact fixed XOR differences; no weak-key class is selected.",
+    "plaintext_model": "Two pools of 2^84.5 plaintext pairs, one encryption per plaintext: 2^86.5 aggregate related-key chosen plaintexts.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source7rrectangle and false-quartet analyses use uniformity/independence approximations; component support/DDT checks are not an independent whole-attack probability proof.",
+      "Correlated5-byte key-quartet candidate count is2^40·127·2^16≈2^63, not(2^40)^4. Unknown dependentS-box differences are enumerated, not freely chosen."
+    ]
+  },
+  "techniques": [
+    "related-key-rectangle",
+    "five-byte-last-round-key-quartet"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^86.5",
+      "log2": 86.5,
+      "unit": "8-round-aes192-encryptions",
+      "qualifier": "estimate",
+      "note": "PDF12reports2^86.5 eight-round encryptions dominated by encrypting all chosen plaintexts. Native Step3 estimate is2^63 after filtered quartets; sorting/query generation are in the same source accounting, not an independent precomputation correction."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^86.5",
+      "log2": 86.5,
+      "unit": "related-key-chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Two pools each2^84.5pairs: four plaintext encryptions per pair-of-pool index give2^86.5total blocks, or2^84.5queries under each of four keys;2^169candidate quartets are not query count."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^90.83",
+      "log2": 90.83,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Preserve source2^90.83bytes and stated2^86.5·20byte accounting; exact log2 of that expression is90.821928. Do not silently replace the unexplained20-byte source unit by16bytes."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separately reusable preprocessing budget is stated; online/data-generation encryption dominates quoted total time. Missing does not mean zero."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "five-byte-key-quartet-recovery",
+    "value": 0.76,
+    "description": "About0.77 probability of at least3 right quartets from2^169candidates, multiplied by source1−0.01wrong-key-output estimate, gives≈0.76for the five-byte subkeyquartet. Exact source-event expression gives mean4.0625and Poisson pass≈0.770912; this is arithmetic consistency, not independent end-to-end validation."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-f77e60cd1dc0aaa3-2005",
+      "locator": "PDF8–13/printed375–380 Section4complete: AESrounddefinition; PDF9E0/E1; PDF10–11Figs3–5, Assumptions1–2; PDF12explicit5-bytequartetoutput/nativecosts; PDF13success.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/assessment"
+      ],
+      "interpretation": "Complete exact16-page primary read; abstractbreakheadline is interpreted through explicit five-byte output, all costs/success kept together. No wholeattack or master-key completion executed."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Complete independent16-page primary read and bounded forward checks on2026-10-27. Finite255DDT-row,4080key-parallelogram and1020three-round support checks verify components, not the full7r rectangle probability or8r key-ranking success.",
+    "The published endpoint outputs40bits of each correlated round7subkey, not a complete192-bit master key. No source full-master-key completion algorithm/budget exists in this edition."
+  ],
+  "related_problem_ids": []
+}

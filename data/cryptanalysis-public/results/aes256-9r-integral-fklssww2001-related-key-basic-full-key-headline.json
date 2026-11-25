@@ -1,0 +1,157 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-9r-integral-fklssww2001-related-key-basic-full-key-headline",
+  "title": "9-round AES-256: reported whole-key related-key basic filter",
+  "display": {
+    "name": "Related-key basic filter, full-key headline",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "fklssww2001-whitening-rounds-1-to-r-final-no-mixcolumns",
+    "description": "The authors' reported whole-key attack on 9-round AES-256, with initial whitening and final MixColumns omitted. The detailed filter stage is separately recorded as aes256-9r-integral-fklssww2001-related-key-basic; its selected subkey material and the broader whole-cipher claim have different scopes."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related_key_chosen_plaintext_encryption"
+    ],
+    "related_key_count": 256,
+    "target_selection": "designated_target",
+    "key_relation": "For an unknown base master key L, L_a XOR L has byte a at zero-based master-key byte indices 21 and 25 and zero elsewhere, for every a in 0,...,255. The a=0 key is the base key; total distinct keys is 256.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "Eight varying plaintext bytes cover 2^64 choices under each of 256 related master keys, totaling 2^72 key/plaintext queries.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Wrong-subkey rejection uses the paper's heuristic model for zero XOR sums; no numerical whole-procedure success rate is supplied.",
+      "Related master keys use a fixed XOR relation, while their expanded-key differences depend on guessed base-key bytes through S-boxes. These are not arbitrary independently selectable subkey oracles.",
+      "This record retains the paper's explicit whole-cipher attack headline. The detailed search first isolates selected subkey material; repeated filtering, reverse expansion or residual search for full master-key completion is not separately costed for every endpoint in this version."
+    ]
+  },
+  "techniques": [
+    "related-key",
+    "integral-square",
+    "key-schedule-differential"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "about 2^248",
+      "log2": 248,
+      "unit": "fklssww2001-trial-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Section 4.2 estimates 2^248 guesses and a workload comparable to one encryption per guess. This basic endpoint has different data and key guessing from the partial-sum improvement. This whole-key row preserves the authors' attack-level estimate; it does not infer a new constant factor from the separately catalogued filter."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^72",
+      "log2": 72,
+      "unit": "related-key-chosen-plaintext-queries",
+      "qualifier": "exact",
+      "note": "Total across 256 distinct related keys: 2^64 chosen plaintexts per key. The factor 256 is already included. The acquisition budget is the paper's reported attack-level budget."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Neither the basic nor improved related-key construction provides an explicit complete peak-storage budget."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Table preparation and setup are described within the construction but not separately priced for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "author-reported-whole-key-attack",
+    "value": null,
+    "description": "No numerical success for this exact key_recovery output is given. Section4.2 says enough sets identify the correct guesses; Section4.3 says about32 structures, without a joint error probability. The source 256-key relation and required plaintext compensation are conditions of the balanced identity. The basic 2^72-data endpoint does not inherit the optimized structure count or an invented per-set rejection rate. This is an author full-key headline; numerical success of unitemized completion is not inferred from the selected-subkey relation.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit; preserve resource parameters, existing conflicts and full-audit gates. Local source models and conditional relations do not certify whole-output success."
+    },
+    "components": [
+      {
+        "metric": "correct-related-key-hypothesis-balanced-sum",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF13 Section4.2 / Figure2 and PDF15 Section4.3: with correct guessed key bytes and source-defined plaintext compensation under the 256 related keys, the targeted byte of b6 sums to zero. The optimized full-structure sum preserves this relation; unique identification is a separate event."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Sections 4.1–4.5 pp.223–227; Table 1 p.214; conclusion pp.227–228",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Preserve the explicit reported whole-cipher attack scope as well as the separately catalogued selected-subkey calculation. The source's approximate headline is not promoted to independently verified end-to-end accounting."
+    },
+    {
+      "source_id": "fklssww2001-integral-author",
+      "locator": "Sections 4.1–4.5, document pp.11–15; Table 1, document p.2",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The author-hosted version states the same attack-level scope and endpoints, with its own version fingerprint."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Both complete editions: proceedingsPDF1–18/printed213–230 and authorPDF1–19 including finalblank; Sections2–5, AppendixA and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Proceedings PDF11–15 / printed223–227 Sections4.1–4.3/4.5, Figures1–2; Table1 onPDF2.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical success for this exact key_recovery output is given. Section4.2 says enough sets identify the correct guesses; Section4.3 says about32 structures, without a joint error probability. The source 256-key relation and required plaintext compensation are conditions of the balanced identity. The basic 2^72-data endpoint does not inherit the optimized structure count or an invented per-set rejection rate. This is an author full-key headline; numerical success of unitemized completion is not inferred from the selected-subkey relation."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The whole-key cost is retained as the authors' published attack claim. Per-stage completion accounting is not independently reconstructed and remains a coverage issue.",
+    "The selected-subkey filter is a separate result; these two scopes must not be ranked as if their goals were equal.",
+    "No complete attack implementation or cost reproduction was executed."
+  ],
+  "related_problem_ids": []
+}

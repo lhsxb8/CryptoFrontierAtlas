@@ -1,0 +1,155 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-6r-integral-fklssww2001-partial-sums-full-key-headline",
+  "title": "6-round AES-192: reported whole-key partial sums, five-byte filter",
+  "display": {
+    "name": "Partial sums, five-byte filter, full-key headline",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "fklssww2001-whitening-rounds-1-to-r-final-no-mixcolumns",
+    "description": "The authors' reported whole-key attack on 6-round AES-192, with initial whitening and final MixColumns omitted. The detailed filter stage is separately recorded as aes192-6r-integral-fklssww2001-partial-sums; its selected subkey material and the broader whole-cipher claim have different scopes."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown master key with the standard AES expansion; no related-key access.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "Six chosen-plaintext structures, each varying the four bytes feeding one first-round column over all 2^32 possibilities and fixing the other bytes.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Wrong-subkey rejection uses the paper's heuristic model for zero XOR sums; no numerical whole-procedure success rate is supplied.",
+      "This record retains the paper's explicit whole-cipher attack headline. The detailed search first isolates selected subkey material; repeated filtering, reverse expansion or residual search for full master-key completion is not separately costed for every endpoint in this version."
+    ]
+  },
+  "techniques": [
+    "integral-square",
+    "partial-sums"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "about 2^52 S-box applications, approximately 2^44 trial encryptions",
+      "log2": 44,
+      "unit": "fklssww2001-trial-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "The six-structure total is about 2^52 S-box applications. Division by the authors' rough 2^8 S-box applications per trial encryption gives 2^44; this is their cost model, not a modern calibrated AES implementation. This whole-key row preserves the authors' attack-level estimate; it does not infer a new constant factor from the separately catalogued filter."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "6*2^32",
+      "log2": 34.584962500721154,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Section 2.3 uses about six structures to identify the five subkey bytes. This is the full filtering data, not six plaintexts. The acquisition budget is the paper's reported attack-level budget."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "2^24-bit first counter array; input list and other working storage separately required",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Section 2.3 explicitly prices the first partial-sum counter array at 2^24 bits and starts from a list of 2^32 ciphertexts. The array alone is not asserted to be whole-attack peak memory."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Table preparation and setup are described within the construction but not separately priced for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "author-reported-whole-key-attack",
+    "value": null,
+    "description": "No numerical key_recovery success is stated at this exact structure budget. The direct and partial-sums implementations preserve the same aggregate XOR. The 255/256 wrong-key rejection in Section2.1 is for one 256-text Lambda set in the older algorithm; it is not assigned to the improved 2^32-text aggregate or exponentiated over this endpoint. About six structures are said to identify the five-byte hypothesis, without an explicit joint probability or full-key completion distribution. This is an author full-key headline; numerical success of unitemized completion is not inferred from the selected-subkey relation.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit; preserve resource parameters, existing conflicts and full-audit gates. Local source models and conditional relations do not certify whole-output success."
+    },
+    "components": [
+      {
+        "metric": "correct-key-aggregate-structure-balanced-sum",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF3–6 Sections2.3–2.4: a correctly hypothesized targeted byte has zero XOR over the complete 2^32-text structure, since it partitions into balanced 256-text sets. Partial sums compute the same XOR exactly; the identity does not imply unique recovery."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Table 1 p.214; Sections 2.3–2.7 pp.215–221; conclusion p.227",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Preserve the explicit reported whole-cipher attack scope as well as the separately catalogued selected-subkey calculation. The source's approximate headline is not promoted to independently verified end-to-end accounting."
+    },
+    {
+      "source_id": "fklssww2001-integral-author",
+      "locator": "Table 1, document p.2; Sections 2.3–2.7, document pp.3–9",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The author-hosted version states the same attack-level scope and endpoints, with its own version fingerprint."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Both complete editions: proceedingsPDF1–18/printed213–230 and authorPDF1–19 including finalblank; Sections2–5, AppendixA and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Proceedings PDF2–6 / printed214–218 Sections2.1–2.4, Eq.(1); Table1 onPDF2.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical key_recovery success is stated at this exact structure budget. The direct and partial-sums implementations preserve the same aggregate XOR. The 255/256 wrong-key rejection in Section2.1 is for one 256-text Lambda set in the older algorithm; it is not assigned to the improved 2^32-text aggregate or exponentiated over this endpoint. About six structures are said to identify the five-byte hypothesis, without an explicit joint probability or full-key completion distribution. This is an author full-key headline; numerical success of unitemized completion is not inferred from the selected-subkey relation."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The whole-key cost is retained as the authors' published attack claim. Per-stage completion accounting is not independently reconstructed and remains a coverage issue.",
+    "The selected-subkey filter is a separate result; these two scopes must not be ranked as if their goals were equal.",
+    "No complete attack implementation or cost reproduction was executed."
+  ],
+  "related_problem_ids": []
+}

@@ -1,0 +1,155 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-functions-minier2005-schedule-optimized-selected-subkeys",
+  "title": "7-round AES-192: Schedule-optimized selected-subkey extension",
+  "display": {
+    "name": "Eight-byte second-half subkey extension",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "minier2005-whitening-final-no-mixcolumns-standard-left-shiftrows",
+    "description": "AES-192 on 128-bit blocks. Seven-round prefix with initial whitening and final MixColumns omitted. The source explicitly specifies left-going ShiftRows. The procedure returns kini (four initial bytes), k_tau1 and k_tau2 (twenty last/penultimate-round bytes or linear combinations). This record covers that selected-key-material output. Section5.4 reduces the second-half k_tau2 search from ten bytes to eight by using the standard AES-192 key schedule."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key or known-key access.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "A 2^32 chosen-plaintext structure varying four initial bytes with the other twelve fixed.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "A random32-bit model for the four internal parameters supports the birthday estimate. Sixteen-value preliminary matches are checked over all256 y values."
+    ]
+  },
+  "techniques": [
+    "collision-of-functions",
+    "meet-in-the-middle",
+    "split-variables",
+    "key-schedule-dependencies"
+  ],
+  "resources": {
+    "time": {
+      "status": "qualitative",
+      "reported": "Smaller second-half search:8 guessed bytes instead of10; total work not restated",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The first-half table still enumerates10 bytes. The text does not give a new total exponent, so2^144 is not automatically reduced by16."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "One four-byte structure, reused throughout the search."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "Split tables with altered second-half search; whole peak not restated",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Section5.4 does not provide a new peak-storage estimate."
+    },
+    "preprocessing": {
+      "status": "qualitative",
+      "reported": "Ciphertext-dependent per-kini/per-c-pair tables inside the search",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No independent complete preprocessing budget is separately stated."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "selected-key-material-extension",
+    "value": null,
+    "description": "No separate numerical success is stated for the AES192 schedule-optimized endpoint. Section5.4 changes the second-half enumeration from ten to eight bytes without restating joint success, total work or peak memory. Retain the Section5.3 half-probability only as an upstream baseline collision event, not as an adapted-endpoint or complete-key guarantee.",
+    "components": [
+      {
+        "metric": "sampled-internal-function-collision-baseline",
+        "value": 0.5,
+        "basis": "author_model",
+        "expression": "\\approx\\frac{1}{2}",
+        "description": "Section5.3 BASELINE split search: a random2^16 sample among2^32 internal function descriptions gives about one-half collision probability and supplies kini,k_tau1,k_tau2 under the source model. Section5.4 reduces the second-half key enumeration from ten to eight bytes, but does not separately quantify success of that schedule-constrained adaptation."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Local collision, table-hit, conditional retention and filter events are separate from recovery success or distinguishing advantage. Existing costs, targets, settings, conflicts and full-audit gates remain unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Printed p.26 Section5.4, with pp.23–26 Section5 base attack",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-author",
+      "locator": "Printed p.26 Section5.4, with pp.23–26 Section5 base attack",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Version-specific primary text; printed pagination retained for each inspected copy."
+    },
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Both complete PDF1–11/printed16–26; Sections3–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "minier2005-three-rounds-proceedings",
+      "locator": "Proceedings PDF10–11 / printed25–26 Section5.3 split-search collision and selected key material; PDF11 / printed26 Section5.4 AES192 schedule extension.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No separate numerical success is stated for the AES192 schedule-optimized endpoint. Section5.4 changes the second-half enumeration from ten to eight bytes without restating joint success, total work or peak memory. Retain the Section5.3 half-probability only as an upstream baseline collision event, not as an adapted-endpoint or complete-key guarantee."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Primary-text claims are catalogued by target and scope. Full attacks, cost estimates and global success are not independently reproduced."
+  ],
+  "related_problem_ids": []
+}

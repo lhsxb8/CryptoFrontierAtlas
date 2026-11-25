@@ -1,0 +1,180 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-6r-truncated-differential-cwsw2022-conditional-ps95",
+  "title": "6-round AES-128 conditional truncated differential with concrete S-box, PS=0.95",
+  "display": {
+    "name": "Conditional truncated differential (PS 95%)",
+    "method": "differential"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "cwsw2022-initial-ark-final-no-mixcolumns",
+    "description": "6-round AES-128 in Table 1's secret-key scope; X0 plaintext, X1 after whitening, X7 final output without MixColumns (Section 2.2). Source probability approximations are not every-standard-master-key theorems."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed unknown AES-128 master key supplies all queries; no related-key access.",
+    "key_population": "unknown AES-128 key with explicitly retained source statistical and round-key averaging assumptions",
+    "plaintext_model": "Independent diagonal structures varying all values in bytes0,5,10,15 (2^32 texts), others constant per structure.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "reference_model": "Distinguish the reduced-round secret-key AES permutation from a uniform random permutation by a conditional collision statistic.",
+    "assumptions": [
+      "Section 2.3 assumes no nontrivial relation between delta-sets and uses a normal statistical approximation.",
+      "Introduction explicitly invokes independent random round keys for extended probabilities; no every-master-key proof under the standard AES key schedule is supplied.",
+      "Conditional observation count versus all plaintext pairs and the sign of Equation(13) require further review.",
+      "Section5 assumes independence between columns; Section6 treats unselected first-round differences as random-permutation propagation.",
+      "ClaimedPS also depends on the4rconditional-trial/thresholdmodel and5rdenominator product; sourceEnc+MA vector and conversion conflict remain unresolved."
+    ]
+  },
+  "techniques": [
+    "truncated-differential",
+    "concrete-sbox-ddt",
+    "divide-and-combine",
+    "conditional-probability-statistic"
+  ],
+  "resources": {
+    "time": {
+      "status": "conflict",
+      "reported": "Headline2^63.42 six-round encryptions; body2^62.88 six-round encryptions+(2^62.88+2^61.88) MA",
+      "log2": null,
+      "unit": "mixed-six-round-encryptions-and-memory-accesses",
+      "qualifier": "unspecified",
+      "note": "20MA≈one round means120MA per six-round encryption. Printed vector and2^63.42-E headline do not reconcile; no repaired scalar substituted."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^62.88",
+      "log2": 62.88,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Source-reported query budget. The conditional-sample accounting is disputed; preserve the headline rather than supplying a repaired attack vector."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^32×128-bit=2^39-bit",
+      "log2": 39,
+      "unit": "bits",
+      "qualifier": "estimate",
+      "note": "Native2^32×128-bit storage:2^32 blocks or2^36 bytes, not2^39 bytes."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Not separately reported for this exact configuration."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "source-normal-approximation-PS",
+    "value": 0.95,
+    "description": "The source sets PS=0.95; conditional-sample/variance accounting and the sign of Eq(13) remain conflicting evidence, not a validated decision probability."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "cwsw2022-truncated-differential-proceedings",
+      "locator": "PDF pp.5,18–19 / printed pp.426,439–440, Table1 Section6 row, Figure3, Section6.2 algorithm and budgets.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts",
+        "/bound"
+      ],
+      "interpretation": "Keep the complete author cost/PS assignment with review findings; no speculative replacement endpoints or success rates. Null bound means no minimum-active-S-box claim; missing costs are explicitly not reported, never zero."
+    },
+    {
+      "source_id": "cwsw2022-truncated-differential-proceedings",
+      "locator": "Complete publisher PDF1–24; [local audit reference not distributed]",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Full primary source read; inventory and scientific correctness are tracked separately. Numerical source claims retained unless explicitly field-conflicted."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Costs and statistical claims are author-reported; no probability-building or attack code was executed.",
+    "The Section5 four-factor product prints positive denominator exponents while Table2 has negative exponents; claimed final biases retained, not silently repaired.",
+    "Complete24-page publisher read;all16Table2 rows and96publishedTable3 cells inventoried.111new probability properties added, with literal invalid(12,17) retained.288asserted but unpublished cells and explicitly deferred Small-AES/full-paper material keep work inventory open. Bounded forward checks complete; statistical and author-code threshold conflicts remain."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "Conditional-sample and statistical sign accounting",
+      "description": "The source's conditional Bernoulli trial count is converted directly into all chosen pairs; acceptance costs are not reconciled, and Eq(13)'s printed sign disagrees with the intended large success. For rawpairsR and acceptanceq, scaledratio variance is approximatelyR*p*(1-p)/q under an extra independentpair model, notR*p*(1-p). Sharedtext covariance remains unanalysed; q4≈2^-8,q5/6≈2^-32. No repairedvector inferred.",
+      "observations": [
+        {
+          "source_id": "cwsw2022-truncated-differential-proceedings",
+          "locator": "PDF p.16 / printed p.437, Eq(12)–(14).",
+          "reported": "N counts independent Boolean experiments with conditional probability; mu=N|p-q|>=0, but printed PS=[1+erf(-mu/(sqrt(2)*sigma))]/2."
+        },
+        {
+          "source_id": "cwsw2022-truncated-differential-proceedings",
+          "locator": "PDF p.19 / printed p.440, Section6.2.",
+          "reported": "Source PS=.95: N≈2^93.88 ALL pairs from2^30.88 structures; condition requires four output-zero bytes, so c1≈2^61.88 accepted pairs."
+        }
+      ]
+    },
+    {
+      "field": "/resources/time",
+      "label": "Six-round encryption-equivalent conversion",
+      "description": "Original body/headline disagree under the stated Table1 calibration.",
+      "observations": [
+        {
+          "source_id": "cwsw2022-truncated-differential-proceedings",
+          "locator": "PDF p.5 / printed p.426, Table1 caption.",
+          "reported": "20 memory accesses≈one-round encryption."
+        },
+        {
+          "source_id": "cwsw2022-truncated-differential-proceedings",
+          "locator": "PDF p.19 / printed p.440, Section6.2 Complexity and Success Probability.",
+          "reported": "2^62.88 six-round encryptions plus2^63.46 memory accesses, i.e.2^63.42 encryptions."
+        }
+      ]
+    },
+    {
+      "field": "/success",
+      "label": "Ordering probability versus threshold-classifier success",
+      "description": "Eq14 models ordering of two independently sampled normal statistics; this is not balanced classification accuracy for one unknown permutation with midpoint threshold. Shared-text pair covariance is also unpriced. Author PS remains reported, not a validated whole-distinguisher success.",
+      "observations": [
+        {
+          "source_id": "cwsw2022-truncated-differential-proceedings",
+          "locator": "PDF16/437 Eqs12–14.",
+          "reported": "Normal difference is used for sourcePS after Eq13 prints a negativeerfsign."
+        },
+        {
+          "source_id": "cwsw2022-truncated-differential-proceedings",
+          "locator": "PDF19/440 decision rule;paper-linked authorartifact.",
+          "reported": "One oracle is classified with a fixed midpoint threshold; no two-independent-statistic experiment is specified."
+        }
+      ]
+    }
+  ]
+}

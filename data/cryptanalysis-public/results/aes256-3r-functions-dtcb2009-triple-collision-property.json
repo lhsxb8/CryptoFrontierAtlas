@@ -1,0 +1,164 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-3r-functions-dtcb2009-triple-collision-property",
+  "title": "3-round AES-256: Conditional three-function collision",
+  "display": {
+    "name": "Conditional three-function collision",
+    "method": "collision"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 3,
+    "full_round": false,
+    "round_convention": "dtcb2009-inner-rounds-no-whitening-with-mixcolumns",
+    "description": "3 inner AES rounds without initial whitening, including MixColumns in every round; fixed keys and explicitly conditioned input structures."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "Fixed standard AES key schedule; component derivations treat its round-key bytes as constants, not as a related-key oracle.",
+    "key_population": "General key under the source's modeled internal-parameter events; no special master-key class is specified.",
+    "plaintext_model": "Two active-byte input sets with equal parameter bytes c1..c8; the proof then asks for c9..c16 also to coincide.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Probabilities for internal parameters use the paper's randomness assumptions; they are not independently established for all AES keys.",
+      "At a fixed key and common active input, the source’s sufficient equality c1..c16 forces identical passive plaintext contexts. A useful distinct-set collision cannot be certified by that equality. Other function collisions with unequal parameter descriptions are not ruled out."
+    ]
+  },
+  "techniques": [
+    "collision-of-functions",
+    "conditional-parameterization"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement; input cardinalities and event probabilities are property parameters."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "conditional-structural-property",
+    "value": null,
+    "description": "A conditional function or collision statement, not an attack-success experiment."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Printed p.152 Section4.3 Proposition5 and proof",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/property"
+      ],
+      "interpretation": "Complete official proceedings read and critical page images checked. Original claims remain attributed to DTCB09; later objections have their own source-specific observations."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Complete PDF1–13/printed144–156; Sections3–4 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Raw-first complete inventory and independent component review completed; source costs and whole-attack reproduction remain separate."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "PDF3–5 and9–10/printed146–148 and152–153; corrected Equations3–6, Proposition5 and Corollary1.",
+      "fields": [
+        "/field_conflicts",
+        "/property"
+      ],
+      "interpretation": "Two raw-source independent derivations and primary acceptance establish the local injectivity problem. Reviewer inference is not an author erratum or a proof against all collision constructions."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Formal component tests and author-reported budgets are distinct from an end-to-end attack reproduction."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "Given equality of c1..c8 for a pair of function sets, the source models equality of c9..c16 with probability2^-64; together these equalities make the first three third-round diagonal functions coincide.",
+    "quantifier": "The author conditions on equal c1..c8 and models eight further equalities with probability 2^-64. Independent fixed-key analysis shows that the full equal-c1..c16 certificate cannot hold for distinct passive contexts.",
+    "scope": "The statement is about function collisions; its proof assumes stronger parameter equality. That sufficient condition is injective on fixed-key, aligned-active-input AES contexts. This does not disprove output-function collisions with unequal parameter descriptions.",
+    "parameters": [
+      {
+        "name": "Precondition",
+        "reported": "c1..c8 equal across the two sets",
+        "meaning": "Explicit condition used in the proposition's proof."
+      },
+      {
+        "name": "Additional coincidences",
+        "reported": "c9..c16 equal; modeled probability2^-64",
+        "meaning": "Eight further byte coincidences yield equality of C3_11,C3_22,C3_33 as functions."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Formal equal-parameter substitutions verify the cancellation identity. Two independent GF(256) derivations find rank 12 for c5..c16 as an affine map of the 12 non-first-column S(round1) bytes, and rank 3 for c1..c4 on the other diagonal inputs. Thus equal c1..c16 implies identical first-round states and identical passive plaintexts. The derivation is exact; finite source-graph checks are not an end-to-end attack reproduction."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property/quantifier",
+      "label": "Equal-parameter proof admits only identical AES contexts",
+      "description": "For fixed round keys and a common active input, c5..c16 is a rank-12 affine map of the 12 external S(round1) bytes. Together with c1..c4 equality, this fixes the whole first-round state; AES invertibility forces the same passive plaintext context. All four third-round functions then coincide, so the cross-set difference is zero. This challenges only the source’s literal distinct-set equal-parameter certificate and its 2^-64 generation model, not the formal conditional identity or every possible function collision.",
+      "observations": [
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "PDF9–10/printed152–153 Proposition5 proof, Corollary1 proof and Equation14.",
+          "reported": "The proof assumes c1..c8 equal, then models c9..c16 equal with probability 2^-64 to obtain a nontrivial 13-parameter cross-set description."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "PDF3–5/printed146–148 first-round state, corrected Equations3–6; independent reviewer derivation accepted 2026-10-26.",
+          "reported": "Reviewer-derived map consists of four nonsingular 3-by-3 MixColumns submatrices, total rank12. The literal certificate forces identical fixed-key, aligned-input AES contexts; unequal-parameter function collisions remain outside this conclusion."
+        }
+      ]
+    }
+  ]
+}

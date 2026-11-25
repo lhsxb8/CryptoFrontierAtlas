@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+  \node[box,minimum width=4cm] (pad) at (0,0) {Message $M$\\padding $+$ length field};
+  \node[box,minimum width=4cm] (blocks) at (0,-1.7) {Blocks $M_1,\ldots,M_m$\\$\AtlasBlockBits$ bits each};
+  \node[accent,minimum width=4cm] (compress) at (0,-3.55) {Compression $+$ feed-forward\\$\AtlasSteps$ steps per block};
+  \draw[wire] (pad) -- (blocks); \draw[wire] (blocks) -- (compress);
+  \node[box,minimum width=4cm] (output) at (0,-5.4) {First $\AtlasOutputBits$ bits of $H_m$};
+  \draw[wire] (compress) -- (output);
+  \node[note,text width=5.8cm] at (0,-6.6) {$H_i=H_{i-1}\boxplus F(H_{i-1},M_i)$\\$H_0$: instance-specific IV\quad Word size: $\AtlasWordBits$ bits};
+\end{tikzpicture}

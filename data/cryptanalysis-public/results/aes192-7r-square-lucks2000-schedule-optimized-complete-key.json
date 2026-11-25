@@ -1,0 +1,240 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-7r-square-lucks2000-schedule-optimized-complete-key",
+  "title": "7-round AES-192: schedule-optimized complete-key claim",
+  "display": {
+    "name": "Schedule-optimized complete-key claim",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "lucks2000-whitening-full-rounds-including-last-mixcolumns",
+    "description": "AES-192 on 128-bit blocks, reduced to 7 rounds. Lucks includes MixColumns in the final round (Section 2.2 footnote). Equivalent subkey L^r=ShiftRows^-1(MixColumns^-1(K^r)); this is not the final-no-MixColumns convention used by FKLSSWW. The schedule supplies W23,W24,W25 from the last round key; two additional equivalent subkey bytes are guessed, followed by the complete-key completion described by analogy to Section 5."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key or known-key access.",
+    "key_population": "general secret key; no restriction to a weak-key family",
+    "plaintext_model": "A 2^32-text structure. Printed Step 1 uses (0,0),(1,2),(2,2),(3,1), while Step 2 and the earlier construction use (1,3) for the row-one position; this conflict remains explicit.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "A wrong integral subkey guess is modeled as passing an eight-bit balance check with probability about 2^-8; repeated checks use the source's heuristic filtering assumptions.",
+      "For each initial-key guess, select 32 distinct 256-text sets and test them until a balance check rejects. The accepted material is followed by the stated residual key search."
+    ]
+  },
+  "techniques": [
+    "integral-square"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "about 2^184",
+      "log2": 184,
+      "unit": "lucks2000-basic-operations",
+      "qualifier": "estimate",
+      "note": "The source multiplies 2^32 initial guesses, 2^128 final-key guesses, 2^16 inner guesses and about 2^8 work per test. One basic operation is defined as five byte XORs, five inverse S-box evaluations and one inverse MixColumns evaluation; it is not one S-box lookup or AES encryption."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "The 32 internal test sets are selected from the same 2^32-query structure; they do not multiply the acquisition budget."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "128-bit-ciphertext-blocks",
+      "qualifier": "estimate",
+      "note": "Dominant storage is the observed ciphertext structure."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The paper does not separately price setup for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-master-key-recovery",
+    "value": null,
+    "description": "Section6 carries over the optimized32-set wrong-tuple model from Section5. Its2^176 candidate-tuple budget yields a separate analyst-derived model estimate of at most about2^-80 for any wrong tuple to pass. That estimate excludes residual full-key identification, uses the source's joint32-test surrogate rather than independent tuples, and leaves the printed state/key-index conflicts unresolved. Complete-key success remains unquantified.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "AES192 optimized loop and inherited AES25632-test analysis independently rechecked. A model-qualified local union estimate is appended, not a primary success fill. Fixed32 sets per whitening guess and the carried-over per-tuple joint surrogate are required; no adaptive set selection or independence between tuples is assumed. Completion/finite-transcript uniqueness and printed coordinate/index conflicts remain open."
+    },
+    "components": [
+      {
+        "metric": "correct-hypothesis-lambda-balance-relation",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Chapter7–13 Eq.(3)/Sections3–6: the necessary balance relation holds under the correct hypothesis in the intended Square construction. Existing ShiftRows/printed-coordinate conflicts mean this is not a certification of the literal implementation."
+      },
+      {
+        "metric": "wrong-key-tuple-passes-one-lambda-source-model",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "Chapter8/12 Sections3.2/5: source2^-8 for one incorrect terminal tuple to pass a Lambda-set test, conditional on the applicable outer hypotheses. Not full expanded-key recovery success."
+      },
+      {
+        "metric": "wrong-tuple-passes32-lambda-tests-source-model",
+        "value": 8.636168555094445e-78,
+        "basis": "author_model",
+        "expression": "2^{-256}",
+        "description": "Chapter12–13 Sections5–6: the source repeated-test surrogate assigns32 eight-bit tests to a fixed wrong tuple. The AES192 text refers back to that analysis but does not itself report an aggregate2^-80 rate. The separate analyst-derived union component uses this inherited joint surrogate, not an independence claim about distinct tuples. Active-input and BO/state/key-index conflicts remain."
+      },
+      {
+        "metric": "source-model-any-wrong-176-bit-tuple-acceptance",
+        "value": null,
+        "expression": "P_{\\mathrm{FA,tuple}}\\lesssim 2^{-80}",
+        "basis": "derived_from_source",
+        "description": "For the source's fixed32 Lambda sets per whitening-key guess, assume its inherited joint wrong-tuple surrogate gives acceptance about at most2^-256 for each incorrect tuple. A union over at most2^32*2^128*2^16=2^176 tuples then gives about2^-80 for any incorrect tuple to pass. No independence between tuples is needed; early stopping cannot enlarge this event. The within-tuple32-test surrogate is an author-model assumption, not proved by distinct sets or valid for adaptive set selection. This is not a validated AES192 implementation bound, does not resolve printed coordinate/key-index conflicts, and excludes remaining full-key completion and finite-transcript identification."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "lucks2000-square-aes3",
+      "locator": "Paper pp.12–13 Section 6; p.14 Table 2",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary-source endpoint preserving the stated target, access model, native resource units and recovery scope. Paper-local pagination is distinct from the whole-proceedings PDF page number."
+    },
+    {
+      "source_id": "lucks2000-square-aes3",
+      "locator": "Paper p.13 algorithm, visually checked; paper pp.8–9 definitions",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "The original printed algorithm-index discrepancies remain independent of the source's numerical complexity claim."
+    },
+    {
+      "source_id": "lucks2000-square-aes3",
+      "locator": "CompletechapterPDF215–229 in original AES3volume; chapter1–15, Sections1–7 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    },
+    {
+      "source_id": "lucks2000-square-aes3",
+      "locator": "Official358-page AES3 volume PDF220–227/chapter6–13 Sections3.1–6; basic balance on PDF221, five-tuple on222, optimized32-set source model on225–227.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical success for this exact key_recovery endpoint is established by the source. The balanced relation and wrong-hypothesis filters are separate from complete recovery and from the printed coordinate disputes, which remain unchanged. The fixed-wrong-tuple32-test source model is not a new all-key probability; the already-symbolic AES256 sibling remains untouched."
+    },
+    {
+      "source_id": "lucks2000-square-aes3",
+      "locator": "VolumePDF221–224 / chapter7–10 Sections3.1–4; PDF225–227 / chapter11–13 Sections5–6.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: the checked source does not quantify this exact main output at its recorded budget. Separate proof, coordinate, key-schedule and cost obligations remain recorded. All primary probability values, components and scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    },
+    {
+      "source_id": "lucks2000-square-aes3",
+      "locator": "Original AES3 volume PDF225–227 / chapter11–13 Sections5–6,32 balance tests, AES256 wrong-tuple model, AES1922^32*2^128*2^16 loops and 'essentially the same' analysis; PDF228 Table2.",
+      "fields": [
+        "/success",
+        "/success/review",
+        "/success/components"
+      ],
+      "interpretation": "Under the inherited32-test surrogate, a union over at most2^176 tuples with about2^-256 wrong-tuple acceptance gives local false-acceptance estimate about2^-80. This is analyst-derived, not an author-stated AES192 aggregate or a full-key success probability. Fixed source sets, source-model assumptions and all printed-index conflicts are retained."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Costs and success statements are the authors' analytical claims; no complete attack or third-party implementation was executed.",
+    "The general BO definition on chapter p8 omits the previous inverse ShiftRows column adjustment for a nonzero target row. For SR(A)(i,j)=A(i,j+s*i), BO input column j and row k require the previous L byte at (k,j+s*k). The surrounding row-0 constructions avoid this adjustment. Independent finite controls check local algebra, not a complete attack repair."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/plaintext_model",
+      "label": "Active input positions",
+      "description": "The printed input positions disagree with the adjacent initial-key guess and earlier structure construction. Both lists are retained; the publication has not been silently corrected.",
+      "observations": [
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "Paper p.13, algorithm Step 1",
+          "reported": "Active input positions (0,0), (1,2), (2,2), (3,1)."
+        },
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "Paper p.13, algorithm Step 2; paper p.9 Section 3.3",
+          "reported": "The corresponding initial-key positions and earlier structure use (0,0), (1,3), (2,2), (3,1)."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "State and subkey indices",
+      "description": "The AES-192 algorithm's test expression does not match the prepared state and column-three subkeys; its row argument also needs reconciliation with the BO definition.",
+      "observations": [
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "Paper p.13, Steps 5–7",
+          "reported": "Prepare Q6 and derive/guess the column-three L6 bytes with L5_(0,3)."
+        },
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "Paper p.13, Step 10; paper p.8 BO definition",
+          "reported": "The sum instead ranges over Q5 and uses BO(A3,3,L6_1,L5_(0,1)), mixing a different state, column-one subkeys and the stated row parameter."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "ShiftRows formula and diagram coordinates",
+      "description": "Chapterp3 defines left-going SR, B(i,j)=A(i,j+i), but Fig2 and Table1 use right-going coordinates. The later anti-diagonal reaches columns0/2 under the literal left formula and one column under the right diagram. A coherent coordinate convention must be selected before reproducing the printed algorithm. This does not refute the direction-independent integral or establish a standard-key-schedule reflection equivalence.",
+      "observations": [
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "OriginalvolumePDF217–218/chapter3–4, SRformula, Fig2, Eq1 and Table1.",
+          "reported": "Printed formula and drawn/table coordinate directions differ."
+        },
+        {
+          "source_id": "lucks2000-square-aes3",
+          "locator": "OriginalvolumePDF223,225,227/chapter9,11,13. Two independent raw-source reviews accepted2026-10-27.",
+          "reported": "Source anti-diagonal(0,0),(1,3),(2,2),(3,1) maps tocolumns0/2 with standardleftSR, and tocolumn0 with rightSR."
+        }
+      ]
+    }
+  ]
+}

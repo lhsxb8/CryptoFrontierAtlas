@@ -1,0 +1,144 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes128-2r-fixed-precomputed-tpkc-nllw2025",
+  "title": "Fixed-TPKC · precomputed rebound",
+  "display": {
+    "name": "Fixed-TPKC · precomputed rebound",
+    "method": "rebound"
+  },
+  "result_kind": "collision_construction",
+  "goal": "key_collision",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 2,
+    "full_round": false,
+    "round_convention": "nllw2025-standard-reduced-final-no-mc",
+    "description": "2-round AES-128 with initial whitening and no final MixColumns; two distinct keys yield the same complete ciphertext for a predetermined plaintext."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "offline_public_cipher_evaluation"
+    ],
+    "related_key_count": null,
+    "key_relation": "Two distinct attacker-chosen master keys; no secret related-key oracle.",
+    "key_population": "General standard AES master keys",
+    "plaintext_model": "One predetermined common plaintext; published witnesses use the all-zero block.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "SAT characteristic search cost is not included in the reported attack work.",
+      "Work is expected collision-generation cost; component trail probabilities are not end-to-end success."
+    ]
+  },
+  "techniques": [
+    "bit-oriented-rebound",
+    "rebound-friendly-sat",
+    "offline-online-precomputation"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{26}",
+      "log2": 26,
+      "unit": "round-reduced-aes-encryptions",
+      "qualifier": "estimate",
+      "note": "Online 2^26 headline only; the source separately enumerates 2^36 setup candidates and does not supply a justified combined encryption-equivalent cost."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Offline public-cipher construction; no secret-key oracle data budget."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^{22}",
+      "log2": 22,
+      "unit": "precomputation-table-entries",
+      "qualifier": "estimate",
+      "note": "Table entry count; no fixed entry width is supplied."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^{36}",
+      "log2": 36,
+      "unit": "setup-candidate-evaluations",
+      "qualifier": "estimate",
+      "note": "Required offline enumeration; native operations and online work are not silently combined."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "find-full-output-key-collision-for-source-plaintext-model",
+    "value": null,
+    "description": "The checked analysis gives an expected-work or filtering argument without a numeric probability for the complete named output event.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF pp.19–20 Section4.2.1, offline and online phases/Table2."
+    },
+    "components": [
+      {
+        "metric": "conditional-outbound-trail-success-per-starting-point",
+        "value": null,
+        "expression": "2^{-26}",
+        "basis": "author_model",
+        "description": "Conditional on the stated inbound/precomputed starting-point constraints; not full-budget collision-generation success."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "nllw2025-practical-key-collision",
+      "locator": "PDF pp.19–20 Section4.2.1, offline and online phases/Table2.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/success/components",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together. Independently checked against the raw source and existing QBD25 baseline; different constructions are not relabelled."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The complete named output probability is not quantified by the source."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/time",
+      "label": "Online headline and setup accounting",
+      "description": "The reported online headline does not supply a common-unit total including the separately enumerated setup.",
+      "observations": [
+        {
+          "source_id": "nllw2025-practical-key-collision",
+          "locator": "PDF pp.19–20 Section4.2.1, offline and online phases/Table2.",
+          "reported": "Online work 2^26; offline enumeration 2^36; source describes offline contribution as negligible."
+        },
+        {
+          "source_id": "nllw2025-practical-key-collision",
+          "locator": "PDF pp.19–20 Section4.2.1, offline and online phases/Table2.",
+          "reported": "A combined encryption-equivalent setup-plus-online bound is not derived in the source."
+        }
+      ]
+    }
+  ]
+}

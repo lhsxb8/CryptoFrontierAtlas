@@ -1,0 +1,142 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-fault-auto-bdf2011",
+  "title": "BDF11 10-round AES-128 Automated single-byte fault recovery",
+  "display": {
+    "name": "Automated single-byte fault recovery",
+    "method": "fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full AES-128, single unknown-byte fault at X7[0], before final three rounds. Source demonstrates with finalMC included but explicitly says replayable for standard omitted-finalMC."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "paired-correct-and-faulty-encryption-outputs",
+      "single-byte-state-fault-injection"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key oracle.",
+    "key_population": "general secret key",
+    "plaintext_model": "Source-defined plaintext/ciphertext observations under the same key.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "assumptions": [],
+    "fault_model": {
+      "target": "AES state byte X7[0].",
+      "granularity": "One 8-bit state byte.",
+      "timing": "Before SB of round8 in one-based indexing, state X7 in zero-based source.",
+      "location": "Known byte0.",
+      "value_control": "Unknown byte difference, not chosen value.",
+      "sample_pairing": "One correct/faulty ciphertext pair for the same plaintext and key.",
+      "evidence_scope": "software_experiment"
+    }
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "automated-meet-in-the-middle"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^24",
+      "log2": 24,
+      "unit": "source-encryption-units",
+      "qualifier": "estimate",
+      "note": "Table2 uses encryption units; Section5.3 solver complexity24 is a component operation estimate, and a couple-of-seconds software example is not a new universal runtime."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "1",
+      "log2": 0,
+      "unit": "useful-single-byte-faults",
+      "qualifier": "exact",
+      "note": "One useful fault with correct counterpart; total physical attempts not priced."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^16",
+      "log2": 16,
+      "unit": "source-native-memory-units",
+      "qualifier": "estimate",
+      "note": "Author-reported native resource accounting."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "value": null,
+    "metric": "whole-attack-success",
+    "description": "The source reports an implemented fault attack and the expected2^16 tested candidates, but no number of attack trials, population success fraction or probability of unique correct-key recovery. The counts2^16/2^24 describe intermediate filtering, not overall success.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted exact-edition success audit; construction and parameter-specific defining passages, not a new full-paper audit."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-6d12e67e699e3ac5-2011",
+      "locator": "PDF p.4 Table2; pp.16–17 Section5.3 and Algorithm, full master-key recovery via AES-128 schedule.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-6d12e67e699e3ac5-2011",
+      "locator": "Original PDF p.4 Table 2; pp.16–17 Section 5.3, including p.17 explicit replay without terminal MixColumns, eleven-step recovery, and experimental check.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Independently confirms full ten-round AES-128 with one unknown nonzero byte fault in known byte 0 before round 8; output pairing is required. Final three-round working window is not a three-round ordinary AES endpoint. 2^16 surviving candidates are not a success probability."
+    },
+    {
+      "source_id": "aes-paper-6d12e67e699e3ac5-2011",
+      "locator": "PDF pp.16–17 /printed184–185 Section5.3, Lemma3 and complete11-step fault procedure.",
+      "fields": [
+        "/success"
+      ],
+      "interpretation": "The source reports an implemented fault attack and the expected2^16 tested candidates, but no number of attack trials, population success fraction or probability of unique correct-key recovery. The counts2^16/2^24 describe intermediate filtering, not overall success."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "All 19 original pages read and result inventory independently checked; bounded version/forward checks completed. No author solver, attack code, or numerical success experiment executed."
+  ],
+  "related_problem_ids": []
+}

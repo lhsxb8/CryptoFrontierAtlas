@@ -1,0 +1,68 @@
+% Generated from the public primitive catalog. Original Atlas drawing; Apache-2.0.
+% Target: ascon-aead128; view: overview-compact
+\documentclass[border=9pt]{standalone}
+% Original Atlas figure theme. Apache-2.0; see the repository LICENSE.
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,decorations.pathreplacing,matrix}
+\definecolor{atlasInk}{HTML}{172235}
+\definecolor{atlasTeal}{HTML}{0D7B7D}
+\definecolor{atlasMuted}{HTML}{637278}
+\definecolor{atlasFill}{HTML}{EAF4F2}
+\definecolor{atlasLine}{HTML}{B6C8C7}
+\tikzset{
+  every picture/.style={line width=.65pt,draw=atlasInk,>=Latex},
+  every node/.style={text=atlasInk,font=\sffamily\small},
+  box/.style={draw,rounded corners=1.5pt,minimum height=.9cm,minimum width=1.6cm,align=center,inner sep=6pt,fill=white},
+  accent/.style={box,draw=atlasTeal,fill=atlasFill},
+  wire/.style={->,line width=.7pt},
+  keywire/.style={wire,draw=atlasTeal,dashed},
+  xor/.style={draw,circle,fill=white,inner sep=0pt,minimum size=.38cm},
+  add/.style={draw,rectangle,fill=white,inner sep=0pt,minimum size=.38cm},
+  note/.style={font=\sffamily\scriptsize,text=atlasMuted,align=center},
+  phase/.style={font=\sffamily\small\bfseries,text=atlasTeal},
+  group/.style={draw=atlasLine,dashed,rounded corners=2pt,inner sep=8pt}
+}
+\newcommand{\rotl}{\mathbin{\lll}}
+\newcommand{\rotr}{\mathbin{\ggg}}
+\newcommand{\kx}{\operatorname{Keccak}\!\text{-}\!f[1600]}
+
+\newcommand{\AtlasKeyBits}{128}
+\newcommand{\AtlasKeyWords}{4}
+\newcommand{\AtlasRounds}{N_r}
+\newcommand{\AtlasPriorRounds}{N_r-1}
+\newcommand{\AtlasRoundKeys}{N_r+1}
+\newcommand{\AtlasDoubleRounds}{N_r/2}
+\newcommand{\AtlasSixRoundGroups}{N_r/6}
+\newcommand{\AtlasFLGroups}{N_r/6-1}
+\newcommand{\AtlasRoundStart}{24-n}
+\newcommand{\AtlasBlockBits}{b}
+\newcommand{\AtlasOutputBits}{d}
+\newcommand{\AtlasStateBits}{320}
+\newcommand{\AtlasNonceBits}{128}
+\newcommand{\AtlasCounterBits}{q}
+\newcommand{\AtlasStreamBlockBits}{b}
+\newcommand{\AtlasRate}{128}
+\newcommand{\AtlasCapacity}{c}
+\newcommand{\AtlasSteps}{N}
+\newcommand{\AtlasLastStep}{N-1}
+\newcommand{\AtlasWordBits}{40}
+\newcommand{\AtlasHashWords}{10}
+\newcommand{\AtlasFeedForward}{\boxplus}
+\newcommand{\AtlasByteOrder}{big-endian}
+\newcommand{\AtlasDomain}{01}
+\newif\ifAtlasXof
+\AtlasXoffalse
+\begin{document}
+\begin{tikzpicture}
+  \node[accent,minimum width=4.8cm] (init) at (0,0) {$S=\mathrm{IV}\Vert K\Vert N$\\$S\gets p[12](S)\oplus(0^{192}\Vert K)$};
+  \node[box,minimum width=4.8cm] (ad) at (0,-2) {Absorb padded AAD; $p[8]$ per block\\Skip absorption if AAD is empty\\Then XOR $(0^{319}\Vert1)$};
+  \node[box,minimum width=4.8cm] (msg) at (0,-4.25) {Absorb plaintext, read ciphertext\\$p[8]$ between blocks\\Pad last block; no following $p[8]$};
+  \node[accent,minimum width=4.8cm] (fin) at (0,-6.5) {Inject $(0^{128}\Vert K\Vert0^{64})$\\Apply $p[12]$\\$T=S[192{:}319]\oplus K$};
+  \draw[wire] (init) -- (ad); \draw[wire] (ad) -- (msg); \draw[wire] (msg) -- (fin);
+  \node[note,text width=5.8cm] at (0,-8) {NIST 2025: $320$-bit state, $128$-bit rate\\Little-endian bit order; standardized IV};
+\end{tikzpicture}
+
+\end{document}

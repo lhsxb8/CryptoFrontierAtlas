@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+  \node[box,minimum width=4.1cm] (pad) at (0,0) {$P=\operatorname{pad}_r(M\Vert\AtlasDomain)$\\$r=\AtlasRate$, $c=\AtlasCapacity$};
+  \node[accent,minimum width=4.1cm] (absorb) at (0,-1.9) {Start with $S=0^{1600}$\\XOR $P_i$ into first $r$ bits\\Apply $f$ to the entire state};
+  \draw[wire] (pad) -- (absorb);
+  \node[note] at (0,-3) {Repeat for every padded block};
+  \node[box,minimum width=4.1cm] (read) at (0,-4.1) {Read the first $r$ state bits};
+  \draw[wire] (absorb.south) -- (0,-2.75); \draw[wire] (0,-3.25) -- (read);
+  \ifAtlasXof
+    \node[accent,minimum width=4.1cm] (out) at (0,-5.9) {Need more output?\\Apply $f$, read $r$ bits again};
+    \node[note] at (0,-7) {Return the requested $d$ bits};
+    \node[note,text width=5cm] at (0,-7.8) {$f=\kx$ ($24$ rounds)\\Suffix $\AtlasDomain$ precedes pad10*1.};
+  \else
+    \node[accent,minimum width=4.1cm] (out) at (0,-5.9) {Keep the first $\AtlasOutputBits$ bits};
+    \node[note,text width=5cm] at (0,-7) {$f=\kx$ ($24$ rounds)\\Suffix $\AtlasDomain$ precedes pad10*1.};
+  \fi
+  \draw[wire] (read) -- (out);
+\end{tikzpicture}

@@ -1,0 +1,126 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-clockwise-collision-n2013-no-shift-ncc4",
+  "title": "NLS+13 10-round AES-128 Clockwise-collision EM subkey recovery / no-shift-ncc4",
+  "display": {
+    "name": "Clockwise-collision EM subkey recovery / no-shift-ncc4",
+    "method": "collision"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full AES128 hardware implementation; Algorithm1 outputs ONE8-bit last-round subkey Kr. The experiment is not a complete128-bit master-key recovery."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "passive-local-electromagnetic-traces",
+      "public_ciphertexts_unknown_plaintexts"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key oracle.",
+    "key_population": "Condition on target no-shift last-round subkey byte in{0x8d,0xb9,0xe7}, Ncc=4; no full-master-key weak-class cardinality claimed.",
+    "plaintext_model": "Unknown/random plaintexts and public ciphertexts; no chosen-plaintext or chosen-key profiling device required.",
+    "computation": "classical",
+    "attack_surface": "side_channel",
+    "assumptions": [
+      "Parallel128-bit loop architecture with16 composite-field S-boxes and no SCA countermeasures.",
+      "Local EM probe observes one target8-bit S-box/register at the last round; no-shift-ncc4 register mapping.",
+      "SASEBO-G, XilinxVirtex-IIProXC2VP7-5FG456C FPGA at8MHz; AgilentDSO7032A, WM7000-HC020 EM probe, YCK1000AMP amplifier.",
+      "Threshold h=12.5, collision count t=4; published fitted leakage distributions/Table2 and MonteCarlo Ps for t>=2."
+    ]
+  },
+  "techniques": [
+    "clockwise-collision",
+    "electromagnetic-analysis",
+    "threshold-key-candidate-counting"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "545",
+      "log2": 9.090112419664289,
+      "unit": "EM-traces",
+      "qualifier": "estimate",
+      "note": "Source M(4,12.5)=545; footnote marker is not another count digit. Native trace count, not encryption queries. Eq6 gives M(t,h)=t/(P0*integral[-infinity,h] f0(x)dx); the quoted endpoint is retained rather than replacing it with a recomputation from rounded calibration statistics."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The study uses100000 traces to estimate leakage statistics. This is experimental calibration, not an explicitly priced required attacker setup phase; no zero or100000-trace attack preprocessing is inferred."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "value": 0.907,
+    "metric": "source-simulation-byte-recovery",
+    "description": "Published success for this threshold/collision count and fitted experimental leakage distribution; identifies the one target subkey byte. For t>=2 the paper uses MonteCarlo under fitted leakage distributions; this is not an empirical repeated full-master-key recovery rate."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-32e3f3f971dfdc7e-2013",
+      "locator": "PDF pp.4–5 Section3/Algorithm1 and key conditions; p.8 experiment/Table1; p.10 first paragraph/footnote4; pp.14–15 AppendixA weak-byte values.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary result, model and accounting passages checked; selected-endpoint extraction, not a completed full-paper/forward-literature audit."
+    },
+    {
+      "source_id": "aes-paper-32e3f3f971dfdc7e-2013",
+      "locator": "PDF1–15 complete; PDF6–7 Eqs1–6/MonteCarlo convention; PDF8–10 Table1/Table2/Figs4–9 and endpoint footnotes.",
+      "fields": [
+        "/assessment",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Complete primary inventory. Rounded Gaussian fits are not exact remeasurement, and100000 calibration traces are not silently charged as required attack setup."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Recovers one8-bit last-round subkey on the specified unprotected local-EM hardware implementation.",
+    "The t,h measurement formula does not supply an analytic t>=2 success curve; only the published endpoint is numerically instantiated."
+  ],
+  "related_problem_ids": []
+}

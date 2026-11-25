@@ -1,0 +1,147 @@
+{
+  "schema_version": "0.10.0",
+  "id": "qin2025-aes192-5r-fixed-zero",
+  "title": "Fixed-zero-input key collision on five-round AES-192, QBD 2025 full version",
+  "display": {
+    "name": "Guess-and-determine rebound, fixed-zero input",
+    "method": "rebound"
+  },
+  "result_kind": "collision_construction",
+  "goal": "key_collision",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "aes_prefix_initial_ark_last_round_without_mc",
+    "description": "Initial AddRoundKey, four full rounds, then a final round without MixColumns; standard AES-192 key expansion starting at the master key."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "offline-public-cipher-evaluation"
+    ],
+    "related_key_count": null,
+    "key_relation": "The adversary constructs two distinct keys; no unknown related-key encryption oracle is assumed.",
+    "key_population": "attacker-selected distinct keys",
+    "plaintext_model": "fixed_zero",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The common input is the prescribed all-zero 128-bit block.",
+      "The objective is E_k1(0)=E_k2(0) for distinct chosen keys, not recovery of an unknown key."
+    ]
+  },
+  "techniques": [
+    "guess-and-determine-rebound",
+    "key-collision"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "approximately 2^21",
+      "log2": 21,
+      "unit": "source-native-gd-rebound-work",
+      "qualifier": "estimate",
+      "note": "Expected collision work in the source inbound/outbound cost model; no conversion to full-AES encryption units is made."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate external-oracle data budget is reported; a fixed input is not data complexity one."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Table 1 prints a dash; a quantitative storage bound was not extracted."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing budget is reported."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "find-one-key-collision",
+    "value": null,
+    "description": "The source prices expected work for one collision, not a numerical probability of finding at least one at that fixed budget. Inbound DDT characteristic probability is distinct from the GD-generated starting-point distribution; outbound probability is conditional on an admissible inbound point. Published witness pairs and implementation timings are not a trial-denominated experimental success rate. ",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition targeted success audit of defining constructions and parameter-specific cost/probability passages; not a new full-paper/forward audit. Weak-key/structure fractions, local false matches, raw Grover marked fractions and whole-attack success stay distinct."
+    },
+    "components": [
+      {
+        "metric": "inbound-characteristic-source-model",
+        "value": 2.1382117680737565e-50,
+        "basis": "derived_from_source",
+        "expression": "2^{-165}",
+        "description": "PDF43 AppendixC.1: source inbound characteristic model, not the probability that the GD procedure generates a starting point or the whole attack succeeds. AppendixC.1 explicitly charges21 S-boxes at2^-7 and three at2^-6, giving2^-165."
+      },
+      {
+        "metric": "outbound-given-admissible-inbound-point",
+        "value": 4.76837158203125e-7,
+        "basis": "author_model",
+        "expression": "2^{-21}",
+        "description": "PDF43 AppendixC.1: source outbound characteristic conditioned on a conforming starting point. Sufficient degrees of freedom or expected one collision does not quantify finite-budget success."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "qbd2025-key-collisions-full",
+      "locator": "Table 1 p.6; Appendix C.1 p.43; Table 6 p.35, first 5-round AES-192 pair; author verifier lines 338-380.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The classical fixed-zero result is the Section C.1 row, separate from the quantum six-round row. A concrete five-round key pair is independently checked."
+    },
+    {
+      "source_id": "qbd2025-key-collisions-full",
+      "locator": "Complete exact primaryPDF1–58, all sections, displayed formulas/tables/algorithms, proofs and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full contribution inventory read; bounded forward checking and finite component validation are separately receipted. Full attack reproduction not attempted."
+    },
+    {
+      "source_id": "qbd2025-key-collisions-full",
+      "locator": "PDF43 AppendixC.1, defining characteristic,degree-of-freedom and complexity paragraphs.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The source prices expected work for one collision, not a numerical probability of finding at least one at that fixed budget. Inbound DDT characteristic probability is distinct from the GD-generated starting-point distribution; outbound probability is conditional on an admissible inbound point. Published witness pairs and implementation timings are not a trial-denominated experimental success rate. "
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "collision_witness_only",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Only the supplied collision witness is locally reproduced, not the attack search or its cost.",
+    "The result is five-round and does not settle the full 12-round AES-192 question."
+  ],
+  "related_problem_ids": [
+    "cryptofrontieratlas:aes-full-round-fixed-target-key-collision"
+  ]
+}

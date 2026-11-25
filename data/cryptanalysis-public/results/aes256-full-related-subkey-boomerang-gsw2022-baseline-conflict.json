@@ -1,0 +1,299 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-full-related-subkey-boomerang-gsw2022-baseline-conflict",
+  "title": "Full AES-256 key-structure boomerang baseline with 2^17 related-subkey oracles, GSW 2022 source conflict",
+  "display": {
+    "name": "Key-structure boomerang, baseline",
+    "method": "boomerang"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 14,
+    "full_round": true,
+    "round_convention": "fips197-full-cipher",
+    "description": "Standard full AES-256: the rounds-2-to-14 boomerang distinguisher receives one prepended round for key recovery. This record selects the baseline with 2^16 encryption keys and 2^16 decryption keys, not the later 2^19-key variant."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related-subkey-chosen-plaintext-encryption",
+      "adaptive-related-subkey-chosen-ciphertext-decryption"
+    ],
+    "related_key_count": 131072,
+    "key_budget": {
+      "reported": "2^17 related keys: 2^16 encryption keys and 2^16 decryption keys",
+      "log2": 17,
+      "unit": "distinct_related_keys",
+      "distinct_key_count": 131072,
+      "note": "Section 4.1 constructs the two oracle families, and p.20 explicitly counts 2^17 keys. This is the author's key-oracle count, not the 2^31 unordered key pairs or 2^23 eligible key quartets formed within the structures."
+    },
+    "target_selection": "designated_target",
+    "key_relation": "Related-subkey setting: vary the prescribed 16-bit difference space of the second 256-bit subkey K^1 to derive encryption keys; obtain decryption keys by adding a fixed difference to the joint state formed by the second half of K^3 and first half of K^4, then invert/extend the schedule. These are not fixed-XOR master-key oracles.",
+    "key_population": "No weak-key-subset precondition is stated. The structure is based on an original secret key K0, and Section 4.3 maps key-byte proposals from the different key quartets back to K0 and its related K0-prime.",
+    "plaintext_model": "Eight chosen-plaintext structures of 2^72 texts, each encrypted under 2^16 keys; modified ciphertexts are decrypted under the corresponding related-subkey oracles.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The attacker can choose differences at the specified intermediate key-schedule states and access all resulting encryption/decryption oracles.",
+      "The baseline uses one key structure and eight plaintext structures, as in Algorithm 1 and its repetitions.",
+      "The time conversion assumes one AES-256 encryption/decryption is equivalent to about 2^8 memory accesses, as counted by the authors.",
+      "The full-key claim includes the authors' assertion that completion after recovering 120 key bits does not dominate; the completion algorithm is not detailed."
+    ]
+  },
+  "techniques": [
+    "related-subkey-boomerang",
+    "key-structures",
+    "plaintext-structures",
+    "local-collisions",
+    "ladder-switch",
+    "key-ranking"
+  ],
+  "resources": {
+    "time": {
+      "status": "conflict",
+      "reported": "Table 1 at s=0 and Section 4.3 Complexity: 2^92.5; Section 4.3 More Tradeoffs at s=0 with 2^17 keys: 2^92",
+      "log2": null,
+      "unit": "AES-256-encryption-equivalents-under-source-memory-access-model",
+      "qualifier": "unspecified",
+      "note": "Rechecked on 2026-10-10 in the official ACISP chapter. Algorithm 1 and the Complexity section give 2^92 encryption/decryption calls plus 2^99 memory accesses. At the authors' 2^8 accesses per encryption, the sum is 2^92 + 2^91, with exponent approximately 92.585; the paper summarizes it as 2^92.5. The More Tradeoffs paragraph instead prints 2^(92+s) for 2^(17-s) keys, giving 2^92 at s=0. These are distinct printed estimates; no corrected formula was obtained, so normalization remains unset."
+    },
+    "data": {
+      "status": "conflict",
+      "reported": "Table 1 at s=0 and Section 4.3 Complexity: 2^92; Section 4.3 More Tradeoffs at s=0 with 2^17 keys: 2^91",
+      "log2": null,
+      "unit": "total-related-subkey-block-oracle-queries",
+      "qualifier": "unspecified",
+      "note": "Algorithm 1 performs 2^88 encryptions and 2^88 decryptions for each plaintext structure; eight structures give 8 * (2^88 + 2^88) = 2^92 total oracle calls. The 2^91 count covers either direction alone. Table 1 and Complexity use 2^92 total; More Tradeoffs prints 2^(91+s) for the same 2^(17-s) key budget, without redefining data as one-direction-only. This field records total calls, so the latter figure cannot silently replace the algorithm count. Both printed figures remain visible and normalization stays unset."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^89",
+      "log2": 89,
+      "unit": "source-native-storage-units-unspecified",
+      "qualifier": "estimate",
+      "note": "Table 1 at s=0 and Section 4.3 Complexity give 2^89. Algorithm 1 describes a hash table of size 2^88 containing plaintext pairs, but the paper does not define a single unit for the final memory total; no byte or block conversion is asserted."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Key-structure creation and filtering are described within the attack; no separately quantified reusable preprocessing budget is supplied."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "full-key-recovery-success",
+    "value": null,
+    "description": "The source targets four right quartets and recovers a120-bit vote before an unspecified full-key completion. These statements give no numerical full-key success at either s=0 endpoint. The source binomial model is recorded symbolically: its printed four-vote approximation and expected wrong-key count are already arithmetic-conflicted, and expected counts are not probabilities of a unique correct key. Existing completion and applicable time/data conflicts remain. Key-structure pair fractions are not weak-secret-key fractions. B43 adds a source-surrogate bound for no wrong120-bit candidate receiving at least four votes. It is a local voting event, unconditioned on collecting four right quartets; complete-key success remains unquantified.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Independent source-first and endpoint review, PDF11–18: the whole-key probability is not quantified. Expected four right quartets lacks an acquisition joint law and final256-bit completion remains unspecified. Baseline's fixed-N source voting bound is local and unconditioned; no new bound is transferred to reuse without a common120-bit vote mapping across varying K0-prime. Preserve arithmetic, completion, native-unit and time/data conflicts. Targeted source review leaves the original goal gap and full-audit gates open."
+    },
+    "components": [
+      {
+        "metric": "optimal-key-pair-fraction-within-structure",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "PDF12–13:1/2^8 of key pairs in the chosen structure have the optimal upper S-box transition. This fraction is within the structure, not the population of secret master keys."
+      },
+      {
+        "metric": "upper-characteristic-given-optimal-key-pair",
+        "value": 9.313225746154785e-10,
+        "basis": "author_model",
+        "expression": "2^{-30}",
+        "description": "PDF12 Section4.2: five2^-6 transitions in rounds2–8, conditional on the selected optimal pair class."
+      },
+      {
+        "metric": "fixed-lower-characteristic-source-model",
+        "value": 0.000003814697265625,
+        "basis": "author_model",
+        "expression": "2^{-18}",
+        "description": "PDF12 Section4.2: three2^-6 transitions in rounds10–14."
+      },
+      {
+        "metric": "boomerang-given-optimal-key-pair-source-model",
+        "value": 1.262177448353619e-29,
+        "basis": "author_model",
+        "expression": "2^{-96}",
+        "description": "PDF12–13: source2^(2*(-30-18)) for the optimal class, after the first-round condition. Not the probability of collecting four right quartets."
+      },
+      {
+        "metric": "stepII-initial-sbox-compatibility-filter",
+        "value": 0.015625,
+        "basis": "author_model",
+        "expression": "2^{-6}",
+        "description": "PDF15 StepII1: four bits from plaintext S-box compatibility plus two from key-schedule compatibility."
+      },
+      {
+        "metric": "stepII-key-schedule-consistency-filter",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "PDF15 StepII6: an8-bit key-schedule equality filters proposed quartets from2^65 to2^57."
+      },
+      {
+        "metric": "one-wrong-proposal-hits-fixed120-bit-value-source-model",
+        "value": 7.52316384526264e-37,
+        "basis": "author_model",
+        "expression": "2^{-120}",
+        "description": "PDF16 Recover the Key: the source assumes a uniform120-bit wrong proposal for its binomial expression. No independence or exact uniformity is independently established here."
+      },
+      {
+        "metric": "one-fixed-wrong-key-exactly-four-votes-source-model",
+        "value": null,
+        "basis": "author_model",
+        "expression": "\\binom{2^{88}}{4}(2^{-120})^{4}(1-2^{-120})^{2^{88}-4}",
+        "description": "PDF16: probability of exactly four votes for ONE fixed wrong120-bit candidate under the source binomial/random-proposal model. The printed approximation2^-138.5 and expected count2^-18.5 retain the existing arithmetic conflict. This is not a probability of no wrong candidates or full-key recovery."
+      },
+      {
+        "metric": "source-model-no-wrong-120-bit-candidate-reaches-four-votes",
+        "value": null,
+        "basis": "derived_from_source",
+        "relation": ">=",
+        "expression": "1-\\frac{1}{6144}",
+        "description": "Baseline s=0 only, within the source fixed-N binomial surrogate: N=2^88 proposals and p=2^-120 for one fixed wrong120-bit candidate. The fourth-factorial-moment bound P(Y>=4)<=C(N,4)*p^4 and a union over at most2^120 wrong candidates give error<1/6144. Thus the displayed symbolic lower bound is valid in that model without independence between different candidates. The fixed N is the source surrogate for an expected proposal count, not a proved hard cap for the actual attack. This event is not conditioned on obtaining four right quartets, is not full256-bit recovery or an actual-AES frequency, and is not propagated to encryption reuse, whose varying decryption-side shifts change K0-prime and lack a justified common120-bit vote pool. The source's printed exactly-four-vote arithmetic conflict is retained."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "gsw2022-key-structures-conference",
+      "locator": "Section 4.1 pp.11-13 and Figure 4 p.14; Section 4.3 Algorithm 1 p.15, Steps I-II pp.16-18, and Recover the Key p.18.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The detailed attack uses related-subkey encryption and adaptive decryption, a two-family key structure, and mappings of recovered byte proposals back to the original keys. It is a full-round/full-key author claim, not merely a 13-round distinguisher or a four-key attack."
+    },
+    {
+      "source_id": "gsw2022-key-structures-conference",
+      "locator": "Printed p.6 Table 1, first Key-Structure Boomerang row at s=0; Section 4.3 Complexity pp.18-19; More Tradeoffs p.20 at s=0.",
+      "fields": [
+        "/resources/time",
+        "/resources/data",
+        "/resources/memory",
+        "/setting/key_budget",
+        "/assessment/claim_status"
+      ],
+      "interpretation": "The 2026-10-10 PDF visual/text recheck confirms time 2^92.5 and data 2^92 in Table 1 and Complexity for 2^17 keys. Counting both query directions over eight structures independently yields 2^92 calls; adding the source's converted memory-access work gives exponent approximately 92.585, summarized as 92.5 in the paper. More Tradeoffs prints time 2^92 and data 2^91 at the same key count. This records the source inconsistency rather than a curator-issued erratum; normalized time/data remain unset."
+    },
+    {
+      "source_id": "gsw2022-key-structures-conference",
+      "locator": "Complete exact primary PDF1–21, all sections, formulas, tables, algorithms, appendices and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full reading and result inventory; bounded forward check and finite controls separately recorded. No author attack code executed."
+    },
+    {
+      "source_id": "gsw2022-key-structures-conference",
+      "locator": "PDF16/printed18 Recover the Key four-vote equation.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Source-local reconciliation task; not a replacement attack budget."
+    },
+    {
+      "source_id": "gsw2022-key-structures-conference",
+      "locator": "PDF14–16/printed16–18 Figure5,StepII and Recover the Key.",
+      "fields": [
+        "/target",
+        "/field_conflicts"
+      ],
+      "interpretation": "Source-local reconciliation task; not a replacement attack budget."
+    },
+    {
+      "source_id": "gsw2022-key-structures-conference",
+      "locator": "PDF4/printed6 Table1; PDF13–18/printed15–20 Algorithm1/Complexity/Further Improvement/More Tradeoffs.",
+      "fields": [
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Independent full raw21page read and255row DDT/finite arithmetic preserve two branches and their native sums. No source erratum or completion algorithm found in bounded checks."
+    },
+    {
+      "source_id": "gsw2022-key-structures-conference",
+      "locator": "PDF9–13/printed11–15 Sections4.1–4.3 and Table2; PDF15–18/printed17–20 StepII,Recover the Key,Further Improvement and More Tradeoffs.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The source targets four right quartets and recovers a120-bit vote before an unspecified full-key completion. These statements give no numerical full-key success at either s=0 endpoint. The source binomial model is recorded symbolically: its printed four-vote approximation and expected wrong-key count are already arithmetic-conflicted, and expected counts are not probabilities of a unique correct key. Existing completion and applicable time/data conflicts remain. Key-structure pair fractions are not weak-secret-key fractions."
+    },
+    {
+      "source_id": "gsw2022-key-structures-conference",
+      "locator": "PDF11–13/printed13–15 Sections4.1–4.3 quartet/key-structure model; PDF15–16/printed17–18 StepII and Recover the Key; PDF17/printed19 Further Improvement; PDF18/printed20 tradeoffs.",
+      "fields": [
+        "/success",
+        "/success/components",
+        "/success/review"
+      ],
+      "interpretation": "Baseline's local at-least-four false-vote tail follows from the source fixed-N per-candidate binomial fourth moment plus a union bound, not the conflicted printed exponent. It is unconditioned on right-quartet acquisition and is not a full-key probability. Reuse changes the decryption-side anchor; no common120-bit aggregation is established for copying the bound."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Unreconciled time/data figures prohibit automatic resource comparisons or an unqualified best-known claim.",
+    "The separate encryption-reuse endpoint and both source formula branches are now inventoried independently; their conflicts remain unresolved.",
+    "The related-subkey access and large key budget differ materially from ordinary single-key AES and from the four-key 2009 boomerang setting.",
+    "The mapping of memory accesses to encryption equivalents is the authors' model, not a hardware-independent runtime measurement.",
+    "The source does not detail full-key completion after 120 recovered bits; no independent attack or completion-cost reproduction was performed."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "Four-vote source arithmetic",
+      "description": "The printed binom(2^88,4)*(2^-120)^4*(1-2^-120)^(2^88-4) has log2 approximately-132.5849625 per wrong proposal, rather than-138.5. Across2^120 proposals expected false survivors are about2^-12.5849625, not2^-18.5. This is a local source arithmetic difference; unknown dependence and full-key success remain separate.",
+      "observations": [
+        {
+          "source_id": "gsw2022-key-structures-conference",
+          "locator": "PDF16/printed18 Recover the Key four-vote equation.",
+          "reported": "Original source claims and numerical scalars retained."
+        },
+        {
+          "source_id": "gsw2022-key-structures-conference",
+          "locator": "PDF16/printed18 Recover the Key four-vote equation. Independent raw review and bounded arithmetic,2026-10-27.",
+          "reported": "The printed binom(2^88,4)*(2^-120)^4*(1-2^-120)^(2^88-4) has log2 approximately-132.5849625 per wrong proposal, rather than-138.5. Across2^120 proposals expected false survivors are about2^-12.5849625, not2^-18.5. This is a local source arithmetic difference; unknown dependence and full-key success remain separate."
+        }
+      ]
+    },
+    {
+      "field": "/target",
+      "label": "Full-key completion not specified",
+      "description": "The explicit vote recovers120independent bits across K0 and K0-prime, not necessarily120bits of a single master key. The text asserts a non-dominating completion but provides no completion algorithm/cost. Preserve full-key recovery only as author claim; no substituted2^136 brute-force budget or whole-attack impossibility verdict.",
+      "observations": [
+        {
+          "source_id": "gsw2022-key-structures-conference",
+          "locator": "PDF14–16/printed16–18 Figure5,StepII and Recover the Key.",
+          "reported": "Original source claims and numerical scalars retained."
+        },
+        {
+          "source_id": "gsw2022-key-structures-conference",
+          "locator": "PDF14–16/printed16–18 Figure5,StepII and Recover the Key. Independent raw review and bounded arithmetic,2026-10-27.",
+          "reported": "The explicit vote recovers120independent bits across K0 and K0-prime, not necessarily120bits of a single master key. The text asserts a non-dominating completion but provides no completion algorithm/cost. Preserve full-key recovery only as author claim; no substituted2^136 brute-force budget or whole-attack impossibility verdict."
+        }
+      ]
+    }
+  ]
+}

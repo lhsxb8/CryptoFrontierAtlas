@@ -1,0 +1,171 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-5r-multiple-eight-cp-no-mc-grr2017",
+  "title": "GRR17 5-round AES Multiple-of-eight / four antidiagonals",
+  "display": {
+    "name": "Multiple-of-eight / four antidiagonals",
+    "method": "differential"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "grr2017-5r-final-no-mc",
+    "description": "Five nonlinear AES rounds with finalMC omitted. One complete source structure and four antidiagonal tests."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key; no related-key oracle.",
+    "key_population": "general secret key",
+    "plaintext_model": "2^32 plaintexts in one complete diagonal set.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Modulo8 acceptance of AES is exact under the stated construction; uniform/independent random-permutation residue tests are source approximations. pr=1-2^(-3s) is random rejection/advantage, not automatically balanced-prior classification accuracy."
+    ],
+    "reference_model": "Single-secret-key distinguishing versus a random permutation/inverse; four tests treated with source approximate random-rejection model."
+  },
+  "techniques": [
+    "structural-differential",
+    "multiple-of-eight"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^35.6",
+      "log2": 35.6,
+      "unit": "memory-lookups",
+      "qualifier": "estimate",
+      "note": "Section3.3 headline, 4 * 3 *2^32 lookups rounded to2^35.6; oracle acquisition separate, no conversion to encryption equivalents."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Author-reported native resource accounting."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^36",
+      "log2": 36,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Author-reported native resource accounting."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical amount is reported for this resource."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "value": 0.999755859375,
+    "metric": "source-random-permutation-rejection",
+    "description": "Section3.2 approximately1-2^-12 from four antidiagonals; AES acceptance deterministic; independence is an author approximation."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-7a9a9302ef091e22-2017",
+      "locator": "PDF pp.1–2/6 inconsistent summaries; p.7 round convention; pp.10–14 Sections3.2–3.5 counting, budget, inverse generalization.",
+      "fields": [
+        "/display",
+        "/result_kind",
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete registered proceedings read and AES claim inventory checked2026-10-26; work-level gates remain open as specified in the audit receipt. Source claims and unresolved fields retain their original status."
+    },
+    {
+      "source_id": "aes-paper-7a9a9302ef091e22-2017-extended-dtu",
+      "locator": "PDF pp.3–4,8,13–16 / printed pp.1–2,6,11–14: consistent extended-edition headlines, Theorem 3 and Algorithm 1.",
+      "fields": [
+        "/resources",
+        "/success",
+        "/field_conflicts",
+        "/limitations"
+      ],
+      "interpretation": "The extended edition supports the original defining algorithm at 2^32 texts and approximately 2^35.6 lookups. Both conflicting original-proceedings observations remain; no formal erratum is asserted."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Both the registered proceedings and the separately hashed extended version have been read. The inverse proof is a D=1 sketch; the forward D=1,2,3 generalization is inspected. Source cost and success approximations remain attached."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/resources/data",
+      "label": "Table versus defining-algorithm budget",
+      "description": "Abstract and Section3/Algorithm1 use2^32 texts and2^35.6 lookups; introductory text/Table1 use2^33 and2^36.6 for the same advertised>99% distinguisher.",
+      "observations": [
+        {
+          "source_id": "aes-paper-7a9a9302ef091e22-2017",
+          "locator": "PDF p.1 abstract, pp.11–13 Sections3.2–3.3/Algorithm1.",
+          "reported": "One structure2^32 texts, time2^35.6 memory lookups."
+        },
+        {
+          "source_id": "aes-paper-7a9a9302ef091e22-2017",
+          "locator": "PDF pp.2,6 introduction and Table1.",
+          "reported": "Data2^33 and time2^36.6 for>99% success."
+        },
+        {
+          "source_id": "aes-paper-7a9a9302ef091e22-2017-extended-dtu",
+          "locator": "PDF pp.3–4 / printed pp.1–2, abstract and introduction; PDF p.8 / printed p.6, Table 1; PDF pp.14–16 / printed pp.12–14, Algorithm 1 accounting.",
+          "reported": "The extended edition consistently reports one structure of 2^32 texts and 4 * 3 * 2^32 ≈ 2^35.6 lookups. It supports the defining-algorithm interpretation; it is not identified as a formal erratum to the original proceedings."
+        }
+      ]
+    },
+    {
+      "field": "/resources/time",
+      "label": "Table versus defining-algorithm time budget",
+      "description": "Abstract and Section3/Algorithm1 use2^32 texts and2^35.6 lookups; introductory text/Table1 use2^33 and2^36.6 for the same advertised>99% distinguisher.",
+      "observations": [
+        {
+          "source_id": "aes-paper-7a9a9302ef091e22-2017",
+          "locator": "PDF p.1 abstract, pp.11–13 Sections3.2–3.3/Algorithm1.",
+          "reported": "One structure2^32 texts, time2^35.6 memory lookups."
+        },
+        {
+          "source_id": "aes-paper-7a9a9302ef091e22-2017",
+          "locator": "PDF pp.2,6 introduction and Table1.",
+          "reported": "Data2^33 and time2^36.6 for>99% success."
+        },
+        {
+          "source_id": "aes-paper-7a9a9302ef091e22-2017-extended-dtu",
+          "locator": "PDF pp.3–4 / printed pp.1–2, abstract and introduction; PDF p.8 / printed p.6, Table 1; PDF pp.14–16 / printed pp.12–14, Algorithm 1 accounting.",
+          "reported": "The extended edition consistently reports one structure of 2^32 texts and 4 * 3 * 2^32 ≈ 2^35.6 lookups. It supports the defining-algorithm interpretation; it is not identified as a formal erratum to the original proceedings."
+        }
+      ]
+    }
+  ]
+}

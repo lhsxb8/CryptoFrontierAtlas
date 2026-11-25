@@ -1,0 +1,221 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-8r-mitm-dtcb2009-selected-subkeys",
+  "title": "8-round AES-256: Conditional-table selected-subkey recovery",
+  "display": {
+    "name": "Conditional-table selected-subkey recovery",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "dtcb2009-whitening-final-round-no-mixcolumns",
+    "description": "Reduced-round AES-256 with initial whitening and final MixColumns omitted. The source's key-search stages and whole-key headline are separated.The extension adds128 bits of eighth-round key material to the seven-round120-bit selection, totaling248 bits of named round-key material. A full AES-256 master key is not inferred from that count."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "Fixed standard AES key schedule; component derivations treat its round-key bytes as constants, not as a related-key oracle.",
+    "key_population": "General key under the source's modeled internal-parameter events; no special master-key class is specified.",
+    "plaintext_model": "2^48 structures of2^32 plaintexts varying the four diagonal bytes; under a guessed first-round key they split into2^72 active-byte sets. Matching uses33 inputs/32 differences, or65 inputs/64 differences for eight rounds.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Probabilities for internal parameters use the paper's randomness assumptions; they are not independently established for all AES keys.",
+      "Step3 andStep4 each enumerate2^40 partial-key guesses over2^80 blocks. The source's2^113 figure prices these partial-decryption/encryption passes; the joint Step5–6 matching and Step8 completion are not separately costed.",
+      "The source treats2^8 partial encryptions/decryptions as one encryption and four byte-function evaluations as one seven-round encryption. These are source conventions, not independent calibration.",
+      "The conditional15-parameter table must use the corrected substitution; printed Equation9 has a coefficient discrepancy.",
+      "DKS2010 disputes the cost analysis. The original claim is retained with no normalized running-time exponent."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "conditional-parameterization",
+    "precomputed-short-difference-sequences",
+    "rare-parameter-event"
+  ],
+  "resources": {
+    "time": {
+      "status": "conflict",
+      "reported": "2^241 claimed; DKS10 disputes the analysis and gives a different corrected MA tradeoff",
+      "log2": null,
+      "unit": "dtcb2009-source-encryption-equivalents",
+      "qualifier": "unspecified",
+      "note": "The later memory-access family has different parameters/units. It does not justify substituting a single new scalar for this endpoint."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^80",
+      "log2": 80,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "2^48 diagonal structures of2^32 blocks. Eight-round extension retains this data count."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^123 AES blocks (=2^127 bytes)",
+      "log2": 123,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Two precomputed target-function tables; eight rounds double the sequence length. Complete online lookup/storage accounting remains under review."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^124 encryption equivalents (doubled64-difference sequence)",
+      "log2": 124,
+      "unit": "dtcb2009-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Reusable key-independent table. Source convention uses approximately four function evaluations per seven-round encryption; no replacement work calibration is inferred."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "historical-author-model-selected-round-key-material-recovery-estimate",
+    "value": null,
+    "description": "Historical approximate author-model estimate inferred across Sections4.2 and4.4, not a separately printed or validated eight-round rate. PDF9 / printed152 states approximately50% after the seven-round two-target-pass attack and remaining-key search. PDF10 / printed153 extends almost the same steps to eight rounds with unchanged data, exhaustive eighth-round key guessing and64 compared differences instead of32. The two target passes share equations8–11 and the same favorable parameter-reduction event, so their acquisition probabilities are not multiplied into0.25. This recovers the intended historical source-model estimate for this exact indexed output. The literal reduced-Equation9 table mismatch, later running-time objection and unverified output/completion accounting remain; no corrected or experimental recovery rate follows. Original estimated costs, settings and local event components are unchanged.",
+    "review": {
+      "status": "pending",
+      "reviewed_on": "2026-11-07",
+      "scope": "Independent source-first and endpoint review accepts attribution of a historical cross-section author-model estimate only. Exact eight-round recovery at the original costs is not scientifically verified; equation, running-time and completion objections remain. No new completed full-paper or forward audit."
+    },
+    "components": [
+      {
+        "metric": "fifteen-parameter-reduction-event-source-model",
+        "value": 2.117582368135751e-22,
+        "basis": "author_model",
+        "expression": "2^{-72}",
+        "description": "Proposition4 / Equation7 assigns2^-72 to the byte-parameter equalities under its random-parameter model. The existing reduced-Equation9 coefficient discrepancy is not resolved; the event is not a validated whole-attack recovery probability."
+      }
+    ],
+    "basis": "author_model",
+    "expression": "\\approx 0.5"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Printed p.153 Section4.4; pp.150–152 underlying Steps1–8; p.154 Table1",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete official proceedings read and critical page images checked. Original claims remain attributed to DTCB09; later objections have their own source-specific observations."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Complete PDF1–13/printed144–156; Sections3–4 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Raw-first complete inventory and independent component review completed; source costs and whole-attack reproduction remain separate."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "Proceedings PDF6–7 Section4.1; PDF10 / printed153 Section4.4 (64-difference extension).",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical success for this exact partial_key_recovery output is supplied. Preserve the source random-parameter assumption and existing reduced-Equation9 conflict. Section4.4 switches from32 to64 compared differences and adds an eighth-round key search. It gives no separate aggregate success. Neither the seven-round approximately50% headline nor its32-difference2^-136 wrong-match probability is copied into this extension. The later running-time objection remains."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "PDF7–9 / printed150–152 Section4.2 Steps1–8 and final approximately50% sentence, especially shared equations8–11 across target passes; PDF10 / printed153 Section4.4 eight-round extension with unchanged data and64 compared differences.",
+      "fields": [
+        "/success",
+        "/success/review",
+        "/field_conflicts"
+      ],
+      "interpretation": "B42 source-first and endpoint review recovers only a historical approximate author-model estimate by explicit cross-section inference. Its scientific validity remains pending with an explicit success conflict; this is not a newly verified attack probability or a silently corrected algorithm. Earlier categorical noninheritance notes remain as historical evidence, superseded only for this limited author-model attribution."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Formal component tests and author-reported budgets are distinct from an end-to-end attack reproduction.",
+    "The2^-136 false-match heuristic for32-byte sequences is not an end-to-end success probability. Sixty-four-byte matching is a distinct extension.",
+    "Later DKS10 correction observations are attached through field_conflicts with their own source and locator; they are not attributed to the original DTCB09 authors."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Reduced Equation9 coefficient",
+      "description": "Under Equation7's conditions, substituting c12=3*d1 into corrected Equation4 gives coefficient1 for S(3*x1+3*d1). Printed Equation9 instead uses coefficient3. The conditional15-parameter count survives the corrected substitution; literal precomputation values differ.",
+      "observations": [
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed p.148 Equation4 and p.149 Equation7",
+          "reported": "The last term of C3_22 is S(3*x1+c12); c12=3*d1 leaves coefficient1."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed p.149 Equation9",
+          "reported": "The corresponding reduced term is printed as 3*S(3*x1+3*d1)."
+        }
+      ]
+    },
+    {
+      "field": "/resources/time",
+      "label": "Later running-time objection",
+      "description": "DKS2010 labels DTCB2009's analysis flawed and gives a differently parameterized eight-round memory-access tradeoff. Its alternative resource vector is not converted into an encryption-count correction of this specific2^241 endpoint.",
+      "observations": [
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "Printed p.153 Section4.4 and p.154 Table1",
+          "reported": "Eight-round online attack complexity is claimed as2^241 encryption equivalents."
+        },
+        {
+          "source_id": "dks2010-single-key-proceedings",
+          "locator": "Printed p.172 Table1, row[8] and footnote double-dagger; p.164 footnote3",
+          "reported": "The later corrected comparison family uses data2^(34+max(n-24,0)), memory2^(208-n) AES blocks and time2^(206+n) memory accesses; the footnote attributes increased cost to a flaw in[8]."
+        },
+        {
+          "source_id": "dks2015-single-key-journal",
+          "locator": "Printed p.418 Table2, DTCB09 row and double-dagger footnote",
+          "reported": "The journal retains the corrected symbolic family: data2^(34+max(n-24,0)), memory2^(208-n) AES blocks, online2^(206+n) memory accesses."
+        }
+      ]
+    },
+    {
+      "field": "/success",
+      "label": "Historical eight-round success estimate remains unverified",
+      "description": "The approximately0.5 figure is a cross-section inference of the original author model, not an independent eight-round measurement or a proved completed-output probability. Equation9 does not literally implement the reduced Equation4, and the published running-time/completion accounting remains disputed. Preserve the historical estimate alongside these objections; it is not a verified recovery rate at the indexed2^241 cost.",
+      "observations": [
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "PDF9 / printed152 Section4.2 final complexity paragraph; PDF10 / printed153 Section4.4 extension",
+          "reported": "Seven-round average expected costs have approximately50% success. The eight-round extension uses almost the same steps and unchanged data, an exhaustive extra-round key search and64 rather than32 compared differences; the approximate eight-round estimate is inferred, not printed separately."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "PDF5 / printed148 Equation4; PDF6 / printed149 Equations7 and9; PDF8 / printed151 Steps7–8",
+          "reported": "Substituting c12=3*d1 into Equation4 gives coefficient1 for S(3*x1+3*d1), while Equation9 prints coefficient3. Steps7–8 describe another target pass and remaining-key search, without separately itemizing the exact complete-output success and cost."
+        },
+        {
+          "source_id": "dks2010-single-key-proceedings",
+          "locator": "Printed172 Table1 row[8] and double-dagger footnote; printed164 footnote3; existing independently reviewed running-time conflict retained",
+          "reported": "Later literature attributes a flaw to the original analysis and compares a differently parameterized memory-access tradeoff. This does not validate the original eight-round approximately0.5 estimate at2^241 encryption equivalents."
+        }
+      ]
+    }
+  ]
+}

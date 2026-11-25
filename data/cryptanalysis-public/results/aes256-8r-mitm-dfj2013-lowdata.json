@@ -1,0 +1,142 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-8r-mitm-dfj2013-lowdata",
+  "title": "Eight-round AES-256 single-key MITM key recovery, low-data tradeoff",
+  "display": {
+    "name": "MITM, low-data tradeoff",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "dfj2013-zero-based-rounds-0-to-7-final-no-mixcolumns",
+    "description": "Eight-round AES-256 under the author's zero-based round numbering, rounds 0 through 7, with the real AES-256 key schedule and the reduced cipher's final MixColumns omitted."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One unknown secret AES key; the attacker does not select related keys or obtain related-key oracles.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "chosen-plaintext structures under one secret key",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Chosen-plaintext structures and the source's truncated-differential analysis.",
+      "The real AES-256 key-schedule relation in Proposition 5 is used to enumerate candidate subkey bytes.",
+      "The low-data variant checks multiple differentials with larger precomputed multiset tables, as in the end of Section 4.1.",
+      "Low-memory output-active byte excludes0,5,10,15; low-data variant tests y5with one extra table parameter."
+    ],
+    "target_selection": "designated_target"
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "differential-enumeration",
+    "multiset-tables"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^196",
+      "log2": 196,
+      "unit": "aes256-encryptions",
+      "qualifier": "estimate",
+      "note": "Author-reported AES-encryption-equivalent time from Table 1 and Section 4.1; the optimized tradeoff's separate preprocessing budget is not extracted."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^107",
+      "log2": 107,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Low-data variant at the end of Section 4.1, using multiple differentials in parallel on the same plaintext structures."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^96",
+      "log2": 96,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Storage for the enlarged precomputed tables; the source explicitly measures this memory in 128-bit AES blocks."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Precomputed tables are required, but a separate preprocessing budget for the low-data variant is not extracted; missing does not mean zero."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "key-recovery-success",
+    "value": null,
+    "description": "The source analyzes an expected suitable pair or table hit but does not supply a numerical success probability for this Table 1 tradeoff.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "The defining section and table give expected right-pair/table-hit counts, conditional filtering and completion, but no numerical complete-key recovery probability at this retained parameter choice."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF pp.4-5, Section 2.1, conventions and units; p.8, Table 1, AES-256 8-round row with data 2^107; pp.13-15, Section 4.1, especially Proposition 5 and the concluding data-memory tradeoff.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The authors report time 2^196, data 2^107 chosen plaintexts and memory 2^96 AES blocks for the multiple-differential variant. The derivation uses the ordinary AES-256 key schedule, not a related-key oracle. This is an attack construction, not a security lower bound; unreported numerical success and separate preprocessing remain null."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF pp.1–17 complete read; p.5native units; pp.10–13 seven-round costs and completion; pp.14–16 schedule-dependent extensions.",
+      "fields": [
+        "/assessment",
+        "/limitations"
+      ],
+      "interpretation": "Raw-first independent full inventory, original-PDF SHA recheck, bounded official version/successor checks. Existing quoted resource tuple and stableIDpreserved; no author code executed."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF13–15 §4.1 and PDF5 single-key setting; two source differential layouts of the same8round extension.",
+      "fields": [
+        "/setting"
+      ],
+      "interpretation": "Source-supported semantic normalization of existing key-relation wording and designated target; no added oracle or key-control assumption."
+    },
+    {
+      "source_id": "dfj2013-mitm-author",
+      "locator": "PDF8 Table1; PDF13–15 Section4.1, simple extension and 64 parallel differentials.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Targeted success audit: expected counts and conditional correctness are retained without inventing an end-to-end probability or a Poisson independence assumption."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The attack, multiset tables and reported costs have not been independently executed or reproduced.",
+    "Unknown numerical success and separate preprocessing prevent automatic frontier comparison.",
+    "Complete17-page author-edition audit and bounded official version/successor checks completed2026-10-27 through literature cutoff2026-10-10. This records checked scope, not exhaustive absence of later corrections."
+  ],
+  "related_problem_ids": []
+}

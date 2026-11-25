@@ -1,0 +1,155 @@
+{
+  "schema_version": "0.10.0",
+  "related_problem_ids": [],
+  "id": "aes192-full-fault-bs2003-xtime-mul-skip-key-extension",
+  "title": "AES-192: MUL-skip xtime: key recovery (Blömer–Seifert, FC2003)",
+  "display": {
+    "name": "MUL-skip xtime: key recovery",
+    "method": "safe_error"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 12,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Complete AES-192 master key using the MUL-skip xtime feedback model; the longer-key completion is a qualitative extension with no total data budget."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen-plaintext-encryption-with-fault-attempt",
+      "observable-encryption-correctness"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One fixed secret master key; no related-key oracle.",
+    "key_population": "Arbitrary key of the stated AES instance in an implementation meeting the fault and feedback assumptions.",
+    "plaintext_model": "For a target first-round key byte, use chosen values i=0,...,N-1 in its plaintext byte; other bytes are arbitrary/random. Whole-key extension repeats for the required key material, with adaptive inputs for long keys.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "The MUL A,#00011011b instruction in the specified extended8051 xtime sequence.",
+      "granularity": "One skipped multiplication instruction, with all other instructions executing as described.",
+      "timing": "Between DIV A,#10000000b and the following XRL during first-round MixColumns; later-round invocation needed for the qualitative long-key extension.",
+      "location": "The MUL in the target byte's xtime invocation, not an arbitrary instruction.",
+      "value_control": "Use a glitch to omit the specified MUL instruction.",
+      "sample_pairing": "Each attempted injection yields a correct/incorrect outcome. Ciphertext-comparison feedback additionally needs a correct reference for the same input, outside the stated attempt count.",
+      "feedback": "Observable correct-versus-incorrect encryption outcome. Section1 permits alternatives: a device reset/error flag; comparison with a fault-free ciphertext; or detectable recomputation timing. Only the binary outcome is required, not the faulty ciphertext bytes. A correct result after skipping multiplication indicates saved MSB=0; an incorrect result indicates MSB=1.",
+      "evidence_scope": "analytical"
+    },
+    "assumptions": [
+      "Successful localization and the stipulated fault-value effect are model assumptions, not measured acquisition success rates.",
+      "The ciphertext-validity alternatives are interchangeable only as a binary observation; the source does not cost each feedback channel's calibration or reference executions separately.",
+      "Recovery target: Complete AES-192 master key using the MUL-skip xtime feedback model; the longer-key completion is a qualitative extension with no total data budget.",
+      "The implementation must expose precisely the specified temporary, instruction, RAM input or register-bank location. A timing-resistant xtime implementation alone does not establish these fault controls.",
+      "Section5.1 refers to the Section4 smaller-block/longer-key extension. Additional adaptive first-round-state control and later-round feedback are required; no full parameterized acquisition budget is given."
+    ]
+  },
+  "techniques": [
+    "safe-error-analysis",
+    "correctness-feedback",
+    "sbox-msb-prediction-table",
+    "mul-skip"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical complete-attack offline runtime is reported."
+    },
+    "data": {
+      "status": "qualitative",
+      "reported": "Qualitative longer-key extension; total attempt count not reported",
+      "log2": null,
+      "unit": "fault-injection-encryption-attempts",
+      "qualifier": "unspecified",
+      "note": "Section5.1 points to the Section4 extension but does not tabulate a complete long-key budget. No384/512 extrapolation is inserted."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "Prediction table T has256 × N Boolean entries; peak memory not reported",
+      "log2": null,
+      "unit": "Boolean-table-entries",
+      "qualifier": "unspecified",
+      "note": "This is the table's logical shape, not a numerical peak-memory or byte-storage claim."
+    },
+    "preprocessing": {
+      "status": "qualitative",
+      "reported": "Build T[k,i] = MSB(SBOX[k XOR i])",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The source specifies this reusable table but gives no preprocessing-time measurement or normalized operation count."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "stated-target-recovery-probability",
+    "value": null,
+    "description": "No numerical recovery success is given for this endpoint at its recorded budget. The complete-key extension uses the approximate16-observations-per-byte reasoning or a qualitative longer-key extension, not the N=256 per-byte endpoint. The source N=256 guarantee is not transferred to this approximate budget. AES192/256 additionally require adaptive later-round observations; their whole-key budget and joint success remain unquantified. The local exact-MSB relation assumes the stated physical effect and reliable binary feedback; no acquisition yield or independence is invented.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit. Theoretical deterministic guarantees require the stated ideal model; local filters, characteristic products, expected counts and physical acquisition are separate. Costs, targets, settings, existing conflicts and full-audit gates are unchanged."
+    },
+    "components": [
+      {
+        "metric": "exact-msb-observation-under-specified-xtime-fault-model",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections5.1–5.5: provided the specified fault effect/location and reliable correctness feedback, the target S-box output MSB is determined exactly. The specified MUL skip or input-MSB reset causes an incorrect output iff MSB1. This local observation is not physical fault acquisition or whole-key success."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Section1 p.164; Section5.1 pp.174–175; Section5.3 pp.176–177; Section4 p.170 and introduction p.163",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Primary-version result with explicit target, feedback model and native fault-attempt accounting; AES means128-bit blocks and the stated standard key size."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Complete PDF1–20/printed162–181; Sections4–5 and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition text and AES contribution inventory reviewed; component checks and whole-attack reproduction are separate."
+    },
+    {
+      "source_id": "bs2003-fault-fc",
+      "locator": "Proceedings PDF13–14 / printed174–175 Section5.1 Equation4, selected inputs i=0..N-1 and N=256 statement; Section5.3 printed176–177 / PDF15–16.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical recovery success is given for this endpoint at its recorded budget. The complete-key extension uses the approximate16-observations-per-byte reasoning or a qualitative longer-key extension, not the N=256 per-byte endpoint. The source N=256 guarantee is not transferred to this approximate budget. AES192/256 additionally require adaptive later-round observations; their whole-key budget and joint success remain unquantified. The local exact-MSB relation assumes the stated physical effect and reliable binary feedback; no acquisition yield or independence is invented."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The paper supplies attack-model reasoning, not a physical experiment with measured chip-level success, time and calibration cost.",
+    "Attempts leaving the targeted value unchanged are informative and remain in the data budget."
+  ]
+}

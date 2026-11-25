@@ -1,0 +1,165 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-3r-mixture-integral-10cp-gs2020",
+  "title": "aes-128/aes-192/aes-256, 3 rounds: Mixture-integral distinguisher (10 CP) [GS20]",
+  "display": {
+    "name": "Mixture-integral distinguisher (10 CP)",
+    "method": "integral"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256",
+      "aes-128-secret-sbox"
+    ],
+    "rounds": 3,
+    "full_round": false,
+    "round_convention": "source-gs20-3r",
+    "description": "Three nonlinear AES rounds; the bytewise test is specified after removing the final MixColumns operation. For ordinary AES with a known final linear layer, apply its inverse to the ciphertexts first. The property does not depend on the key size or key-schedule details."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown key with fixed roundkeys; this key-schedule-independent equality test also applies to the registered common-secret-Sbox AES128 variant.",
+    "key_population": "general secret key",
+    "plaintext_model": "Five related two-plaintext sets, ten nonadaptive chosen plaintexts in total.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Theorem3 requires only a bijective commonSbox and the public AES linear layer; neither key values nor Sbox values are needed by this distinguisher."
+    ],
+    "reference_model": "Distinguish three-round secret-key AES from a random permutation under nonadaptive chosen-plaintext access; source experiments use 21-round AES as the random surrogate."
+  },
+  "techniques": [
+    "mixture-integral",
+    "nonadaptive-low-data"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "1920 ≈ 2^10.9",
+      "log2": 10.906890595608518,
+      "unit": "table-lookups-and-xor-operations",
+      "qualifier": "upper_bound",
+      "note": "At most 1920 operations. Source conversion to about 2^5 three-round encryptions is explicitly approximate because lookup table sizes differ."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "10",
+      "log2": 3.321928094887362,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "Exactly ten nonadaptive chosen plaintexts."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical budget is stated for this configuration."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate numerical budget is stated for this configuration."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "random-permutation-rejection-probability",
+    "value": 0.95,
+    "description": "About 95% source-reported distinguishing success, with 300000 trials. Six-plaintext theory and experiment differ and are not mixed with this point. This is a one-sided random-permutation rejection rate (AES acceptance is one), not equal-prior classifier accuracy. Reported approximate values are preserved, not turned into certified lower bounds.",
+    "components": [
+      {
+        "metric": "earlier-author-edition-random-surrogate-rejection",
+        "value": 0.944,
+        "expression": "94.4\\%",
+        "basis": "reported_experiment",
+        "description": "The distinct2019 author manuscript PDF13 reports94.4% rejection over250000 tests at10chosen plaintexts, using21-round AES as its random-permutation surrogate. This is a source-reported one-sided distinguishing experiment, not full-key recovery or equal-prior classifier accuracy. The exact raw outcome numerator is unavailable; do not infer one from the rounded percentage, pool it with proceedings300000 trials, or replace that edition's approximately95% main value."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-8256ba7259c80e2c-2020",
+      "locator": "PDF p.3 Table 1; pp.11–12 Algorithm 1, Computational Cost and Practical Verification.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Checked primary abstract, result table and defining passages; native costs and goals retained."
+    },
+    {
+      "source_id": "aes-paper-8256ba7259c80e2c-2020",
+      "locator": "PDF9–10 Theorem3, key/Sbox-independent impossible mixture-integral property.",
+      "fields": [
+        "/target",
+        "/setting"
+      ],
+      "interpretation": "Same shared-instance configuration projected onto already registered secretSbox variant; no duplicate result or key-recovery inference."
+    },
+    {
+      "source_id": "aes-paper-8256ba7259c80e2c-2020",
+      "locator": "PDF p.10 Data Cost; p.11 Algorithm 1",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Located source claim and the attached independent review observations; original reported values retained pending reconciliation."
+    },
+    {
+      "source_id": "gs2019-mixture-integral-author-extended",
+      "locator": "PDF12 Algorithm1, PDF13 Section4.3 Practical Verification,10CP/94.4%/250000 tests.",
+      "fields": [
+        "/success/components/0"
+      ],
+      "interpretation": "Separate earlier-edition empirical observation of the same one-sided ten-plaintext distinguisher; source main value/sample count retained without pooling or fictitious exact numerator."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Overlapping four-text sets are dependent. Independent equality-partition counting under the random-function approximation gives rejection probabilities 0.610451780826825,0.8286863776900614,0.9417333194091994,0.984704970673595 for6,8,10,12 plaintexts; these are reviewer calculations, not replacement author-reported data."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "Approximate 95 percent is not a certified threshold",
+      "description": "Keep the author-reported approximately95% point, but the claims of probability higher than95% at ten plaintexts are not justified by the dependent-set construction.",
+      "observations": [
+        {
+          "source_id": "aes-paper-8256ba7259c80e2c-2020",
+          "locator": "PDF p.10 Data Cost; p.11 Algorithm 1",
+          "reported": "The text asks for probability higher than95% and Algorithm1 labels ten plaintexts as probability95%."
+        },
+        {
+          "source_id": "aes-paper-8256ba7259c80e2c-2020",
+          "locator": "PDF pp.11–12 dependence Remark and Practical Verification; Algorithm1 evaluated by independent equality-partition enumeration",
+          "reported": "The source acknowledges true success below the independent-set formula; exact random-function calculation is0.9417333194091994 at ten plaintexts, consistent with approximately95% but below95%."
+        }
+      ]
+    }
+  ]
+}

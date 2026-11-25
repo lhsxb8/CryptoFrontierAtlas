@@ -1,0 +1,176 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-full-dfa-pq2003-eight-late-faults-key-recovery",
+  "title": "AES-128 Eight late faults: full-key recovery (Piret–Quisquater 2003)",
+  "display": {
+    "name": "Eight late faults: full-key recovery",
+    "method": "fault"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 10,
+    "full_round": true,
+    "round_convention": "fips197-full-aes",
+    "description": "Full ten-round AES-128. Two useful late faults for each of four last-round-key groups (eight total) provide candidate material for the complete final-round key; the master key follows by AES-128 key-schedule inversion and candidate verification."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "paired-correct-and-faulty-encryption-outputs",
+      "single-byte-state-fault-injection"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unchanged secret AES-128 master key; no related-key or key-schedule-fault oracle.",
+    "key_population": "AES-128 keys in the stated unprotected single-byte-fault model; no weak-key restriction.",
+    "plaintext_model": "A correct ciphertext and its faulty counterpart for each plaintext; different pairs may use different plaintexts. The source's algorithm associates every pair with the same key.",
+    "computation": "classical",
+    "attack_surface": "fault_injection",
+    "fault_model": {
+      "target": "A byte of the AES encryption state; faults in the key schedule are outside this result.",
+      "granularity": "One initial byte with an unknown nonzero difference; later diffusion may change four or sixteen state bytes.",
+      "timing": "After the round-8 diffusion layer and before the round-9 diffusion layer (theta_(R−2) to theta_(R−1)); the source's theta is ShiftRows followed by MixColumns.",
+      "location": "Acquire two useful faults in each of the four position classes that cover disjoint four-byte final-round-key groups. The source calls these carefully chosen locations; arbitrary placement is not guaranteed to achieve coverage in eight attempts.",
+      "value_control": "The faulty byte value is random and assumed uniformly distributed; no chosen difference or bit-level fault control.",
+      "sample_pairing": "Every faulty ciphertext has its correct counterpart for the same plaintext and key; useful pairs are distinguished from total injection attempts.",
+      "evidence_scope": "analytical"
+    },
+    "assumptions": [
+      "Only correct/faulty output pairs satisfying the stated single-byte model and timing window are counted.",
+      "The last-round-key candidate set is computed from differential constraints, and any remaining candidates require a separate check.",
+      "The paper instantiates and tests the 128-bit-block, 128-bit-key variant; its general extension remark is not a quantified AES-192/256 result.",
+      "In the source theta_r=ShiftRows_r followed by MixColumns_r. The four final-round-key groups in column-majorFIPSindices are{0,13,10,7}, {4,1,14,11}, {8,5,2,15}, {12,9,6,3}; these are affected sets, not ordered inverseMixColumns arguments."
+    ]
+  },
+  "techniques": [
+    "differential-fault-analysis",
+    "late-byte-fault",
+    "candidate-list-filtering"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numeric end-to-end runtime is stated for this specific endpoint. Candidate-list sizes and candidate-search space are not substituted for time."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "8",
+      "unit": "correct-faulty-ciphertext-pairs",
+      "log2": 3,
+      "qualifier": "exact",
+      "note": "Section 3.3 counts eight carefully placed useful faults: two for each four-byte group. Each requires its correct ciphertext counterpart. This is not eight arbitrary injection attempts."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Section 2 stores differential patterns D and candidate lists L but does not tabulate whole-attack peak memory."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Section 2 forms a table of 255*n single-byte-fault diffusion patterns. For one AES column n=4, this gives 1020 patterns as a derived component count, not a reported total preprocessing-time budget."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "empirical-marginal-model-complete-key-success-lower-envelope",
+    "value": null,
+    "description": "Plug-in conservative full-key estimate at eight useful late-fault pairs: two pairs for each of four disjoint final-round-key groups. Adopt the reported rounded98% local singleton frequency as the applicable marginal model for every group. If each population marginal is at least0.98, the union bound gives complete-key success at least0.92 without group independence. All four singleton lists yield the unique true last-round key, and AES128 schedule inversion yields the original master key using the existing data. Because98% is an empirical frequency without a trial denominator, rounding rule or uncertainty bound, the displayed approximately92% is an empirical-marginal-model estimate, not a measured whole-key rate, an unconditional AES guarantee or a statistical confidence lower bound. Transfer of the local observation to each of the four group marginals is a modeling condition, not four measured marginal bounds. No0.98^4 independence product is used. The77% experiment and few-second runtime concern the separate two-earlier-fault attack; they are not transferred. Physical acquisition, timing and two-per-group coverage are conditioned upon, not priced or assigned a yield.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Read all12 exact-edition pages including AppendixA. Reconstructed the sufficient joint singleton event, source98% local measurement, conditional four-marginal union envelope and deterministic AES128 key-schedule inversion. Statistical uncertainty, group transfer and acquisition conditions retained. Both original local components, all native resources and the independent two-earlier-fault endpoint remain unchanged. Targeted success review, not a new full-paper/forward audit."
+    },
+    "components": [
+      {
+        "metric": "true-key-retained-by-eight-effective-late-fault-equations",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections2/3.3: at correctly modeled effective late-byte faults, the actual last-round-key bytes satisfy each column equation and survive intersections. Retention alone does not prove four groups are simultaneously unique."
+      },
+      {
+        "metric": "one-four-byte-group-unique-after-two-late-faults",
+        "value": 0.98,
+        "basis": "reported_experiment",
+        "expression": "\\approx0.98",
+        "description": "Section3.3 reports98% unique identification of ONE four-byte final-subkey group from two useful late-fault pairs, without a trial denominator. This is not the whole-key success for eight useful faults."
+      }
+    ],
+    "basis": "derived_from_source",
+    "expression": "\\gtrsim 1-4(1-0.98)=0.92"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "pq2003-dfa-ches",
+      "locator": "CHES2003 Section 3.3 p.84, eight-fault construction and later four-byte experiment paragraph",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The full-key endpoint is distinct from two-pair partial recovery. Its location-class coverage condition is retained, and neither the four-byte uniqueness rate nor the two-earlier-fault runtime is copied here."
+    },
+    {
+      "source_id": "pq2003-dfa-ches",
+      "locator": "Complete PDF1–12/printed77–88, including Section2 model, Section3.3 every AESendpoint, Table3 and AppendixA.",
+      "fields": [
+        "/assessment",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success"
+      ],
+      "interpretation": "Exact12-page CHES2003 chapter independently read in full on2026-10-27. Reviewer finite component identities and arithmetic checks do not execute or reproduce the author attack or remeasure its empirical frequencies."
+    },
+    {
+      "source_id": "pq2003-dfa-ches",
+      "locator": "Proceedings PDF8–9 / printed84–85 Section3.3 (late four-byte group and earlier whole-key experiments); PDF10 / printed86 conclusion/Table3.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "The eight-carefully-located-useful-fault construction covers four disjoint groups with two late faults each, but no numerical joint whole-key success is reported. Preserve the local empirical98% group statistic without taking0.98^4 or assuming cross-group independence. The77% whole-key singleton statistic belongs to the distinct two-earlier-fault experiment already indexed separately. No physical acquisition yield or unpriced completion is supplied."
+    },
+    {
+      "source_id": "pq2003-dfa-ches",
+      "locator": "CHES2003 PDF2–5/printed78–81 Section2; PDF8/printed84 Section3.3 four-group/eight-late-fault construction and local98% observation; PDF11–12/printed87–88 AppendixA. Targeted success review2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Supersedes only the earlier absence of a composed primary model estimate. For four singleton events U_j, union gives Pr(all U_j)>=1-sum_j(1-p_j); substituting the reported rounded local0.98 as each adopted marginal gives the approximately0.92 empirical-model lower envelope. No group independence, directly measured full-key frequency, confidence interval or actual-population marginal lower bound is asserted. The true key is uniquely assembled on this sufficient event, so this is a complete-output estimate rather than promoting local retention alone."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Useful correct/faulty pairs exclude acquisition failures and faults outside the model; total physical attempts are not costed.",
+    "Computer experiments in this paper do not establish a measured physical fault-injection setup.",
+    "Exact12-page CHES2003 chapter independently read in full on2026-10-27. Reviewer finite component identities and arithmetic checks do not execute or reproduce the author attack or remeasure its empirical frequencies.",
+    "Direct follow-up ePrint2010/440 remains fulltext-access pending after officialIACR403 and CiteSeer/archive timeout. Primary search-index excerpts flag revised1036mean/92%uniqueness as a verification lead, not an inspected correction or replacement of the original1046/77% observations."
+  ],
+  "related_problem_ids": []
+}

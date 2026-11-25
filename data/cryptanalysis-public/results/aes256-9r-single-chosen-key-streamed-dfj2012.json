@@ -1,0 +1,154 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-9r-single-chosen-key-streamed-dfj2012",
+  "title": "DFJ12 9-round AES-256 / aes256-9r-single-chosen-key-streamed-dfj2012",
+  "display": {
+    "name": "Single-chosen-key rebound / streamed",
+    "method": "rebound"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 9,
+    "full_round": false,
+    "round_convention": "dfj2012-9r-source-linear-output",
+    "description": "9 nonlinear AES-256 rounds; Figures 4/9 include the final public linear output map and the subspace condition is transported through it. Figure 1/source Section 2 use AK before SB. This pair-finding endpoint is not unknown-master-key recovery."
+  },
+  "setting": {
+    "key_model": "chosen_key_pair",
+    "oracle_access": [
+      "public_chosen_key_permutation_evaluation"
+    ],
+    "related_key_count": null,
+    "target_selection": "attacker_selected_pair",
+    "key_relation": "One freely chosen AES-256 master key used for BOTH messages. No key difference or related-key oracle; the key schedule is standard.",
+    "key_population": "attacker-chosen valid standard AES-256 key",
+    "plaintext_model": "Construct (m,m-prime,k) such that m XOR m-prime lies in the prescribed four-byte-dimensional input subspace and the ciphertext difference lies in the prescribed four-byte-dimensional output subspace.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The adversary chooses one key; not a fixed known-key game and not a secret-key recovery game.",
+      "Reduced-round source uses AK before SB and a public linear terminal map. The finite AppendixA witness matches with terminalMC and finalARK; the AppendixB absolute End row has a separate local discrepancy, while its output difference matches."
+    ],
+    "reference_model": "Single-chosen-key limited-birthday restricted-pair construction versus an ideal keyed permutation; source generic comparator 2^64 basic operations."
+  },
+  "techniques": [
+    "rebound",
+    "chosen-single-key",
+    "list-intersections",
+    "keyed-supersbox",
+    "list-merging"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^24",
+      "log2": 24,
+      "unit": "basic-operations",
+      "qualifier": "estimate",
+      "note": "Native construction/list cost, not AES encryption equivalents."
+    },
+    "data": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical resource amount supplied for this endpoint."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^16",
+      "log2": 16,
+      "unit": "source-native-storage-units",
+      "qualifier": "estimate",
+      "note": "Source headline/native list storage exponent; no total byte or AES-block width specified."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical resource amount supplied for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "distinguishing-success",
+    "value": null,
+    "description": "No numerical complete chosen-key distinguishing success is stated for this nine-round AES256 streamed endpoint. The source expects2^24 middle solutions and invokes the earlier storage trick, but does not give a complete output-count or ideal-game decision distribution. Keep the two local key-consistency models separate; do not transfer an AES128 witness or its seven-round list percentage to this endpoint.",
+    "components": [
+      {
+        "metric": "L0-L3-two-byte-key-consistency-source-model",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "Section4.3: the L0 candidate determines two bytes k4[1,13] shared with L3; the source list model uses a16-bit consistency condition. This is per fixed candidate, not the probability the merged list is nonempty."
+      },
+      {
+        "metric": "L1-two-byte-consistency-given-three-list-join-source-model",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "Section4.3 Equations12–13: a fixed L1 candidate meets the two named byte conditions under the source model. Expected one match per joined element is not a guarantee of acquisition or uniqueness."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition targeted success audit. Conditional list/outbound events, one-sided AES acceptance, quartet probabilities and expected q outputs remain distinct from whole-game decision success. Existing scientific conflicts, source versions, native budgets, targets, settings, parameter membership and full-audit gates are unchanged."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-c979e91b0b19fd75-2012",
+      "locator": "PDF pp.2–6 model/Table 1; pp.14–16 Sections 4.1–4.3 AES-256 construction/key-schedule completion and native budgets.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Targeted primary result statements and accounting checked; not a complete-paper proof audit."
+    },
+    {
+      "source_id": "aes-paper-c979e91b0b19fd75-2012",
+      "locator": "Complete PDF1–19 / printed225–243; Sections2–4, AppendixA/B PDF18, AppendixC PDF19 and allreferences.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-primary inventory: six configurations. Independent finite FIPS/witness and recurrence checks are component validation, not attack execution. Generic limited-birthday reference cost is not attack data; native list memory is not automatically bytes."
+    },
+    {
+      "source_id": "aes-paper-c979e91b0b19fd75-2012",
+      "locator": "Proceedings PDF15–16 / printed239–240 Section4.3, L0/L3 merge, L0,2,3 and Equations12–13.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical complete chosen-key distinguishing success is stated for this nine-round AES256 streamed endpoint. The source expects2^24 middle solutions and invokes the earlier storage trick, but does not give a complete output-count or ideal-game decision distribution. Keep the two local key-consistency models separate; do not transfer an AES128 witness or its seven-round list percentage to this endpoint."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Overall distinguishing-game success is not numerically reported. Internal list nonemptiness uses an iid-uniform model; list storage counts outside the seven-round AES128 byte estimate have unspecified item widths."
+  ],
+  "related_problem_ids": []
+}

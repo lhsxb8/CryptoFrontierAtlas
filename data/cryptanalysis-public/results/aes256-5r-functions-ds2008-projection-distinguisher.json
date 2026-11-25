@@ -1,0 +1,189 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-5r-functions-ds2008-projection-distinguisher",
+  "title": "5-round AES-256: Five-round function-family distinguisher",
+  "display": {
+    "name": "Five-round function-family distinguisher",
+    "method": "mitm"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "ds2008-inner-rounds-no-whitening-with-mixcolumns",
+    "description": "5 inner AES rounds, without initial whitening and with MixColumns in every round, under fixed round keys. The parameter-independent round argument applies to the standard AES-256 schedule."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One unknown fixed key; the underlying inner-round property holds independently of schedule relations.",
+    "key_population": "General fixed key; no weak-key restriction.",
+    "plaintext_model": "One byte takes all 256 values while the other fifteen bytes are fixed.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [],
+    "reference_model": "Uniformly random permutation of the 128-bit block space, with the same classical chosen-plaintext access."
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "parameterized-functions"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "The paper proposes this distinguisher but gives no complete standalone evaluation budget."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "256",
+      "log2": 8,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "One full structure for the stated property; repeated tests and a target advantage are not specified."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "No separate standalone distinguisher memory budget is stated."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "The 26-byte projected function family is not given a separately costed standalone membership table. The 25-byte attack table in Section5 has different boundaries."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "distinguishing-advantage",
+    "value": null,
+    "description": "Advantage of COMPLETE corrected26-byte function-family membership on one ordered256-input active-byte structure. Every fixed-key AES projected vector belongs to a family of at most2^208 ordered byte functions. For a uniform128-bit permutation, each projected byte has2^120 preimages; sequential sampling without replacement and a union bound over the complete family give the displayed finite-permutation inequality. The family uses the actual SB/SR/MC dependency graph and the DTCB09 corrected coefficients, not the erroneous literal DS08 expansions. No random AES parameter, iid projected-byte or independent-test assumption is used. This is derived two-world advantage, not an author-printed numeric rate or equal-prior classification probability. It applies to the complete family, not a sampled/thinned table. Standalone table generation, evaluation time and memory remain unpriced; the separate25-byte key-recovery table and its2^-1848 wrong-sequence estimate are not substituted. The original source-print discrepancy remains attached.",
+    "components": [
+      {
+        "metric": "aes-side-membership-in-intended-complete-projection-set",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Propositions2–5: conditional on the intended complete parameterization and correct input coordinate, the actual AES function is included in the complete26-parameter set. This conditional membership does not validate the disputed literal formulas or give an ideal-world false-positive probability."
+      }
+    ],
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Read DS08 PDF1–11 and DTCB09 PDF1–6; reconstruct the corrected25/26-byte dependency count and exact observable projection. Prove whole-test false alarms by finite-permutation sampling and a union bound at exactly256 distinct preselected queries. All native resources, local components, printed-formula conflicts and audit gates unchanged. Targeted success proof, not a new whole-paper/forward audit."
+    },
+    "basis": "derived_from_source",
+    "expression": "\\ge 1-2^{208}\\prod_{i=0}^{255}\\frac{2^{120}}{2^{128}-i}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Printed pp.120–121 Section4 Proposition5 and discussion of key-size feasibility",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts",
+        "/bound"
+      ],
+      "interpretation": "Complete official eleven-page proceedings reviewed; critical equations and Table1 visually checked. Author-reported scope and native units retained."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Complete PDF1–11/printed116–126; AppendixA Proposition6 and Sections4–5.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition inventory reviewed; reviewer finite component validation is separate from attack reproduction."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Proceedings PDF4–6 / printed119–121 Propositions2–5 Equations1–6, complete parameter set and five-round distinguisher; original literal-formula conflicts retained.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical distinguishing advantage is given. Complete intended-set membership alone does not quantify the acceptance of a random permutation. Original coordinate/formula conflicts and later correction evidence remain attached; no corrected cost or advantage is substituted."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "PDF5–6 Section4, Propositions4–5; PDF7–9 Section5, Steps2–6, Equation7, Table1 and Section5.3.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: the checked source does not quantify this exact main output at its recorded budget. Separate proof, coordinate, key-schedule and cost obligations remain recorded. All primary probability values, components and scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "FSE2008 PDF3–6/printed118–121 inner-round definition, Propositions2–5 and the26-byte observable projection; targeted success derivation2026-11-07.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Supersedes only the prior absence of a complete ideal-world metric. The corrected full26-byte class contains the AES ordered256-byte vector for every fixed key and has cardinality at most2^208. A fixed output byte vector under an ideal128-bit permutation has probability at most product_{i=0}^{255}2^120/(2^128-i); union over the class gives the stored two-world advantage. This finite-permutation inequality is reviewer-derived, not a source-printed measurement or the later attack wrong-key estimate."
+    },
+    {
+      "source_id": "dtcb2009-mitm-proceedings",
+      "locator": "INDOCRYPT2009 PDF4–5/printed147–148 Proposition3, corrected recurrence and Equations3–6; source states applicability of DS08 is retained.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "The existing printed-expansion discrepancy remains recorded. The actual AES dependency graph uses four shared first-round offsets, sixteen second-round offsets, four selected third-round key bytes, one fourth-round output key byte, and one projected fifth-round key byte. Corrected fixed coefficients do not add parameters. The tested family is this complete corrected26-byte class, not the faulty literal equations or later probabilistically reduced classes. No source conflict or native-cost gap is closed by this success proof."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Results are transcribed from this source version. Full attack searches, costs and success probabilities have not been reproduced.",
+    "The general property applies to all key sizes. It does not establish a computational advantage over exhaustive key search for AES-128."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Printed function expansion",
+      "description": "The recurrence preceding Proposition2 omits the third-round S-boxes. Printed Equation(1) also differs from the second-round diagonal expressions immediately above it. A separately derived 25-parameter AES factorization passes local component tests; the printed expressions are preserved as discrepant. DTCB09 explicitly corrects Equation1 and the C3_22/C3_44 expansions in Equations2/4, while stating that these errors do not affect DS08 attack applicability. Separate corrected AES factorization is supported, not the literal print.",
+      "observations": [
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.119 recurrence preceding Proposition2; p.120 Equation(1)",
+          "reported": "The p.119 recurrence is linear in second-round bytes without S-boxes; Equation(1) uses different coefficients for its c4 and c3 terms."
+        },
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.119 second-round diagonal equations; p.117 AES round definition",
+          "reported": "SubBytes precedes ShiftRows/MixColumns every inner round. C2_22=S(3t11+c4)+c6 and C2_33=2S(t11+c3)+c7 require different nested terms in C3_11."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "PDF5/printed148 Section4, Equations3–6; PDF4/printed147 corrected recurrence.",
+          "reported": "Explicit correction of DS08 Equation1 and C3_22/C3_44; authors state no effect on applicability of DS08 attacks."
+        }
+      ]
+    }
+  ]
+}

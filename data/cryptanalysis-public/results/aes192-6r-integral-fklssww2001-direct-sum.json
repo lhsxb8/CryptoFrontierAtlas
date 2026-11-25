@@ -1,0 +1,175 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-6r-integral-fklssww2001-direct-sum",
+  "title": "6-round AES-192: direct sum, five-byte filter for selected subkey recovery",
+  "display": {
+    "name": "Direct sum, five-byte filter",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 6,
+    "full_round": false,
+    "round_convention": "fklssww2001-whitening-rounds-1-to-r-final-no-mixcolumns",
+    "description": "AES-192 reduced to 6 rounds on 128-bit blocks; initial AddRoundKey k^(0), then rounds 1 through 6, with no MixColumns in the final round. The filter recovers four selected bytes of k^(6) and one selected byte of the equivalent key k'^(5)=MixColumns^-1(k^(5)): 40 bits of subkey material."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown master key with the standard AES expansion; no related-key access.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "Six chosen-plaintext structures, each varying the four bytes feeding one first-round column over all 2^32 possibilities and fixing the other bytes.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Wrong-subkey rejection uses the paper's heuristic model for zero XOR sums; no numerical whole-procedure success rate is supplied.",
+      "The paper presents these constructions as attacks on Rijndael. This record prices the explicitly analyzed selected-subkey filter; complete master-key reconstruction and any repeated filter applications are left for a separate completion-budget review.",
+      "All three AES key lengths share this round-subkey filter; the procedure does not itself determine a complete master key."
+    ]
+  },
+  "techniques": [
+    "integral-square",
+    "direct-summation"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "about 2^64 trial encryptions",
+      "log2": 64,
+      "unit": "fklssww2001-trial-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Section 2.3 first analyzes direct evaluation of Equation (1): 2^32 ciphertexts times 2^40 guesses gives 2^72 elementary evaluations, estimated as 2^64 trial encryptions. Additional structures filter surviving guesses; no separate coefficient is supplied."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "6*2^32",
+      "log2": 34.584962500721154,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Section 2.3 uses about six structures to identify the five subkey bytes. This is the full filtering data, not six plaintexts."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "Input list of 2^32 ciphertexts; full working-memory budget not itemized",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Section 2.3 evaluates four selected bytes from the input ciphertext list; it does not state a complete peak-memory count for direct summation."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Table preparation and setup are described within the construction but not separately priced for this endpoint."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "source-model-unique-partial-subkey-lower-bound",
+    "value": 0.99609375,
+    "description": "Later-source-derived lower bound within the repeated uniform 8-bit wrong-tuple-filter model for the unique correct complete five-byte subkey output. The original construction checks six complete 2^32-plaintext structures; exact direct evaluation and parity-preserving partial sums compute the same XOR and retain the true tuple. DGKLMM2024 explicitly reanalyzes this FKLSSWW2001 construction, the same five selected bytes, and six structures. In that source model each wrong tuple survives all six tests with probability 2^-48, so E_model W < 2^40*2^-48=2^-8 and the first-moment bound gives P_model >= 255/256. No independence between different wrong tuples is required. Repeated-test uniformity/independence remains a source-model assumption, not a proved actual-AES joint law. This is not an author-printed aggregate percentage, an empirical rate, or full-master-key recovery. Original data, operation units and costs are preserved; the later refined operation count is not transplanted.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Verified original/later exact-edition mapping, same five-byte output and six-structure budget, exact correct-tuple retention, and conditional model first-moment inference. Independent source-first and endpoint review. This does not verify actual-cipher repeated-filter assumptions, attack reproduction, full-master-key completion or a new full-paper audit."
+    },
+    "components": [
+      {
+        "metric": "correct-key-aggregate-structure-balanced-sum",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF3–6 Sections2.3–2.4: a correctly hypothesized targeted byte has zero XOR over the complete 2^32-text structure, since it partitions into balanced 256-text sets. Partial sums compute the same XOR exactly; the identity does not imply unique recovery."
+      }
+    ],
+    "relation": ">=",
+    "basis": "derived_from_source",
+    "expression": "P_{\\mathrm{model}}\\ge\\frac{255}{256}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Section 2.3 pp.215–217, Equation (1); Table 1 p.214",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The budget is tied to the stated selected-subkey computation and native operation units. Broad headline claims are retained in the audit report without silently converting a selected-subkey budget into complete master-key recovery."
+    },
+    {
+      "source_id": "fklssww2001-integral-author",
+      "locator": "Section 2.3, document pp.3–5; Table 1, document p.2",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The corresponding construction and numerical endpoint agree with the proceedings in this author-hosted edition; version identity and page numbering remain separate."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Both complete editions: proceedingsPDF1–18/printed213–230 and authorPDF1–19 including finalblank; Sections2–5, AppendixA and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Proceedings PDF2–6 / printed214–218 Sections2.1–2.4, Eq.(1); Table1 onPDF2.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical partial_key_recovery success is stated at this exact structure budget. The direct and partial-sums implementations preserve the same aggregate XOR. The 255/256 wrong-key rejection in Section2.1 is for one 256-text Lambda set in the older algorithm; it is not assigned to the improved 2^32-text aggregate or exponentiated over this endpoint. About six structures are said to identify the five-byte hypothesis, without an explicit joint probability or full-key completion distribution."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "PDF3–5 / printed215–217 Section2.3, Equation(1), exact direct and parity-preserving partial-sums evaluation; PDF2 Table1, six2^32-text structures and five selected subkey bytes.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Original exact output and budget anchor for a later-source-model first-moment inference. Original resources and evidence are retained; no original printed numerical aggregate success is claimed."
+    },
+    {
+      "source_id": "dgklmm2024-partial-sums-fft-author",
+      "locator": "PDF6–8, Lemma2, Section2.3 and Algorithm1, explicit reanalysis of the FKLSSWW2001 five-byte, six-structure construction and repeated8-bit filtering.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Later same-construction repeated-filter model yields E_model W<2^-8 and unique five-byte output probability at least255/256 by first moment. It does not prove the actual-AES filter law or justify changing the original operation budget."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The recorded recovery scope is the subkey material explicitly tested by the described procedure. The paper's broader attack headline and completion accounting are tracked separately.",
+    "Resource estimates are analytical; no attack implementation or claimed full-scale experiment was executed for this audit."
+  ],
+  "related_problem_ids": []
+}

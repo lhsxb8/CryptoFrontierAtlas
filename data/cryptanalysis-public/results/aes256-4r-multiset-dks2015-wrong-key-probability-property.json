@@ -1,0 +1,180 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-4r-multiset-dks2015-wrong-key-probability-property",
+  "title": "4-round AES-256: Journal wrong-key multiset probability claim",
+  "display": {
+    "name": "Journal wrong-key multiset probability claim",
+    "method": "mitm"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 4,
+    "full_round": false,
+    "round_convention": "dks-four-full-inner-rounds",
+    "description": "Four inner AES rounds include MixColumns in every round; local round numbering starts0. Standard AES schedule is included among the fixed-key cases."
+  },
+  "setting": {
+    "key_model": "fixed_round_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed standard AES schedule; no related-key oracle.",
+    "key_population": "General fixed key; no weak-key subset is specified.",
+    "plaintext_model": "One active-byte delta-set of256 values with15 passive bytes.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Wrong-key differences are255 iid uniform bytes after removing the fixed zero."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "multiset-tabulation",
+    "differential-enumeration"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement, not an attack-resource measurement."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement, not an attack-resource measurement."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement, not an attack-resource measurement."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural statement, not an attack-resource measurement."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-statement",
+    "value": null,
+    "description": "The statement concerns structure or a conditional statistical model."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "dks2015-single-key-journal",
+      "locator": "Printed pp.406–407 Section4.1, all probability and combinatorial calculations",
+      "fields": [
+        "/property",
+        "/setting",
+        "/field_conflicts",
+        "/target",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal"
+      ],
+      "interpretation": "Full source version read and compared. Matching statements share one scoped record; changed claims and source-specific discrepancies retain their own identities."
+    },
+    {
+      "source_id": "lhsh2024-multiset-false-positive-journal",
+      "locator": "PDF12/printed1223 Section4.2; PDF15–16 reference8.",
+      "fields": [
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact primary passage checked in the full-audit batch; source claims and reviewer component checks are separate."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Local identity/counting tests cover components; full attack searches and success rates have not been reproduced.",
+    "Full exact-edition inventory checked; numerical attack execution is not claimed."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "Under iid wrong-key output differences, Section4.1 claims an upper bound2^-283.6 on matching a table of2^184 representatives.",
+    "quantifier": "For the fixed-key delta-set or conditional model explicitly described below; parameter counts do not measure independent master-key bits.",
+    "scope": "This is the journal's random-output counter-vector argument, not an unconditional AES success theorem. The printed occupancy and maximum-probability steps have exact finite-count discrepancies.",
+    "parameters": [
+      {
+        "name": "Independent values",
+        "reported": "255",
+        "meaning": "The compulsory reference difference zero is removed."
+      },
+      {
+        "name": "Claimed admissible-match bound",
+        "reported": "2^-283.6",
+        "meaning": "Original author bound retained without certification."
+      },
+      {
+        "name": "Claimed top-probability class",
+        "reported": "2^467.6",
+        "meaning": "Derived from the printed Poisson occupancy profile."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Page407 image checked. Exact integer/profile and multinomial tests detect the counting and maximum-probability issues."
+    }
+  },
+  "field_conflicts": [
+    {
+      "field": "/property/validation",
+      "label": "Multiset occupancy and maximum-probability argument",
+      "description": "The source specifies255 draws but its94/94/47/16/4/1 occupancy profile totals257 entries. Exact stars-and-bars gives C(510,255), not the printed C(510,256). Under the stated iid model an all-singleton counter vector has probability255!/256^255≈2^-364.003713; a Poisson-typical profile is not an individual maximum-probability vector. Thus the printed2^-283.6 bound is retained as a disputed argument, not a certified AES bound.",
+      "observations": [
+        {
+          "source_id": "dks2015-single-key-journal",
+          "locator": "Printed p.406 Section4.1 sample-space definition",
+          "reported": "Remove the compulsory zero and take255 independent uniform values from256 symbols; counters sum to255."
+        },
+        {
+          "source_id": "dks2015-single-key-journal",
+          "locator": "Printed p.407 Section4.1 combinatorial calculation and probability conclusion",
+          "reported": "Counts C(510,256); uses94 empty,94 singleton,47 doubleton,16 tripleton,4 quadrupleton,1 quintupleton bins and claims a highest-probability class of2^467.6, giving2^-283.6."
+        }
+      ]
+    },
+    {
+      "field": "/property/statement",
+      "label": "Later Poisson-shape probability critique with different normalization",
+      "description": "LHSH24 Section4.2 criticizes the inherited Poisson-shape approach, cites the2010 proceedings, and replacesN*2^-467.6 byN*2^-458.6 in its random-table(256,8) model. The journal removes a forced-zero entry and models255 random values. This supports the source-method critique but supplies no direct numeric replacement for the journal2^-283.6 claim or actual AES success. LHSH states feasibility is unchanged.",
+      "observations": [
+        {
+          "source_id": "dks2015-single-key-journal",
+          "locator": "Printed406–407 Section4.1.",
+          "reported": "Delete forced zero;255 values, Poisson lambda255/256; source probability2^-283.6."
+        },
+        {
+          "source_id": "lhsh2024-multiset-false-positive-journal",
+          "locator": "PDF12/printed1223 Section4.2 and footnotes; PDF15–16 reference8.",
+          "reported": "Poisson-shape critique; random(256,8) table averageFPP N*2^-458.6; reference8 identifiesASIACRYPT2010; feasibility unaffected."
+        }
+      ]
+    }
+  ]
+}

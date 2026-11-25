@@ -1,0 +1,134 @@
+{
+  "schema_version": "0.11.0",
+  "id": "aes-5r-multiple-exchanged-boomerang-sks2025",
+  "title": "Multiple exchanged boomerang",
+  "display": {
+    "name": "Multiple exchanged boomerang",
+    "method": "boomerang"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "sks2025-five-rounds-final-no-mc",
+    "description": "Five-round AES with initial whitening and final MixColumns omitted; the key schedule is unused and the construction applies to all three standard key lengths."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintexts",
+      "adaptive_chosen_ciphertexts"
+    ],
+    "related_key_count": null,
+    "key_relation": "One fixed standard AES master key and its key schedule.",
+    "key_population": "General standard AES master keys",
+    "plaintext_model": "Initial 2^12.55 diagonal plaintext structure and 2^27.1 adaptive ciphertext queries.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Binomial independent-trial author model for both AES and ideal-permutation sides.",
+      "Experimental random-side control uses full 10-round AES, not independently sampled ideal permutations."
+    ],
+    "reference_model": "Equal-prior binary decision between the five-round fixed-secret-key AES permutation and an ideal random permutation using CP and adaptive inverse queries. Threshold K >= 1; the experiments instead use full ten-round AES as random-side control."
+  },
+  "techniques": [
+    "exchanged-boomerang",
+    "four-trail-clustering"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^{27.1}",
+      "log2": 27.1,
+      "unit": "memory-accesses",
+      "qualifier": "estimate",
+      "note": "Source-native memory-access count, not normalized to AES encryptions."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^{27.1}",
+      "log2": 27.1,
+      "unit": "adaptive-chosen-ciphertexts",
+      "qualifier": "estimate",
+      "note": "Dominant ACC count; the additional chosen-plaintext costs are preserved in plaintext_model."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The complete storage footprint is not quantified in Sections4–5."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Setup is included in total work unless separately stated."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "equal-prior-average-correct-classification-aes-versus-random",
+    "value": 0.796,
+    "basis": "author_model",
+    "description": "Average of Pr[AES classified AES] and Pr[random classified random] at the source trial count and threshold K>=1.",
+    "expression": "\\frac{1-(1-p)^n+(1-q)^n}{2},\\quad n=2^{26.1}, p=2^{-26.1}+2^{-30}, q=2^{-30}",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-10",
+      "scope": "PDF pp.5–6 Table1, pp.15–20 Section5/Algorithm2/Tables3–4. Checked the two-sided binomial model and experimental event separately."
+    },
+    "components": [
+      {
+        "metric": "aes-side-correct-classification",
+        "value": 0.656,
+        "basis": "author_model",
+        "description": "One-sided value stated in Table1 footnote; different metric from primary two-sided average."
+      },
+      {
+        "metric": "reported-average-correct-classification-against-10r-aes-control",
+        "value": 0.7845,
+        "basis": "reported_experiment",
+        "description": "1000 tests per side: 637/1000 correct AES-side and 932/1000 correct control-side decisions; no local reproduction."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "skkslhs2025-exchanged-boomerang",
+      "locator": "PDF pp.5–6 Table1, pp.15–20 Section5/Algorithm2/Tables3–4.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/success/components",
+        "/bound"
+      ],
+      "interpretation": "Defining primary-text costs, output event and conditions checked together."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The probability is tied to the stated source model and trial count."
+  ],
+  "related_problem_ids": []
+}

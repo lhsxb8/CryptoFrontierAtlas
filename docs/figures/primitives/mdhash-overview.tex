@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+  \node[box] (pad) at (1,1.8) {Message $M$\\$1\,0^*\,\|\,\operatorname{len}_{64}(M)$};
+  \node (blocks) at (6.8,1.8) {$M_1,\ldots,M_m\quad (\AtlasBlockBits\ \text{bits each})$};
+  \draw[wire] (pad) -- (blocks);
+  \node (iv) at (-.3,0) {$H_0=\mathrm{IV}$};
+  \node[accent] (f1) at (2.5,0) {Compress\\$\AtlasSteps$ steps};
+  \node[accent] (fm) at (6.5,0) {Compress\\$\AtlasSteps$ steps};
+  \node[box] (out) at (10,0) {Serialize $H_m$\\$\AtlasOutputBits$ bits};
+  \draw[wire] (iv) -- (f1); \draw[wire] (f1) -- node[above,note] {$\cdots\ H_{m-1}$} (fm); \draw[wire] (fm) -- (out);
+  \draw[wire] (2.5,1.25) -- node[right,note] {$M_1$} (f1.north);
+  \draw[wire] (6.5,1.25) -- node[right,note] {$M_m$} (fm.north);
+  \node at (5.4,-1.35) {$H_i=H_{i-1}\AtlasFeedForward F(H_{i-1},M_i)$};
+  \node[note] at (5.4,-2) {$\AtlasStateBits$-bit chaining state: $\AtlasHashWords$ words of $32$ bits\qquad \AtlasByteOrder\ encoding};
+  \node[note] at (5.4,-2.55) {$F$: working-state transformation, before feed-forward\quad $\boxplus$: wordwise addition modulo $2^{32}$\quad $\oplus$: XOR};
+\end{tikzpicture}

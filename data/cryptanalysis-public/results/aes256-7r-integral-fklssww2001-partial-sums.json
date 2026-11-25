@@ -1,0 +1,154 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-7r-integral-fklssww2001-partial-sums",
+  "title": "7-round AES-256: partial sums, 21 structures for selected subkey recovery",
+  "display": {
+    "name": "Partial sums, 21 structures",
+    "method": "integral"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 7,
+    "full_round": false,
+    "round_convention": "fklssww2001-whitening-rounds-1-to-r-final-no-mixcolumns",
+    "description": "AES-256 reduced to 7 rounds on 128-bit blocks; initial AddRoundKey k^(0), then rounds 1 through 7, with no MixColumns in the final round. The described filter guesses the 16 bytes of k^(7) and four bytes of k'^(6); the selected equivalent round-five byte follows from the AES-256 expansion."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown master key with the standard AES expansion; no related-key access.",
+    "key_population": "general secret key; no weak-key restriction reported",
+    "plaintext_model": "21 chosen-plaintext structures of 2^32 texts, as tabulated; each varies a four-byte input column.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Wrong-subkey rejection uses the paper's heuristic model for zero XOR sums; no numerical whole-procedure success rate is supplied.",
+      "The paper presents these constructions as attacks on Rijndael. This record prices the explicitly analyzed selected-subkey filter; complete master-key reconstruction and any repeated filter applications are left for a separate completion-budget review.",
+      "The AES-256 schedule supplies the selected round-five equivalent byte but none of the four needed round-six bytes."
+    ]
+  },
+  "techniques": [
+    "integral-square",
+    "partial-sums"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "about 2^172",
+      "log2": 172,
+      "unit": "fklssww2001-trial-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "The paper estimates 2^178 lookups, about 2^170 trial encryptions, per dominating structure; five such structures give its rounded 2^172 total. All 21 structures remain in the data count."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "21*2^32",
+      "log2": 36.39231742277876,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "estimate",
+      "note": "Table 1 reports the total filtering structures. The smaller number of structures dominating time does not replace this data requirement."
+    },
+    "memory": {
+      "status": "qualitative",
+      "reported": "Partial-sum counter arrays and a 2^32-text structure; peak storage not itemized",
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The section gives intermediate counter sizes and precomputed tables but no complete peak-memory budget for this endpoint."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "Table preparation and setup are described within the construction but not separately priced for this endpoint."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "selected-subkey-filter-recovery",
+    "value": null,
+    "description": "No numerical partial_key_recovery success is stated at this exact structure budget. The direct and partial-sums implementations preserve the same aggregate XOR. The 255/256 wrong-key rejection in Section2.1 is for one 256-text Lambda set in the older algorithm; it is not assigned to the improved 2^32-text aggregate or exponentiated over this endpoint. The 19/21-structure AES192/256 extensions use their own key-schedule dependencies. Their source counting and early rejection costs do not quantify all-output success.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Exact-edition endpoint-specific success audit; preserve resource parameters, existing conflicts and full-audit gates. Local source models and conditional relations do not certify whole-output success."
+    },
+    "components": [
+      {
+        "metric": "correct-key-aggregate-structure-balanced-sum",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "PDF3–6 Sections2.3–2.4: a correctly hypothesized targeted byte has zero XOR over the complete 2^32-text structure, since it partitions into balanced 256-text sets. Partial sums compute the same XOR exactly; the identity does not imply unique recovery."
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Section 2.4 pp.217–218; Table 1 p.214",
+      "fields": [
+        "/goal",
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The budget is tied to the stated selected-subkey computation and native operation units. Broad headline claims are retained in the audit report without silently converting a selected-subkey budget into complete master-key recovery."
+    },
+    {
+      "source_id": "fklssww2001-integral-author",
+      "locator": "Section 2.4, document pp.5–6; Table 1, document p.2",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The corresponding construction and numerical endpoint agree with the proceedings in this author-hosted edition; version identity and page numbering remain separate."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Both complete editions: proceedingsPDF1–18/printed213–230 and authorPDF1–19 including finalblank; Sections2–5, AppendixA and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-edition contribution inventory checked; finite component controls and full attack/proof reproduction remain separate."
+    },
+    {
+      "source_id": "fklssww2001-integral-proceedings",
+      "locator": "Proceedings PDF2–6 / printed214–218 Sections2.1–2.4, Eq.(1); Table1 onPDF2.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical partial_key_recovery success is stated at this exact structure budget. The direct and partial-sums implementations preserve the same aggregate XOR. The 255/256 wrong-key rejection in Section2.1 is for one 256-text Lambda set in the older algorithm; it is not assigned to the improved 2^32-text aggregate or exponentiated over this endpoint. The 19/21-structure AES192/256 extensions use their own key-schedule dependencies. Their source counting and early rejection costs do not quantify all-output success."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The recorded recovery scope is the subkey material explicitly tested by the described procedure. The paper's broader attack headline and completion accounting are tracked separately.",
+    "Resource estimates are analytical; no attack implementation or claimed full-scale experiment was executed for this audit."
+  ],
+  "related_problem_ids": []
+}

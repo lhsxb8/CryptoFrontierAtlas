@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+  \node (l) at (1,2) {$L_{i-1}$}; \node (r) at (8,2) {$R_{i-1}$};
+  \node[accent,minimum width=3.8cm] (f) at (5,0) {Expansion $32\to48$\\$\oplus\,k_i$\quad $8$ S-boxes\quad $P$};
+  \node[xor] (x) at (1,0) {$+$};
+  \draw[wire] (l) -- (x); \draw[wire] (r) -- (8,0) -- (f);
+  \draw[wire] (f) -- (x);
+  \node (key) at (5,1.7) {$k_i\in\{0,1\}^{48}$}; \draw[keywire] (key) -- (f);
+  \node (lo) at (1,-2) {$L_i=R_{i-1}$};
+  \node (ro) at (8,-2) {$R_i=L_{i-1}\oplus f(R_{i-1},k_i)$};
+  \draw[wire] (x) -- (1,-.8) -- (8,-1.45) -- (ro);
+  \draw[wire] (8,0) -- (8,-.8) -- (1,-1.45) -- (lo);
+  \node[note] at (4.5,-2.8) {One DES round; both halves contain $32$ bits.};
+\end{tikzpicture}

@@ -1,0 +1,150 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes128-8r-known-key-integral-gilbert2014",
+  "title": "Eight-round AES-128 known-key integral tuple construction, Gilbert 2014",
+  "display": {
+    "name": "Known-key integral, tuple construction",
+    "method": "integral"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "aes_prefix_initial_ark_last_round_without_mc",
+    "description": "Eight-round AES-128 with the standard known key schedule, initial whitening and no final MixColumns, as defined in Section 2. The adversary constructs a tuple with a specified input-output relation."
+  },
+  "setting": {
+    "key_model": "known_key",
+    "oracle_access": [
+      "white-box-known-key-forward-and-backward-computation"
+    ],
+    "related_key_count": null,
+    "target_selection": "fixed_known_key",
+    "key_relation": "One known random key; no key recovery, related-key oracle or adversarially chosen key is required.",
+    "key_population": "every known AES-128 key in the stated construction",
+    "plaintext_model": "adversary-constructed tuple of distinct inputs",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "reference_model": "A perfect random 128-bit permutation and its inverse, queried at most N=2^64 times. Proposition 4 bounds the probability of producing N pairs satisfying the same byte-uniformity relation by 1/(2^128-(N-1)), hence at most 2^-127.",
+    "assumptions": [
+      "Known-key structural model of Section 3, not the ordinary secret-key PRP distinguishing game.",
+      "N=2^64 distinct inputs and their outputs; each byte position is uniformly distributed across the input tuple and across the output tuple.",
+      "Only the AES-128 instance is instantiated here; source footnote 2 also discusses extension to the other key lengths."
+    ]
+  },
+  "techniques": [
+    "known-key-integral",
+    "untwisted-representation",
+    "super-sbox"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^64",
+      "log2": 64,
+      "unit": "aes128-8-round-computations",
+      "qualifier": "estimate",
+      "note": "Section 4.1 gives T=N=2^64 AES8 computations to derive the tuple; Section 3 defines the work unit and includes checking the relation in the model. The source uses an AES-equivalent dominant-work estimate; tuple derivation and relation verification are not assumed to be identical machine operations."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^64",
+      "log2": 64,
+      "unit": "constructed-input-output-pairs",
+      "qualifier": "exact",
+      "note": "Tuple order N and output size, not chosen-plaintext queries to an unknown secret-key encryption oracle."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No explicit peak-memory count for this construction is extracted; tuple size is not silently converted to peak storage."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No separate reusable preprocessing resource is tabulated."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "known-key-relation-construction",
+    "value": 1,
+    "description": "For every known key in the stated instance, Algorithm A deterministically constructs the complete source-defined tuple satisfying relation R. This is a theoretical construction guarantee, not secret-key recovery or an experimentally measured fraction. The ideal-permutation construction bound is a separate event.",
+    "basis": "source_proof",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Targeted verification of Properties 1–2 and Algorithm A, the exact relation and applicable key model; the independent-key and standard-schedule targets stay separate."
+    },
+    "components": [
+      {
+        "metric": "random-permutation-relation-construction",
+        "value": null,
+        "expression": "1/(2^{128}-(2^{64}-1))",
+        "basis": "source_proof",
+        "description": "Proposition 4 bounds success of an arbitrary ideal-permutation algorithm making q <= N = 2^64 queries. The displayed bound is at most 2^-127; it is not the real-AES construction success.",
+        "relation": "<="
+      }
+    ]
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "gilbert2014-simplified-aes-conference",
+      "locator": "Printed pp.203-204, Section 2, AESr convention; pp.208-210, Section 3, Definitions 1-2; pp.213-215, Section 4.1, relation R, algorithm A and Proposition 4.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "The source constructs a 2^64-pair integral relation in 2^64 AES8 computations, and separately proves a small ideal-permutation probability for the same query budget. Memory and reusable preprocessing are not inferred from tuple size."
+    },
+    {
+      "source_id": "gilbert2014-simplified-aes-conference",
+      "locator": "Complete PDF1–23 / printed200–222; Definitions1–2 PDF9–10; §4.1 PDF14–17; §4.2 PDF18–22; allreferences.",
+      "fields": [
+        "/assessment",
+        "/resources",
+        "/setting",
+        "/success"
+      ],
+      "interpretation": "Complete exact conference-version inventory. Ideal-permutation success bounds, tuple order and AES-side deterministic construction remain distinct."
+    },
+    {
+      "source_id": "gilbert2014-simplified-aes-conference",
+      "locator": "PDF4/printed203 footnote2; PDF14–16/printed213–215 Section4.1, Properties1–2, Algorithm A and Proposition4, including explicit independent-subkey applicability.",
+      "fields": [
+        "/success",
+        "/success/components/0",
+        "/success/review"
+      ],
+      "interpretation": "Success backfill: source-proved real-cipher relation construction and ideal-world probability bound are distinct events. No new attack, resource conversion or whole-paper audit."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The known-key construction was not executed at its 2^64-tuple scale.",
+    "The source itself cites other eight-round known-key relations with lower cost; different tuple relations are not automatically comparable.",
+    "This is a structural known-key result, not an attack recovering an unknown AES key.",
+    "Bounded later-literature check identifies GR17 and its revised-description note; its full result inventory is a separate work, not a cost replacement for this relation."
+  ],
+  "related_problem_ids": []
+}

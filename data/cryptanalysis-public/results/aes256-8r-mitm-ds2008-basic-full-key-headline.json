@@ -1,0 +1,219 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes256-8r-mitm-ds2008-basic-full-key-headline",
+  "title": "8-round AES-256: Basic MITM: full-key headline",
+  "display": {
+    "name": "Basic MITM: full-key headline",
+    "method": "mitm"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-256"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "ds2008-key-recovery-boundaries-section5",
+    "description": "Reduced-round AES-256, with initial whitening. Section5's partial-decryption boundary uses the final-round byte positions; Section2 describes omission of final MixColumns. Costs follow that source convention.Section5.2 additionally enumerates the entire eighth-round key and reuses the seven-round procedure. The adjacent seventh/eighth-round key material permits standard AES-256 schedule inversion; no extra search cost is invented. Independent64 synthetic-key schedule inversions confirm that adjacent full K7/K8 determine the AES256 master key; this is not enumeration of the attack candidate space."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "chosen_plaintext_encryption"
+    ],
+    "related_key_count": null,
+    "key_relation": "One unknown standard AES master key; the source attack derivation treats searched round-key bytes without using schedule relations.",
+    "key_population": "General fixed key; no weak-key restriction.",
+    "plaintext_model": "Source 2^32 chosen-plaintext structure; Step2's diagonal coordinates differ from the cost paragraph's first-column description.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "Offline table generation and online search have different native work units and are kept separate.",
+      "The source p.122 converts 2^88 partial decryptions to 2^80 encryption equivalents using its stated factor of 2^8. This conversion is recorded, not independently calibrated.",
+      "Step6's remaining-key enumeration has no separate numerical budget; the online figure describes the matching/search phase.",
+      "Section5 uses absolute function-value sequences and guesses a transformed penultimate-round-key byte."
+    ]
+  },
+  "techniques": [
+    "meet-in-the-middle",
+    "parameterized-functions"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^208",
+      "log2": 208,
+      "unit": "ds2008-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Online search only under the source's partial-decryption conversion; preprocessing and unitemized completion are separate."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^32",
+      "log2": 32,
+      "unit": "chosen-plaintext-blocks",
+      "qualifier": "exact",
+      "note": "The source count is preserved with the documented coordinate discrepancy."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^206 AES blocks (=2^210 bytes)",
+      "log2": 206,
+      "unit": "128-bit-blocks",
+      "qualifier": "estimate",
+      "note": "Four output tables. The improved variant stores 255 differences per function; Table1 retains the same leading exponent."
+    },
+    "preprocessing": {
+      "status": "reported",
+      "reported": "2^208",
+      "log2": 208,
+      "unit": "ds2008-four-round-byte-function-evaluations",
+      "qualifier": "estimate",
+      "note": "Key-independent setup evaluating 2^200 parameter tuples on 256 byte inputs; amortized/reusable in the source."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "conditional-source-model-full-key-recovery-lower-bound",
+    "value": null,
+    "description": "Full AES256 master-key recovery within named model M8. Section5.2 enumerates all128 bits of K8 and reuses the seven-round matching construction. Adopt the intended corrected factorization, correct coordinates and recorded boundary interpretation, with any complete equivalent K7 converted back by its known invertible linear boundary transform. For the true K8 branch, each of four targets uses all already acquired n2 structures and has Equation7 miss bound \\((1-n_1^{-1})^{n_2}\\). The stronger extension premise requires a uniform raw wrong-signature law conditional on the setup for every fixed wrong outer/inner tuple, including wrong K8 guesses. This is an explicit heuristic model premise, not implied by conditioning the seven-round model on correct K8 and not proved for actual AES. The raw256-byte signature has2048 bits. With at most \\(2^{200}/n_1\\) table entries, a modeled wrong hit has probability at most \\(2^{-1848}/n_1\\). A fixed superset of at most \\(4n_2 2^{208}\\) outer/inner tests includes the128-bit outer K8 enumeration and80-bit target search. The aggregate wrong-hit term is consequently \\(2^{-1638}n_2/n_1\\), not the seven-round exponent1766. Union bounding four true-target misses and all wrong hits gives \\(p_{\\mathcal M_8,\\mathrm{key}}\\ge\\max\\{0,1-4(1-n_1^{-1})^{n_2}-2^{-1638}n_2/n_1\\}\\), without cross-target or cross-guess independence. Within-target sampling assumptions remain. Once all groups identify correct K7 and the enumerated K8, their eight consecutive words w28..w35 recover the master key: FIPS Algorithm2 has \\(w_i=w_{i-8}\\oplus T_i(w_{i-1})\\); applying the same XOR equation backward for i35 down to8 uniquely recovers w0..w7. This exact inversion needs no residual key enumeration. It is not an inference that168/200 selected-material bits are independent master-key bits. The complete-table assignment n1=n2=1 retains the positive failure term symbolically, not rounded to100%. Applicability still requires nonempty finite tables, positive integer usable n2, feasible query allocation and the source matching-work estimate. Original source conflicts, native units and domain limits remain. verified concerns the mathematical implication inside M8 and the output/budget mapping, not an experiment, an unconditional AES bound, a fixed-time guarantee or complete parameter-domain feasibility.",
+    "components": [
+      {
+        "metric": "correct-sequence-in-intended-complete-table",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Section5 Steps1/4: conditional on the intended complete parameter expansion and correct coordinates, the correct ordered 256-value function is present. This is necessary table membership, not unique identification; existing literal-formula and coordinate conflicts remain."
+      },
+      {
+        "metric": "one-wrong-ordered-sequence-matches-complete-basic-table",
+        "value": null,
+        "basis": "author_model",
+        "expression": "2^{-1848}",
+        "description": "Section5 Step4: source uniform ordered256-byte-sequence model gives2^200*2^-2048=2^-1848 for one wrong sequence. Preserve this positive probability symbolically rather than floating-point zero; this formula is not transferred to the XOR-normalized255-value variant."
+      }
+    ],
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Verified only the named M8 implication: explicit wrong-outer-key extension premise, raw/normalized table-hit counts,128-bit outer enumeration, fixed test supersets and four-marginal union bound; adjacent K7/K8 universally determine the AES256 key via FIPS backward recurrence after the stated boundary conversion. This does not establish the actual-AES random laws, printed factorization/coordinates, all parameter feasibility, native cost calibration or a fixed runtime."
+    },
+    "basis": "derived_from_source",
+    "expression": "p_{\\mathcal M_8,\\mathrm{key}}\\ge1-2^{-1638}"
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Printed p.122 Section5 Steps1–6 and cost paragraph; p.123 Section5.2",
+      "fields": [
+        "/target",
+        "/goal",
+        "/setting",
+        "/resources",
+        "/success",
+        "/field_conflicts",
+        "/bound"
+      ],
+      "interpretation": "Complete official eleven-page proceedings reviewed; critical equations and Table1 visually checked. Author-reported scope and native units retained."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Complete PDF1–11/printed116–126; AppendixA Proposition6 and Sections4–5.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Full exact-edition inventory reviewed; reviewer finite component validation is separate from attack reproduction."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "Proceedings PDF7–9 / printed122–124 Section5 Steps1–6, Section5.2 eight-round extension and Section5.3 improved XOR-normalized255-value sequence.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical aggregate recovery success is established. The per-wrong-sequence2^-1848 heuristic is not a whole-search success probability. AES256 adjacent-subkey inversion is deterministic once the required correct material is identified, not a probability of identifying it. Retain original coordinate/formula conflicts and200-bit basic versus168-bit improved selected round-key-material scopes."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "PDF5–6 Section4, Propositions4–5; PDF7–9 Section5, Steps2–6, Equation7, Table1 and Section5.3.",
+      "fields": [
+        "/success/review"
+      ],
+      "interpretation": "Extraction-review scope only: the checked source does not quantify this exact main output at its recorded budget. Separate proof, coordinate, key-schedule and cost obligations remain recorded. All primary probability values, components and scientific conflicts are unchanged. No probability was added and no scientific conflict was resolved."
+    },
+    {
+      "source_id": "ds2008-mitm-proceedings",
+      "locator": "PDF2–3,5–9/printed117–118,120–124: round convention, Proposition4, Section5 Steps1–5, Equation7, Section5.2 outer-key extension, Section5.3 and Table1. B63 analyst derivation, [local audit reference not distributed]",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Derived conditional complete-key output bound, not a probability printed for the extension. The outer128-bit enumeration is included in a fixed superset of4*n2*2^208 raw or4*n2*2^200 normalized tests. Conditional on the explicit wrong-outer/inner signature model, raw2^-1848/n1 or normalized2^-1840/n1 per-test bounds both give2^-1638*n2/n1. Combine with four true-branch miss marginals using all already acquired structures, without target/guess independence. The sampled member uses the actual same-n Table1 curve. Original costs and conflicts remain; the stronger wrong-outer-key premise is named, not inferred from the seven-round model. This supersedes earlier absence-of-aggregate-inference wording only within M8."
+    },
+    {
+      "source_id": "nist-fips197-upd1",
+      "locator": "Section5.2, Algorithm2; PDF25–26, printed17–18. Backward recurrence derived in [local audit reference not distributed]",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "AES256 uses Nk=8 and w_i=w_(i-8) XOR T_i(w_(i-1)). Given consecutive w28..w35 (ordinary K7/K8), evaluating i35 down to8 recovers w0..w7 uniquely. If the matching boundary returns an equivalent full K7, apply its public invertible linear conversion first. This universal algebraic recurrence, not the earlier finite64-key check alone, establishes deterministic completion after correct identification. It supplies no probability of obtaining those correct round keys."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Results are transcribed from this source version. Full attack searches, costs and success probabilities have not been reproduced.",
+    "Online/offline units remain distinct. Given correct adjacent K7/K8, master-key completion is deterministic schedule inversion; lookup/sorting and full candidate-search cost were not reproduced.",
+    "Section5.2 notes that generic Hellman tradeoffs dominate the baseline time/memory pair; historical novelty does not imply current frontier status."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/plaintext_model",
+      "label": "Chosen-plaintext coordinates",
+      "description": "Step2 enumerates diagonal whitening-key bytes to arrange one active byte after round1; the following cost paragraph instead describes a varying first plaintext column.",
+      "observations": [
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.122 Section5 Step2",
+          "reported": "Kinit=(K0_11,K0_22,K0_33,K0_44); choose a set with only C1_11 active."
+        },
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.122 paragraph following Step6",
+          "reported": "The 2^32 plaintext structure varies the first column and fixes the rest."
+        }
+      ]
+    },
+    {
+      "field": "/setting/assumptions",
+      "label": "Printed function expansion",
+      "description": "The recurrence preceding Proposition2 omits the third-round S-boxes. Printed Equation(1) also differs from the second-round diagonal expressions immediately above it. A separately derived 25-parameter AES factorization passes local component tests; the printed expressions are preserved as discrepant. DTCB09 explicitly corrects Equation1 and the C3_22/C3_44 expansions in Equations2/4, while stating that these errors do not affect DS08 attack applicability. Separate corrected AES factorization is supported, not the literal print.",
+      "observations": [
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.119 recurrence preceding Proposition2; p.120 Equation(1)",
+          "reported": "The p.119 recurrence is linear in second-round bytes without S-boxes; Equation(1) uses different coefficients for its c4 and c3 terms."
+        },
+        {
+          "source_id": "ds2008-mitm-proceedings",
+          "locator": "Printed p.119 second-round diagonal equations; p.117 AES round definition",
+          "reported": "SubBytes precedes ShiftRows/MixColumns every inner round. C2_22=S(3t11+c4)+c6 and C2_33=2S(t11+c3)+c7 require different nested terms in C3_11."
+        },
+        {
+          "source_id": "dtcb2009-mitm-proceedings",
+          "locator": "PDF5/printed148 Section4, Equations3–6; PDF4/printed147 corrected recurrence.",
+          "reported": "Explicit correction of DS08 Equation1 and C3_22/C3_44; authors state no effect on applicability of DS08 attacks."
+        }
+      ]
+    }
+  ]
+}

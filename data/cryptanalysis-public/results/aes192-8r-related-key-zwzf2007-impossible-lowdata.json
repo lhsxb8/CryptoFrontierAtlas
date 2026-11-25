@@ -1,0 +1,205 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-related-key-zwzf2007-impossible-lowdata",
+  "title": "8-round AES-192: Impossible differential, low-data endpoint",
+  "display": {
+    "name": "Impossible differential, low-data endpoint",
+    "method": "differential"
+  },
+  "result_kind": "key_recovery_attack",
+  "goal": "partial_key_recovery",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "zwzf2007-whitening-k0-final-round-without-mixcolumns",
+    "description": "Standard AES-192 under the paper's round numbering: initial whitening k0, rounds1 onward; last MixColumns omitted for 8-round recovery variants. Guess13 bytes0,1,2,4,5,7,8,10,11,12,13,14,15 of k8 and byte3 of w7, then recover8 whitening bytes:176 bits of named subkey material. These are selected round-key values, not an independently priced complete192-bit master key."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "related_key_chosen_plaintext_encryption"
+    ],
+    "related_key_count": 2,
+    "key_relation": "Two unknown AES-192 master keys K and K'=K XOR Delta, where Delta[0]=Delta[8]=a!=0 and the other22 bytes are0. Initial whitening is k0; round subkeys are k1,... .",
+    "key_population": "General unknown key pair with attacker-chosen nonzero a; b,c are actual key-dependent S-box output differences, not independently chosen subkeys.",
+    "plaintext_model": "Two pools of2^63.5 plaintexts; total2^64.5 queries. A2^-56 filter leaves about2^71 usable pairs per outer hypothesis.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [
+      "The source models pair filters and incorrect whitening-key eliminations probabilistically; those independence assumptions have not been proved for every AES key.",
+      "Named subkey bits may be dependent. No complete192-bit master-key recovery budget is supplied.",
+      "The source uses64 memory accesses per encryption equivalent; this is an accounting convention, not an independent implementation measurement.",
+      "The112-bit terminal guess computes b and c through the source's schedule relations."
+    ]
+  },
+  "techniques": [
+    "related-key",
+    "impossible-differential",
+    "wrong-key-elimination"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^177",
+      "log2": 177,
+      "unit": "zwzf2007-source-encryption-equivalents",
+      "qualifier": "estimate",
+      "note": "Source formula uses2^71 retained pairs,2^112 terminal hypotheses, a2^-6 memory-access conversion. Remaining master-key completion is not priced."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^64.5",
+      "log2": 64.5,
+      "unit": "related-key-chosen-plaintext-blocks-total",
+      "qualifier": "estimate",
+      "note": "Total plaintext-block encryption queries across exactly2 related keys, not a per-key budget."
+    },
+    "memory": {
+      "status": "reported",
+      "reported": "2^69 bytes",
+      "log2": 69,
+      "unit": "bytes",
+      "qualifier": "estimate",
+      "note": "Author-reported memory; do not reinterpret the exponent as128-bit blocks."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "The shared Section4 precomputation is about2^62 encryptions; no complete additional setup total for this extension is separately supplied."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "selected-subkey-recovery",
+    "value": null,
+    "description": "No numerical recovery success is supplied for this 176-bit named-subkey output. The source uses2^71 useful pairs and a small conditional wrong-list estimate; it does not quantify joint output recovery. Keep the existing missing-Delta filtering-notation conflict; the component retention statement is conditional on the intended difference equations, not the disputed literal notation. Remaining master-key completion stays unpriced.",
+    "components": [
+      {
+        "metric": "true-candidate-retained-under-intended-difference-conditions",
+        "value": 1,
+        "basis": "source_proof",
+        "expression": "1",
+        "description": "Sections3–5: with the actual schedule differences and the intended Delta-w conditions, the correct tuple survives the impossible test. This conditional identity does not validate the already disputed literal omitted-Delta notation or guarantee uniqueness."
+      },
+      {
+        "metric": "conditional-pair-filter-stage-1",
+        "value": 5.960464477539063e-8,
+        "basis": "author_model",
+        "expression": "2^{-24}",
+        "description": "Section5.2 First Attack stage1: source conditional24-bit pair test under the stated terminal guess and correct schedule differences. These cascade fractions count useful pairs, not independent recovery events."
+      },
+      {
+        "metric": "conditional-pair-filter-stage-2",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "Section5.2 First Attack stage2: source conditional8-bit pair test under the stated terminal guess and correct schedule differences. These cascade fractions count useful pairs, not independent recovery events."
+      },
+      {
+        "metric": "conditional-pair-filter-stage-3",
+        "value": 0.0000152587890625,
+        "basis": "author_model",
+        "expression": "2^{-16}",
+        "description": "Section5.2 First Attack stage3: source conditional16-bit pair test under the stated terminal guess and correct schedule differences. These cascade fractions count useful pairs, not independent recovery events."
+      },
+      {
+        "metric": "conditional-pair-filter-stage-4",
+        "value": 0.00390625,
+        "basis": "author_model",
+        "expression": "2^{-8}",
+        "description": "Section5.2 First Attack stage4: source conditional8-bit pair test under the stated terminal guess and correct schedule differences. These cascade fractions count useful pairs, not independent recovery events."
+      },
+      {
+        "metric": "one-fixed-wrong-whitening-candidate-survives-source-model",
+        "value": 2.572209372642415e-56,
+        "basis": "author_model",
+        "expression": "(1-2^{-64})^{2^{71}}",
+        "description": "Section5.2 reuses the uniform-elimination procedure with2^71 useful pairs for one fixed wrong64-bit whitening candidate. For the first variant the source2^-8 is an expected aggregate suggestion count over2^112 terminal guesses, not a whole-output failure probability."
+      },
+      {
+        "metric": "any-wrong-whitening-candidate-remains-given-one-terminal-guess-source-bound",
+        "value": null,
+        "relation": "<=",
+        "expression": "2^{64}\\exp(-128)",
+        "basis": "author_model",
+        "description": "PDF10 / printed24 Section5.2 First Attack: author-model upper bound on at least one wrong64-bit whitening candidate for ONE fixed112-bit terminal-key hypothesis after approximately2^71 usable pairs. Source rounds it to2^-120 and then counts approximately2^-8 expected suggestions over all2^112 hypotheses. This bound is not the probability of correct176-bit output or complete AES192 recovery; intended difference equations and the existing notation conflict remain."
+      }
+    ],
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-07",
+      "scope": "Exact13-page proceedings edition; endpoint-specific review of Section4.2 and Section5.2. No primary probability was added: expected wrong candidates and a fixed-terminal-guess false-candidate bound do not quantify joint selected72/176/152-bit recovery at fixed plaintext budgets. Preserve source-model components, intended-difference conditions, missing-Delta and per-bin conflicts. Not a new full-paper audit."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "Printed pp.23–24 Section5.2 First Attack and p.16 Table1",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal",
+        "/field_conflicts"
+      ],
+      "interpretation": "Complete original proceedings reviewed. Source-convention boundaries, total queries across the two keys, partial output and native accounting are kept explicit."
+    },
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "Proceedings PDF9–11 / printed23–25 Section5.2, all three corrected boundary constructions and their paired budgets.",
+      "fields": [
+        "/success",
+        "/success/components"
+      ],
+      "interpretation": "No numerical recovery success is supplied for this 176-bit named-subkey output. The source uses2^71 useful pairs and a small conditional wrong-list estimate; it does not quantify joint output recovery. Keep the existing missing-Delta filtering-notation conflict; the component retention statement is conditional on the intended difference equations, not the disputed literal notation. Remaining master-key completion stays unpriced."
+    },
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "PDF6–7 / printed20–21 Sections4.1–4.2; PDF9–11 / printed23–25 Section5.2, especially PDF10 first/second attacks.",
+      "fields": [
+        "/success/review",
+        "/success/components"
+      ],
+      "interpretation": "Endpoint-specific source review: append only the separately named author-model false-candidate event at this exact subroutine budget. No primary probability was added; existing primary and component evidence, costs, targets, settings and all scientific conflicts are unchanged. No scientific conflict was resolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Independent local checks cover the AES key schedule and deterministic components. Full cryptanalytic searches, resource calibration and success rates have not been reproduced."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/setting/assumptions",
+      "label": "Key difference omitted in filtering notation",
+      "description": "The first/second attack prose compares a state difference with a key value (w7)_6 or(w7)_9. The preceding derivation explicitly requires the differences(Delta w7)_6 and(Delta w7)_9. A local valid related-key example gives w7[6]=11 but Delta w7[6]=15.",
+      "observations": [
+        {
+          "source_id": "zwzf2007-related-key-proceedings",
+          "locator": "Printed p.23 Section5.2 introductory derivation",
+          "reported": "Required conditions are(Delta x7^W)_6=(Delta w7)_6 and(Delta x7^W)_9=(Delta w7)_9."
+        },
+        {
+          "source_id": "zwzf2007-related-key-proceedings",
+          "locator": "Printed pp.23–24 First Attack and Second Attack filtering paragraphs",
+          "reported": "The prose writes comparison to(w7)_6 and(w7)_9 without the Delta symbol."
+        }
+      ]
+    }
+  ]
+}

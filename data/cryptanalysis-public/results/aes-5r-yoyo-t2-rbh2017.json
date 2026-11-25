@@ -1,0 +1,206 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes-5r-yoyo-t2-rbh2017",
+  "title": "RBH17 5-round AES / aes-5r-yoyo-t2-rbh2017",
+  "display": {
+    "name": "Yoyo byte-collision distinguisher",
+    "method": "differential"
+  },
+  "result_kind": "distinguisher",
+  "goal": "distinguishing",
+  "target": {
+    "variant_ids": [
+      "aes-128",
+      "aes-192",
+      "aes-256"
+    ],
+    "rounds": 5,
+    "full_round": false,
+    "round_convention": "rbh2017-5r-stripped-external-linear-layers",
+    "description": "5 nonlinear AES rounds in the source enck/deck convention, omitting initial ShiftRows and final ShiftRows/MixColumns. Section 3 explains public linear conjugation to full-round AES."
+  },
+  "setting": {
+    "key_model": "single_secret_key",
+    "oracle_access": [
+      "adaptive_chosen_plaintext_encryption",
+      "adaptive_chosen_ciphertext_decryption"
+    ],
+    "related_key_count": null,
+    "target_selection": "designated_target",
+    "key_relation": "One unknown standard AES master key and its expanded round keys.",
+    "key_population": "general secret key",
+    "plaintext_model": "Yoyo swap-generated adaptive encryption/decryption texts under one unknown key; the source native chosen-text count is not automatically an aggregate oracle-call count.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": [],
+    "reference_model": "Adaptive bidirectional secret-key distinguishing versus a random permutation and its inverse; no known-key or related-key oracle."
+  },
+  "techniques": [
+    "yoyo-game",
+    "zero-difference-pattern"
+  ],
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "2^24.8",
+      "log2": 24.8,
+      "unit": "xor-operations",
+      "qualifier": "estimate",
+      "note": "Table 2 offline XOR count for t=2; oracle work is separate."
+    },
+    "data": {
+      "status": "reported",
+      "reported": "2^25.8",
+      "log2": 25.830074998557688,
+      "unit": "adaptive-chosen-texts",
+      "qualifier": "estimate",
+      "note": "Section 3.3 D=p_b(t)^-1 p_b(4-t)^-1 / 2, p_b(t)=binom(4,t)*2^(-8t); approximate native chosen-text count. Source t=2 rounds to 2^25.8."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical resource amount supplied for this endpoint."
+    },
+    "preprocessing": {
+      "status": "not_reported",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "unspecified",
+      "note": "No numerical resource amount supplied for this endpoint."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "equal-prior-two-sided-classification-success",
+    "value": null,
+    "description": "The later official primary specifically reanalyses this reported t2/cutoff choice and finds equal-prior whole-game success approximately0.5. A high AES-acceptance rate is not correct classification of a random permutation. Retain original reported costs as historical disputed claims.",
+    "expression": "\\approx 0.5",
+    "basis": "author_model",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-05",
+      "scope": "Later-primary evaluation of the original optimal t=2 algorithm/cutoff, with equal priors. Approximate and disputed success is retained without changing the original native resource counts."
+    }
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+      "locator": "PDF pp.4–5 Table 2; pp.12–13 external layers; pp.16–19 Section 3.3, Theorem 4, p_b(t) and D formula with t=1,2,3.",
+      "fields": [
+        "/target",
+        "/setting",
+        "/techniques",
+        "/resources",
+        "/success",
+        "/bound"
+      ],
+      "interpretation": "Targeted primary result statements and accounting checked; not a complete-paper proof audit."
+    },
+    {
+      "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+      "locator": "Complete PDF1–27 / printed217–243, all sections, algorithms, cost paragraphs and references.",
+      "fields": [
+        "/assessment"
+      ],
+      "interpretation": "Complete exact-primary inventory, with independent consequential-section review. No author attack code executed."
+    },
+    {
+      "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+      "locator": "PDF18–22 Algorithms4–5, §3.3–3.4 source cutoffs and native D(t).",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Both located source observations retained; no silently repaired resource or success vector."
+    },
+    {
+      "source_id": "mrsa2023-yoyo-tosc-primary",
+      "locator": "PDF7–10 §§3.2–4; PDF20–23 §6, Table3 and original5r/6r comparisons.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Both located source observations retained; no silently repaired resource or success vector."
+    },
+    {
+      "source_id": "mrsa2023-yoyo-tosc-primary",
+      "locator": "PDF7–10 original/revised algorithms and Observation1–2; PDF20–23 Table3 and corrected cutoff discussion.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Targeted later-correction read only, not a full MRSA23 audit; corrections are not transferred to deterministic3r/4r or key recovery."
+    },
+    {
+      "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+      "locator": "PDF18–22 Algorithms4–5, §3.3–3.4 source cutoffs and native D(t).",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact source-local or later-primary observation supporting the attached unresolved field."
+    },
+    {
+      "source_id": "mrsa2023-yoyo-tosc-primary",
+      "locator": "PDF7–10 §§3.2–4; PDF20–23 §6, Table3 and original5r/6r comparisons.",
+      "fields": [
+        "/success",
+        "/field_conflicts"
+      ],
+      "interpretation": "Exact source-local or later-primary observation supporting the attached unresolved field."
+    },
+    {
+      "source_id": "mrsa2023-yoyo-tosc-primary",
+      "locator": "CompletePDF1–30 / printed28–57, all algorithms, theory, experiments, tables and references.",
+      "fields": [
+        "/assessment",
+        "/success"
+      ],
+      "interpretation": "MRSA23 now independently read in full; the earlier21-page targeted union was not a full audit. Statistical correction and deterministic key recovery remain separate; original RBH17 resource vectors/conflicts are unchanged."
+    },
+    {
+      "source_id": "mrsa2023-yoyo-tosc-primary",
+      "locator": "PDF8–9/printed35–36 Section3.2/Table1 and PDF23/printed50 Section6/Table3; original five-round x/y/t parameters.",
+      "fields": [
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Later source evaluates the same original cutoff as approximately random guessing. Its re-counted oracle data is not substituted into the RBH17 native cost tuple; existing success conflicts remain unresolved."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-27",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Algorithm 4 pseudocode uses additional loop thresholds; the source heuristic formula is not an exact query-success tradeoff. Noncentral t values have no separately reported offline XOR budget."
+  ],
+  "related_problem_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "Later yoyo success analysis",
+      "description": "The later official primary specifically reanalyses this reported t2/cutoff choice and finds equal-prior whole-game success approximately0.5. A high AES-acceptance rate is not correct classification of a random permutation. Retain original reported costs as historical disputed claims.",
+      "observations": [
+        {
+          "source_id": "aes-paper-5ca1e9f06c4997e9-2017",
+          "locator": "PDF18–22 Algorithms4–5, §3.3–3.4 source cutoffs and native D(t).",
+          "reported": "Source reports this yoyo distinguisher at the original data/cutoff choice without a complete two-sided success calculation."
+        },
+        {
+          "source_id": "mrsa2023-yoyo-tosc-primary",
+          "locator": "PDF7–10 §§3.2–4; PDF20–23 §6, Table3 and original5r/6r comparisons.",
+          "reported": "The original optimal t2 distinguishers have overall equal-prior success≈0.5; revised cutoffs and query accounting are different results."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+  \node (zero) at (0,1) {$0^{128}$};
+  \node[accent] (aes) at (2.4,1) {$\mathrm{AES}_K$};
+  \node[box] (dbl1) at (6,1) {$\operatorname{dbl}$};
+  \node[box] (dbl2) at (9.6,1) {$\operatorname{dbl}$};
+  \draw[wire] (zero) -- (aes); \draw[wire] (aes) -- node[above] {$L$} (dbl1);
+  \draw[wire] (dbl1) -- node[above] {$K_1$} (dbl2);
+  \draw[wire] (dbl2) -- (12,1) node[right] {$K_2$};
+  \node at (6,-.6) {$\operatorname{dbl}(X)=(X\ll1)\oplus\begin{cases}0^{128},&\operatorname{MSB}(X)=0,\\0^{120}\Vert\mathtt{87},&\operatorname{MSB}(X)=1.\end{cases}$};
+  \node[note] at (6,-1.9) {Shift within $128$ bits; $\mathtt{87}$ is hexadecimal.};
+  \node[note] at (6,-2.6) {$K_1$: complete nonempty last block\qquad $K_2$: padded partial block or empty message};
+\end{tikzpicture}

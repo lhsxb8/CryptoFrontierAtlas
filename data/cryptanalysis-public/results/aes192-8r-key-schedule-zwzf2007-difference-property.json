@@ -1,0 +1,136 @@
+{
+  "schema_version": "0.10.0",
+  "id": "aes192-8r-key-schedule-zwzf2007-difference-property",
+  "title": "8-round AES-192: Two-byte related-key schedule difference",
+  "display": {
+    "name": "Two-byte related-key schedule difference",
+    "method": "differential"
+  },
+  "result_kind": "structural_property",
+  "goal": "structural_property",
+  "target": {
+    "variant_ids": [
+      "aes-192"
+    ],
+    "rounds": 8,
+    "full_round": false,
+    "round_convention": "zwzf2007-key-schedule-k0-through-k8",
+    "description": "Standard AES-192 key expansion k0 through k8, including whitening; Table2 uses column-major byte numbering."
+  },
+  "setting": {
+    "key_model": "related_secret_keys",
+    "oracle_access": [
+      "structural_property_no_oracle"
+    ],
+    "related_key_count": 2,
+    "key_relation": "Two unknown AES-192 master keys K and K'=K XOR Delta, where Delta[0]=Delta[8]=a!=0 and the other22 bytes are0. Initial whitening is k0; round subkeys are k1,... .",
+    "key_population": "General unknown key pair with attacker-chosen nonzero a; b,c are actual key-dependent S-box output differences, not independently chosen subkeys.",
+    "plaintext_model": "Key-schedule property; no plaintext queries.",
+    "computation": "classical",
+    "attack_surface": "algorithmic",
+    "assumptions": []
+  },
+  "techniques": [
+    "related-key",
+    "key-schedule-differences"
+  ],
+  "resources": {
+    "time": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "data": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "memory": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    },
+    "preprocessing": {
+      "status": "not_applicable",
+      "reported": null,
+      "log2": null,
+      "unit": null,
+      "qualifier": "not_applicable",
+      "note": "Structural or conditional statistical statement, not an attack-resource measurement."
+    }
+  },
+  "success": {
+    "status": "not_applicable",
+    "metric": "structural-or-conditional-statistical-statement",
+    "value": null,
+    "description": "Parameters describe a structural identity or conditional random-elimination model."
+  },
+  "bound": null,
+  "evidence": [
+    {
+      "source_id": "zwzf2007-related-key-proceedings",
+      "locator": "Printed pp.18–19 Section3 Table2; pp.21,24–26 b/c and schedule-relation paragraphs",
+      "fields": [
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/bound",
+        "/goal",
+        "/property"
+      ],
+      "interpretation": "Complete original proceedings reviewed. Source-convention boundaries, total queries across the two keys, partial output and native accounting are kept explicit."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "primary_text": "checked",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-10-10",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Independent local checks cover the AES key schedule and deterministic components. Full cryptanalytic searches, resource calibration and success rates have not been reproduced."
+  ],
+  "related_problem_ids": [],
+  "property": {
+    "statement": "For DeltaK active at bytes0 and8 with the same nonzero a, the complete k0,...,k8 difference pattern is determined by a and two actual nonzero S-box differences b,c.",
+    "quantifier": "For every standard AES-192 master key and every nonzero a, with b,c evaluated from that key's schedule.",
+    "scope": "b=S(k5[12]) XOR S(k5[12] XOR a); c=S(k7[7]) XOR S(k7[7] XOR b). The schedule is not an independently selected related-subkey oracle.",
+    "parameters": [
+      {
+        "name": "Master-key difference",
+        "reported": "DeltaK[0]=DeltaK[8]=a!=0",
+        "meaning": "All other22 byte differences are zero."
+      },
+      {
+        "name": "Possible nonzero output differences",
+        "reported": "127 for each fixed nonzero input difference",
+        "meaning": "126 DDT outputs have2 preimages, one has4; the127 values are not uniformly likely."
+      },
+      {
+        "name": "Key-byte bridges",
+        "reported": "k5[12]=k8[4] XOR k8[12]; k7[7]=k8[11] XOR k8[15]",
+        "meaning": "Allow the first/second eight-round attack to compute b,c from the guessed material."
+      },
+      {
+        "name": "Seven-round bridge",
+        "reported": "k5[12]=k7[0] XOR k7[4]",
+        "meaning": "Used by the Section6 equality-based attack."
+      }
+    ],
+    "validation": {
+      "basis": "analytical",
+      "description": "Local tests check all9 Table2 subkeys on512 standard related-key pairs and all255 nonzero AES S-box difference supports."
+    }
+  }
+}
