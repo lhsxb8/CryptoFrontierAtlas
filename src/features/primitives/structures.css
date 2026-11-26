@@ -5,9 +5,11 @@
 .atlas-structure button, .atlas-structure-downloads button { border: 0; background: transparent; color: var(--teal); display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 6px 8px; font-size: 12px; }
 .atlas-structure-toolbar { padding: 0 20px 10px; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
 .atlas-structure-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.atlas-structure-enlarge { margin-left: auto; }
 .atlas-structure-tabs [role=tab] { color: var(--muted); border-radius: 4px; }
 .atlas-structure-tabs [aria-selected=true] { background: #eaf4f2; color: #0d6668; box-shadow: inset 0 0 0 1px #c7ded9; }
 .atlas-structure-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(190px, 24%); min-width: 0; }
+.atlas-structure.is-single-view .atlas-structure-layout { border-top: 1px solid var(--line); }
 .atlas-structure-layout.is-family { grid-template-columns: minmax(0, 1fr); }
 .atlas-structure-figure { min-width: 0; margin: 0; padding: 14px 20px; display: flex; flex-direction: column; justify-content: center; }
 .atlas-structure-image { min-height: 180px; display: flex; align-items: center; justify-content: center; }

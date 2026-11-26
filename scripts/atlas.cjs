@@ -13,6 +13,7 @@ try {
   if (command === 'check') {
     const data = require('../lib/node/cryptanalysis/check-data.cjs').validateDataset(root);
     console.log(`PASS: ${data.results.length} results, ${data.entries.length} compact-index entries, ${data.sources.length} sources, ${data.ciphers.length} cipher families, ${data.variants.length} instances.`);
+    if (data.problemAnalyses.length) console.log(`Hard problems: ${data.problemAnalyses.length} targets, ${data.problemAnalyses.reduce((n, c) => n + c.results.length, 0)} results, ${data.problemAnalyses.reduce((n, c) => n + c.families.length, 0)} families.`);
   } else if (commands[command]) {
     const result = spawnSync(process.execPath, [path.join(root, 'lib/node/cryptanalysis', commands[command]), ...args], {stdio:'inherit', cwd:root});
     if (result.error) throw result.error;

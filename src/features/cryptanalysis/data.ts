@@ -8,6 +8,7 @@ export const ciphers = dataset.ciphers;
 export const results = dataset.results;
 export const compactResults = dataset.compactResults;
 export const familyCatalogs = dataset.familyCatalogs;
+export const problemAnalyses = dataset.problemAnalyses;
 // Detailed payloads win if a caller supplies both views of the same point.
 const pointsById = new Map(results.map(result => [result.id, result]));
 for (const result of compactResults) if (!pointsById.has(result.id)) pointsById.set(result.id, result);

@@ -1,14 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Public primitive and construction directory (no analysis results)",
+  "title": "Public primitive, construction and hard-problem directory (no analysis results)",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "categories", "specifications", "primitives", "instances"],
+  "required": ["schema_version", "categories", "specifications", "primitives", "instances", "problem_sources", "hard_problems"],
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": {"const": 3},
+    "problem_sources": {"type": "array", "items": {"$ref": "#/$defs/problemSource"}},
+    "hard_problems": {"type": "array", "items": {"$ref": "#/$defs/hardProblem"}},
     "categories": {"type": "array", "minItems": 1, "items": {
-      "type": "object", "additionalProperties": false, "required": ["id", "en", "zh"],
-      "properties": {"id": {"$ref": "#/$defs/category"}, "en": {"$ref": "#/$defs/text"}, "zh": {"$ref": "#/$defs/text"}}
+      "type": "object", "additionalProperties": false, "required": ["id", "domain", "en", "zh"],
+      "properties": {"id": {"$ref": "#/$defs/category"}, "domain": {"enum": ["symmetric", "asymmetric"]}, "en": {"$ref": "#/$defs/text"}, "zh": {"$ref": "#/$defs/text"}},
+      "if": {"properties": {"id": {"enum": ["hard_problem", "public_key_encryption", "key_agreement", "digital_signature", "kem"]}}},
+      "then": {"properties": {"domain": {"const": "asymmetric"}}},
+      "else": {"properties": {"domain": {"const": "symmetric"}}}
     }},
     "specifications": {"type": "array", "minItems": 1, "items": {
       "type": "object", "additionalProperties": false,
@@ -27,7 +32,7 @@
       "type": "object", "additionalProperties": false,
       "required": ["id", "name", "category", "aliases", "description", "specification_ids", "uses"],
       "properties": {
-        "id": {"$ref": "#/$defs/id"}, "name": {"$ref": "#/$defs/text"}, "category": {"$ref": "#/$defs/category"},
+        "id": {"$ref": "#/$defs/id"}, "name": {"$ref": "#/$defs/text"}, "category": {"$ref": "#/$defs/primitiveCategory"},
         "aliases": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
         "description": {"$ref": "#/$defs/text"}, "specification_ids": {"$ref": "#/$defs/references"},
         "uses": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
@@ -72,16 +77,590 @@
           {"type": "object", "additionalProperties": false, "required": ["type", "key_bits", "block_bits", "tag_bits", "cipher_instance_id"], "properties": {
             "type": {"const": "mac"}, "key_bits": {"$ref": "#/$defs/positive"}, "block_bits": {"$ref": "#/$defs/positive"},
             "tag_bits": {"$ref": "#/$defs/positive"}, "cipher_instance_id": {"$ref": "#/$defs/id"}
-          }}
+          }},
+          {"$ref": "#/$defs/rsaOaep"},
+          {"$ref": "#/$defs/rsaPss"},
+          {"$ref": "#/$defs/ffdhe"},
+          {"$ref": "#/$defs/ecdh"},
+          {"$ref": "#/$defs/xdh"},
+          {"$ref": "#/$defs/ecdsa"},
+          {"$ref": "#/$defs/eddsa"},
+          {"$ref": "#/$defs/sm2Encryption"},
+          {"$ref": "#/$defs/sm2Signature"},
+          {"$ref": "#/$defs/sm2KeyExchange"},
+          {"$ref": "#/$defs/mlKem"},
+          {"$ref": "#/$defs/mlDsa"},
+          {"$ref": "#/$defs/slhDsa"}
         ]}
       }
     }}
   },
   "$defs": {
+    "problemSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "authors",
+        "year",
+        "edition",
+        "url"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "$ref": "#/$defs/text"
+        },
+        "authors": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 1900,
+          "maximum": 2100
+        },
+        "edition": {
+          "$ref": "#/$defs/text"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        }
+      }
+    },
+    "hardProblem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "category",
+        "aliases",
+        "description",
+        "statement",
+        "parameters",
+        "formulations",
+        "qualifications",
+        "references",
+        "related_scheme_ids",
+        "related_problem_ids"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "category": {
+          "const": "hard_problem"
+        },
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "description": {
+          "$ref": "#/$defs/text"
+        },
+        "statement": {
+          "$ref": "#/$defs/text"
+        },
+        "parameters": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "modulus",
+                "size",
+                "input_distribution"
+              ],
+              "properties": {
+                "type": {
+                  "const": "integer_factorization"
+                },
+                "modulus": {
+                  "$ref": "#/$defs/text"
+                },
+                "size": {
+                  "$ref": "#/$defs/text"
+                },
+                "input_distribution": {
+                  "$ref": "#/$defs/text"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "modulus",
+                "exponent",
+                "input_distribution"
+              ],
+              "properties": {
+                "type": {
+                  "const": "rsa_inversion"
+                },
+                "modulus": {
+                  "$ref": "#/$defs/text"
+                },
+                "exponent": {
+                  "$ref": "#/$defs/text"
+                },
+                "input_distribution": {
+                  "$ref": "#/$defs/text"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "group",
+                "order",
+                "input_distribution"
+              ],
+              "properties": {
+                "type": {
+                  "const": "discrete_logarithm"
+                },
+                "group": {
+                  "$ref": "#/$defs/text"
+                },
+                "order": {
+                  "$ref": "#/$defs/text"
+                },
+                "input_distribution": {
+                  "$ref": "#/$defs/text"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "curve",
+                "group",
+                "order",
+                "input_distribution"
+              ],
+              "properties": {
+                "type": {
+                  "const": "elliptic_curve_discrete_logarithm"
+                },
+                "curve": {
+                  "$ref": "#/$defs/text"
+                },
+                "group": {
+                  "$ref": "#/$defs/text"
+                },
+                "order": {
+                  "$ref": "#/$defs/text"
+                },
+                "input_distribution": {
+                  "$ref": "#/$defs/text"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "dimension",
+                "modulus",
+                "sample_count",
+                "secret_distribution",
+                "error_distribution"
+              ],
+              "properties": {
+                "type": {
+                  "const": "lwe"
+                },
+                "dimension": {
+                  "$ref": "#/$defs/text"
+                },
+                "modulus": {
+                  "$ref": "#/$defs/text"
+                },
+                "sample_count": {
+                  "$ref": "#/$defs/text"
+                },
+                "secret_distribution": {
+                  "$ref": "#/$defs/text"
+                },
+                "error_distribution": {
+                  "$ref": "#/$defs/text"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "ring",
+                "modulus",
+                "sample_count",
+                "secret_distribution",
+                "error_distribution",
+                "representation"
+              ],
+              "properties": {
+                "type": {
+                  "const": "ring_lwe"
+                },
+                "ring": {
+                  "$ref": "#/$defs/text"
+                },
+                "modulus": {
+                  "$ref": "#/$defs/text"
+                },
+                "sample_count": {
+                  "$ref": "#/$defs/text"
+                },
+                "secret_distribution": {
+                  "$ref": "#/$defs/text"
+                },
+                "error_distribution": {
+                  "$ref": "#/$defs/text"
+                },
+                "representation": {
+                  "$ref": "#/$defs/text"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "ring",
+                "module_rank",
+                "modulus",
+                "sample_count",
+                "secret_distribution",
+                "error_distribution",
+                "representation"
+              ],
+              "properties": {
+                "type": {
+                  "const": "module_lwe"
+                },
+                "ring": {
+                  "$ref": "#/$defs/text"
+                },
+                "module_rank": {
+                  "$ref": "#/$defs/text"
+                },
+                "modulus": {
+                  "$ref": "#/$defs/text"
+                },
+                "sample_count": {
+                  "$ref": "#/$defs/text"
+                },
+                "secret_distribution": {
+                  "$ref": "#/$defs/text"
+                },
+                "error_distribution": {
+                  "$ref": "#/$defs/text"
+                },
+                "representation": {
+                  "$ref": "#/$defs/text"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "dimension",
+                "column_count",
+                "modulus",
+                "norm",
+                "bound"
+              ],
+              "properties": {
+                "type": {
+                  "const": "sis"
+                },
+                "dimension": {
+                  "$ref": "#/$defs/text"
+                },
+                "column_count": {
+                  "$ref": "#/$defs/text"
+                },
+                "modulus": {
+                  "$ref": "#/$defs/text"
+                },
+                "norm": {
+                  "$ref": "#/$defs/text"
+                },
+                "bound": {
+                  "$ref": "#/$defs/text"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "ring",
+                "module_rank",
+                "column_count",
+                "modulus",
+                "norm",
+                "bound",
+                "representation"
+              ],
+              "properties": {
+                "type": {
+                  "const": "module_sis"
+                },
+                "ring": {
+                  "$ref": "#/$defs/text"
+                },
+                "module_rank": {
+                  "$ref": "#/$defs/text"
+                },
+                "column_count": {
+                  "$ref": "#/$defs/text"
+                },
+                "modulus": {
+                  "$ref": "#/$defs/text"
+                },
+                "norm": {
+                  "$ref": "#/$defs/text"
+                },
+                "bound": {
+                  "$ref": "#/$defs/text"
+                },
+                "representation": {
+                  "$ref": "#/$defs/text"
+                }
+              }
+            }
+          ]
+        },
+        "formulations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "description"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "search",
+                  "decision"
+                ]
+              },
+              "description": {
+                "$ref": "#/$defs/text"
+              }
+            }
+          }
+        },
+        "qualifications": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "references": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_id",
+              "locator"
+            ],
+            "properties": {
+              "source_id": {
+                "$ref": "#/$defs/id"
+              },
+              "locator": {
+                "$ref": "#/$defs/text"
+              }
+            }
+          }
+        },
+        "related_scheme_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "related_problem_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      }
+    },
     "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
     "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
     "positive": {"type": "integer", "minimum": 1, "maximum": 9007199254740991},
     "references": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
-    "category": {"enum": ["block_cipher", "stream_cipher", "hash_function", "xof", "permutation", "aead", "mac"]}
+    "category": {"anyOf": [{"$ref": "#/$defs/primitiveCategory"}, {"const": "hard_problem"}]},
+    "primitiveCategory": {"enum": ["block_cipher", "stream_cipher", "hash_function", "xof", "permutation", "aead", "mac", "public_key_encryption", "key_agreement", "digital_signature", "kem"]},
+    "hash": {"enum": ["SHA-256", "SHA-384", "SHA-512"]},
+    "curve": {"enum": ["P-256", "P-384", "P-521"]},
+    "hex": {"type": "string", "pattern": "^(?:[0-9a-f]{2})*$"},
+    "context": {"type": "string", "pattern": "^(?:[0-9a-f]{2})*$", "maxLength": 510},
+    "rsaOaep": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "modulus_bits", "hash", "mgf_hash", "label_hex"],
+      "properties": {
+        "type": {"const": "public_key_encryption"}, "scheme": {"const": "rsaes_oaep"},
+        "modulus_bits": {"$ref": "#/$defs/positive"}, "hash": {"$ref": "#/$defs/hash"},
+        "mgf_hash": {"$ref": "#/$defs/hash"}, "label_hex": {"$ref": "#/$defs/hex"}
+      }
+    },
+    "rsaPss": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "modulus_bits", "hash", "mgf_hash", "salt_bytes"],
+      "properties": {
+        "type": {"const": "digital_signature"}, "scheme": {"const": "rsassa_pss"},
+        "modulus_bits": {"$ref": "#/$defs/positive"}, "hash": {"$ref": "#/$defs/hash"},
+        "mgf_hash": {"$ref": "#/$defs/hash"}, "salt_bytes": {"type": "integer", "minimum": 0, "maximum": 9007199254740991}
+      }
+    },
+    "ffdhe": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "group", "modulus_bits", "generator"],
+      "properties": {
+        "type": {"const": "key_agreement"}, "scheme": {"const": "ffdhe"},
+        "group": {"enum": ["ffdhe2048", "ffdhe3072", "ffdhe4096", "ffdhe6144", "ffdhe8192"]},
+        "modulus_bits": {"$ref": "#/$defs/positive"}, "generator": {"const": 2}
+      }
+    },
+    "ecdh": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "curve", "field_bits"],
+      "properties": {
+        "type": {"const": "key_agreement"}, "scheme": {"const": "ecdh"},
+        "curve": {"$ref": "#/$defs/curve"}, "field_bits": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "xdh": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "function", "field_bits", "public_key_bytes", "shared_secret_bytes"],
+      "properties": {
+        "type": {"const": "key_agreement"}, "scheme": {"const": "xdh"},
+        "function": {"enum": ["X25519", "X448"]}, "field_bits": {"$ref": "#/$defs/positive"},
+        "public_key_bytes": {"$ref": "#/$defs/positive"}, "shared_secret_bytes": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "ecdsa": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "curve", "field_bits", "hash"],
+      "properties": {
+        "type": {"const": "digital_signature"}, "scheme": {"const": "ecdsa"},
+        "curve": {"$ref": "#/$defs/curve"}, "field_bits": {"$ref": "#/$defs/positive"}, "hash": {"$ref": "#/$defs/hash"}
+      }
+    },
+    "eddsa": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "variant", "field_bits", "hash", "public_key_bytes", "signature_bytes", "context_hex"],
+      "properties": {
+        "type": {"const": "digital_signature"}, "scheme": {"const": "eddsa"},
+        "variant": {"enum": ["Ed25519", "Ed448"]}, "field_bits": {"$ref": "#/$defs/positive"},
+        "hash": {"enum": ["SHA-512", "SHAKE256"]}, "public_key_bytes": {"$ref": "#/$defs/positive"},
+        "signature_bytes": {"$ref": "#/$defs/positive"}, "context_hex": {"$ref": "#/$defs/context"}
+      }
+    },
+    "sm2Encryption": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "curve", "field_bits", "hash", "ciphertext_order"],
+      "properties": {
+        "type": {"const": "public_key_encryption"}, "scheme": {"const": "sm2_encryption"},
+        "curve": {"const": "curveSM2"}, "field_bits": {"const": 256}, "hash": {"const": "SM3"},
+        "ciphertext_order": {"const": "C1C3C2"}
+      }
+    },
+    "sm2Signature": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "curve", "field_bits", "hash"],
+      "properties": {
+        "type": {"const": "digital_signature"}, "scheme": {"const": "sm2_signature"},
+        "curve": {"const": "curveSM2"}, "field_bits": {"const": 256}, "hash": {"const": "SM3"}
+      }
+    },
+    "sm2KeyExchange": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "curve", "field_bits", "hash", "shared_secret_bits"],
+      "properties": {
+        "type": {"const": "key_agreement"}, "scheme": {"const": "sm2_key_exchange"},
+        "curve": {"const": "curveSM2"}, "field_bits": {"const": 256}, "hash": {"const": "SM3"},
+        "shared_secret_bits": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "mlKem": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "parameter_set", "security_category", "module_rank", "public_key_bytes", "secret_key_bytes", "ciphertext_bytes", "shared_secret_bytes"],
+      "properties": {
+        "type": {"const": "kem"}, "scheme": {"const": "ml_kem"},
+        "parameter_set": {"enum": ["ML-KEM-512", "ML-KEM-768", "ML-KEM-1024"]},
+        "security_category": {"enum": [1, 3, 5]}, "module_rank": {"$ref": "#/$defs/positive"},
+        "public_key_bytes": {"$ref": "#/$defs/positive"}, "secret_key_bytes": {"$ref": "#/$defs/positive"},
+        "ciphertext_bytes": {"$ref": "#/$defs/positive"}, "shared_secret_bytes": {"const": 32}
+      }
+    },
+    "mlDsa": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "parameter_set", "security_category", "matrix_rows", "matrix_columns", "public_key_bytes", "secret_key_bytes", "signature_bytes", "context_hex"],
+      "properties": {
+        "type": {"const": "digital_signature"}, "scheme": {"const": "ml_dsa"},
+        "parameter_set": {"enum": ["ML-DSA-44", "ML-DSA-65", "ML-DSA-87"]},
+        "security_category": {"enum": [2, 3, 5]}, "matrix_rows": {"$ref": "#/$defs/positive"}, "matrix_columns": {"$ref": "#/$defs/positive"},
+        "public_key_bytes": {"$ref": "#/$defs/positive"}, "secret_key_bytes": {"$ref": "#/$defs/positive"},
+        "signature_bytes": {"$ref": "#/$defs/positive"}, "context_hex": {"$ref": "#/$defs/context"}
+      }
+    },
+    "slhDsa": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "scheme", "parameter_set", "hash_family", "security_category", "hash_bytes", "hypertree_height", "hypertree_layers", "fors_height", "fors_trees", "public_key_bytes", "secret_key_bytes", "signature_bytes", "context_hex"],
+      "properties": {
+        "type": {"const": "digital_signature"}, "scheme": {"const": "slh_dsa"},
+        "parameter_set": {"enum": ["SLH-DSA-SHA2-128s", "SLH-DSA-SHA2-128f", "SLH-DSA-SHAKE-128s", "SLH-DSA-SHAKE-128f"]},
+        "hash_family": {"enum": ["SHA2", "SHAKE"]}, "security_category": {"const": 1}, "hash_bytes": {"const": 16},
+        "hypertree_height": {"$ref": "#/$defs/positive"}, "hypertree_layers": {"$ref": "#/$defs/positive"},
+        "fors_height": {"$ref": "#/$defs/positive"}, "fors_trees": {"$ref": "#/$defs/positive"},
+        "public_key_bytes": {"$ref": "#/$defs/positive"}, "secret_key_bytes": {"$ref": "#/$defs/positive"},
+        "signature_bytes": {"$ref": "#/$defs/positive"}, "context_hex": {"$ref": "#/$defs/context"}
+      }
+    }
   }
 }

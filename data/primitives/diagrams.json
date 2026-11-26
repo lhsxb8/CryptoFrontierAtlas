@@ -9,7 +9,13 @@
     {"id": "omac-design", "title": "Iwata and Kurosawa · OMAC / OMAC1 design", "url": "https://www.nuee.nagoya-u.ac.jp/labs/tiwata/omac/omac.html", "locator": "OMAC1 construction and original FSE 2003 publication"},
     {"id": "sm3-standard-text", "title": "GB/T 32905-2016 · Specification text", "url": "https://tsgdag.jhun.edu.cn/_upload/article/files/7d/c2/952f626a48589eeb00644bf8e7b4/0ea064f0-e3d0-4ff0-b0f8-27aadd1c4b02.pdf", "locator": "National standard, Sections 4–5; public copy hosted by Jianghan University"},
     {"id": "sm4-english-description", "title": "Tse, Wong and Saarinen · SM4 English description", "url": "https://datatracker.ietf.org/doc/html/draft-ribose-cfrg-sm4-10", "locator": "Sections 4–7. Archived individual Internet-Draft, not an IETF standard; the normative algorithm reference is GB/T 32907-2016."},
-    {"id": "sha1-transition", "title": "NIST · SHA-1 transition", "url": "https://www.nist.gov/news-events/news/2022/12/nist-retires-sha-1-cryptographic-algorithm", "locator": "Historical security context and transition announcement; the algorithm diagram follows FIPS 180-4 Section 6.1"}
+    {"id": "sha1-transition", "title": "NIST · SHA-1 transition", "url": "https://www.nist.gov/news-events/news/2022/12/nist-retires-sha-1-cryptographic-algorithm", "locator": "Historical security context and transition announcement; the algorithm diagram follows FIPS 180-4 Section 6.1"},
+    {
+      "id": "sm2-shen-lee-2014",
+      "title": "Shen and Lee · SM2 algorithm description (expired Internet-Draft)",
+      "url": "https://www.ietf.org/archive/id/draft-shen-sm2-ecdsa-02.txt",
+      "locator": "Sections 5–6 describe the signing and key-exchange equations. This expired draft is a design reference, not the registered GB/T edition; its encryption serialization and example curves are not adopted."
+    }
   ],
   "diagrams": [
     {
@@ -203,6 +209,414 @@
       "views": [
         {"id": "overview", "template": "mdhash-overview.tex", "label": {"en": "Hash construction", "zh": "哈希构造"}, "caption": {"en": "Each 512-bit block updates four 32-bit words in 64 steps, followed by additive feed-forward. MD5 has broken collision resistance and is retained for historical research.", "zh": "每个 512 比特消息块经过 64 步更新四个 32 比特字，再进行加法前馈。MD5 的抗碰撞性已被攻破，此处保留用于历史研究。"}},
         {"id": "detail", "template": "md5-detail.tex", "label": {"en": "Compression step", "zh": "压缩函数步"}, "caption": {"en": "Four groups of 16 steps use different Boolean functions, message-word orders and rotations. Message words, length encoding and digest serialization are little-endian.", "zh": "四组各 16 步分别使用不同的布尔函数、消息字顺序和旋转量；消息字、长度编码和摘要序列化均采用小端序。"}}
+      ]
+    },
+    {
+      "family_id": "rsa-oaep",
+      "instance_ids": [
+        "rsa-oaep-2048-sha256",
+        "rsa-oaep-3072-sha256",
+        "rsa-oaep-4096-sha256"
+      ],
+      "specification_ids": [
+        "standard-rfc-8017"
+      ],
+      "design_source_ids": [],
+      "locator": "RFC 8017, Sections 7.1 and B.2.1",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "rsa-oaep-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "OAEP encoding precedes public RSA exponentiation. Decryption applies private RSA and validates the OAEP encoding; the directory fixes both hashes and the label.",
+            "zh": "OAEP 编码后执行 RSA 公钥运算；解密执行私钥运算并校验编码。实例明确哈希、MGF1 哈希与标签。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "sm2-encryption",
+      "instance_ids": [
+        "sm2-encryption-sm3"
+      ],
+      "specification_ids": [
+        "standard-gbt-32918-4-2016",
+        "standard-gbt-32918-5-2017",
+        "standard-gbt-32905-2016"
+      ],
+      "design_source_ids": [],
+      "locator": "GB/T 32918.4-2016, Sections 5–7; GB/T 32918.5-2017, Section 3",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "sm2-encryption-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "SM2 encryption derives a mask from the ephemeral shared point and authenticates the recovered message with SM3. The registered standard profile orders ciphertext components as C1, C3, C2; validation and KDF retry checks are required.",
+            "zh": "SM2 加密从临时共享点派生掩码，并用 SM3 校验恢复的消息。所列标准实例按 C1、C3、C2 排列密文分量；必须执行验证与 KDF 重试检查。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "ffdhe",
+      "instance_ids": [
+        "ffdhe2048",
+        "ffdhe3072",
+        "ffdhe4096"
+      ],
+      "specification_ids": [
+        "standard-rfc-7919"
+      ],
+      "design_source_ids": [],
+      "locator": "RFC 7919, Appendix A.1",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "dh-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "The named safe-prime group fixes p and generator 2. Public shares are exchanged before both parties compute the same finite-field secret; authentication and KDF are outside this group definition.",
+            "zh": "命名安全素数群确定 p 与生成元 2。交换公开值后，双方计算相同的有限域秘密；身份认证与 KDF 由具体协议规定。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "ecdh",
+      "instance_ids": [
+        "ecdh-p256",
+        "ecdh-p384",
+        "ecdh-p521"
+      ],
+      "specification_ids": [
+        "standard-sp-800-56a-r3",
+        "standard-sp-800-186"
+      ],
+      "design_source_ids": [],
+      "locator": "SP 800-56A Rev. 3, Section 5.7.1.2; SP 800-186, Section 3.2.1",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "dh-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "Each party multiplies the peer's validated public point by its private scalar. The registered curves have cofactor one; shared-point encoding, authentication and KDF follow the applicable protocol.",
+            "zh": "双方使用私有标量乘以经过验证的对方公钥点。所列曲线余因子为 1；共享点编码、身份认证和 KDF 由相应协议规定。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "xdh",
+      "instance_ids": [
+        "x25519",
+        "x448"
+      ],
+      "specification_ids": [
+        "standard-rfc-7748"
+      ],
+      "design_source_ids": [],
+      "locator": "RFC 7748, Sections 5 and 6.1",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "dh-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "XDH denotes the selected RFC 7748 function, X25519 or X448, including its scalar and coordinate encodings. The result is a raw shared secret, not a complete authenticated exchange.",
+            "zh": "XDH 表示所选 RFC 7748 函数 X25519 或 X448，含其标量与坐标编码规则。输出是原始共享秘密，不是完整的认证密钥交换。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "sm2-key-exchange",
+      "instance_ids": [
+        "sm2-key-exchange-sm3-256"
+      ],
+      "specification_ids": [
+        "standard-gbt-32918-3-2016",
+        "standard-gbt-32918-5-2017",
+        "standard-gbt-32905-2016"
+      ],
+      "design_source_ids": [
+        "sm2-shen-lee-2014"
+      ],
+      "locator": "GB/T 32918.3-2016, Sections 5–6; GB/T 32918.5-2017, Section 3",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "sm2-key-exchange-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "SM2 key exchange combines static and ephemeral keys and derives the output from the shared point and both identity digests. The diagram gives Alice's combination; Bob applies the symmetric rule. Key confirmation is optional in the cited protocol.",
+            "zh": "SM2 密钥交换结合静态和临时密钥，从共享点及双方身份摘要派生输出。图示 Alice 的组合步骤，Bob 使用对应规则；引用协议中的密钥确认步骤为可选。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "rsa-pss",
+      "instance_ids": [
+        "rsa-pss-2048-sha256",
+        "rsa-pss-3072-sha256",
+        "rsa-pss-4096-sha256"
+      ],
+      "specification_ids": [
+        "standard-rfc-8017"
+      ],
+      "design_source_ids": [],
+      "locator": "RFC 8017, Sections 8.1, 9.1 and B.2.1",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "rsa-pss-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "PSS encoding precedes private RSA exponentiation. Verification uses the public key and checks the encoding against the message, including the selected salt length.",
+            "zh": "PSS 编码后执行 RSA 私钥运算；验签使用公钥并检查消息、编码和所选盐长度。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "ecdsa",
+      "instance_ids": [
+        "ecdsa-p256-sha256",
+        "ecdsa-p384-sha384",
+        "ecdsa-p521-sha512"
+      ],
+      "specification_ids": [
+        "standard-fips-186-5",
+        "standard-sp-800-186"
+      ],
+      "design_source_ids": [],
+      "locator": "FIPS 186-5, Section 6; SP 800-186, Section 3.2.1",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "ecdsa-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "ECDSA signs a hash representative using a nonce and private scalar. Verification reconstructs a point with the public key and checks its x-coordinate; range, nonce and point-validation rules remain part of the specification.",
+            "zh": "ECDSA 使用随机数与私钥标量对哈希代表值签名；验证使用公钥重建点并检查横坐标。取值范围、随机数和点验证规则仍按标准执行。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "eddsa",
+      "instance_ids": [
+        "ed25519",
+        "ed448"
+      ],
+      "specification_ids": [
+        "standard-rfc-8032"
+      ],
+      "design_source_ids": [],
+      "locator": "RFC 8032, Sections 4 and 5.1",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "eddsa-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "Pure EdDSA derives the nonce and challenge with RFC 8032 domain rules. The overview shows cofactored verification; encoding checks and the variant's exact hash expansion are required. No prehash variant is implied.",
+            "zh": "Pure EdDSA 按 RFC 8032 的域分离规则生成随机数与挑战。图示带余因子的验证关系；需执行编码检查和对应变体的哈希扩展，不包含预哈希变体。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "sm2-signature",
+      "instance_ids": [
+        "sm2-signature-sm3"
+      ],
+      "specification_ids": [
+        "standard-gbt-32918-2-2016",
+        "standard-gbt-32918-5-2017",
+        "standard-gbt-32905-2016"
+      ],
+      "design_source_ids": [
+        "sm2-shen-lee-2014"
+      ],
+      "locator": "GB/T 32918.2-2016, Sections 5–7; GB/T 32918.5-2017, Section 3",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "sm2-signature-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "SM2 binds the signer identity and public key through ZA before hashing the message. Its signing and verification equations differ from ECDSA; exceptional scalar values require retry or rejection as specified.",
+            "zh": "SM2 通过 ZA 绑定签名者身份和公钥，再哈希消息。其签名与验证方程不同于 ECDSA；特殊标量值按规范重试或拒绝。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "ml-dsa",
+      "instance_ids": [
+        "ml-dsa-44",
+        "ml-dsa-65",
+        "ml-dsa-87"
+      ],
+      "specification_ids": [
+        "standard-fips-204"
+      ],
+      "design_source_ids": [],
+      "locator": "FIPS 204, Sections 5 and 8, Tables 1–2",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "ml-dsa-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "FIPS 204 ML-DSA derives a challenge from a masked module-lattice commitment, checks rejection bounds and encodes the response and hint. Verification reconstructs high bits with the public key and checks the challenge. This is the pure external interface.",
+            "zh": "FIPS 204 的 ML-DSA 从掩码模格承诺生成挑战，检查拒绝条件并编码响应和提示。验证方使用公钥重建高位并检查挑战；这里采用纯消息外部接口。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "slh-dsa",
+      "instance_ids": [
+        "slh-dsa-sha2-128s",
+        "slh-dsa-sha2-128f",
+        "slh-dsa-shake-128s",
+        "slh-dsa-shake-128f"
+      ],
+      "specification_ids": [
+        "standard-fips-205"
+      ],
+      "design_source_ids": [],
+      "locator": "FIPS 205, Sections 9–11, Table 2",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "slh-dsa-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "FIPS 205 SLH-DSA signs a message digest with FORS and authenticates the FORS public key through an XMSS hypertree. Verification reconstructs the public root. Each instance binds its hash family and forest/hypertree dimensions.",
+            "zh": "FIPS 205 的 SLH-DSA 使用 FORS 签署消息摘要，并经 XMSS 超树认证 FORS 公钥。验证重建公钥根节点；实例明确哈希家族及森林、超树参数。"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "ml-kem",
+      "instance_ids": [
+        "ml-kem-512",
+        "ml-kem-768",
+        "ml-kem-1024"
+      ],
+      "specification_ids": [
+        "standard-fips-203"
+      ],
+      "design_source_ids": [],
+      "locator": "FIPS 203, Sections 7–8, Tables 2–3",
+      "review": {
+        "status": "source_checked",
+        "checked_on": "2026-11-26"
+      },
+      "views": [
+        {
+          "id": "overview",
+          "template": "ml-kem-overview.tex",
+          "label": {
+            "en": "Construction",
+            "zh": "构造"
+          },
+          "caption": {
+            "en": "FIPS 203 ML-KEM wraps internal encryption with hash-derived coins, re-encryption checking and implicit rejection. The internal encryption component is not exposed as a separate KEM result. Encodings and input checks follow the standard.",
+            "zh": "FIPS 203 的 ML-KEM 在内部加密外加入哈希派生随机量、重加密检查与隐式拒绝。内部加密组件不作为独立 KEM 结果展示；编码及输入检查遵循标准。"
+          }
+        }
       ]
     }
   ]

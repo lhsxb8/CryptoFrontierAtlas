@@ -25,7 +25,7 @@ async function noOverflow(page: Page) {
 
 test('one quantum collection contains every model with source-specific tags and no tabs', async ({page}) => {
   await syntheticData(page); await page.goto(base);
-  await expect(page.locator('.a-surface-heading')).toHaveText(['Classical cryptanalysis', 'Quantum cryptanalysis']);
+  await expect(page.locator('.a-surface-heading')).toHaveText(['Classical Cryptanalysis', 'Quantum Cryptanalysis']);
   await expect(page.locator('.a-result-sections').getByRole('tab')).toHaveCount(0);
   await expect(page.getByRole('heading', {name: /^(Q1|Q2)$/})).toHaveCount(0);
   await page.getByRole('button', {name: 'Expand all', exact: true}).click();
@@ -46,7 +46,7 @@ test('one quantum collection contains every model with source-specific tags and 
 
 test('tags survive direct result links, model search and cross-model comparisons', async ({page}) => {
   await syntheticData(page); await page.goto(base + '?q=Q2');
-  await expect(page.locator('.a-surface-heading')).toHaveText(['Quantum cryptanalysis']);
+  await expect(page.locator('.a-surface-heading')).toHaveText(['Quantum Cryptanalysis']);
   await page.getByRole('button', {name: 'Expand all', exact: true}).click();
   await expect(page.locator('tr[data-record-id]')).toHaveCount(1);
   await page.locator(`[data-record-id="${q2.id}"] .a-result-title`).click();

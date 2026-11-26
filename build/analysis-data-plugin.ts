@@ -25,7 +25,7 @@ export function analysisDataPlugin(profile: 'public' | 'internal'): Plugin {
   ];
   const isDatasetFile = (file: string) => watchPaths().some(p => file === p || file.startsWith(p + sep));
   const isOptimizerInput = (file: string) => file.startsWith(resolve(runtimeRoot, 'lib/cryptanalysis') + sep)
-    || file === resolve(projectRoot, config.paths.cryptanalysisSchemas, 'result-taxonomy.json');
+    || ['result-taxonomy.json', 'problem-result.schema.json'].some(name => file === resolve(projectRoot, config.paths.cryptanalysisSchemas, name));
   const loadRaw = () => {
     refreshNodeDataModules(require, runtimeRoot, projectRoot);
     const dataset = require(loaderFile).loadDataset(projectRoot, profile);
@@ -69,6 +69,8 @@ export function analysisDataPlugin(profile: 'public' | 'internal'): Plugin {
         analysis_record_count: data.results.length, analysis_source_count: data.sources.length,
         analysis_entry_count: data.results.length + data.compactResults.length,
         analysis_family_count: data.familyCatalogs.reduce((count: number, catalog: any) => count + catalog.families.length, 0),
+        problem_analysis_record_count: data.problemAnalyses.reduce((count: number, catalog: any) => count + catalog.results.length, 0),
+        problem_analysis_family_count: data.problemAnalyses.reduce((count: number, catalog: any) => count + catalog.families.length, 0),
         analysis_sha256: published.hash, analysis_asset: published.name,
       }, null, 2) + '\n'});
       this.emitFile({type: 'asset', fileName: published.name, source: published.source});

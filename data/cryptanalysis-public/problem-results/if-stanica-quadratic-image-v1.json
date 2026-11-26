@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "id": "if-stanica-quadratic-image-v1",
+  "title": "Deterministic Quadratic-Image Sieving",
+  "method": "deterministic-lattice-bsgs",
+  "result_kind": "algorithm",
+  "goal": "complete_factorization",
+  "statement": "Author-proved general deterministic factorization bound using quadratic-image restrictions and the large-order subroutine.",
+  "target": {
+    "kind": "hard_problem",
+    "problem_id": "integer-factorization",
+    "input_class": "general_integer",
+    "description": "General positive integers, with the preliminary reductions and recursive handling described in Theorem 3.13.",
+    "parameters": [
+      {
+        "name": "N",
+        "meaning": "Integer input",
+        "domain": "Positive integer; asymptotic bound as $N\\to\\infty$.",
+        "value": "N"
+      }
+    ],
+    "modulus_bits": null,
+    "instance_name": null
+  },
+  "setting": {
+    "computation": "classical",
+    "model": "deterministic",
+    "basis": "proved",
+    "input_access": "public_integer",
+    "assumptions": [],
+    "auxiliary_information": []
+  },
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "$N^{1/5}\\exp\\!\\left[-\\left(\\frac{\\log(4/3)}{50}+o(1)\\right)\\frac{\\log N}{\\log\\log N}\\right]$",
+      "unit": "bit-operations",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Theorem 3.13 and Equation (16), including the preliminary reduction; asymptotic, not a measured finite-size speedup."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No memory bound is established in this selected extraction."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "complete-factorization",
+    "value": 1,
+    "relation": "=",
+    "basis": "source_proof",
+    "description": "The source's deterministic theorem guarantees the stated output on its declared domain; this is not an independent verification of the proof.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-26",
+      "scope": "Checked the deterministic guarantee and output event in the cited theorem and algorithm."
+    }
+  },
+  "evidence": [
+    {
+      "source_id": "stanica2026-quadratic-image-v1",
+      "locator": "PDF/printed pp. 20–22, Theorem 3.13, Equation (16) and its proof; p. 23, finite-size projection qualification.",
+      "fields": [
+        "/statement",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Targeted primary-text transcription; no full-paper audit, global frontier certification or independent implementation run."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "review_scope": "targeted_primary_text",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The extracted theorem is unconditional in the author's proof; GRH is used for a different trace-selection result in Section 2.",
+    "A recent preprint claim is recorded as author reported, not independently proved by the Atlas.",
+    "Finite-size projections in the source are not empirical factorization records; no automatic SOTA claim is assigned."
+  ],
+  "related_result_ids": [
+    "if-harvey-hittmeir-large-order-v2",
+    "if-gao-balanced-semiprime-v1"
+  ]
+}

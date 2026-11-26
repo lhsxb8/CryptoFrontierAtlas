@@ -1,0 +1,9 @@
+\begin{tikzpicture}[node distance=.55cm]
+  \node[phase] (title) {Pure EdDSA};
+  \node[box,below=of title] (nonce) {Secret prefix, message $M$\\$r=H_{\rm dom}(\mathrm{prefix},M)\bmod L$};
+  \node[accent,below=of nonce] (point) {$R=[r]B,\quad A=[a]B$\\$k=H_{\rm dom}(R,A,M)\bmod L$};
+  \node[box,below=of point] (sign) {$S=(r+ka)\bmod L$\\Signature $\operatorname{encode}(R,S)$};
+  \node[accent,below=of sign] (verify) {Cofactored verification\\$[2^c S]B=[2^c]R+[2^c k]A$};
+  \draw[wire] (nonce) -- (point); \draw[wire] (point) -- (sign); \draw[wire] (sign) -- (verify);
+  \node[note,below=.5cm of verify,text width=6cm] {$H_{\rm dom}$ includes the RFC 8032 domain rules.\\Encoding and scalar-range checks remain required.\\Signature: $\AtlasSignatureBytes$ bytes.};
+\end{tikzpicture}

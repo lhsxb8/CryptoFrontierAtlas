@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Composed by problem-contract.cjs with the existing resource, success, evidence, conflict and model-parameter contracts; no cipher target or rounds are synthesized.",
+  "title": "Hard-problem analysis configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "title", "method", "result_kind", "goal", "statement", "target", "setting", "resources", "success", "evidence", "assessment", "limitations", "related_result_ids"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"$ref": "#/$defs/id"},
+    "title": {"$ref": "#/$defs/text"},
+    "method": {"$ref": "#/$defs/id"},
+    "result_kind": {"enum": ["algorithm", "supporting_result", "computation_record"]},
+    "goal": {"enum": ["nontrivial_factor", "complete_factorization", "large_order_or_factor"]},
+    "statement": {"$ref": "#/$defs/text"},
+    "target": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "problem_id", "input_class", "description", "parameters", "modulus_bits", "instance_name"],
+      "properties": {
+        "kind": {"const": "hard_problem"},
+        "problem_id": {"const": "integer-factorization"},
+        "input_class": {"enum": ["general_integer", "composite_integer", "balanced_semiprime", "special_integer", "almost_all_integers", "named_challenge"]},
+        "description": {"$ref": "#/$defs/text"},
+        "parameters": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/model_parameter"}},
+        "modulus_bits": {"type": ["integer", "null"], "minimum": 2},
+        "instance_name": {"type": ["string", "null"]}
+      }
+    },
+    "setting": {
+      "type": "object", "additionalProperties": false,
+      "required": ["computation", "model", "basis", "input_access", "assumptions", "auxiliary_information"],
+      "properties": {
+        "computation": {"enum": ["classical", "quantum"]},
+        "model": {"enum": ["deterministic", "randomized", "quantum", "oracle_assisted", "measured_implementation"]},
+        "basis": {"enum": ["proved", "conditional", "heuristic", "experiment"]},
+        "input_access": {"const": "public_integer"},
+        "assumptions": {"$ref": "#/$defs/texts"},
+        "auxiliary_information": {"$ref": "#/$defs/texts"},
+        "memory_model": {"enum": ["qram", "qraqm", "no_qram"]}
+      }
+    },
+    "resources": {
+      "type": "object", "additionalProperties": false, "required": ["time", "memory"],
+      "properties": {
+        "time": {"$ref": "#/$defs/resource"},
+        "memory": {"$ref": "#/$defs/resource"},
+        "classical_time": {"$ref": "#/$defs/resource"},
+        "quantum_calls": {"$ref": "#/$defs/resource"},
+        "gates_per_call": {"$ref": "#/$defs/resource"},
+        "logical_qubits": {"$ref": "#/$defs/resource"},
+        "oracle_calls": {"$ref": "#/$defs/resource"},
+        "wall_time": {"$ref": "#/$defs/resource"},
+        "energy": {"$ref": "#/$defs/resource"}
+      }
+    },
+    "success": {"$ref": "#/$defs/shared_success"},
+    "evidence": {"$ref": "#/$defs/shared_evidence"},
+    "field_conflicts": {"$ref": "#/$defs/shared_conflicts"},
+    "assessment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["claim_status", "review_scope", "reproduction", "reviewed_on", "frontier_status"],
+      "properties": {
+        "claim_status": {"enum": ["author_reported", "source_conflict"]},
+        "review_scope": {"const": "targeted_primary_text"},
+        "reproduction": {"const": "not_attempted"},
+        "reviewed_on": {"type": "string", "format": "date"},
+        "frontier_status": {"const": "not_assessed"}
+      }
+    },
+    "experiment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["date", "hardware", "software", "parameters", "reported_outcome", "verification"],
+      "properties": {
+        "date": {"type": "string", "format": "date"},
+        "hardware": {"$ref": "#/$defs/text"},
+        "software": {"$ref": "#/$defs/text"},
+        "parameters": {"$ref": "#/$defs/text"},
+        "reported_outcome": {"$ref": "#/$defs/text"},
+        "verification": {"const": "source_report_only"}
+      }
+    },
+    "limitations": {"$ref": "#/$defs/texts"},
+    "related_result_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "texts": {"type": "array", "items": {"$ref": "#/$defs/text"}}
+  }
+}

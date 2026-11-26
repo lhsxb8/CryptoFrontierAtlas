@@ -7,7 +7,7 @@ import { build } from 'esbuild';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { resultFixture } from '../helpers/result-model-fixtures.mjs';
-import { catalogFixture } from '../helpers/primitive-catalog-fixtures.mjs';
+import { catalogFixture, asymmetricCatalogFixture, hardProblemCatalogFixture } from '../helpers/primitive-catalog-fixtures.mjs';
 import { surfaceResult } from '../helpers/attack-surface-fixtures.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
@@ -69,14 +69,14 @@ const analysisManifest = {
   dataset_version: '0.10.0', schema_version: '0.10.0', reviewed_on: '2026-10-09', local_only: true,
   record_count: results.length, source_count: sources.length, scope: 'Rendering fixture', verification_scope: 'AES verification scope sentinel', records: results.map(result => result.id),
 };
-const fixture = { analysisEnabled: true, ciphers, variants, results, resultPoints: results, familyCatalogs: [], sources, coverage, analysisManifest };
+const fixture = { analysisEnabled: true, ciphers, variants, results, resultPoints: results, familyCatalogs: [], problemAnalyses: [], sources, coverage, analysisManifest };
 
 // Bundle the actual pages and their actual model/components. Only the data
 // boundary and inert CSS imports are replaced; there are no mock page views.
 const componentProviders = new WeakMap();
 async function bundleFixture(fixture) {
   const catalog = fixture.publicCatalog ?? {
-    schema_version: 1, categories: [{id: 'block_cipher', en: 'Block ciphers', zh: '分组密码'}],
+    schema_version: 3, hard_problems: [], problem_sources: [], categories: [{id: 'block_cipher', domain: 'symmetric', en: 'Block Ciphers', zh: '分组密码'}],
     specifications: [{id: 'fixture-specification', title: 'Synthetic specification', edition: 'Fixture edition', url: 'https://example.invalid/spec', status: 'published', status_note: 'Synthetic fixture.', checked_on: '2026-01-01'}],
     primitives: fixture.ciphers.map(c => ({id: c.id, name: c.name, category: c.primitive_type, aliases: c.aliases, description: c.description, specification_ids: ['fixture-specification'], uses: []})),
     instances: fixture.variants.map(v => ({id: v.id, family_id: v.family, name: v.name ?? v.id.toUpperCase(), specification_ids: ['fixture-specification'], locator: 'Synthetic location', parameters: {type: 'block_cipher', key_bits: v.key_bits, block_bits: v.block_bits, rounds: v.full_rounds}})),
@@ -86,7 +86,7 @@ async function bundleFixture(fixture) {
     loader: {'.webp': 'dataurl'},
     define: {'import.meta.env.BASE_URL': JSON.stringify('./')},
     stdin: {
-      contents: "export { PortalPage, CipherDirectory, SourcesPage, CoveragePage, PlannedCollection } from './src/app/atlas/pages'; export { PrimitivePage } from './src/features/primitives/pages'; export { parseHash } from './src/app/atlas/model'; export { CitationLabel, ResultsPage, ResultDetail, ComparePage } from './src/features/cryptanalysis'; export { LocaleProvider } from './src/app/locale';",
+      contents: "export { PortalPage, CipherDirectory, SourcesPage, CoveragePage, PlannedCollection } from './src/app/atlas/pages'; export { HardProblemPage } from './src/features/primitives/HardProblemPage'; export { titleCaseLabel } from './src/app/interface-labels'; export { routeScopeParams } from './src/app/atlas/model'; export { PrimitivePage, PrimitiveDirectory } from './src/features/primitives/pages'; export { directoryEntries, directoryRoutes, parameterRows } from './src/features/primitives/model'; export { parseHash } from './src/app/atlas/model'; export { CitationLabel, ResultsPage, ResultDetail, ComparePage } from './src/features/cryptanalysis'; export { LocaleProvider } from './src/app/locale';",
       resolveDir: root, sourcefile: 'atlas-page-fixture.ts', loader: 'ts',
     },
     plugins: [{
@@ -100,7 +100,7 @@ async function bundleFixture(fixture) {
         builder.onLoad({ filter: /.*/, namespace: 'fixture' }, ({ path }) => ({
           loader: 'js',
           contents: path === 'analysis'
-            ? `const fixture = ${JSON.stringify(fixture)}; export const { analysisEnabled, ciphers, variants, results, resultPoints, familyCatalogs, sources, coverage, analysisManifest } = fixture;
+            ? `const fixture = ${JSON.stringify(fixture)}; export const { analysisEnabled, ciphers, variants, results, resultPoints, familyCatalogs, problemAnalyses, sources, coverage, analysisManifest } = fixture;
                export function comparability() { throw new Error('Unexpected comparison in a page-rendering fixture'); }
                export function compareReportedCosts() { throw new Error('Unexpected comparison in a page-rendering fixture'); }`
             : path === 'primitives' ? `export const primitiveCatalog = ${JSON.stringify(catalog)}; export const releaseMetadata = {application_version: '1.0.0', data_revision: '${'a'.repeat(64)}'}; export const primitiveStructures = ${JSON.stringify(fixture.structures ?? {registry: {diagrams: []}, manifest: {assets: []}})};`
@@ -128,9 +128,9 @@ const render = (Component, props = {}) => renderToStaticMarkup(createElement(com
 const plainText = html => html.replace(/<[^>]*>/g, '');
 const recordRow = (html, id) => html.match(new RegExp(`<tr[^>]*data-record-id="${id}"[^>]*>([\\s\\S]*?)<\\/tr>`))?.[1];
 const noLedger = html => {
-  assert.match(html, /No audit ledger for this scope/);
+  assert.match(html, /No Audit Ledger for This Scope/);
   assert.doesNotMatch(html, /AES (?:audit selection|review process|issue evidence|issue action|pending literature|coverage gap|ingestion batch|verification scope) sentinel/);
-  assert.doesNotMatch(html, /Ledger totals/);
+  assert.doesNotMatch(html, /Ledger Totals/);
 };
 
 const surfaceRecords = ['algorithmic', 'side_channel', 'fault_injection'].flatMap(surface =>
@@ -155,7 +155,7 @@ test('exact-ID and citation searches find side-channel records directly', () => 
   for (const q of [side.id, sources[0].citation_label]) {
     const html = render(surfacePages.ResultsPage, {cipherId: 'aes', variantId: 'aes-128', searchParams: new URLSearchParams({q})});
     assert.ok(recordRow(html, side.id));
-    assert.match(html, /<h3 class="a-surface-heading">Side-channel analysis<\/h3>/);
+    assert.match(html, /<h3 class="a-surface-heading">Side-Channel Analysis<\/h3>/);
     assert.doesNotMatch(html, /Matching results on other attack surfaces|attack_surface=/);
     const legacy = render(surfacePages.ResultsPage, {cipherId: 'aes', variantId: 'aes-128', searchParams: new URLSearchParams({q, attack_surface: 'algorithmic'})});
     assert.equal(legacy, html);
@@ -164,11 +164,11 @@ test('exact-ID and citation searches find side-channel records directly', () => 
 
 test('method-only links directly reach fault results without dropping other constraints', () => {
   const html = render(surfacePages.ResultsPage, {cipherId: 'aes', variantId: 'aes-128', searchParams: new URLSearchParams('method=fault')});
-  assert.match(html, /<h3 class="a-surface-heading">Fault-injection analysis<\/h3>/);
+  assert.match(html, /<h3 class="a-surface-heading">Fault-Injection Analysis<\/h3>/);
   assert.match(html, /data-section-id="fault_injection-fault"/);
-  assert.doesNotMatch(html, /No matching results|Matching results on other attack surfaces|attack_surface=/);
+  assert.doesNotMatch(html, /No Matching Results|Matching results on other attack surfaces|attack_surface=/);
   const constrained = render(surfacePages.ResultsPage, {cipherId: 'aes', variantId: 'aes-128', searchParams: new URLSearchParams('method=fault&rounds=999')});
-  assert.match(constrained, /No matching results/);
+  assert.match(constrained, /No Matching Results/);
   assert.doesNotMatch(constrained, /data-section-id=/);
 });
 
@@ -189,7 +189,7 @@ test('legacy details and comparisons return to the unified page with search and 
     assert.match(modelCompare, /a-model-compare/);
     assert.doesNotMatch(modelCompare, /attack_surface=/);
     const picker = render(surfacePages.ComparePage, {searchParams: context});
-    assert.match(picker, /Comparison instances/);
+    assert.match(picker, /Comparison Instances/);
     assert.doesNotMatch(picker, /attack_surface=/);
   }
 });
@@ -216,19 +216,19 @@ test('real pages show extended experiments and theorem round domains with separa
   const theorem = resultFixture({ id: 'synthetic-render-theorem', source: sources[0].id, theorem: true });
   const extended = await bundleFixture({ ...fixture, results: [experiment, theorem], resultPoints: [experiment, theorem] });
   const detail = render(extended.ResultDetail, { id: experiment.id, searchParams: new URLSearchParams({ variant: 'aes-128' }) });
-  assert.match(detail, /Target experiment|Synthetic Davies/);
+  assert.match(detail, /Target Experiment|Synthetic Davies/);
   assert.match(detail, /128-bit full output/);
-  assert.match(detail, /Target relation|Input control|Reference experiment/);
-  assert.match(detail, /Reported resources/);
+  assert.match(detail, /Target Relation|Input Control|Reference experiment/);
+  assert.match(detail, /Reported Resources/);
   const theoremDetail = render(extended.ResultDetail, { id: theorem.id, searchParams: new URLSearchParams({ variant: 'aes-128' }) });
-  assert.match(theoremDetail, /Theoretical bound/);
+  assert.match(theoremDetail, /Theoretical Bound/);
   assert.match(theoremDetail, /data-native-expression="integer r &gt;= 3"/);
-  assert.doesNotMatch(theoremDetail, /Reported resources|a-resource-card|Choose another record/);
+  assert.doesNotMatch(theoremDetail, /Reported Resources|a-resource-card|Choose another record/);
   assert.match(theoremDetail, /Synthetic product model/);
   const list = render(extended.ResultsPage, { cipherId: 'aes', variantId: 'aes-128', searchParams: new URLSearchParams({ q: 'synthetic', view: 'points' }) });
   assert.match(list, /Compression-function preimage/);
   assert.match(list, /a-attack-table/);
-  assert.match(list, /Theoretical bound/);
+  assert.match(list, /data-label="Type">Theoretical bound/);
   const row = recordRow(list, theorem.id);
   assert.ok(row); assert.doesNotMatch(row, /data-label="Time"|data-label="Memory"|type="checkbox"/);
   const coverage = render(extended.CoveragePage, { searchParams: new URLSearchParams({ variant: 'aes-128', goal: theorem.goal }) });
@@ -271,12 +271,12 @@ test('a special AES bookmark keeps its exact instance, opens Others and never ag
   assert.match(html, /class="a-instance-others-toggle is-active" aria-expanded="true"/);
   assert.match(html, /aria-current="page"[^>]*>AES-128 with secret S-box<\/a>/);
   assert.doesNotMatch(html, /class="a-instance-other-links"[^>]*hidden/);
-  assert.match(render(groupedPages.ResultsPage, { cipherId: 'aes', variantId: 'others' }), /Cipher instance not found/);
+  assert.match(render(groupedPages.ResultsPage, { cipherId: 'aes', variantId: 'others' }), /Cipher Instance Not Found/);
 });
 
 test('comparison and coverage selectors share the Others group without introducing an Others instance', () => {
   const comparison = render(groupedPages.ComparePage, { searchParams: new URLSearchParams({ ids: 'stale-selection' }) });
-  assert.match(comparison, /aria-label="Comparison instances"/);
+  assert.match(comparison, /aria-label="Comparison Instances"/);
   assert.match(comparison, /class="a-instance-other-links"[^>]*hidden=""/);
   for (const variant of specialVariants) assert.ok(comparison.includes(`href="#/cryptanalysis/compare/${variant.id}?variant=${variant.id}"`));
   assert.doesNotMatch(comparison, /stale-selection|\/compare\/others/);
@@ -300,7 +300,7 @@ test('a family opens its first registered instance directly with in-page instanc
   assert.match(html, /data-native-expression="20"/);
   assert.match(html, /result-section-heading-algorithmic-mitm/);
   assert.match(html, /<span class="a-citation-label">\[TFA<sup>\+<\/sup>26\]<\/span>/);
-  assert.match(html, /data-label="Paper \/ attack"/);
+  assert.match(html, /data-label="Paper \/ Attack"/);
   assert.match(html, /FixtureConf 2026/);
   assert.doesNotMatch(html, /AES-only fixture result|Sibling-only fixture result|Choose an instance/);
   const nav = html.match(/<nav[^>]*aria-label="Cipher instances"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
@@ -355,7 +355,7 @@ test('unified rows retain scoped result links and deduplicated citations alongsi
     const record = results.find(result => result.id === id);
     const row = recordRow(html, id);
     assert.ok(row);
-    const cell = row.match(/<td[^>]*data-label="Paper \/ attack"[^>]*>([\s\S]*?)<\/td>/)?.[1];
+    const cell = row.match(/<td[^>]*data-label="Paper \/ Attack"[^>]*>([\s\S]*?)<\/td>/)?.[1];
     const link = cell?.match(/<a\b([^>]*)>([\s\S]*?)<\/a>/);
     assert.ok(link);
     assert.equal(plainText(link[2]), '[TFA+26]');
@@ -414,23 +414,23 @@ test('family-level coverage requires an instance and keeps the AES-only audit is
 test('AES audit totals remain separate from whole-directory record totals', () => {
   const html = render(CoveragePage);
   assert.match(html, /<strong>4<\/strong> reported points in the directory/);
-  assert.match(html, /Ledger totals · AES/);
+  assert.match(html, /Ledger Totals · AES/);
   assert.match(html, /<dt>other key recovery<\/dt><dd>1<\/dd>/);
   assert.match(html, /AES audit selection sentinel/);
   assert.match(html, /AES ingestion batch sentinel/);
-  assert.doesNotMatch(html, /No audit ledger for this scope/);
+  assert.doesNotMatch(html, /No Audit Ledger for This Scope/);
 });
 
 test('real pages reject an unknown family and mismatched family-instance scope', () => {
   const familyHtml = render(ResultsPage, { cipherId: 'missing' });
-  assert.match(familyHtml, /Cipher not found/);
+  assert.match(familyHtml, /Cipher Not Found/);
   assert.doesNotMatch(familyHtml, /<table\b|fixture result/);
   const resultHtml = render(ResultsPage, { cipherId: 'aes', variantId: 'test-cipher-20' });
-  assert.match(resultHtml, /Cipher instance not found/);
+  assert.match(resultHtml, /Cipher Instance Not Found/);
   assert.doesNotMatch(resultHtml, /<table\b|fixture result/);
   const coverageHtml = render(CoveragePage, { searchParams: new URLSearchParams({ family: 'aes', variant: 'test-cipher-20' }) });
-  assert.match(coverageHtml, /Analysis scope not found/);
-  assert.doesNotMatch(coverageHtml, /<table\b|Ledger totals/);
+  assert.match(coverageHtml, /Analysis Scope Not Found/);
+  assert.doesNotMatch(coverageHtml, /<table\b|Ledger Totals/);
 });
 
 const compactSource = { ...sources[0], id: 'compact-only-source', title: 'Compact-only source fixture', citation_label: 'Cmp26' };
@@ -471,14 +471,14 @@ const directoryOnly = await bundleFixture({analysisEnabled: false, analysisManif
 test('public directory works without an analysis dataset and separates zero results from filter misses', () => {
   const html = render(directoryOnly.CipherDirectory);
   assert.match(html, /Fixture Block/);
-  assert.match(html, /Extendable-output functions/);
-  assert.match(html, /No catalogued results/);
-  assert.doesNotMatch(html, /No matching primitives|<table\b|Comparison selection/);
+  assert.match(html, /Extendable-Output Functions/);
+  assert.match(html, /No Catalogued Results/);
+  assert.doesNotMatch(html, /No Matching Primitives|<table\b|Comparison selection/);
   const filtered = render(directoryOnly.CipherDirectory, {searchParams: new URLSearchParams({primitive: 'xof'})});
   assert.match(filtered, /Fixture XOF/);
   assert.doesNotMatch(filtered, /Fixture Block/);
   const missing = render(directoryOnly.CipherDirectory, {searchParams: new URLSearchParams({q: 'does-not-exist'})});
-  assert.match(missing, /No matching primitives/);
+  assert.match(missing, /No Matching Primitives/);
   assert.match(missing, /Reset filters/);
 });
 
@@ -488,28 +488,26 @@ test('directory detail renders type-specific parameters without inventing cipher
   assert.match(html, /State size/); assert.match(html, /128 bits/);
   assert.match(html, /Synthetic specification/); assert.match(html, /Synthetic section 3/);
   assert.doesNotMatch(html, /Key material|Block size|full rounds|Comparison selection|<table\b/);
-  assert.match(render(directoryOnly.PrimitivePage, {cipherId: 'fixture-xof', variantId: 'fixture-block-128'}), /Record not found/);
+  assert.match(render(directoryOnly.PrimitivePage, {cipherId: 'fixture-xof', variantId: 'fixture-block-128'}), /Record Not Found/);
 });
 
-test('home and TBD pages retain all four entrances without planned collection counts', () => {
+test('home retains four entrances and only implementation remains planned', () => {
   const html = render(directoryOnly.PortalPage);
   assert.match(html, /<header class="atlas-portal-heading"><h1[^>]*>CryptoFrontier<wbr\/><span>Atlas<\/span><\/h1><\/header>/);
   assert.doesNotMatch(html, /atlas-portal-mark|\u2733/);
   assert.equal((html.match(/class="atlas-portal-card /g) ?? []).length, 4);
   for (const href of ['/questions', '/cryptanalysis', '/asymmetric-cryptanalysis', '/implementation']) assert(html.includes(`href="#${href}"`));
-  assert.equal((html.match(/class="atlas-tbd"/g) ?? []).length, 2);
-  for (const collection of ['asymmetric', 'implementation']) {
-    const page = render(directoryOnly.PlannedCollection, {collection});
-    assert.match(page, /TBD/); assert.match(page, /Back to home/);
-    assert.doesNotMatch(page, /atlas-portal-count|Comparison selection/);
-  }
+  assert.equal((html.match(/class="atlas-tbd"/g) ?? []).length, 1);
+  const page = render(directoryOnly.PlannedCollection);
+  assert.match(page, /Implementation/); assert.match(page, /TBD/); assert.match(page, /Back to home/);
+  assert.doesNotMatch(page, /atlas-portal-count|Comparison selection/);
 });
 
 test('all four home cards embed distinct local artwork while keeping headings and links accessible', () => {
   const html = render(directoryOnly.PortalPage);
   const cards = [...html.matchAll(/<a class="atlas-portal-card [^"]+"[^>]*>([\s\S]*?)<\/a>/g)].map(match => match[1]);
   assert.equal(cards.length, 4);
-  const labels = ['Open questions', 'Symmetric cryptanalysis', 'Asymmetric cryptanalysis', 'Implementation'];
+  const labels = ['Open Questions', 'Symmetric Cryptanalysis', 'Asymmetric Cryptanalysis', 'Implementation'];
   const imageSources = new Set();
   for (const [index, card] of cards.entries()) {
     assert.match(card, /<img class="atlas-collection-art" src="data:image\/webp;base64,/);
@@ -517,7 +515,7 @@ test('all four home cards embed distinct local artwork while keeping headings an
     assert.ok(card.includes(`<h2>${labels[index]}</h2>`));
     assert.doesNotMatch(card, /atlas-portal-icon|<svg class="atlas-collection-art"/);
     imageSources.add(card.match(/<img[^>]+src="([^"]+)"/)?.[1]);
-    assert.equal(card.includes('class="atlas-tbd"'), index >= 2);
+    assert.equal(card.includes('class="atlas-tbd"'), index === 3);
   }
   assert.equal(imageSources.size, 4);
 });
@@ -532,6 +530,111 @@ test('directory routes keep legacy bookmarks and explicit IDs without choosing a
   assert.equal(legacy.params.get('q'), 'kept');
   assert.equal(directoryOnly.parseHash('#/cryptanalysis/ciphers/fixture-block', targets).variantId, 'fixture-block-128');
   assert.equal(directoryOnly.parseHash('#/implementation/unknown', targets).page, 'not-found');
+});
+
+const asymmetricCatalog = asymmetricCatalogFixture();
+const asymmetricPages = await bundleFixture({...fixture, publicCatalog: asymmetricCatalog});
+const hardCatalog = hardProblemCatalogFixture();
+const problemPages = await bundleFixture({...fixture, publicCatalog: hardCatalog});
+
+test('hard problems share the directory hierarchy without becoming algorithms or scientific targets', () => {
+  const html = render(problemPages.PrimitiveDirectory, {domain: 'asymmetric'});
+  assert.equal((html.match(/class="atlas-family-card"/g) ?? []).length, 22);
+  assert(html.indexOf('<h2>Hard Problems</h2>') < html.indexOf('<h2>Public-Key Encryption</h2>'));
+  assert.equal(problemPages.directoryRoutes(hardCatalog, variants, 'asymmetric').length, 13);
+  const filtered = render(problemPages.PrimitiveDirectory, {domain: 'asymmetric', searchParams: new URLSearchParams({primitive: 'hard_problem'})});
+  assert.equal((filtered.match(/class="atlas-family-card"/g) ?? []).length, 9);
+  assert.doesNotMatch(filtered, /0 instances|No Catalogued Results|algorithms\/fixture/);
+  assert.doesNotMatch(render(problemPages.PrimitiveDirectory), /Hard Problems|fixture-problem-/);
+  const search = render(problemPages.PrimitiveDirectory, {domain: 'asymmetric', searchParams: new URLSearchParams({q: 'Synthetic definition ring_lwe'})});
+  assert.equal((search.match(/class="atlas-family-card"/g) ?? []).length, 1);
+  assert.match(search, /href="#\/asymmetric-cryptanalysis\/problems\/fixture-problem-ring-lwe"/);
+});
+
+test('problem details retain symbolic parameters and source titles without instance or diagram placeholders', () => {
+  for (const problem of hardCatalog.hard_problems) {
+    const html = render(problemPages.HardProblemPage, {id: problem.id});
+    assert.match(html, /class="katex"/);
+    assert.match(html, /Synthetic source with qRAM and ePrint/);
+    assert.match(html, /Synthetic definition location/);
+    assert.match(html, /Related Schemes/);
+    assert.match(html, /href="#\/asymmetric-cryptanalysis\/algorithms\/fixture-rsaes-oaep"/);
+    assert.doesNotMatch(html, /0 instances|Diagram pending|Specifications|atlas-instance-table|a-selection-bar|No Catalogued Results/);
+  }
+  const scheme = render(problemPages.PrimitivePage, {cipherId: 'fixture-rsaes-oaep', domain: 'asymmetric'});
+  assert.match(scheme, /Related Hard Problems/);
+  assert.match(scheme, /href="#\/asymmetric-cryptanalysis\/problems\/fixture-problem-integer-factorization"/);
+});
+
+test('problem routes reject algorithm identities and cannot inherit symmetric comparison scope', () => {
+  const path = '#/asymmetric-cryptanalysis/problems/fixture-problem-lwe?variant=aes-128';
+  const route = problemPages.parseHash(path, variants);
+  assert.equal(route.page, 'hard-problem'); assert.equal(route.domain, 'asymmetric');
+  assert.equal(route.id, 'fixture-problem-lwe');
+  assert.equal(problemPages.routeScopeParams(route, ciphers, variants, results).toString(), '');
+  assert.equal(problemPages.parseHash(path.split('?')[0] + '/extra', variants).page, 'not-found');
+  assert.match(render(problemPages.HardProblemPage, {id: 'fixture-rsaes-oaep'}), /Record Not Found/);
+  assert.match(render(problemPages.PrimitivePage, {cipherId: 'fixture-problem-lwe', domain: 'asymmetric'}), /Record Not Found/);
+});
+
+test('interface title casing preserves acronyms, mathematical identifiers and mixed-case names', () => {
+  for (const [before, after] of [
+    ['Round & key schedule', 'Round & Key Schedule'],
+    ['Differential fault analysis (DFA)', 'Differential Fault Analysis (DFA)'],
+    ['qRAM and ePrint', 'qRAM and ePrint'],
+    ['AES and ML-KEM', 'AES and ML-KEM'],
+    ['X25519 / ffdhe2048', 'X25519 / ffdhe2048'],
+  ]) assert.equal(problemPages.titleCaseLabel(before), after);
+});
+
+test('shared directory rendering isolates domains, filters and scientific result counts', () => {
+  const html = render(asymmetricPages.PrimitiveDirectory, {domain: 'asymmetric'});
+  assert.equal((html.match(/class="atlas-family-card"/g) ?? []).length, 13);
+  assert.match(html, /Asymmetric Cryptanalysis/);
+  assert.match(html, /Public-Key Encryption/); assert.match(html, /Key Encapsulation Mechanisms/);
+  assert.doesNotMatch(html, /Block Ciphers|AES|Twenty-round|fixture-block|reported points|No Catalogued Results|role="tab/);
+  assert.match(html, /href="#\/asymmetric-cryptanalysis\/algorithms\/fixture-ml-kem"/);
+  const symmetric = render(asymmetricPages.PrimitiveDirectory);
+  assert.doesNotMatch(symmetric, /Synthetic ml_kem|Key Encapsulation Mechanisms/);
+  const filtered = render(asymmetricPages.PrimitiveDirectory, {domain: 'asymmetric', searchParams: new URLSearchParams({primitive: 'kem'})});
+  assert.equal((filtered.match(/class="atlas-family-card"/g) ?? []).length, 1);
+  const wrongFilter = render(asymmetricPages.PrimitiveDirectory, {domain: 'asymmetric', searchParams: new URLSearchParams({primitive: 'block_cipher'})});
+  assert.match(wrongFilter, /No Matching Entries/);
+});
+
+test('asymmetric deep links retain domain and cannot reuse symmetric scientific defaults', () => {
+  const targets = asymmetricPages.directoryRoutes(asymmetricCatalog, variants);
+  assert(targets.every(i => !i.id.includes('ml-kem')));
+  const asymmetricTargets = asymmetricPages.directoryRoutes(asymmetricCatalog, variants, 'asymmetric');
+  assert.equal(asymmetricTargets.length, 13);
+  assert(asymmetricTargets.every(i => !variants.some(v => v.id === i.id)));
+  const family = asymmetricPages.parseHash('#/asymmetric-cryptanalysis/algorithms/fixture-ml-kem?variant=aes-128', targets);
+  assert.equal(family.domain, 'asymmetric'); assert.equal(family.variantId, undefined);
+  const instance = asymmetricPages.parseHash('#/asymmetric-cryptanalysis/algorithms/fixture-ml-kem/fixture-ml-kem-instance', targets);
+  assert.equal(instance.page, 'instance'); assert.equal(instance.domain, 'asymmetric');
+  assert.equal(asymmetricPages.parseHash('#/asymmetric-cryptanalysis/algorithms/fixture-ml-kem/extra/path', targets).page, 'not-found');
+  for (const [cipherId, domain] of [['fixture-ml-kem', 'symmetric'], ['fixture-block', 'asymmetric']]) {
+    assert.match(render(asymmetricPages.PrimitivePage, {cipherId, domain}), /Record Not Found/);
+  }
+});
+
+test('asymmetric details use typed units and cross-domain dependency links without result comparisons', () => {
+  for (const instance of asymmetricCatalog.instances.filter(i => 'scheme' in i.parameters)) {
+    const rows = asymmetricPages.parameterRows(instance);
+    assert(rows.every(row => row.label && row.value !== 'undefined'));
+    assert(rows.every(row => !['type', 'scheme'].includes(row.key)));
+    for (const row of rows) {
+      if (row.key.endsWith('_bytes')) assert.match(row.value, / bytes$/);
+      if (row.key.endsWith('_bits')) assert.match(row.value, / bits$/);
+    }
+    const html = render(asymmetricPages.PrimitivePage, {cipherId: instance.family_id, variantId: instance.id, domain: 'asymmetric'});
+    assert.match(html, /href="#\/asymmetric-cryptanalysis"/);
+    assert.match(html, /href="#\/cryptanalysis\/ciphers\/fixture-xof"/);
+    assert.match(html, /No Catalogued Results/);
+    assert.doesNotMatch(html, /<table|a-selection-bar|Search analysis results|AES-only fixture/);
+  }
+  const kem = asymmetricCatalog.instances.find(i => i.parameters.scheme === 'ml_kem');
+  assert.equal(asymmetricPages.parameterRows(kem).find(row => row.key === 'security_category').value, '1');
 });
 
 test('counts live in the directory and results, not the portal, and include compact points', () => {
@@ -561,20 +664,20 @@ test('Chinese portal retains four concise entrances and their destinations', () 
 test('scoped source pages include compact-only and retained historical citations without cross-instance leakage', () => {
   const searchParams = new URLSearchParams({ variant: 'aes-128' });
   const compact = render(extended.SourcesPage, { collection: 'analysis', id: compactSource.id, searchParams });
-  assert.match(compact, /Source details/);
-  assert.match(compact, /Directly citing results · 2/);
+  assert.match(compact, /Source Details/);
+  assert.match(compact, /Directly Citing Results · 2/);
   for (const point of compactPoints) {
     assert.ok(compact.includes(`href="#/cryptanalysis/results/${point.id}?variant=aes-128"`));
     assert.ok(compact.includes(point.title));
   }
   const historical = render(extended.SourcesPage, { collection: 'analysis', id: historicalSource.id, searchParams });
-  assert.match(historical, /Directly citing results · 1/);
+  assert.match(historical, /Directly Citing Results · 1/);
   assert.match(historical, /href="#\/cryptanalysis\/results\/historical-fixture\?variant=aes-128"/);
   const index = render(extended.SourcesPage, { collection: 'analysis', searchParams });
   assert.match(index, /Compact-only source fixture/);
   assert.match(index, /Historical-only source fixture/);
   const other = render(extended.SourcesPage, { collection: 'analysis', id: compactSource.id, searchParams: new URLSearchParams({ variant: 'test-cipher-20' }) });
-  assert.match(other, /Source in this scope not found/);
+  assert.match(other, /Source in This Scope Not Found/);
   assert.doesNotMatch(other, /Compact configuration one|Compact configuration two/);
 });
 
@@ -586,7 +689,7 @@ test('coverage counts active compact configurations while its detailed-record le
   assert.match(html, /aria-label="1 result, Single-key, 10 rounds"/);
   assert.doesNotMatch(html, /aria-label="2 results, Single-key, 10 rounds"/);
   assert.match(html, /<dt>other key recovery<\/dt><dd>2<\/dd>/);
-  assert.match(html, /Ledger totals/);
+  assert.match(html, /Ledger Totals/);
   assert.match(html, /Includes historical records/);
   assert.match(html, /Historical audit action sentinel/);
   assert.match(html, /href="#\/cryptanalysis\/results\/historical-fixture\?variant=aes-128"/);

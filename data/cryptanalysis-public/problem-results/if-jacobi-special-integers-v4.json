@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "id": "if-jacobi-special-integers-v4",
+  "title": "Complete Factorization of Special Integers",
+  "method": "squarefree-decomposition",
+  "result_kind": "algorithm",
+  "goal": "complete_factorization",
+  "statement": "Theorem 5.3 reduces complete factorization of special integers to amplified squarefree-part-or-prime extraction; Corollary 5.4 instantiates it quantumly.",
+  "target": {
+    "kind": "hard_problem",
+    "problem_id": "integer-factorization",
+    "input_class": "special_integer",
+    "description": "$N=\\prod_i p_i^{\\alpha_i}$ with distinct primes and pairwise-distinct positive exponents $\\alpha_i$ (Definition 5.1).",
+    "parameters": [
+      {
+        "name": "N",
+        "meaning": "Special integer input",
+        "domain": "Positive integer with pairwise-distinct prime exponents.",
+        "value": "N"
+      },
+      {
+        "name": "T",
+        "meaning": "Amplification repetitions",
+        "domain": "$T=\\omega(\\log N)$; polynomially bounded choices give polynomial overhead.",
+        "value": "T"
+      }
+    ],
+    "modulus_bits": null,
+    "instance_name": null
+  },
+  "setting": {
+    "computation": "quantum",
+    "model": "quantum",
+    "basis": "proved",
+    "input_access": "public_integer",
+    "assumptions": [
+      "Each amplified subroutine returns the squarefree part or a prime divisor with probability $1-\\exp(-\\Omega(T))$ on every required subinput.",
+      "The class does not contain ordinary RSA moduli $pq$ with two distinct primes, since both exponents are 1."
+    ],
+    "auxiliary_information": []
+  },
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No total bound is extracted for this coordinate in the checked result."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No total classical/quantum memory bound is extracted for this result."
+    },
+    "classical_time": {
+      "status": "reported",
+      "reported": "$\\operatorname{poly}(\\log N)$",
+      "unit": "bit-operations",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Classical work outside amplified subroutine calls in Theorem 5.3."
+    },
+    "oracle_calls": {
+      "status": "reported",
+      "reported": "$O(\\sqrt{\\log N})$",
+      "unit": "amplified-squarefree-part-or-prime-calls",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Calls to the algorithm of Lemma 5.2, each using up to T base calls; this is not O(sqrt(log N)) elementary quantum circuit calls."
+    },
+    "quantum_calls": {
+      "status": "reported",
+      "reported": "$O(T\\sqrt{\\log N})$",
+      "unit": "base-circuit-calls",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Composition of Lemma 5.2 and Theorem 5.3. With T=omega(log N), Corollary 5.4 states omega((log N)^(3/2)) calls; that omega is not rewritten as big-O."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "complete-factorization",
+    "value": null,
+    "expression": "$1-\\operatorname{negl}(\\log N)$",
+    "basis": "source_proof",
+    "description": "Theorem 5.3 and Corollary 5.4 guarantee full factorization for special inputs with amplification parameter T=omega(log N).",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-26",
+      "scope": "Checked the stated event and bound in the cited theorem/corollary and its surrounding argument; not a proof reproduction."
+    }
+  },
+  "evidence": [
+    {
+      "source_id": "kahanamoku-meyer2026-jacobi-v4",
+      "locator": "PDF pp. 33–36 / printed pp. 31–34, Definition 5.1, Lemma 5.2, Theorem 5.3, Algorithm 5.1 and Corollary 5.4.",
+      "fields": [
+        "/statement",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Targeted transcription of this result's input, output, cost accounting and success event; not a full-paper audit."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "review_scope": "targeted_primary_text",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Restricted inputs, not a full-factorization algorithm for general RSA semiprimes.",
+    "Standalone Jacobi-symbol gate, depth and space optimizations in Section 4 are excluded.",
+    "The reduction's amplified subroutine calls and underlying circuit invocations are separate resource coordinates."
+  ],
+  "related_result_ids": []
+}

@@ -41,6 +41,19 @@ test('version checks reject stale lockfiles and changelogs', t => {
   assert.throws(() => checkVersion(root), /changelog/);
 });
 
+test('local functionality edits and repeated checks leave the released version untouched', t => {
+  const {root, write} = fixture(t);
+  write('CHANGELOG.md', '# Changelog\n\n## Unreleased\n\n- New synthetic functionality, pending an authorized push.\n\n## 1.0.0\n\n- Released.\n');
+  write('local-feature.js', 'export const syntheticFeature = true;\n');
+  const files = ['package.json', 'package-lock.json', 'CHANGELOG.md'];
+  const before = files.map(file => readFileSync(join(root, file), 'utf8'));
+  for (let attempt = 0; attempt < 3; attempt++) {
+    assert.equal(checkVersion(root), '1.0.0');
+    assert.equal(releaseMetadata(root, catalogFixture()).application_version, '1.0.0');
+  }
+  assert.deepEqual(files.map(file => readFileSync(join(root, file), 'utf8')), before);
+});
+
 test('data edits change a deterministic revision without changing application or schema versions', t => {
   const {root, write} = fixture(t);
   const original = publicDataRevision(root), packageBytes = readFileSync(join(root, 'package.json'), 'utf8');

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Family structure is shared with existing parameterized analysis families through problem-contract.cjs.",
+  "title": "Hard-problem analysis catalog and bounded coverage",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "problem_id", "reviewed_on", "records", "families", "standalone_result_ids", "coverage"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "problem_id": {"const": "integer-factorization"},
+    "reviewed_on": {"type": "string", "format": "date"},
+    "records": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "families": {"type": "array", "items": {"$ref": "#/$defs/shared_family"}},
+    "standalone_result_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "coverage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["search_cutoff", "comparison_as_of", "selection", "source_ids", "exhaustive", "latest_or_best_known_claim", "not_yet_covered", "exclusions"],
+      "properties": {
+        "search_cutoff": {"type": "string", "format": "date"},
+        "comparison_as_of": {"type": "string", "format": "date"},
+        "selection": {"type": "string", "minLength": 10},
+        "source_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "exhaustive": {"const": false},
+        "latest_or_best_known_claim": {"const": false},
+        "not_yet_covered": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "exclusions": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["source_id", "locator", "reason"],
+          "properties": {"source_id": {"$ref": "#/$defs/id"}, "locator": {"type": "string", "minLength": 8}, "reason": {"type": "string", "minLength": 10}}
+        }}
+      }
+    },
+    "ingestion_batches": {"type": "array", "items": {"type": "object"}}
+  }
+}

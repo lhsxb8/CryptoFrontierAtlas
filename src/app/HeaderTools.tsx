@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { ArrowUpRight, Check, CircleHelp, FilePlus2, Languages } from 'lucide-react';
+import { ArrowUpRight, Check, CircleHelp, FilePlus2, Github, Languages } from 'lucide-react';
 import Modal from '../components/Modal';
 import { useLocale } from './locale';
 import { appVersion } from './version';
 import { releaseMetadata } from '../features/primitives/data';
-import { submissionRoutes, submissionUrl, SUBMISSION_GUIDE_URL, type SubmissionRoute } from './reporting';
+import { submissionRoutes, submissionUrl, REPOSITORY_URL, SUBMISSION_GUIDE_URL, type SubmissionRoute } from './reporting';
 
 type DialogName = 'language' | 'help' | 'report';
 
@@ -22,6 +22,7 @@ export default function HeaderTools() {
   };
   return <>
     <div className="atlas-header-tools">
+      {REPOSITORY_URL && <a href={REPOSITORY_URL} target="_blank" rel="noopener noreferrer" aria-label={text.githubRepository} title={text.githubRepository}><Github size={17} aria-hidden="true" /><span className="atlas-tool-label">GitHub</span></a>}
       <button type="button" aria-label={text.language} aria-haspopup="dialog" aria-expanded={dialog === 'language'} onClick={() => setDialog('language')}><Languages size={17} aria-hidden="true" /><span>{locale === 'zh' ? '中文' : 'EN'}</span></button>
       <button type="button" aria-label={text.help} aria-haspopup="dialog" aria-expanded={dialog === 'help'} onClick={() => setDialog('help')}><CircleHelp size={17} aria-hidden="true" /><span className="atlas-tool-label">{text.help}</span></button>
       <button type="button" aria-label={text.report} aria-haspopup="dialog" aria-expanded={dialog === 'report'} onClick={() => setDialog('report')}><FilePlus2 size={17} aria-hidden="true" /><span className="atlas-tool-label">{text.report}</span></button>

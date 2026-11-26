@@ -1,7 +1,7 @@
 # Extending the result model
 
-The taxonomy registry is `schemas/cryptanalysis/result-taxonomy.json`. It is the
-single authored source for kinds, goals, methods, key models and attack surfaces.
+The cipher-result taxonomy registry is `schemas/cryptanalysis/result-taxonomy.json`.
+It is the single authored source for cipher kinds, goals, methods, key models and attack surfaces.
 `npm run sync:analysis-model` projects it into the JSON Schema and TypeScript
 taxonomy. `npm run check:analysis-model` checks for drift.
 
@@ -56,6 +56,29 @@ The same rule applies to the shared procedural field declarations in
 `lib/node/cryptanalysis/structure-contracts.cjs`. Do not regenerate permissions
 automatically from a changed schema. See [Published analysis data](published-data.md#extending-a-contract)
 for field classes, transformations and synthetic regression requirements.
+
+## Hard-problem analyses
+
+`problem-result.schema.json` defines an explicit target-discriminated branch, first
+for Integer Factorization. Its closed kind/goal contract distinguishes algorithms,
+supporting subroutines and reported computations. Do not add factorization methods
+to cipher attack enums or use `related_problem_ids`, which links cipher analyses to
+Open Questions rather than primitive hard problems.
+
+`lib/node/cryptanalysis/problem-contract.cjs` composes the resource, probability,
+parameter, evidence and conflict definitions from the existing result schema,
+and the existing procedural family shape. Both AJV and the publication validator
+consume that composition. `problem-analyses.cjs` validates catalog references,
+complete family assignments, source fingerprints, evidence pointers and scoped
+ingestion receipts. Public catalogs omit receipts but retain scientific coverage.
+
+Comparison uses the same entry point and cost arithmetic as cipher analyses.
+Different target kinds never compare. Hard-problem algorithm comparisons require
+identical inputs, goals, methods, settings, numerical parameter assignments,
+verified exact success and compatible complete resource vectors. Symbolic bounds,
+supporting results and hardware computation records cannot certify dominance.
+Quantum factorization uses a public integer input; it does not acquire Q1/Q2
+secret-oracle labels from AES. A quantum-memory tag requires positive evidence.
 
 ## Verification
 

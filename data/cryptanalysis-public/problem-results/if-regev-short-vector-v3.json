@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "id": "if-regev-short-vector-v3",
+  "title": "Regev: Short-Vector Factoring",
+  "method": "multidimensional-period-finding",
+  "result_kind": "algorithm",
+  "goal": "nontrivial_factor",
+  "statement": "Conditional nontrivial-factor algorithm using independent multidimensional quantum samples and lattice postprocessing.",
+  "target": {
+    "kind": "hard_problem",
+    "problem_id": "integer-factorization",
+    "input_class": "composite_integer",
+    "description": "Composite $n$-bit integer; the main quantum step treats odd inputs with at least two distinct prime factors.",
+    "parameters": [
+      {
+        "name": "n",
+        "meaning": "Input bit-length parameter",
+        "domain": "Positive integer; $2^{n-1}\\le N<2^n$.",
+        "value": "n"
+      },
+      {
+        "name": "d",
+        "meaning": "Lattice dimension",
+        "domain": "Theorem 1.1 choice, with integer rounding as in the source.",
+        "value": "sqrt(n)"
+      }
+    ],
+    "modulus_bits": null,
+    "instance_name": null
+  },
+  "setting": {
+    "computation": "quantum",
+    "model": "quantum",
+    "basis": "conditional",
+    "input_access": "public_integer",
+    "assumptions": [
+      "Theorem 1.1 assumes a vector in $L\\setminus L_0$ of norm $\\exp(O(\\sqrt n))$ for the chosen small bases. This hypothesis is not replaced by a later paper's modified-base result."
+    ],
+    "auxiliary_information": []
+  },
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No total bound is extracted for this coordinate in the checked result."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No total classical/quantum memory bound is extracted for this result."
+    },
+    "classical_time": {
+      "status": "reported",
+      "reported": "$\\operatorname{poly}(n)$",
+      "unit": "bit-operations",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Classical postprocessing only; not an aggregate quantum/classical runtime."
+    },
+    "quantum_calls": {
+      "status": "reported",
+      "reported": "$\\sqrt n+4$",
+      "unit": "circuit-calls",
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "Independent samples in Theorem 1.1; lattice-dimension rounding is implicit in the source."
+    },
+    "gates_per_call": {
+      "status": "reported",
+      "reported": "$O(n^{3/2}\\log n)$",
+      "unit": "quantum-gates-per-call",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Per invocation of the algorithmic circuit, not total gate count or an implementation estimate."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "nontrivial-factor",
+    "value": null,
+    "description": "A constant-success argument is given, but the checked edition conflicts on the lattice-event probability: Corollary 4.5 states at least 1/4, while the theorem proof invokes failure probability 1/4. No numeric primary probability is certified here.",
+    "review": {
+      "status": "pending",
+      "reviewed_on": "2026-11-26",
+      "scope": "Compared Corollary 4.5 and the theorem proof, including sampling errors; the inconsistent probability statements remain unresolved."
+    }
+  },
+  "evidence": [
+    {
+      "source_id": "regev2024-quantum-factoring-v3",
+      "locator": "PDF/printed p. 3, Theorem 1.1; pp. 7–8, Corollary 4.5 and proof of Theorem 1.1.",
+      "fields": [
+        "/statement",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/field_conflicts"
+      ],
+      "interpretation": "Targeted transcription of this result's input, output, cost accounting and success event; not a full-paper audit."
+    }
+  ],
+  "assessment": {
+    "claim_status": "source_conflict",
+    "review_scope": "targeted_primary_text",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Nontrivial factor, not a separately costed recursive complete factorization.",
+    "The super-polynomial classical tradeoff mentioned in the introduction is outside this selected configuration.",
+    "No numerical frontier comparison; success conflict and symbolic costs remain."
+  ],
+  "related_result_ids": [],
+  "field_conflicts": [
+    {
+      "field": "/success",
+      "label": "Probability statement mismatch",
+      "description": "The corollary's success lower bound and its use in the theorem proof have different numerical meanings. Neither 3/4 nor 1/4 is silently substituted as the complete factoring success probability.",
+      "observations": [
+        {
+          "source_id": "regev2024-quantum-factoring-v3",
+          "locator": "PDF/printed p. 7, Corollary 4.5.",
+          "reported": "Lattice event has probability at least 1/4."
+        },
+        {
+          "source_id": "regev2024-quantum-factoring-v3",
+          "locator": "PDF/printed p. 8, proof of Theorem 1.1.",
+          "reported": "The same corollary property is invoked with failure probability 1/4."
+        }
+      ]
+    }
+  ]
+}

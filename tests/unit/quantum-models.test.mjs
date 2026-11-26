@@ -99,7 +99,7 @@ test('query and memory model differences remain incomparable despite sharing one
 test('the page has one quantum heading, no Q1/Q2 subheadings or tabs, and unique DOM IDs', () => {
   const html = renderToStaticMarkup(createElement(ui.ResultSections, {views: ui.resultFamilyViews([...points, quantumResult({structural: true, id: 'synthetic-quantum-property'})]),
     sources: [], variant: {id: 'aes-128', name: 'AES-128'}, params: new URLSearchParams(), selected: [], onToggle() {}, renderStructural: () => 'Synthetic property'}));
-  assert.equal((html.match(/<h3 class="a-surface-heading">Quantum cryptanalysis<\/h3>/g) ?? []).length, 1);
+  assert.equal((html.match(/<h3 class="a-surface-heading">Quantum Cryptanalysis<\/h3>/g) ?? []).length, 1);
   assert(html.includes('data-section-id="quantum-structural"'));
   assert.doesNotMatch(html, /role="tab|<h[1-6][^>]*>Q[12]</);
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map(match => match[1]);

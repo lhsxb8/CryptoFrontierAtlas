@@ -7,7 +7,8 @@ const require = createRequire(import.meta.url);
 const { privateHttpPath } = require('../lib/node/private-paths.cjs');
 const { assertPublicAsset, publicAssetInventory, validatePublicAssets } = require('../lib/node/public-assets.cjs');
 const sharedBuildInputs = [dirname(require.resolve('../lib/cryptanalysis/compare.cjs')),
-  require.resolve('../schemas/cryptanalysis/result-taxonomy.json')];
+  require.resolve('../schemas/cryptanalysis/result-taxonomy.json'),
+  require.resolve('../schemas/cryptanalysis/problem-result.schema.json')];
 const within = (root: string, file: string) => file === root || file.startsWith(root + sep);
 
 /** HTTP and imported files share a boundary; trusted Node loaders remain usable. */
@@ -83,7 +84,7 @@ export function devBoundaryPlugin(): Plugin {
       if (shared.some(file => privateHttpPath(file))) throw new Error('Unsafe shared build input.');
       roots = Array.from(new Set([resolve(config.root), realpathSync(config.root),
         ...(existsSync(dependencies) ? [realpathSync(dependencies)] : []),
-        // A programmatic build may reuse the pure core and its taxonomy from
+        // A programmatic build may reuse the pure core and its exact contracts from
         // another checkout. This grants no additional HTTP access.
         ...shared]));
     },

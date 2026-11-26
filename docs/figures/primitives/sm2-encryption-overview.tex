@@ -1,0 +1,9 @@
+\begin{tikzpicture}[node distance=.55cm]
+  \node[phase] (title) {SM2 encryption};
+  \node[box,below=of title] (point) {Random $k$, recipient public key $P_B$\\$C_1=[k]G,\quad (x,y)=[k]P_B$};
+  \node[accent,below=of point] (mask) {$t=\operatorname{KDF}(x\Vert y,|M|)$\\$C_2=M\oplus t$};
+  \node[box,below=of mask] (digest) {$C_3=\operatorname{SM3}(x\Vert M\Vert y)$};
+  \node[accent,below=of digest] (cipher) {$C=C_1\Vert C_3\Vert C_2$};
+  \draw[wire] (point) -- (mask); \draw[wire] (mask) -- (digest); \draw[wire] (digest) -- (cipher);
+  \node[note,below=.5cm of cipher,text width=6cm] {Decrypt with $(x,y)=[d_B]C_1$, recover $M$, check $C_3$.\\Point validation and the all-zero KDF check are required.\\Field: $\AtlasFieldBits$ bits.};
+\end{tikzpicture}

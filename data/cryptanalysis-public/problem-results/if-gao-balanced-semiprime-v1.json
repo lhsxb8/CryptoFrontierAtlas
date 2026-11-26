@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "id": "if-gao-balanced-semiprime-v1",
+  "title": "Balanced Semiprimes via Rank-3 Lattices",
+  "method": "deterministic-lattice-bsgs",
+  "result_kind": "algorithm",
+  "goal": "complete_factorization",
+  "statement": "Theorem 1.1 recovers both prime factors of a balanced semiprime.",
+  "target": {
+    "kind": "hard_problem",
+    "problem_id": "integer-factorization",
+    "input_class": "balanced_semiprime",
+    "description": "$N=pq$ with prime factors $p,q=\\Theta(N^{1/2})$.",
+    "parameters": [
+      {
+        "name": "N",
+        "meaning": "Balanced semiprime input",
+        "domain": "$N=pq$; both factors have order $N^{1/2}$.",
+        "value": "N"
+      }
+    ],
+    "modulus_bits": null,
+    "instance_name": null
+  },
+  "setting": {
+    "computation": "classical",
+    "model": "deterministic",
+    "basis": "proved",
+    "input_access": "public_integer",
+    "assumptions": [],
+    "auxiliary_information": []
+  },
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "$O\\!\\left(\\frac{N^{1/5}\\log^{13/5}N}{(\\log\\log N)^{3/5}}\\right)$",
+      "unit": "bit-operations",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Deterministic fixed-finite-tape Turing model stated on p. 1; Theorem 1.1 balanced-semiprime domain."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No memory bound is established in this selected extraction."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "complete-factorization",
+    "value": 1,
+    "relation": "=",
+    "basis": "source_proof",
+    "description": "The source's deterministic theorem guarantees the stated output on its declared domain; this is not an independent verification of the proof.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-26",
+      "scope": "Checked the deterministic guarantee and output event in the cited theorem and algorithm."
+    }
+  },
+  "evidence": [
+    {
+      "source_id": "gao2025-rank-three-factoring-v1",
+      "locator": "PDF/printed pp. 1–2, computational model and Theorem 1.1; Section 4, balanced-semiprime factorization.",
+      "fields": [
+        "/statement",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Targeted primary-text transcription; no full-paper audit, global frontier certification or independent implementation run."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "review_scope": "targeted_primary_text",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Does not assert this bound for arbitrary unbalanced composites.",
+    "Theorem 1.2's power-form inputs and Section 6's power-divisor algorithms are outside this selected example; no coverage of those configurations is claimed."
+  ],
+  "related_result_ids": []
+}

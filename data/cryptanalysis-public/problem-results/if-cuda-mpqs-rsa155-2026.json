@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "id": "if-cuda-mpqs-rsa155-2026",
+  "title": "RSA-155 with CUDA-MPQS",
+  "method": "self-initializing-quadratic-sieve",
+  "result_kind": "computation_record",
+  "goal": "complete_factorization",
+  "statement": "Reported complete factorization of RSA-155 with GPU-assisted self-initializing quadratic sieving.",
+  "target": {
+    "kind": "hard_problem",
+    "problem_id": "integer-factorization",
+    "input_class": "named_challenge",
+    "description": "The named 512-bit RSA-155 challenge modulus, already previously factored; selected July 14, 2026 run.",
+    "parameters": [
+      {
+        "name": "n",
+        "meaning": "Modulus bit length",
+        "domain": "RSA-155 challenge.",
+        "value": 512
+      },
+      {
+        "name": "F",
+        "meaning": "Factor-base cutoff",
+        "domain": "Section V-G(c).",
+        "value": 600000000
+      },
+      {
+        "name": "M",
+        "meaning": "Sieve interval parameter",
+        "domain": "Section V-G(c).",
+        "value": 8388608
+      },
+      {
+        "name": "L",
+        "meaning": "Large-prime bound",
+        "domain": "Section V-G(c).",
+        "value": 80000000000000
+      },
+      {
+        "name": "batch",
+        "meaning": "Polynomial batch size",
+        "domain": "Section V-G(c).",
+        "value": 16
+      },
+      {
+        "name": "unroll",
+        "meaning": "CUDA-graph unroll",
+        "domain": "Section V-G(c).",
+        "value": 4
+      }
+    ],
+    "modulus_bits": 512,
+    "instance_name": "RSA-155"
+  },
+  "setting": {
+    "computation": "classical",
+    "model": "measured_implementation",
+    "basis": "experiment",
+    "input_access": "public_integer",
+    "assumptions": [],
+    "auxiliary_information": []
+  },
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "$700.64$",
+      "unit": "H100-GPU-hours",
+      "log2": null,
+      "qualifier": "estimate",
+      "note": "689.74 GPU-hours for 64-GPU sieving plus 10.90 GPU-hours for the single-GPU solve; not CPU core-hours or elapsed time."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No memory bound is established in this selected extraction."
+    },
+    "wall_time": {
+      "status": "reported",
+      "reported": "$\\approx24$",
+      "unit": "hours",
+      "log2": null,
+      "qualifier": "estimate",
+      "note": "Reported sieve-start-to-factors elapsed time across two jobs, not the arithmetic sum of per-GPU work."
+    },
+    "energy": {
+      "status": "reported",
+      "reported": "$242.26$",
+      "unit": "kWh-GPU-board-energy",
+      "log2": null,
+      "qualifier": "estimate",
+      "note": "239.78 kWh sieving plus 2.48 kWh solving, from sampled GPU power; not whole-system energy."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "complete-factorization-run-success",
+    "value": null,
+    "description": "The paper reports one completed RSA-155 computation. That observed outcome is not a general whole-run success probability, nor is a dependency-level frequency such a probability.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-26",
+      "scope": "Checked Section V-G's run outcome, cost accounting and device/host verification report; no independent rerun or factor-witness verification."
+    }
+  },
+  "evidence": [
+    {
+      "source_id": "januszewski-heinrichs2026-cuda-mpqs-v1",
+      "locator": "PDF pp. 8–9, Section V-G (RSA-155); PDF p. 3, Section IV-B host residuals; PDF p. 7, Table III.",
+      "fields": [
+        "/statement",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/success/review",
+        "/experiment"
+      ],
+      "interpretation": "Targeted primary-text transcription; no full-paper audit, global frontier certification or independent implementation run."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "review_scope": "targeted_primary_text",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "A selected computation record, not a claim of the largest general integer factorization or a break of current RSA key sizes.",
+    "GPU-hours are not directly comparable to CPU core-hours; board energy excludes unmeasured host/system energy.",
+    "Other moduli and hardware points in Table III are outside this selected run; no whole-paper benchmark inventory is claimed."
+  ],
+  "related_result_ids": [],
+  "experiment": {
+    "date": "2026-07-14",
+    "hardware": "64 NVIDIA H100 GPUs across 16 nodes for sieving, then one H100 for GF(2) solving; CPU setup, I/O and coordinator large-prime matching remain.",
+    "software": "CUDA-MPQS v1.0.5 for this RSA-155 run; later profiled versions in the same paper are not substituted.",
+    "parameters": "F=6e8; M=8,388,608; L=8e13; u8sat wide accumulator; batch=16; graph unroll=4; autotuning off; legacy matrix stage.",
+    "reported_outcome": "Two 78-digit prime factors, with device and host product checks reported by the authors. Factor bytes were not extracted or independently checked by the Atlas.",
+    "verification": "source_report_only"
+  }
+}

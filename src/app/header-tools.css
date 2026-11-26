@@ -1,6 +1,6 @@
 .atlas-header-tools { display: flex; align-items: center; flex-shrink: 0; gap: 4px; }
-.atlas-header-tools > button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; min-width: 44px; padding: 8px 10px; border: 1px solid transparent; border-radius: 5px; background: transparent; color: #d4e2e4; font-size: 12px; white-space: nowrap; }
-.atlas-header-tools > button:hover, .atlas-header-tools > button[aria-expanded="true"] { background: #1a303e; border-color: #36515b; color: #fff; }
+.atlas-header-tools > :is(button, a) { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; min-width: 44px; padding: 8px 10px; border: 1px solid transparent; border-radius: 5px; background: transparent; color: #d4e2e4; font-size: 12px; white-space: nowrap; text-decoration: none; }
+.atlas-header-tools > :is(button, a):hover, .atlas-header-tools > button[aria-expanded="true"] { background: #1a303e; border-color: #36515b; color: #fff; }
 .atlas-header-inner { gap: 20px; }
 .atlas-dialog { --atlas-dialog-space: 48px; width: min(640px, calc(100% - 32px)); max-width: none; max-height: calc(100dvh - var(--atlas-dialog-space)); padding: 0; border: 1px solid #ccd9d6; border-radius: 12px; background: #fff; color: var(--ink); box-shadow: 0 22px 80px #061b2b38; overflow: hidden; }
 .atlas-dialog::backdrop { background: #0b172680; }
@@ -45,7 +45,7 @@
 @media (max-width: 650px) {
   .atlas-header-inner { gap: 0 8px; padding-right: 14px; padding-left: 14px; }
   .atlas-header-tools { gap: 0; }
-  .atlas-header-tools > button { padding: 8px 6px; }
+  .atlas-header-tools > :is(button, a) { padding: 8px 6px; }
   .atlas-tool-label { display: none; }
   .atlas-dialog { --atlas-dialog-space: 24px; width: calc(100% - 24px); }
   .atlas-dialog-surface { padding: 20px; }

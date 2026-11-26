@@ -269,7 +269,7 @@ function ProblemExplorer({ problemId, searchParams, onParamsChange }: ProblemExp
   useEffect(() => {
     document.title = selected
       ? `${selected.title} · CryptoFrontierAtlas`
-      : selectedId ? 'Question not found · CryptoFrontierAtlas' : 'Questions · CryptoFrontierAtlas';
+      : selectedId ? 'Question Not Found · CryptoFrontierAtlas' : 'Questions · CryptoFrontierAtlas';
   }, [selected, selectedId]);
 
   function openProblem(event: MouseEvent<HTMLAnchorElement>, id: string) {
@@ -326,7 +326,7 @@ function ProblemExplorer({ problemId, searchParams, onParamsChange }: ProblemExp
             {selected ? <Detail key={selected.id} problem={selected} questionHref={questionHref} onNavigate={openProblem} /> : (
               <div className="detail-inner not-found">
                 <a className="back-button" href={questionHref()}><ArrowLeft size={16} /> Back to questions</a>
-                <div className="detail-heading"><h1 tabIndex={-1}>Question not found</h1></div>
+                <div className="detail-heading"><h1 tabIndex={-1}>Question Not Found</h1></div>
               </div>
             )}
           </section>
@@ -460,7 +460,7 @@ function ProblemExplorer({ problemId, searchParams, onParamsChange }: ProblemExp
               {!filtered.length && <div className="empty-state"><Search size={24} /><strong>No matching questions</strong><button className="text-button" onClick={resetFilters}>Reset filters</button></div>}
             </div>
             {filtered.length > 0 && (
-              <nav className="pagination" aria-label="Question index pagination">
+              <nav className="pagination" aria-label="Question Index pagination">
                 <span className="pagination-range">Showing {pageStart + 1}-{Math.min(pageStart + PAGE_SIZE, filtered.length)} of {filtered.length}</span>
                 <div className="pagination-controls">
                   <button className="pagination-button" type="button" aria-label="Previous page" title="Previous page" disabled={currentPage === 1} onClick={() => changePage(Math.max(1, currentPage - 1))}><ChevronLeft size={16} /></button>
@@ -523,7 +523,7 @@ function Detail({ problem, questionHref, onNavigate }: {
     ['Source files', problem.lean.source_tree_file_count?.toString()],
   ].filter((entry) => entry[1]);
   const relationGroups = [
-    { label: 'Related questions', ids: problem.relations.related },
+    { label: 'Related Questions', ids: problem.relations.related },
     { label: 'Supersedes', ids: problem.relations.supersedes },
     { label: 'Superseded by', ids: problem.relations.superseded_by },
   ].filter((group) => group.ids.length > 0);
@@ -546,14 +546,14 @@ function Detail({ problem, questionHref, onNavigate }: {
       <div className="detail-grid">
         <div className="detail-main">
           <section className="detail-section">
-            <h2 className="section-kicker">Formal statement</h2>
+            <h2 className="section-kicker">Formal Statement</h2>
             <div className="formula-block"><MathText text={problem.formal_statement.body} /></div>
             {problem.scope.assumptions.length > 0 && <div className="conditions">
               <h3>Conditions</h3>
               <ul>{problem.scope.assumptions.map((assumption, index) => <li key={index}><MathText text={assumption} /></li>)}</ul>
             </div>}
             <details className="disclosure scope-details">
-              <summary>Parameters &amp; domain <ChevronDown size={14} aria-hidden="true" /></summary>
+              <summary>Parameters &amp; Domain <ChevronDown size={14} aria-hidden="true" /></summary>
               <dl className="metadata-list">
                 <div><dt>Domain</dt><dd><MathText text={problem.scope.domain} /></dd></div>
                 {problem.scope.parameters.length > 0 && <div><dt>Parameters</dt><dd><MathText text={problem.scope.parameters.join(' · ')} /></dd></div>}
@@ -561,7 +561,7 @@ function Detail({ problem, questionHref, onNavigate }: {
             </details>
           </section>
           <section className="detail-section">
-            <h2 className="section-kicker">Scope &amp; unresolved questions</h2>
+            <h2 className="section-kicker">Scope &amp; Unresolved Questions</h2>
             <p className="scope-remainder"><MathText text={problem.scope.unresolved_remainder} /></p>
           </section>
           {progress.length > 0 && <section className="detail-section progress-section">
@@ -569,7 +569,7 @@ function Detail({ problem, questionHref, onNavigate }: {
             <Timeline entries={progress} citations={problem.source.citations} />
           </section>}
           {relatedResults.length > 0 && <section className="detail-section question-analysis-links" aria-labelledby="related-analysis-heading">
-            <h2 className="section-kicker" id="related-analysis-heading">Related analysis results</h2>
+            <h2 className="section-kicker" id="related-analysis-heading">Related Analysis Results</h2>
             {relatedResults.map((result) => (
               <a className="question-analysis-link" href={`#/cryptanalysis/results/${encodeURIComponent(result.id)}`} key={result.id}>
                 <span><strong>{result.title}</strong><span>{result.target.round_domain?.domain ?? result.target.rounds} rounds · {readableEnum(result.goal)} · {readableEnum(result.setting.key_model)}</span></span>
@@ -591,19 +591,19 @@ function Detail({ problem, questionHref, onNavigate }: {
               </div>
             ))}
             {statementHistory.length > 0 && <details className="disclosure statement-history">
-              <summary>Statement history <ChevronDown size={14} aria-hidden="true" /></summary>
+              <summary>Statement History <ChevronDown size={14} aria-hidden="true" /></summary>
               <Timeline entries={statementHistory} citations={problem.source.citations} />
             </details>}
           </section>
           {problem.artifacts.length > 0 && <section className="side-block artifact-block">
-            <h2 className="section-kicker"><FileCheck2 size={14} /> Proof &amp; code</h2>
+            <h2 className="section-kicker"><FileCheck2 size={14} /> Proof &amp; Code</h2>
             {problem.artifacts.map((artifact, index) => (
                 <div className="artifact-entry" key={`${artifact.role}-${artifact.url ?? index}`}>
                   {safeExternalUrl(artifact.url)
                     ? <a href={safeExternalUrl(artifact.url)!} target="_blank" rel="noreferrer">{artifactRoleLabels[artifact.role]} <ExternalLink size={12} /></a>
                     : <strong>{artifactRoleLabels[artifact.role]}</strong>}
                   <details className="disclosure artifact-details">
-                    <summary>Artifact details <ChevronDown size={14} aria-hidden="true" /></summary>
+                    <summary>Artifact Details <ChevronDown size={14} aria-hidden="true" /></summary>
                     <dl className="metadata-list">
                       <div><dt>Availability</dt><dd>{artifactVisibilityLabels[artifact.visibility]}</dd></div>
                       {artifact.license && <div><dt>License</dt><dd>{artifact.license}</dd></div>}
@@ -614,10 +614,10 @@ function Detail({ problem, questionHref, onNavigate }: {
               ))}
           </section>}
           {relationGroups.length > 0 && <section className="side-block relation-block">
-            <h2 className="section-kicker"><Link2 size={14} /> Related questions</h2>
+            <h2 className="section-kicker"><Link2 size={14} /> Related Questions</h2>
             {relationGroups.map((group) => (
                 <div className="relation-group" key={group.label}>
-                  {group.label !== 'Related questions' && <span>{group.label}</span>}
+                  {group.label !== 'Related Questions' && <span>{group.label}</span>}
                   {group.ids.map((id) => {
                     const target = problems.find((candidate) => candidate.id === id);
                     return (
@@ -631,7 +631,7 @@ function Detail({ problem, questionHref, onNavigate }: {
               ))}
           </section>}
           <details className="disclosure record-details">
-            <summary>Record details <ChevronDown size={14} aria-hidden="true" /></summary>
+            <summary>Record Details <ChevronDown size={14} aria-hidden="true" /></summary>
             <h3>Verification</h3>
             <dl className="metadata-list">
               <div><dt>Mathematical status</dt><dd>{statusLabels[problem.status.public_mathematical_status]}</dd></div>

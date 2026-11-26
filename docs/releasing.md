@@ -4,7 +4,10 @@
 
 Follow the [version policy](versioning.md). The initial application release is
 v1.0.0. Data-only updates retain the application version and receive a different
-content-derived data revision. Keep existing release tags immutable.
+content-derived data revision. Keep existing release tags immutable. Local work
+keeps the current version and accumulates under `Unreleased`. Prepare one version
+increment only at an explicitly authorized remote-push boundary when the outgoing
+batch includes framework, functionality or runtime changes; retries reuse it.
 
 `npm run check:version` checks the package, lockfile, changelog and any citation.
 The build publishes `atlas-release.json` with its application version and data

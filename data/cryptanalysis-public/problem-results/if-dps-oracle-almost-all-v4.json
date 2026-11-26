@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "id": "if-dps-oracle-almost-all-v4",
+  "title": "Oracle-Assisted Factoring of Almost All Inputs",
+  "method": "elliptic-curve-oracle",
+  "result_kind": "algorithm",
+  "goal": "nontrivial_factor",
+  "statement": "With the specified elliptic-curve point-count-multiple oracle, Theorem 1.2 deterministically finds a nontrivial factor for almost all inputs in the bounded population.",
+  "target": {
+    "kind": "hard_problem",
+    "problem_id": "integer-factorization",
+    "input_class": "almost_all_integers",
+    "description": "Inputs $n\\le X$ outside an exceptional set of size at most $X/(\\log X)^\\delta$ for sufficiently large X; X renames the source's upper bound N to distinguish it from an individual input.",
+    "parameters": [
+      {
+        "name": "X",
+        "meaning": "Upper bound on the input population (source N)",
+        "domain": "Sufficiently large positive integer.",
+        "value": "X"
+      },
+      {
+        "name": "gamma",
+        "meaning": "Oracle-family size parameter",
+        "domain": "$2<\\gamma<2+(\\sqrt{257}-15)/16$.",
+        "value": "gamma"
+      },
+      {
+        "name": "delta",
+        "meaning": "Exceptional-set exponent",
+        "domain": "$0<\\delta<1/4$.",
+        "value": "delta"
+      },
+      {
+        "name": "B",
+        "meaning": "Number of elliptic-curve indices",
+        "domain": "Theorem 1.2.",
+        "value": "floor((log X)^gamma)"
+      },
+      {
+        "name": "M",
+        "meaning": "Oracle response bound",
+        "domain": "$M=X^{O(1)}$.",
+        "value": "M"
+      }
+    ],
+    "modulus_bits": null,
+    "instance_name": null
+  },
+  "setting": {
+    "computation": "classical",
+    "model": "oracle_assisted",
+    "basis": "proved",
+    "input_access": "public_integer",
+    "assumptions": [],
+    "auxiliary_information": [
+      "MultEll(X,B,M) of Definition 1.1 supplies bounded positive multiples of E(n,b), the product of point counts over prime factors, for eligible b; it may reject nonsquarefree inputs."
+    ]
+  },
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "$O((\\log X)^{\\rho(\\gamma)+o(1)}),\\quad\\rho(\\gamma)=\\max\\!\\left(\\gamma+2,\\frac{9\\gamma-17}{8(\\gamma-2)}\\right)$",
+      "unit": "bit-operations-excluding-oracle-computation",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Theorem 1.2's classical algorithm bound; it does not include a cheap implementation of the oracle. Section 1.5 discusses the separate oracle-computation cost."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No memory bound is established in this selected extraction."
+    },
+    "oracle_calls": {
+      "status": "reported",
+      "reported": "$O((\\log X)^\\gamma)$",
+      "unit": "MultEll-queries",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Query accounting of Theorem 1.2; not coherent access to a secret-key oracle."
+    }
+  },
+  "success": {
+    "status": "not_reported",
+    "metric": "nontrivial-factor-on-a-given-input",
+    "value": null,
+    "description": "The deterministic theorem gives an exceptional-set size bound over the population n<=X, not a randomized success probability for a specified RSA integer. The density guarantee stays in the target and statement.",
+    "review": {
+      "status": "not_quantified",
+      "reviewed_on": "2026-11-26",
+      "scope": "Checked Theorem 1.2, the exceptional-input handling and Algorithm 3.1. No per-input randomized success is stated."
+    }
+  },
+  "evidence": [
+    {
+      "source_id": "dabrowski2023-oracle-factoring-v4",
+      "locator": "PDF/printed pp. 5–7, Definition 1.1, Theorem 1.2, Remark 1.5 and oracle-cost discussion; pp. 13–14, Algorithm 3.1.",
+      "fields": [
+        "/statement",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Targeted primary-text transcription; no full-paper audit, global frontier certification or independent implementation run."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "review_scope": "targeted_primary_text",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Not unassisted polynomial-time classical factoring.",
+    "The exceptional set includes cases not handled by the stated oracle/preselection model; no guarantee for every RSA modulus follows.",
+    "The one-query oracle of Theorem 1.4 is a different model and is not mixed into this configuration."
+  ],
+  "related_result_ids": []
+}

@@ -1,0 +1,9 @@
+\begin{tikzpicture}[node distance=.5cm]
+  \node[phase] (title) {SM2 key exchange};
+  \node[box,below=of title] (keys) {Static keys $(d_A,P_A)$, $(d_B,P_B)$\\Ephemeral $R_A=[r_A]G$, $R_B=[r_B]G$};
+  \node[accent,below=of keys] (exchange) {Exchange and validate $R_A,R_B$\\Bind identities through $Z_A,Z_B$};
+  \node[box,below=of exchange] (combine) {$t_A=(d_A+\bar{x}_A r_A)\bmod n$\\$U=[h t_A](P_B+[\bar{x}_B]R_B)$};
+  \node[accent,below=of combine] (derive) {$K=\operatorname{KDF}(x_U\Vert y_U\Vert Z_A\Vert Z_B,\mathrm{klen})$};
+  \draw[wire] (keys) -- (exchange); \draw[wire] (exchange) -- (combine); \draw[wire] (combine) -- (derive);
+  \node[note,below=.45cm of derive,text width=6.8cm] {Bob computes the matching point by the symmetric rule.\\$\bar{x}$ is the standard's truncated-and-offset coordinate.\\Output: $\AtlasSharedBits$ bits; optional key confirmation.};
+\end{tikzpicture}

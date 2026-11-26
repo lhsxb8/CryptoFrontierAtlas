@@ -36,6 +36,21 @@ under `schemas/primitives/`. The catalog build adapter validates them independen
 of analysis availability. Public catalog instances carry type-specific parameters;
 they are not synthesized into scientific analysis targets. Where IDs overlap,
 both build profiles check target parameters against the public definitions.
+The version-3 directory assigns symmetric/asymmetric domains at the category
+level. One shared directory/detail UI uses domain-scoped routes and counts.
+Asymmetric parameter contracts are purpose- and scheme-specific; no asymmetric
+entry is injected into the symmetric scientific result model or comparator.
+Hard-problem definitions have separate closed contracts and references within the
+same catalog. The shared directory projects algorithms and problems as distinct
+entry kinds; dedicated problem routes show symbolic definitions without inventing
+algorithm instances. Problem/scheme associations are independent of construction
+dependencies and scientific result relations.
+Hard-problem analyses enter the same validated corpus, source registry, read model
+and publication pipeline through `problem-results/` and `problem-analyses/`.
+`target.kind = hard_problem` never fabricates a cipher instance or round count.
+The schema composer shares resource, probability, evidence and family contracts;
+the comparator dispatches by target kind before considering matching cost vectors.
+Integer Factorization is the first supported analysis target in this branch.
 The same adapter validates parameter-bound TikZ/SVG structure assets and their
 explicit instance registry. Figures are compiled offline, committed and checked
 without TeX in ordinary builds. The frontend shares one structure panel across

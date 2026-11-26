@@ -28,18 +28,18 @@ export function ExperimentDefinition({ record }: { record: AnalysisResult }) {
   if (!e) return null;
   return <div className="a-experiment-definition">
     <h3><MathText text={e.construction.name} /></h3><p><Formula expression={e.construction.definition} /></p>
-    <h3>Target relation</h3><p><Formula expression={e.relation} /></p>
+    <h3>Target Relation</h3><p><Formula expression={e.relation} /></p>
     <dl className="a-metadata"><div><dt>Output condition</dt><dd><ExperimentSummary record={record} /></dd></div>
       <div><dt>Distinctness and reuse</dt><dd><Formula expression={e.distinctness ?? 'Not specified in the source'} /></dd></div>
       <div><dt>Reference experiment</dt><dd><Formula expression={e.reference ?? 'Not specified in the source'} /></dd></div>
     </dl>
-    <h3>Input control</h3><dl className="a-metadata">{e.variables.map(variable => <div key={variable.name}>
+    <h3>Input Control</h3><dl className="a-metadata">{e.variables.map(variable => <div key={variable.name}>
       <dt><Formula expression={variable.name} /></dt><dd>{humanize(variable.control)}
         <p><Formula expression={variable.domain ?? 'Domain not reported'} /></p>
         <p><Formula expression={variable.condition ?? 'Condition not reported'} /></p>
       </dd></div>)}</dl>
     <Parameters parameters={e.parameters} />
-    {e.unresolved.length > 0 && <><h3>Unresolved source definitions</h3><ul className="a-compact-list">{e.unresolved.map(item => <li key={item}><Formula expression={item} /></li>)}</ul></>}
+    {e.unresolved.length > 0 && <><h3>Unresolved Source Definitions</h3><ul className="a-compact-list">{e.unresolved.map(item => <li key={item}><Formula expression={item} /></li>)}</ul></>}
   </div>;
 }
 

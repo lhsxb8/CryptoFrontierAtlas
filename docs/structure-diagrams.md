@@ -40,6 +40,16 @@ views retain their security context and distinguish MD5's little-endian encoding
 from SHA-1/SM3's big-endian encoding. Shared hash templates derive the chaining
 word count, step count, feed-forward operator and serialization from each binding.
 
+Asymmetric entries use construction overviews: OAEP/PSS encoding and RSA
+operations; finite-field and elliptic-curve key agreement; distinct ECDSA, EdDSA
+and SM2 equations; ML-KEM encapsulation/implicit rejection; ML-DSA rejection and
+hints; and SLH-DSA's FORS/XMSS composition. Standard parameter names and dimensions
+are bound from the catalog. These compact drawings work at desktop and mobile
+widths without a second layout asset. A single-view binding puts enlargement in
+the heading, without a redundant tab strip or toolbar row. Detailed validity
+checks remain in the cited specifications and captions;
+the drawings are explanatory, not executable protocol implementations.
+
 Only explicit catalog bindings are eligible. Standard AES diagrams are never
 inferred for research variants. Filtering reduced-round attacks does not redefine
 the primitive or invent an attack's round boundaries. Public figures depend only

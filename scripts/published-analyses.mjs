@@ -13,6 +13,7 @@ try {
     const counts = command === 'export' ? exportPublishedDataset(root)
       : command === 'check-export' ? checkExport(root) : validatePublishedDataset(root).publication.counts;
     console.log(`PASS: published analysis ${command}; ${counts.records} detailed records, ${counts.entries} entries, ${counts.parameterized_families} parameterized families, ${counts.sources} sources.`);
+    if (counts.hard_problems) console.log(`Hard problems: ${counts.hard_problems} targets, ${counts.problem_records} results, ${counts.problem_families} families.`);
   }
 } catch (error) {
   console.error(error.message); process.exitCode = 1;

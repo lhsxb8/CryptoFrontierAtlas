@@ -59,9 +59,9 @@ test('published formula families retain assignments, compact details and primary
   const point = page.locator('.a-attack-point-details').filter({has:page.locator('a[href*="/results/' + pointId + '?"]')});
   await point.locator('.a-text-link').click();
   await expect(page.locator('.a-current-parameters [data-native-expression]')).toHaveAttribute('data-native-expression', 'n = 6; w = 3');
-  await expect(page.getByRole('heading', {name:'Source evidence', exact:true})).toBeVisible();
+  await expect(page.getByRole('heading', {name:'Source Evidence', exact:true})).toBeVisible();
   await page.locator('.a-evidence-entry h3 a').first().click();
-  await expect(page.getByRole('heading', {level:1})).toHaveText('Source details');
+  await expect(page.getByRole('heading', {level:1})).toHaveText('Source Details');
   await expect(page.locator('.atlas-source-card')).toContainText('SHA-256');
   await noOverflow(page);
   expect(errors).toEqual([]);
@@ -91,12 +91,12 @@ test('public coverage and conflict details retain qualifications without ingesti
   await expect(page.locator('.a-evidence-entry')).not.toHaveCount(0);
   await noOverflow(page);
   await page.goto('/#/cryptanalysis/coverage?variant=aes-128');
-  await expect(page.getByRole('heading', {level:1})).toHaveText('Coverage & audit');
+  await expect(page.getByRole('heading', {level:1})).toHaveText('Coverage & Audit');
   await expect(page.locator('.atlas-coverage-matrix a').first()).toBeVisible();
-  await expect(page.getByRole('heading', {name:'Coverage gaps · AES', exact:true})).toBeVisible();
+  await expect(page.getByRole('heading', {name:'Coverage Gaps · AES', exact:true})).toBeVisible();
   await expect(page.locator('.atlas-source-list .atlas-source-card').first()).toBeVisible();
-  await expect(page.locator('summary').filter({hasText:'Ingestion batch'})).toHaveCount(0);
-  await page.getByText('Review scope', {exact:true}).click();
+  await expect(page.locator('summary').filter({hasText:'Ingestion Batch'})).toHaveCount(0);
+  await page.getByText('Review Scope', {exact:true}).click();
   await expect(page.locator('.atlas-methods .atlas-metadata')).toBeVisible();
   await noOverflow(page);
 });
@@ -129,5 +129,5 @@ test('an unavailable analysis asset shows a recoverable error instead of an empt
   await noOverflow(page);
   await page.unroute(/\/analysis-[a-f0-9]{64}\.json$/);
   await page.getByRole('button', {name:'Reload', exact:true}).click();
-  await expect(page.getByRole('heading', {level:1})).toHaveText('Primitive & construction directory');
+  await expect(page.getByRole('heading', {level:1})).toHaveText('Primitive & Construction Directory');
 });

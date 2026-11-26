@@ -1,6 +1,7 @@
 import type { AnalysisFamilyCatalog, AnalysisResult, AnalysisResultFamily, AnalysisSource, CipherFamily, CipherVariant } from './types';
 import { resultTaxonomy } from './taxonomy';
 import { quantumModelTags } from './quantum-model';
+import { titleCaseLabel } from '../../app/interface-labels';
 export { publicationLabel } from '../../../lib/cryptanalysis/publication.mjs';
 import { publicationLabel } from '../../../lib/cryptanalysis/publication.mjs';
 
@@ -19,7 +20,7 @@ export function resultPageParams(params: URLSearchParams): URLSearchParams {
   next.delete('attack_surface');
   return next;
 }
-export const resourceLabels = { time: 'Time', data: 'Data', memory: 'Memory', preprocessing: 'Preprocessing', t_gates: 'T gates', clifford_gates: 'Clifford gates', t_depth: 'T depth', circuit_depth: 'Circuit depth', logical_qubits: 'Logical qubits' };
+export const resourceLabels = { time: 'Time', data: 'Data', memory: 'Memory', preprocessing: 'Preprocessing', t_gates: 'T Gates', clifford_gates: 'Clifford Gates', t_depth: 'T Depth', circuit_depth: 'Circuit Depth', logical_qubits: 'Logical Qubits' };
 export function resourceEntries(record: AnalysisResult) {
   return Object.entries(record.resources).map(([key, resource]) => ({ key, label: resourceLabels[key as keyof typeof resourceLabels] || humanize(key), resource }));
 }
@@ -41,10 +42,10 @@ export const methodLabels = resultTaxonomy.methods;
 /** Qualify display labels without changing the scientific method taxonomy. */
 export function methodLabel(method: AnalysisResult['display']['method'], surface?: string): string {
   if (surface === 'side_channel') {
-    if (method === 'differential') return 'Side-channel-assisted differential';
-    if (method === 'collision') return 'Collision-based side-channel analysis';
+    if (method === 'differential') return 'Side-Channel-Assisted Differential';
+    if (method === 'collision') return 'Collision-Based Side-Channel Analysis';
   }
-  return methodLabels[method];
+  return titleCaseLabel(methodLabels[method]);
 }
 
 export function roundLabel(record: Pick<AnalysisResult, 'target'>): string {

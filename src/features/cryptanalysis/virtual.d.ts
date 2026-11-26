@@ -5,11 +5,11 @@ declare module 'virtual:cryptanalysis-data' {
 
 declare module 'virtual:cryptanalysis-comparison' {
   export function comparability(
-    a: import('./types').AnalysisResult,
-    b: import('./types').AnalysisResult,
+    a: import('./types').AnalysisResult | import('./problem-types').ProblemResult,
+    b: import('./types').AnalysisResult | import('./problem-types').ProblemResult,
   ): import('./types').Comparability;
   export function compareReportedCosts(
-    a: import('./types').AnalysisResult,
-    b: import('./types').AnalysisResult,
+    a: import('./types').AnalysisResult | import('./problem-types').ProblemResult,
+    b: import('./types').AnalysisResult | import('./problem-types').ProblemResult,
   ): import('./types').ReportedCostComparison;
 }

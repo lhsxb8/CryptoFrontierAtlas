@@ -8,16 +8,19 @@ test('home presents a visible masthead and four concise entrances with primary a
     await page.goto('/#/');
     const cards = page.locator('.atlas-portal-card');
     await expect(cards).toHaveCount(4);
-    await expect(cards.locator('h2')).toHaveText(['Open questions', 'Symmetric cryptanalysis', 'Asymmetric cryptanalysis', 'Implementation']);
+    await expect(cards.locator('h2')).toHaveText(['Open Questions', 'Symmetric Cryptanalysis', 'Asymmetric Cryptanalysis', 'Implementation']);
     await expect(page.locator('main p, .atlas-portal-count, .atlas-portal-action, main .atlas-kicker')).toHaveCount(0);
     await expect(page.locator('main h1')).toHaveText('CryptoFrontierAtlas');
     await expect(page.locator('main h1')).toBeVisible();
     await expect(page.locator('.atlas-portal-heading')).toHaveText('CryptoFrontierAtlas');
     await expect(page.locator('.atlas-portal-heading > :not(h1)')).toHaveCount(0);
-    await expect(cards.locator('.atlas-tbd')).toHaveCount(2);
+    await expect(cards.locator('.atlas-tbd')).toHaveCount(1);
+    await expect(page.locator('.atlas-portal-card.is-primary')).toHaveCount(3);
+    await expect(page.locator('.atlas-portal-card.is-planned')).toHaveCount(1);
     const geometry = await cards.evaluateAll(elements => elements.map(element => ({height: element.getBoundingClientRect().height, overflow: element.scrollWidth > element.clientWidth + 1})));
     expect(geometry.every(card => !card.overflow)).toBe(true);
-    expect(Math.min(...geometry.slice(0, 2).map(card => card.height))).toBeGreaterThan(Math.max(...geometry.slice(2).map(card => card.height)) + 50);
+    expect(await cards.nth(2).locator('h2').evaluate(node => parseFloat(getComputedStyle(node).fontSize)))
+      .toBeGreaterThan(await cards.nth(3).locator('h2').evaluate(node => parseFloat(getComputedStyle(node).fontSize)));
     const illustrations = cards.locator('img.atlas-collection-art[aria-hidden="true"]');
     await expect(illustrations).toHaveCount(4);
     expect(new Set(await illustrations.evaluateAll(images => images.map(image => image.getAttribute('src')))).size).toBe(4);
@@ -55,7 +58,7 @@ test('home presents a visible masthead and four concise entrances with primary a
 test('global dialogs omit redundant descriptions and expose version provenance on demand', async ({page, request}) => {
   const metadata = await (await request.get('/atlas-release.json')).json();
   await page.goto('/#/');
-  await expect(page.locator('.atlas-footer')).not.toContainText('Data revision');
+  await expect(page.locator('.atlas-footer')).not.toContainText('Data Revision');
   for (const name of ['Language', 'Help', 'Report']) {
     await page.getByRole('button', {name, exact: true}).click();
     const dialog = page.getByRole('dialog');
@@ -110,7 +113,7 @@ test('diagram scroll guidance follows actual overflow while scientific captions 
   const panel = page.locator('.atlas-structure');
   await expect(panel.locator('.atlas-structure-scroll-hint')).toHaveCount(0);
   await expect(panel.locator('figcaption')).toContainText('final round omits MixColumns');
-  await panel.getByRole('tab', {name: 'Round & key schedule', exact: true}).click();
+  await panel.getByRole('tab', {name: 'Round & Key Schedule', exact: true}).click();
   await expect(panel.locator('.atlas-structure-scroll-hint')).toBeVisible();
   expect(await panel.locator('.atlas-structure-image').evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
   await expect(panel.locator('figcaption')).toContainText('extra SubWord');
