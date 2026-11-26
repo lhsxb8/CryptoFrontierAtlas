@@ -1,0 +1,9 @@
+\begin{tikzpicture}[node distance=.55cm]
+  \node[phase] (title) {RSAES-OAEP};
+  \node[box,below=of title] (message) {Message $M$, label $L$, random seed};
+  \node[accent,below=of message] (encode) {OAEP encoding\\$\mathrm{EM}=\operatorname{OAEP}(M,L)$};
+  \node[box,below=of encode] (rsa) {Public key $(n,e)$\\$m=\operatorname{OS2IP}(\mathrm{EM})$\\$c=m^e\bmod n$};
+  \node[accent,below=of rsa] (cipher) {Ciphertext $C=\operatorname{I2OSP}(c)$};
+  \draw[wire] (message) -- (encode); \draw[wire] (encode) -- (rsa); \draw[wire] (rsa) -- (cipher);
+  \node[note,below=.5cm of cipher,text width=6cm] {Private exponentiation, then OAEP decoding:\\recover $M$ or reject the encoding.\\Modulus: $\AtlasModulusBits$ bits;\quad hash: $\AtlasHash$.};
+\end{tikzpicture}

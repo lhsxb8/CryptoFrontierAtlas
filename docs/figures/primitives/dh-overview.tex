@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+  \node[phase] at (0,0) {Alice}; \node[phase] at (4.6,0) {Bob};
+  \node[box] (a) at (0,-1) {Private $a$\\$A=\AtlasDhPublicA$};
+  \node[box] (b) at (4.6,-1) {Private $b$\\$B=\AtlasDhPublicB$};
+  \node[accent] (sa) at (0,-3.6) {$Z_A=\AtlasDhSharedA$};
+  \node[accent] (sb) at (4.6,-3.6) {$Z_B=\AtlasDhSharedB$};
+  \draw[wire] (a) -- (sa); \draw[wire] (b) -- (sb);
+  \draw[wire] (a.south east) -- node[pos=.25,above,note] {$A$} (sb.north west);
+  \draw[wire] (b.south west) -- node[pos=.25,above,note] {$B$} (sa.north east);
+  \node[box] (shared) at (2.3,-5.1) {Matching shared secret $Z_A=Z_B$};
+  \draw[wire] (sa.south) |- (shared.west); \draw[wire] (sb.south) |- (shared.east);
+  \node[note,text width=6.8cm] at (2.3,-6.1) {$\AtlasDhGroup$\\Authentication, validation and KDF belong to the protocol.};
+\end{tikzpicture}

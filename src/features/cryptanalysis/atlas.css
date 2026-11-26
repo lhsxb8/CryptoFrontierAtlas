@@ -56,6 +56,26 @@
 .atlas-primitive-specs > h2 { font-size: 18px; }
 .atlas-primitive-specs .atlas-source-card { margin-top: 14px; }
 .atlas-primitive-specs h3 { overflow-wrap: anywhere; }
+.atlas-problem-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 36px; margin-top: 24px; }
+.atlas-problem-layout > section { min-width: 0; }
+.atlas-problem-page h2, .atlas-problem-related h2 { font-size: 18px; margin: 0 0 16px; }
+.atlas-problem-definition h2:not(:first-child) { margin-top: 28px; }
+.atlas-problem-definition p, .atlas-problem-formulations dd { line-height: 1.85; font-size: 14px; overflow-wrap: anywhere; }
+.atlas-problem-formulations { margin: 0; }
+.atlas-problem-formulations > div + div { margin-top: 16px; }
+.atlas-problem-formulations dt { font-size: 13px; font-weight: 650; }
+.atlas-problem-formulations dd { margin: 5px 0 0; }
+.atlas-problem-parameters { border-left: 1px solid #d7dfda; padding-left: 28px; }
+.atlas-problem-parameters .atlas-metadata { margin: 0; gap: 18px; }
+.atlas-problem-parameters .atlas-metadata > div { grid-template-columns: minmax(0, 1fr); gap: 3px; }
+.atlas-problem-parameters .atlas-metadata dt { font-size: 12px; font-weight: 600; }
+.atlas-problem-parameters .atlas-metadata dd { font-size: 13px; }
+.atlas-problem-related { margin-top: 30px; }
+.atlas-problem-related .atlas-primitive-navigation { margin: 0; }
+@media (max-width: 760px) {
+  .atlas-problem-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .atlas-problem-parameters { border-left: 0; border-top: 1px solid #d7dfda; padding: 24px 0 0; }
+}
 .atlas-specification-details { margin-top: 10px; }
 .atlas-specification-details > summary { cursor: pointer; color: var(--teal); font-size: 12px; }
 .atlas-status-warning, .atlas-family-card > .atlas-status-warning { color: #7e5016; background: #fff4df; padding: 7px 9px; border: 0; border-radius: 3px; font-size: 11px; margin-bottom: 14px; }
@@ -176,7 +196,7 @@
 .atlas-footer strong { color: #546e5e; font-size: 11px; font-weight: 600; }
 .atlas-footer a { display: inline-flex; gap: 5px; align-items: center; color: #5f7d68; text-decoration: none; }
 .atlas-footer a:hover { text-decoration: underline; }
-@media (max-width: 1250px) {
+@media (max-width: 1350px) {
   .atlas-header-inner { flex-wrap: wrap; gap: 0 20px; padding-top: 16px; }
 }
 @media (max-width: 650px) {

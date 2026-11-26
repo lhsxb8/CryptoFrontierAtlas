@@ -1,0 +1,67 @@
+% Generated from the public primitive catalog. Original Atlas drawing; Apache-2.0.
+% Target: sm2-encryption-sm3; view: overview
+\documentclass[border=9pt]{standalone}
+% Original Atlas figure theme. Apache-2.0; see the repository LICENSE.
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,decorations.pathreplacing,matrix}
+\definecolor{atlasInk}{HTML}{172235}
+\definecolor{atlasTeal}{HTML}{0D7B7D}
+\definecolor{atlasMuted}{HTML}{637278}
+\definecolor{atlasFill}{HTML}{EAF4F2}
+\definecolor{atlasLine}{HTML}{B6C8C7}
+\tikzset{
+  every picture/.style={line width=.65pt,draw=atlasInk,>=Latex},
+  every node/.style={text=atlasInk,font=\sffamily\small},
+  box/.style={draw,rounded corners=1.5pt,minimum height=.9cm,minimum width=1.6cm,align=center,inner sep=6pt,fill=white},
+  accent/.style={box,draw=atlasTeal,fill=atlasFill},
+  wire/.style={->,line width=.7pt},
+  keywire/.style={wire,draw=atlasTeal,dashed},
+  xor/.style={draw,circle,fill=white,inner sep=0pt,minimum size=.38cm},
+  add/.style={draw,rectangle,fill=white,inner sep=0pt,minimum size=.38cm},
+  note/.style={font=\sffamily\scriptsize,text=atlasMuted,align=center},
+  phase/.style={font=\sffamily\small\bfseries,text=atlasTeal},
+  group/.style={draw=atlasLine,dashed,rounded corners=2pt,inner sep=8pt}
+}
+\newcommand{\rotl}{\mathbin{\lll}}
+\newcommand{\rotr}{\mathbin{\ggg}}
+\newcommand{\kx}{\operatorname{Keccak}\!\text{-}\!f[1600]}
+
+\newcommand{\AtlasModulusBits}{b}
+\newcommand{\AtlasFieldBits}{256}
+\newcommand{\AtlasHash}{\textsf{SM3}}
+\newcommand{\AtlasCurve}{\textsf{curveSM2}}
+\newcommand{\AtlasDhGroup}{\textsf{X25519 / X448}}
+\newcommand{\AtlasDhPublicA}{\operatorname{XDH}(a,u_0)}
+\newcommand{\AtlasDhPublicB}{\operatorname{XDH}(b,u_0)}
+\newcommand{\AtlasDhSharedA}{\operatorname{XDH}(a,B)}
+\newcommand{\AtlasDhSharedB}{\operatorname{XDH}(b,A)}
+\newcommand{\AtlasSaltBytes}{s}
+\newcommand{\AtlasSharedBits}{klen}
+\newcommand{\AtlasPublicKeyBytes}{|pk|}
+\newcommand{\AtlasSecretKeyBytes}{|sk|}
+\newcommand{\AtlasCiphertextBytes}{|c|}
+\newcommand{\AtlasSignatureBytes}{|\sigma|}
+\newcommand{\AtlasModuleRank}{k}
+\newcommand{\AtlasMatrixRows}{k}
+\newcommand{\AtlasMatrixColumns}{\ell}
+\newcommand{\AtlasHypertreeHeight}{h}
+\newcommand{\AtlasHypertreeLayers}{d}
+\newcommand{\AtlasForsHeight}{a}
+\newcommand{\AtlasForsTrees}{k}
+\newcommand{\AtlasHashBytes}{n}
+\newcommand{\AtlasHashFamily}{\textsf{SHA2 / SHAKE}}
+\begin{document}
+\begin{tikzpicture}[node distance=.55cm]
+  \node[phase] (title) {SM2 encryption};
+  \node[box,below=of title] (point) {Random $k$, recipient public key $P_B$\\$C_1=[k]G,\quad (x,y)=[k]P_B$};
+  \node[accent,below=of point] (mask) {$t=\operatorname{KDF}(x\Vert y,|M|)$\\$C_2=M\oplus t$};
+  \node[box,below=of mask] (digest) {$C_3=\operatorname{SM3}(x\Vert M\Vert y)$};
+  \node[accent,below=of digest] (cipher) {$C=C_1\Vert C_3\Vert C_2$};
+  \draw[wire] (point) -- (mask); \draw[wire] (mask) -- (digest); \draw[wire] (digest) -- (cipher);
+  \node[note,below=.5cm of cipher,text width=6cm] {Decrypt with $(x,y)=[d_B]C_1$, recover $M$, check $C_3$.\\Point validation and the all-zero KDF check are required.\\Field: $\AtlasFieldBits$ bits.};
+\end{tikzpicture}
+
+\end{document}

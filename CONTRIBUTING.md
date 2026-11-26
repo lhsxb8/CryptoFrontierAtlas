@@ -55,7 +55,9 @@ Keep scientific logic in `lib/cryptanalysis/`, filesystem adapters in
 See [architecture](docs/architecture.md) and [model extensions](docs/data-model.md).
 
 Follow the [version policy](docs/versioning.md). Data-only updates keep the
-application version. Framework and functionality changes default to a patch
+application version. Local edits, commits and builds also keep the version;
+record pending changes under `Unreleased`. At an authorized remote-push boundary,
+a batch containing framework or functionality changes receives one patch
 increment; major and minor increments require explicit maintainer direction.
 Increment once per release batch. The initial release is v1.0.0.
 

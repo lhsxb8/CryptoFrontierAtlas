@@ -287,6 +287,7 @@ export interface AnalysisDataset {
   results: AnalysisResult[];
   compactResults: AnalysisResult[];
   familyCatalogs: AnalysisFamilyCatalog[];
+  problemAnalyses: import('./problem-types').ProblemAnalysis[];
   sources: AnalysisSource[];
   variants: CipherVariant[];
   coverage: AnalysisCoverage | null;

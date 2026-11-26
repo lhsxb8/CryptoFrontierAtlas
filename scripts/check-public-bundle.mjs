@@ -71,6 +71,8 @@ function verifyPublicReceipt(projectRoot, directory) {
   if (receipt.analysis_record_count !== data.results.length || receipt.analysis_source_count !== data.sources.length
     || receipt.analysis_entry_count !== data.results.length + data.compactResults.length
     || receipt.analysis_family_count !== data.familyCatalogs.reduce((sum, catalog) => sum + catalog.families.length, 0)
+    || (receipt.problem_analysis_record_count ?? 0) !== data.problemAnalyses.reduce((sum, catalog) => sum + catalog.results.length, 0)
+    || (receipt.problem_analysis_family_count ?? 0) !== data.problemAnalyses.reduce((sum, catalog) => sum + catalog.families.length, 0)
     || receipt.analysis_sha256 !== expectedHash || receipt.analysis_asset !== assetName
     || !existsSync(asset) || readFileSync(asset, 'utf8') !== expected) {
     throw new Error('Public release rejected: missing, changed or stale published analysis asset. Rebuild the public website.');

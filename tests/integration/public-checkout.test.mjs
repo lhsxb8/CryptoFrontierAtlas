@@ -50,10 +50,21 @@ test('a public checkout builds the complete snapshot without the local corpus, s
   assert.equal(receipt.analysis_included, true);
   assert.equal(receipt.analysis_record_count, publication.counts.records);
   assert.equal(receipt.analysis_source_count, publication.counts.sources);
+  assert.equal(receipt.problem_analysis_record_count, publication.counts.problem_records);
+  assert.equal(receipt.problem_analysis_family_count, publication.counts.problem_families);
   const publicData = JSON.parse(readFileSync(join(output, receipt.analysis_asset), 'utf8'));
   assert.equal(publicData.enabled, true);
   assert.equal(publicData.compactResults.length, publication.counts.compact_only);
   assert(publicData.results.length > 0);
+  assert.equal(publicData.problemAnalyses.length, publication.counts.hard_problems);
+  const problemResults = publicData.problemAnalyses.flatMap(c => c.results);
+  assert.equal(problemResults.length, publication.counts.problem_records);
+  assert(problemResults.length > 0);
+  for (const problem of publicData.problemAnalyses) {
+    assert.equal('ingestion_batches' in problem, false);
+    assert.equal(existsSync(join(directory, 'data/cryptanalysis-public/provenance')), false);
+    assert.deepEqual(problem.results.map(r => r.id).sort(), [...problem.records].sort());
+  }
   const catalogPath = join(output, 'atlas-catalog.json');
   const releasePath = join(output, 'atlas-release.json');
   const catalogBytes = readFileSync(catalogPath, 'utf8');
@@ -69,6 +80,9 @@ test('a public checkout builds the complete snapshot without the local corpus, s
   checkPublicBundle({projectRoot:directory, outputDirectory:join(directory, 'shared-build')});
   const analysisPath = join(output, receipt.analysis_asset), analysisBytes = readFileSync(analysisPath, 'utf8');
   writeFileSync(analysisPath, JSON.stringify({...publicData, results: []}));
+  assert.throws(() => checkPublicBundle({projectRoot:directory, outputDirectory:output}), /published analysis asset/);
+  writeFileSync(analysisPath, analysisBytes);
+  writeFileSync(analysisPath, JSON.stringify({...publicData, problemAnalyses: []}));
   assert.throws(() => checkPublicBundle({projectRoot:directory, outputDirectory:output}), /published analysis asset/);
   writeFileSync(analysisPath, analysisBytes);
   writeFileSync(releasePath, JSON.stringify({...release, application_version: '0.0.0'}));

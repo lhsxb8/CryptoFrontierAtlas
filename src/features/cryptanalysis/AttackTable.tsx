@@ -18,7 +18,7 @@ import { useWideCosts } from './use-wide-costs';
 export { attackRows, attackBlocks, type AttackRow } from './attack-rows';
 
 type CostDimension = keyof AnalysisResult['resources'] | 'success';
-const costColumns = ['Time', 'Data', 'Memory', 'Preprocessing', 'Success probability'];
+const costColumns = ['Time', 'Data', 'Memory', 'Preprocessing', 'Success Probability'];
 const costSymbols: Partial<Record<CostDimension, string>> = {
   time: 'T', data: 'D', memory: 'M', preprocessing: 'T_{\\mathrm{pre}}',
   t_gates: 'T_{\\mathrm{gates}}', circuit_depth: 'D_{\\mathrm{circuit}}',
@@ -50,7 +50,7 @@ function AttackDetails({ row, sources, params }: { row: AttackRow; sources: Anal
   const { view } = row;
   const record = view.records[0];
   return <div className="a-attack-details">
-    <div><h3>Attack and conditions</h3><p><ResultTitle title={record.title} recordId={record.id} /></p><p><Formula expression={record.target.description} /></p>
+    <div><h3>Attack and Conditions</h3><p><ResultTitle title={record.title} recordId={record.id} /></p><p><Formula expression={record.target.description} /></p>
       <dl className="a-metadata">{[
         ['Round boundary', record.target.round_convention],
         ['Key relation', record.setting.key_relation], ['Key population', record.setting.key_population],
@@ -61,7 +61,7 @@ function AttackDetails({ row, sources, params }: { row: AttackRow; sources: Anal
       <ExperimentDefinition record={record} />
       {view.family && <FamilyModel family={view.family} sources={sources} variantId={params.get('variant') || undefined} />}
     </div>
-    <div><h3>Success, accounting and evidence</h3>{view.records.map(item => <section key={item.id} className="a-attack-point-details">
+    <div><h3>Success, Accounting and Evidence</h3>{view.records.map(item => <section key={item.id} className="a-attack-point-details">
       <a className="a-text-link" href={resultHref(item.id, params)}>{view.family ? <Formula expression={parameterChoice(view, item)} /> : 'Full result details'} →</a>
       {item.setting.plaintext_model !== record.setting.plaintext_model && <p><strong>Plaintext model: </strong><Formula expression={item.setting.plaintext_model} /></p>}
       {JSON.stringify(item.setting.assumptions) !== JSON.stringify(record.setting.assumptions) && <Conditions items={item.setting.assumptions} />}
@@ -88,7 +88,7 @@ export function AttackTable({ views = [], rows: suppliedRows, sources, variant, 
     <table className="a-attack-table">
       <caption className="sr-only">Attacks. Formulas and complete reported parameter choices, in source-native units.</caption>
       <colgroup>{widths.map((width, index) => <col key={index} style={{ width: `${width}%` }} />)}</colgroup>
-      <thead><tr><th scope="col"><span className="sr-only">Compare selection</span></th>{['Paper / attack', 'Rounds', 'Goal', 'Setting', 'Time', 'Data', 'Memory', 'Preprocessing', 'Success probability'].map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
+      <thead><tr><th scope="col"><span className="sr-only">Compare selection</span></th>{['Paper / Attack', 'Rounds', 'Goal', 'Setting', 'Time', 'Data', 'Memory', 'Preprocessing', 'Success Probability'].map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
       <tbody>{attackBlocks(rows).map(block => {
         const { view, id } = block;
         const first = view.records[0], formula = block.rows[0].formula;
@@ -104,7 +104,7 @@ export function AttackTable({ views = [], rows: suppliedRows, sources, variant, 
           return <tr key={row.id} className={`a-attack-row${rowIndex ? ' a-attack-continuation' : ''}${checked ? ' a-row-selected' : ''}`} data-attack-block={id} data-record-id={formula ? undefined : record.id} data-record-ids={formula ? undefined : row.view.records.map(item => item.id).join(' ')} data-model-id={formula ? row.id : undefined} data-family-id={view.family?.id}>
             <td className="a-attack-select"><label className="a-checkbox"><input type="checkbox" aria-label={formula ? `Compare ${title}` : `Compare ${parameterChoice(row.view, row.view.records.find(item => item.id === selectionId)!)} at ${attackName(view)}`} checked={checked} disabled={selected.length >= MAX_COMPARISON_RECORDS && !checked} onChange={() => { setChoices(current => ({ ...current, [row.id]: selectionId })); onToggle(selectionId); }} /></label></td>
             {rowIndex === 0 && <>
-              <td data-label="Paper / attack" className="a-attack-identity" rowSpan={block.rows.length}>
+              <td data-label="Paper / Attack" className="a-attack-identity" rowSpan={block.rows.length}>
                 <a className="a-result-title" href={resultHref(first.id, params)} title={title}><CitationLabel label={resultCitationLabel({ evidence: view.records.flatMap(item => item.evidence) }, sources)} /></a>
                 <span className="a-attack-name"><Formula expression={attackName(view)} /></span>
                 {publications.map(({ source }) => <a className="a-attack-publication" key={source.publication.url} href={sourceHref(source.id, variant.id)} title={source.title}>{publicationLabel(source)}</a>)}

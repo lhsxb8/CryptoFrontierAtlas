@@ -21,13 +21,13 @@ export function FamilyModel({ family, sources, variantId }: {
         {expression.display_expression === null ? <span>See reported points</span> : <><Formula expression={expression.display_expression ?? expression.expression} display readable /><ResourceUnit unit={expression.unit} /></>}
         {expression.note && <p><Formula expression={readerText(expression.note)} /></p>}
       </div>)}</div>
-      <details className="a-model-conditions"><summary>Parameter range, success and cost accounting</summary>
+      <details className="a-model-conditions"><summary>Parameter Range, Success and Cost Accounting</summary>
         <Conditions items={family.model.constraints} />
         <p><strong>Success: </strong><Formula expression={readerText(family.model.success)} readable /></p>
         <p><strong>Accounting: </strong><Formula expression={readerText(family.model.accounting)} /></p>
       </details>
     </>}
-    <details className="a-model-conditions"><summary>Formula and table sources · {countLabel(family.evidence.length, 'reference')}</summary>
+    <details className="a-model-conditions"><summary>Formula and Table Sources · {countLabel(family.evidence.length, 'reference')}</summary>
       <ul>{family.evidence.map((evidence, index) => {
         const source = sources.find(item => item.id === evidence.source_id);
         return <li key={index}><a href={sourceHref(evidence.source_id, variantId)}>{source ? `[${source.citation_label}] · ${publicationLabel(source)}` : evidence.source_id}</a><p><MathText text={evidence.locator} /></p></li>;

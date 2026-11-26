@@ -4,7 +4,7 @@
   "reviewed_on": "2026-11-10",
   "local_only": false,
   "record_count": 561,
-  "source_count": 176,
+  "source_count": 186,
   "scope": "Version-specific AES results across classical algorithmic, quantum logical-circuit and fault-injection settings. Full-scope literature census is in progress; current-best status is not asserted.",
   "verification_scope": "Primary-text transcription checks, plus five independently checked collision witnesses. No full attack-cost reproduction.",
   "records": [

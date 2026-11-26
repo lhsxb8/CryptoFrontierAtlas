@@ -1,0 +1,9 @@
+\begin{tikzpicture}[node distance=.55cm]
+  \node[phase] (title) {SM2 signatures};
+  \node[box,below=of title] (digest) {Identity digest $Z_A$, message $M$\\$e=\operatorname{SM3}(Z_A\Vert M)$};
+  \node[accent,below=of digest] (point) {$R=[k]G=(x,y)$\\$r=(e+x)\bmod n$};
+  \node[box,below=of point] (sign) {$s=(1+d_A)^{-1}(k-rd_A)\bmod n$\\Signature $(r,s)$};
+  \node[accent,below=of sign] (verify) {$t=(r+s)\bmod n$\\$(x',y')=[s]G+[t]P_A$};
+  \draw[wire] (digest) -- (point); \draw[wire] (point) -- (sign); \draw[wire] (sign) -- (verify);
+  \node[note,below=.5cm of verify,text width=6cm] {Check $(e+x')\bmod n=r$ and the specified validity rules.\\Signing retries invalid $r,s$; verification rejects $t=0$.\\$Z_A$ binds identity, domain parameters and public key.};
+\end{tikzpicture}

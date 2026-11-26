@@ -2,12 +2,14 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { ArrowUpRight, Binary } from 'lucide-react';
 import ProblemExplorer from '../features/questions/Explorer';
 import { problems } from '../features/questions/data';
-import { analysisEnabled, ciphers, resultPoints, variants } from '../features/cryptanalysis/data';
+import { analysisEnabled, ciphers, resultPoints, variants, problemAnalyses } from '../features/cryptanalysis/data';
+import { ProblemResultDetail } from '../features/cryptanalysis/ProblemAnalysis';
 import { ResultsPage, ResultDetail, ComparePage } from '../features/cryptanalysis';
 import { PortalPage, CipherDirectory, SourcesPage, CoveragePage, NotFound, PlannedCollection } from './atlas/pages';
-import { PrimitivePage } from '../features/primitives/pages';
+import { PrimitiveDirectory, PrimitivePage } from '../features/primitives/pages';
+import { HardProblemPage } from '../features/primitives/HardProblemPage';
 import { primitiveCatalog } from '../features/primitives/data';
-import { directoryRoutes } from '../features/primitives/model';
+import { directoryRoutes, primitiveDomain } from '../features/primitives/model';
 import { appVersion } from './version';
 import { parseHash, routeHref, routeScopeParams, variantLabel } from './atlas/model';
 import HeaderTools from './HeaderTools';
@@ -68,31 +70,38 @@ export default function App() {
   }, [route.path, route.page]);
 
   useEffect(() => {
+    const family = primitiveCatalog.primitives.find(p => p.id === route.cipherId && primitiveDomain(primitiveCatalog, p.id) === (route.domain ?? 'symmetric'));
+    const scientific = route.domain !== 'asymmetric';
     const title = route.page === 'questions' && route.id ? problems.find(problem => problem.id === route.id)?.title
+      : route.page === 'hard-problem' ? primitiveCatalog.hard_problems.find(problem => problem.id === route.id)?.name
+      : route.page === 'problem-result' ? problemAnalyses.find(c => c.problem_id === route.problemId)?.results.find(r => r.id === route.id)?.title
       : route.page === 'result' && route.id ? resultPoints.find(result => result.id === route.id)?.title
-        : route.page === 'cipher' ? primitiveCatalog.primitives.find(p => p.id === route.cipherId)?.name ?? ciphers.find(cipher => cipher.id === route.cipherId)?.name
-          : route.page === 'instance' ? primitiveCatalog.instances.find(i => i.id === route.variantId && i.family_id === route.cipherId)?.name ?? variants.filter(variant => variant.id === route.variantId && variant.family === route.cipherId).map(variantLabel)[0]
+        : route.page === 'cipher' ? family?.name ?? (scientific ? ciphers.find(cipher => cipher.id === route.cipherId)?.name : undefined)
+          : route.page === 'instance' ? (family && primitiveCatalog.instances.find(i => i.id === route.variantId && i.family_id === family.id)?.name) ?? (scientific ? variants.filter(variant => variant.id === route.variantId && variant.family === route.cipherId).map(variantLabel)[0] : undefined)
           : route.page === 'not-found' ? text.pageNotFound
             : ({ home: text.researchCollections, questions: text.questions, 'question-sources': text.questionCitations, ciphers: text.cipherDirectory, compare: text.compareResults, 'analysis-sources': text.analysisSources, coverage: text.coverage, asymmetric: text.asymmetric, implementation: text.implementation } as Record<string, string>)[route.page];
     document.title = `${title ?? text.recordNotFound} · CryptoFrontierAtlas`;
-  }, [route.page, route.id, route.cipherId, route.variantId, text]);
+  }, [route.page, route.id, route.cipherId, route.variantId, route.problemId, route.domain, text]);
 
   const pageProps = { searchParams: route.params, onParamsChange };
-  const scientificTarget = analysisEnabled && ciphers.some(c => c.id === route.cipherId)
+  const scientificTarget = route.domain !== 'asymmetric' && analysisEnabled && ciphers.some(c => c.id === route.cipherId)
     && (!route.variantId || variants.some(v => v.id === route.variantId && v.family === route.cipherId));
   const content = route.page === 'questions' ? <ProblemExplorer problemId={route.id} {...pageProps} />
     : route.page === 'home' ? <PortalPage />
-      : route.page === 'asymmetric' || route.page === 'implementation' ? <PlannedCollection collection={route.page} />
+      : route.page === 'asymmetric' ? <PrimitiveDirectory domain="asymmetric" {...pageProps} />
+        : route.page === 'hard-problem' ? <HardProblemPage id={route.id!} />
+        : route.page === 'problem-result' ? <ProblemResultDetail problemId={route.problemId!} id={route.id!} />
+        : route.page === 'implementation' ? <PlannedCollection />
       : route.page === 'ciphers' ? <CipherDirectory {...pageProps} />
         : route.page === 'cipher' || route.page === 'instance' ? scientificTarget
           ? <ResultsPage cipherId={route.cipherId!} variantId={route.variantId} {...pageProps} />
-          : <PrimitivePage cipherId={route.cipherId!} variantId={route.variantId} />
+          : <PrimitivePage cipherId={route.cipherId!} variantId={route.variantId} domain={route.domain} />
           : route.page === 'result' ? <ResultDetail id={route.id!} searchParams={route.params} />
             : route.page === 'compare' ? <ComparePage variantId={route.variantId} {...pageProps} />
               : route.page === 'question-sources' ? <SourcesPage collection="questions" {...pageProps} />
                 : route.page === 'analysis-sources' ? <SourcesPage collection="analysis" id={route.id} {...pageProps} />
                   : route.page === 'coverage' ? <CoveragePage {...pageProps} /> : <NotFound />;
-  const section = route.page === 'questions' || route.page === 'question-sources' ? 'questions'
+  const section = route.domain === 'asymmetric' ? 'asymmetric' : route.page === 'questions' || route.page === 'question-sources' ? 'questions'
     : ['ciphers', 'cipher', 'instance', 'result', 'compare', 'analysis-sources', 'coverage'].includes(route.page) ? 'analysis' : route.page;
   const scopeParams = routeScopeParams(route, ciphers, variants, resultPoints);
   const sectionNavigation = section === 'questions' ? [
@@ -110,7 +119,7 @@ export default function App() {
     <a className="atlas-skip-link" href="#atlas-main" onClick={event => { event.preventDefault(); document.getElementById('atlas-main')?.focus(); }}>{text.skip}</a>
     <header className="atlas-header"><div className="atlas-header-inner">
       <a className="brand" href="#/" aria-label={`CryptoFrontierAtlas ${text.home}`}><span className="brand-mark"><Binary size={20} strokeWidth={2.2} /></span><span>CryptoFrontierAtlas</span></a>
-      <PrimaryNavigation routeKey={route.path} entries={navigation.map(item => ({href: '#' + item.path, label: text[item.label], active: section === item.section, planned: ['asymmetric', 'implementation'].includes(item.section)}))} />
+      <PrimaryNavigation routeKey={route.path} entries={navigation.map(item => ({href: '#' + item.path, label: text[item.label], active: section === item.section, planned: item.section === 'implementation'}))} />
       <HeaderTools />
     </div></header>
     {sectionNavigation.length > 0 && <div className={'atlas-section-bar is-' + section}><nav aria-label={text.collectionNavigation}>{sectionNavigation.map(item => <a key={item.href} href={item.href} className={item.active ? 'is-active' : ''} aria-current={item.active ? 'page' : undefined}>{item.label}</a>)}</nav></div>}

@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "id": "if-ekera-single-run-complete-v2",
+  "title": "Single-Run Order Finding: Complete Factorization",
+  "method": "order-finding",
+  "result_kind": "algorithm",
+  "goal": "complete_factorization",
+  "statement": "Complete factorization with overall success tending to one using one quantum order-finding run and polynomial classical postprocessing.",
+  "target": {
+    "kind": "hard_problem",
+    "problem_id": "integer-factorization",
+    "input_class": "general_integer",
+    "description": "The formal corollary treats odd $l$-bit $N$ with at least two distinct prime factors. Trial division, primality and perfect-power reductions cover the other inputs.",
+    "parameters": [
+      {
+        "name": "l",
+        "meaning": "Input bit length",
+        "domain": "Positive integer; $2^{l-1}\\le N<2^l$.",
+        "value": "l"
+      },
+      {
+        "name": "m",
+        "meaning": "Order bit-length upper bound",
+        "domain": "Corollary 3.3 choice.",
+        "value": "l-1"
+      },
+      {
+        "name": "ell",
+        "meaning": "Additional exponent-length parameter",
+        "domain": "Least integer such that $2^{m+\\ell}\\ge N^2/4$.",
+        "value": "least integer with 2^(m+ell)>=N^2/4"
+      },
+      {
+        "name": "B",
+        "meaning": "Frequency search radius",
+        "domain": "Asymptotic choice in Corollary 3.5; satisfies Corollary 3.3's admissibility domain for sufficiently large inputs.",
+        "value": "m"
+      },
+      {
+        "name": "c",
+        "meaning": "Order postprocessing bound",
+        "domain": "Corollary 3.5 example.",
+        "value": 1
+      },
+      {
+        "name": "zeta",
+        "meaning": "Classical factoring bound",
+        "domain": "Corollary 3.5 example.",
+        "value": 1
+      },
+      {
+        "name": "k",
+        "meaning": "Number of classical factoring iterations",
+        "domain": "Corollary 3.5 example; logarithm convention of the source.",
+        "value": "ceil(3 log_2 l)"
+      }
+    ],
+    "modulus_bits": null,
+    "instance_name": null
+  },
+  "setting": {
+    "computation": "quantum",
+    "model": "quantum",
+    "basis": "proved",
+    "input_access": "public_integer",
+    "assumptions": [
+      "The group element is chosen uniformly from $(\\mathbb Z/N\\mathbb Z)^\\times$.",
+      "Costs and asymptotic success use the coupled choices in Corollary 3.5, not an arbitrary fixed finite-size parameter set."
+    ],
+    "auxiliary_information": []
+  },
+  "resources": {
+    "time": {
+      "status": "reported",
+      "reported": "$\\operatorname{poly}(l)$",
+      "unit": "algorithmic-operations",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Corollary 3.5 polynomial-time statement, without a concrete gate or wall-clock normalization."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No total classical/quantum memory bound is extracted for this result."
+    },
+    "quantum_calls": {
+      "status": "reported",
+      "reported": "$1$",
+      "unit": "order-finding-runs",
+      "log2": null,
+      "qualifier": "exact",
+      "note": "One quantum run; the two bounded searches and factoring iterations are classical."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "complete-factorization",
+    "value": null,
+    "expression": "$\\Pr[\\mathrm{complete\\ factorization}]\\longrightarrow1\\quad(N\\to\\infty)$",
+    "basis": "source_proof",
+    "description": "Corollary 3.5 uses the complete-factoring bound of Equation (20), including both order recovery and the classical factorization stage. No universal finite-size value such as 0.9999 is inferred.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-26",
+      "scope": "Checked the stated event and bound in the cited theorem/corollary and its surrounding argument; not a proof reproduction."
+    }
+  },
+  "evidence": [
+    {
+      "source_id": "ekera2024-order-finding-v2",
+      "locator": "PDF/printed pp. 22–24, Section 4.2.1, Corollaries 3.3–3.5; Equation (20).",
+      "fields": [
+        "/statement",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Targeted transcription of this result's input, output, cost accounting and success event; not a full-paper audit."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "review_scope": "targeted_primary_text",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "This is the inspected 2022 preprint version associated with a 2024 journal publication.",
+    "The asymptotic limit is not a guarantee of success probability one for a finite RSA modulus."
+  ],
+  "related_result_ids": []
+}

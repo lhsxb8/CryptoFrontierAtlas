@@ -15,20 +15,20 @@ test('new block, stream and hash instances retain their exact parameters and emp
     await expect(page.locator('.atlas-structure')).toHaveAttribute('data-structure-target', id);
     const parameters = page.locator('.atlas-structure-parameters dl');
     await expect(parameters).toHaveText(`Key material${key} bitsBlock size${block} bitsRounds${rounds}`);
-    await expect(page.locator('.atlas-catalog-empty')).toContainText('No catalogued results');
+    await expect(page.locator('.atlas-catalog-empty')).toContainText('No Catalogued Results');
     await expect(page.locator('.a-selection-bar, .a-attack-table')).toHaveCount(0);
   }
   for (const [family, id, output, steps] of [['sm3', 'sm3-256', 256, 64], ['sha1', 'sha-1', 160, 80], ['md5', 'md5-128', 128, 64]] as const) {
     await page.goto(`/#/cryptanalysis/ciphers/${family}/${id}`);
-    await expect(page.locator('.atlas-structure-parameters dl')).toHaveText(`Output${output} bitsState size${output} bitsBlock size512 bitsCompression steps${steps}`);
+    await expect(page.locator('.atlas-structure-parameters dl')).toHaveText(`Output${output} bitsState size${output} bitsBlock size512 bitsCompression Steps${steps}`);
     await expect(page.locator('.atlas-structure-parameters')).not.toContainText('Key material');
-    await expect(page.locator('.atlas-catalog-empty')).toContainText('No catalogued results');
+    await expect(page.locator('.atlas-catalog-empty')).toContainText('No Catalogued Results');
   }
   for (const key of [128, 256]) {
     await page.goto(`/#/cryptanalysis/ciphers/salsa20/salsa20-${key}`);
     await expect(page.locator('.atlas-structure-parameters dl')).toHaveText(`Key material${key} bitsNonce64 bitsCounter64 bitsState size512 bitsRounds20Keystream block512 bits`);
     await expect(page.locator('.atlas-structure figcaption')).toContainText('column/row');
-    await expect(page.locator('.atlas-catalog-empty')).toContainText('No catalogued results');
+    await expect(page.locator('.atlas-catalog-empty')).toContainText('No Catalogued Results');
   }
 });
 
@@ -42,7 +42,7 @@ test('Chinese aliases find SM3 and SM4 and open their source-bound diagrams', as
   await page.locator('.atlas-primitive-navigation').getByRole('link', {name: 'SM4', exact: true}).click();
   await expect(page.locator('.atlas-structure')).toHaveAttribute('data-structure-target', 'sm4-128');
   await expect(page.locator('.atlas-structure figcaption')).toContainText('reverses word order');
-  await page.getByRole('tab', {name: 'Round & key schedule', exact: true}).click();
+  await page.getByRole('tab', {name: 'Round & Key Schedule', exact: true}).click();
   await expect(page.locator('.atlas-structure figcaption')).toContainText('different linear maps');
   await page.goto('/#/cryptanalysis?q=国密SM3');
   await page.locator('.atlas-family-card').click();
@@ -71,6 +71,6 @@ test('historical hashes keep visible security context without being labelled wit
     await page.goto(`/#/cryptanalysis/ciphers/${family}`);
     await expect(page.locator('.atlas-structure figcaption')).toContainText(/collision resistance.*broken|broken collision resistance/);
     await expect(page.locator('.atlas-status-warning')).toHaveCount(0);
-    await expect(page.locator('.atlas-catalog-empty')).toContainText('No catalogued results');
+    await expect(page.locator('.atlas-catalog-empty')).toContainText('No Catalogued Results');
   }
 });

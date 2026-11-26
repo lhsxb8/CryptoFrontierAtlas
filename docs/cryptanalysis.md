@@ -14,6 +14,8 @@ resources, success event and source evidence.
 | Source | Bibliography, inspected version, result locations and content hash |
 | Cipher and instance | Algorithm identity, parameters and round conventions |
 | Manifest | Dataset version and canonical record list |
+| Problem result | Hard-problem target, input class, output goal and algorithm/run evidence |
+| Problem analysis catalog | Family references, bounded coverage and internal ingestion receipts |
 
 Contracts live in `schemas/cryptanalysis/`. The taxonomy registry defines result
 kinds, goals, methods, key models and attack surfaces. See
@@ -54,11 +56,15 @@ Run these commands from the application root:
 | `npm run report:sota` | Generate the frontier review report |
 | `npm run check:sota` | Validate frontier review inputs |
 
-Validation is read-only. Exporting updates the public snapshot and retains its
-previous version under `.local/publication/`. Indexing updates derived metadata;
+Validation is read-only. Exporting updates the public snapshot and removes its
+temporary rollback copy after success. Indexing updates derived metadata;
 report commands write generated outputs. All commands except public validation
 require the maintained local corpus configured through `atlas.config.cjs`.
 The CLI and build adapter share scientific validation and comparison logic.
+Hard-problem catalogs have their own review/search dates; adding their sources does
+not advance the AES census cutoff or imply a new AES review. The current report
+and progress commands retain their AES-specific scope. See
+[Integer Factorization](integer-factorization.md) for the bounded example collection.
 
 ## Contributions
 

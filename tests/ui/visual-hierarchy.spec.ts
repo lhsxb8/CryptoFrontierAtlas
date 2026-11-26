@@ -4,33 +4,43 @@ import catalog from '../../data/primitives/catalog.json' with {type: 'json'};
 test.use({locale: 'en-US'});
 
 test('chapter headings and primitive names have distinct type roles in a responsive directory', async ({page}) => {
-  for (const width of [1440, 768, 375, 320]) {
-    await page.setViewportSize({width, height: 900});
-    await page.goto('/#/cryptanalysis');
-    await page.getByRole('heading', {name: 'Block ciphers', exact: true}).waitFor();
-    await page.evaluate(() => document.fonts.ready);
-    const typography = await page.locator('.atlas-family-group').first().evaluate(section => {
-      const chapter = getComputedStyle(section.querySelector('h2')!);
-      const entry = getComputedStyle(section.querySelector('h3')!);
-      return {chapterFont: chapter.fontFamily, entryFont: entry.fontFamily, chapterSize: parseFloat(chapter.fontSize), entrySize: parseFloat(entry.fontSize)};
-    });
-    expect(typography.chapterFont).toContain('Atlas Source Serif');
-    expect(typography.entryFont).not.toContain('Atlas Source Serif');
-    expect(typography.chapterSize).toBeGreaterThan(typography.entrySize);
-    expect(await page.evaluate(() => [...document.fonts].some(font => font.family.includes('Atlas Source Serif') && font.status === 'loaded'))).toBe(true);
-    await expect(page.locator('.atlas-directory-toolbar [role=status] strong')).toHaveText(String(catalog.primitives.length));
-    await expect(page.locator('.atlas-family-card')).toHaveCount(catalog.primitives.length);
-    const single = page.locator('.atlas-family-grid.is-single').first();
-    expect(await single.evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(1);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width + 1);
+  const directories = [
+    {domain: 'symmetric', path: '/cryptanalysis', heading: 'Block Ciphers'},
+    {domain: 'asymmetric', path: '/asymmetric-cryptanalysis', heading: 'Hard Problems'},
+  ];
+  for (const directory of directories) {
+    const categories = catalog.categories.filter(category => category.domain === directory.domain);
+    const families = catalog.primitives.filter(family => categories.some(category => category.id === family.category));
+    const entryCount = families.length + (directory.domain === 'asymmetric' ? catalog.hard_problems.length : 0);
+    for (const width of [1440, 768, 375, 320]) {
+      await page.setViewportSize({width, height: 900});
+      await page.goto('/#' + directory.path);
+      await page.getByRole('heading', {name: directory.heading, exact: true}).waitFor();
+      await expect(page.locator('.atlas-family-group h2').first()).toHaveText(directory.heading);
+      await page.evaluate(() => document.fonts.ready);
+      const typography = await page.locator('.atlas-family-group').first().evaluate(section => {
+        const chapter = getComputedStyle(section.querySelector('h2')!);
+        const entry = getComputedStyle(section.querySelector('h3')!);
+        return {chapterFont: chapter.fontFamily, entryFont: entry.fontFamily, chapterSize: parseFloat(chapter.fontSize), entrySize: parseFloat(entry.fontSize)};
+      });
+      expect(typography.chapterFont).toContain('Atlas Source Serif');
+      expect(typography.entryFont).not.toContain('Atlas Source Serif');
+      expect(typography.chapterSize).toBeGreaterThan(typography.entrySize);
+      expect(await page.evaluate(() => [...document.fonts].some(font => font.family.includes('Atlas Source Serif') && font.status === 'loaded'))).toBe(true);
+      await expect(page.locator('.atlas-directory-toolbar [role=status] strong')).toHaveText(String(entryCount));
+      await expect(page.locator('.atlas-family-card')).toHaveCount(entryCount);
+      const single = page.locator('.atlas-family-grid.is-single').first();
+      expect(await single.evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(1);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width + 1);
+    }
   }
 });
 
 test('mobile navigation is a labelled disclosure with keyboard, route and breakpoint recovery', async ({page}) => {
   await page.setViewportSize({width: 375, height: 850});
   await page.goto('/#/');
-  const toggle = page.getByRole('button', {name: 'Primary navigation', exact: true});
-  const nav = page.getByRole('navigation', {name: 'Primary navigation', exact: true});
+  const toggle = page.getByRole('button', {name: 'Primary Navigation', exact: true});
+  const nav = page.getByRole('navigation', {name: 'Primary Navigation', exact: true});
   await expect(toggle).toContainText('Home');
   await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   await expect(nav).toBeHidden();
@@ -42,10 +52,10 @@ test('mobile navigation is a labelled disclosure with keyboard, route and breakp
   await page.keyboard.press('Escape');
   await expect(nav).toBeHidden(); await expect(toggle).toBeFocused();
   await toggle.click();
-  await nav.getByRole('link', {name: 'Symmetric cryptanalysis', exact: true}).click();
+  await nav.getByRole('link', {name: 'Symmetric Cryptanalysis', exact: true}).click();
   await expect(page).toHaveURL(/#\/cryptanalysis$/);
   await expect(page.locator('main h1')).toBeFocused();
-  await expect(toggle).toContainText('Symmetric cryptanalysis');
+  await expect(toggle).toContainText('Symmetric Cryptanalysis');
   await expect(nav).toBeHidden();
   await toggle.click();
   await page.locator('main h1').click();
@@ -53,7 +63,7 @@ test('mobile navigation is a labelled disclosure with keyboard, route and breakp
   await toggle.click();
   await page.setViewportSize({width: 1440, height: 900});
   await expect(nav).toBeVisible(); await expect(toggle).toBeHidden();
-  await expect(nav.getByRole('link', {name: 'Symmetric cryptanalysis', exact: true})).toBeFocused();
+  await expect(nav.getByRole('link', {name: 'Symmetric Cryptanalysis', exact: true})).toBeFocused();
   await page.setViewportSize({width: 375, height: 850});
   await expect(nav).toBeHidden(); await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   await expect(toggle).toBeFocused();
@@ -110,5 +120,5 @@ test('font fallback and reduced motion retain usable narrow entrances', async ({
   await page.locator('.atlas-portal-card').first().hover();
   await expect(page.locator('.atlas-portal-card').first().locator('img')).toHaveCSS('transform', 'none');
   await page.locator('.atlas-portal-card[href="#/cryptanalysis"]').click();
-  await expect(page.getByRole('heading', {name: 'Block ciphers', exact: true})).toBeVisible();
+  await expect(page.getByRole('heading', {name: 'Block Ciphers', exact: true})).toBeVisible();
 });

@@ -7,17 +7,31 @@
     "entries": 1233,
     "compact_only": 1018,
     "parameterized_families": 184,
-    "sources": 176,
+    "sources": 186,
     "ciphers": 1,
-    "instances": 11
+    "instances": 11,
+    "hard_problems": 1,
+    "problem_records": 10,
+    "problem_families": 10
   },
-  "scientific_sha256": "d1cc0118fd2e9affbc2f71b6ce03e43680b09073810409e46e37884a1bbcb910",
+  "scientific_sha256": "beb36d363dc2831be755696d895ce7f894e6a35dea8e928b60c80afd07185d43",
   "files": {
     "ciphers.json": "6c811738b334c3edec00166d833e4f3ca0ab7a2c9600048c9d1d5e473e6e5d7b",
     "coverage.json": "4fbac770aa51107c03392887988e7cdfc1af24970ba70721c10c233663b12958",
     "entries/aes.jsonl": "16de93533b86d504bc0629e534fe543899e7d0d49037e55a5931b9adcbe34566",
-    "manifest.json": "742a34d568183aedb146ef609f96ef856d7ac6d6e773edd6bb603eeb35ff172c",
+    "manifest.json": "d4314b4259b873d5844b0a70982e81b47602b74e86ed6830b3b0aeed348fb101",
     "presentation/aes.json": "06f0ac66b5d8c7ef59815a50bec5673fae80190bd142d7754875ca5474437b4a",
+    "problem-analyses/integer-factorization.json": "86b6f1e8e873551fba2e4986d47a18c48f4c7f230f20eedb83bdb7acc0125bc5",
+    "problem-results/if-cuda-mpqs-rsa155-2026.json": "b75495caa18f19f7bcc8616e9e246231e836833b96c9c33e28ad843916058a70",
+    "problem-results/if-dps-oracle-almost-all-v4.json": "eca1620103e0999473c9dc7c41a0b6c3fd90a64fd3de7eb9ef1e8535805f8841",
+    "problem-results/if-ekera-single-run-complete-v2.json": "0556cd431773daec692ee2a9275d8e1e0c99f4b90391c6cb413c51f9a3a974e4",
+    "problem-results/if-gao-balanced-semiprime-v1.json": "72d1da422d571062dc441ed538bf6b29acce1d97c0c5e44d011e26836313af32",
+    "problem-results/if-harvey-hittmeir-large-order-v2.json": "28c6bbe416984ee5dd9f663ad98d6b4b214a2955f4b16cc4634fd29c73249f02",
+    "problem-results/if-jacobi-special-integers-v4.json": "6c22e5414fcc53cf594c79591b241d77d2f24b7dfca531d3550c25243ba4db7d",
+    "problem-results/if-pilatte-unconditional-v3.json": "612ad9b73ca3af6e4a721db5f814ecd196997920da779916b4469a4bba7fc0c7",
+    "problem-results/if-regev-short-vector-v3.json": "70c30a14535ac03dc5944dd77438a50edc16bc86927e95cb587a20d193e21210",
+    "problem-results/if-rv-noise-robust-v5.json": "c877e07dd5765b351b7e92f8e55afe25c0e999bc863f998a75372496e91ea804",
+    "problem-results/if-stanica-quadratic-image-v1.json": "64e980bf3898e6cb8014f924c3b8685587a1115e1519069723339ffd55c5878c",
     "README.md": "6af86819778db14d14130491bfb1cffdac12e67a3b71f59f818fd5f68c93bbf2",
     "result-families/aes.json": "48520349b5093d6ff2e12e595503786644be89159d5f6cce096a293904f4fc85",
     "results/aes-10r-8plus2-ind-known-key-query-n64-gr2017.json": "d2d1d18c104ca0598fa507451912c76ee1992e34f6ee710a2f3b406fac966a0b",
@@ -581,9 +595,9 @@
     "results/qin2025-aes192-7r-free-target.json": "3d189986c983298cde302878d585fea8357880a210d46f57bccf21871ed074b0",
     "results/qin2025-aes256-6r-fixed-zero.json": "ff1d2e4d4e2245d3c3bf5e11539b67f4ac73de5ff024e5a70df3bbb1748fa266",
     "results/rijndael-v2-four-round-active-sboxes.json": "dfc59057fd9720920149438a681df4d51460d02fe03d458b6fd69b94b2038dc9",
-    "sources.json": "c1dd4437b6abb85cbe9c64f37523b9c8a8671ddcd767f3e9223ad6805c3ede62",
+    "sources.json": "66a7515a7e6b61fc537cb7159fc2d1d1e56ef7802e0c962b607d40d77be05671",
     "variants.json": "4e7a96f7562c54937ed578b5fcd0a4f404dd7199553ccc2e84d855bf5c2bd846",
     "witnesses.json": "1390c9efa7916352592b887ef83a36987c9c06b068fd6b0e2b237baed2870980"
   },
-  "data_sha256": "54395cf8ea4c2443ed45fb677e75d6b34fce20df3372a1f9fde4986a4e4b2b23"
+  "data_sha256": "a95f88ddf204d9e37d86ef3a68430a54aa2ddab03b1bc66411c0073c27575e3e"
 }

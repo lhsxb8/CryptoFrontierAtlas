@@ -1,13 +1,16 @@
 import type { Problem, Citation } from '../../features/questions/data';
 import type { AnalysisResult, AnalysisSource, CipherFamily, CipherVariant } from '../../features/cryptanalysis/types';
+import type { PrimitiveDomain } from '../../features/primitives/types';
 
-export type Page = 'home' | 'questions' | 'question-sources' | 'ciphers' | 'cipher' | 'instance' | 'result' | 'compare' | 'analysis-sources' | 'coverage' | 'asymmetric' | 'implementation' | 'not-found';
+export type Page = 'home' | 'questions' | 'question-sources' | 'ciphers' | 'cipher' | 'instance' | 'hard-problem' | 'problem-result' | 'result' | 'compare' | 'analysis-sources' | 'coverage' | 'asymmetric' | 'implementation' | 'not-found';
 export interface AtlasRoute {
   page: Page;
   path: string;
   id?: string;
   cipherId?: string;
+  problemId?: string;
   variantId?: string;
+  domain?: PrimitiveDomain;
   params: URLSearchParams;
 }
 
@@ -47,12 +50,18 @@ export function parseHash(hash: string, variants: readonly Pick<CipherVariant, '
 
   const base = { path, params };
   if (path === '/') return { ...base, page: 'home' };
-  if (path === '/asymmetric-cryptanalysis') return { ...base, page: 'asymmetric' };
+  if (path === '/asymmetric-cryptanalysis') return { ...base, page: 'asymmetric', domain: 'asymmetric' };
   if (path === '/implementation') return { ...base, page: 'implementation' };
   if (path === '/questions/sources') return { ...base, page: 'question-sources' };
   let match = path.match(/^\/questions(?:\/([^/]+))?$/);
   if (match) return { ...base, page: 'questions', id: match[1] };
   if (path === '/cryptanalysis') return { ...base, page: 'ciphers' };
+  match = path.match(/^\/asymmetric-cryptanalysis\/problems\/([^/]+)\/results\/([^/]+)$/);
+  if (match) return { ...base, page: 'problem-result', domain: 'asymmetric', problemId: match[1], id: match[2] };
+  match = path.match(/^\/asymmetric-cryptanalysis\/problems\/([^/]+)$/);
+  if (match) return { ...base, page: 'hard-problem', domain: 'asymmetric', id: match[1] };
+  match = path.match(/^\/asymmetric-cryptanalysis\/algorithms\/([^/]+)(?:\/([^/]+))?$/);
+  if (match) return { ...base, page: match[2] ? 'instance' : 'cipher', domain: 'asymmetric', cipherId: match[1], variantId: match[2] };
   match = path.match(/^\/cryptanalysis\/ciphers\/([^/]+)(?:\/([^/]+))?$/);
   if (match) {
     // Preserve existing analysis defaults. Directory-only families have an
@@ -86,6 +95,7 @@ export function analysisScope(params: URLSearchParams, ciphers: readonly CipherF
 /** Collection links inherit the displayed, validated scope, never a conflicting query. */
 export function routeScopeParams(route: AtlasRoute, ciphers: readonly CipherFamily[], variants: readonly CipherVariant[], records: readonly AnalysisResult[]): URLSearchParams {
   const params = new URLSearchParams();
+  if (route.domain === 'asymmetric') return params;
   let variant: CipherVariant | undefined;
   if (route.page === 'instance') variant = variants.find(item => item.id === route.variantId && item.family === route.cipherId);
   else if (route.page === 'compare') variant = variants.find(item => item.id === route.variantId);

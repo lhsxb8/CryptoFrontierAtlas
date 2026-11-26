@@ -56,7 +56,7 @@ test('SVG validation is a closed inert dialect, even if a malicious asset hash i
   assert.throws(() => validateDiagramSvg('<!DOCTYPE svg><svg viewBox="0 0 10 10"/>'));
 });
 
-test('numeric macro derivation distinguishes exact AES and Keccak round conventions', t => {
+test('numeric macro derivation distinguishes exact AES and Keccak Round conventions', t => {
   const {root, catalog, registry} = diagramFixture(t);
   const job = diagramJobs(root, catalog, registry)[0];
   const macros = parameterMacros({...job, family_id: 'aes', instances: [{parameters: {key_bits: 256, rounds: 14}}]});
@@ -82,6 +82,17 @@ test('hash diagrams distinguish XOR feed-forward, word count and byte order', ()
   assert.match(md5, /\\AtlasHashWords\}\{4\}/);
   assert.match(md5, /\\AtlasByteOrder\}\{little-endian\}/);
   assert.match(md5, /\\AtlasFeedForward\}\{\\boxplus\}/);
+});
+
+test('asymmetric macro bindings preserve scheme dimensions and reject TeX-bearing labels', () => {
+  const rsa = parameterMacros({family_id: 'fixture-rsa', instances: [{parameters: {scheme: 'rsaes_oaep', modulus_bits: 3072, hash: 'SHA-256'}}]});
+  assert.match(rsa, /\\AtlasModulusBits\}\{3072\}/);
+  assert.doesNotMatch(rsa, /\\AtlasRounds/);
+  const family = parameterMacros({family_id: 'fixture-kem', instances: [2, 3, 4].map(module_rank => ({parameters: {scheme: 'ml_kem', module_rank}}))});
+  assert.match(family, /\\AtlasModuleRank\}\{k\}/);
+  const curve = parameterMacros({family_id: 'fixture-ecdh', instances: [{parameters: {scheme: 'ecdh', curve: 'P-384', field_bits: 384}}]});
+  assert.match(curve, /\\AtlasDhPublicA\}\{\[a\]G\}/);
+  assert.throws(() => parameterMacros({family_id: 'fixture-rsa', instances: [{parameters: {scheme: 'rsaes_oaep', hash: '\\input{private}'}}]}), /Unsafe/);
 });
 
 test('round groups and extra keys derive from exact instances without conflating round conventions', () => {

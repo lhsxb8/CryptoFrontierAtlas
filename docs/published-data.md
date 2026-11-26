@@ -31,6 +31,10 @@ It classifies fields in results, sources, target definitions, compact entries,
 families, presentation annotations, manifests, coverage and witnesses. It does not
 discard results based on frontier, conflict or review status. Adding a primitive
 to the directory still does not imply that it has analysis coverage.
+Typed hard-problem results and their family/coverage catalogs use the same export.
+Their nested fields have separate classifications; ingestion receipts remain
+internal. Snapshot and build receipts bind hard-problem counts as well as their
+complete projected bytes.
 
 ## Extending a contract
 
@@ -88,9 +92,11 @@ npm run check:release
 
 Export first validates the original corpus, including its ingestion evidence.
 It writes and validates a staged snapshot before replacing the public directory.
-The previous snapshot is retained under `.local/publication/previous-*/snapshot`.
-A failed validation leaves the current public snapshot unchanged. The raw corpus
-is never modified by export. Review the resulting data diff before publication.
+A temporary previous snapshot permits rollback if replacement fails; it is removed
+after successful replacement. A failed validation leaves the current public
+snapshot unchanged. The raw corpus is never modified by export. Review the
+resulting data diff before publication; Git, not local snapshot copies, is the
+public data history.
 
 Output is deterministic: an unchanged corpus produces identical files, without
 an export timestamp. `check:analysis-export` compares the expected export with

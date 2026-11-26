@@ -3,7 +3,7 @@
 **[Visit the Atlas](https://lhsxb8.github.io/CryptoFrontierAtlas/)** · [Report an issue](https://github.com/lhsxb8/CryptoFrontierAtlas/issues/new/choose)
 
 A source-backed cryptography research atlas with searchable open questions,
-a symmetric primitive directory and cryptanalytic result views.
+symmetric and asymmetric algorithm directories, and cryptanalytic result views.
 
 ## Why this project
 
@@ -30,8 +30,19 @@ The application version is **v1.0.1**; the initial release was v1.0.0.
 Open questions currently focus on
 symmetric cryptography. The symmetric directory includes block and stream
 ciphers, hashes, XOFs, permutations, AEAD and MACs, including entries with no
-catalogued analysis results. Asymmetric cryptanalysis and implementation have
-dedicated **TBD** entrances.
+catalogued analysis results. The asymmetric directory includes RSA-OAEP/PSS,
+finite-field DH, ECDH, X25519/X448, ECDSA, EdDSA, SM2, ML-KEM, ML-DSA and SLH-DSA,
+with concrete parameter profiles, specifications and construction diagrams.
+Its first category, **Hard Problems**, covers integer factorization, RSA inversion,
+discrete logarithms, LWE/Ring-LWE/Module-LWE and SIS/Module-SIS, with definitions,
+parameter conditions, references and links to related schemes.
+Integer Factorization also has a ten-paper example collection, separated into
+classical algorithms, quantum algorithms and reported computations. Its records
+distinguish general and restricted inputs, auxiliary oracles, output goals and
+source conflicts. Other asymmetric entries currently provide definitions only.
+See [Integer Factorization](docs/integer-factorization.md) for the extraction scope.
+Implementation remains **TBD**. The header's **GitHub** link opens this repository
+from any page.
 
 Analysis coverage is concentrated on AES. A directory entry does not imply a
 completed literature review. Classical and quantum cryptanalysis, side-channel
@@ -39,7 +50,10 @@ analysis and fault-injection analysis have separate sections on the same page.
 Quantum results share one section, with per-result query and memory-model tags;
 Q1, Q2 and public-function results remain scientifically distinct for comparison.
 
-Data updates retain the application version; see the [version policy](docs/versioning.md).
+Local edits, commits and builds retain the application version. At an authorized
+remote push, a batch containing framework or functionality changes receives one
+version increment; data-only updates still retain it. See the
+[version policy](docs/versioning.md).
 The public source includes a validated cryptanalysis snapshot. A fresh checkout
 builds the analysis tables, comparisons, sources and coverage views without the
 maintainer's research workspace or downloaded papers.

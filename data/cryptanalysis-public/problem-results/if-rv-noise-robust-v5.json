@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "id": "if-rv-noise-robust-v5",
+  "title": "Noise-Robust Factoring",
+  "method": "multidimensional-period-finding",
+  "result_kind": "algorithm",
+  "goal": "nontrivial_factor",
+  "statement": "Nontrivial-factor recovery from noisy quantum samples using the classical postprocessing of Theorem 4.5.",
+  "target": {
+    "kind": "hard_problem",
+    "problem_id": "integer-factorization",
+    "input_class": "composite_integer",
+    "description": "Odd composite input under the short-vector and well-spread sample-noise hypotheses.",
+    "parameters": [
+      {
+        "name": "n",
+        "meaning": "Input bit-length parameter",
+        "domain": "Positive integer; $2^{n-1}\\le N<2^n$.",
+        "value": "n"
+      },
+      {
+        "name": "d",
+        "meaning": "Sample lattice dimension",
+        "domain": "Source Regev parameterization.",
+        "value": "sqrt(n)"
+      },
+      {
+        "name": "alpha",
+        "meaning": "Number of samples divided by dimension",
+        "domain": "Constant from Lemma 4.4.",
+        "value": 7
+      },
+      {
+        "name": "gamma",
+        "meaning": "Retained-sample analysis parameter",
+        "domain": "Constant satisfying Lemma 4.4.",
+        "value": 5.9
+      },
+      {
+        "name": "p",
+        "meaning": "Probability that a sample is corrupted",
+        "domain": "$0\\le p<1/70$.",
+        "value": "p"
+      },
+      {
+        "name": "C",
+        "meaning": "Short-vector hypothesis constant",
+        "domain": "Conjecture 3.1.",
+        "value": "C"
+      },
+      {
+        "name": "A",
+        "meaning": "Gaussian-radius parameter",
+        "domain": "Uniform-noise specialization: $A\\ge\\max(C+(\\gamma^2+\\gamma+2)/(2\\gamma),((\\alpha-\\gamma)(\\alpha-\\gamma+3)+2)/2)+o(1)$.",
+        "value": "A"
+      }
+    ],
+    "modulus_bits": null,
+    "instance_name": null
+  },
+  "setting": {
+    "computation": "quantum",
+    "model": "quantum",
+    "basis": "conditional",
+    "input_access": "public_integer",
+    "assumptions": [
+      "Conjecture 3.1 on a short vector in $L\\setminus L_0$.",
+      "Section 4.2.1's independent sample-corruption model, specialized here to uniform additive noise; not arbitrary adversarial noise.",
+      "All constraints of Lemma 4.4 and the Gaussian-radius bound following Theorem 4.5 are required."
+    ],
+    "auxiliary_information": []
+  },
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No total bound is extracted for this coordinate in the checked result."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No total classical/quantum memory bound is extracted for this result."
+    },
+    "classical_time": {
+      "status": "reported",
+      "reported": "$\\operatorname{poly}(n)$",
+      "unit": "bit-operations",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Theorem 4.5 classical postprocessing from the specified sample batch."
+    },
+    "quantum_calls": {
+      "status": "reported",
+      "reported": "$7d$",
+      "unit": "circuit-calls",
+      "log2": null,
+      "qualifier": "exact",
+      "note": "One source sample per call; this is a sample budget, not total runtime."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "nontrivial-factor",
+    "value": null,
+    "expression": "$1/4-o(1)$",
+    "basis": "source_proof",
+    "description": "Theorem 4.5 guarantee over the prescribed sample and error distribution, under Conjecture 3.1 and Lemma 4.4's parameter constraints.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-26",
+      "scope": "Checked the stated event and bound in the cited theorem/corollary and its surrounding argument; not a proof reproduction."
+    }
+  },
+  "evidence": [
+    {
+      "source_id": "ragavan-vaikuntanathan2025-noise-robust-v5",
+      "locator": "PDF pp. 17–19 / printed pp. 14–16, Section 4.2, Lemma 4.4 and Theorem 4.5.",
+      "fields": [
+        "/statement",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Targeted transcription of this result's input, output, cost accounting and success event; not a full-paper audit."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "review_scope": "targeted_primary_text",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "The standalone space-efficient exponentiation and circuit-only optimizations are not separate active analyses.",
+    "The admissible error rate and A constraint belong to this parameter choice; they are not interchangeable independent minima."
+  ],
+  "related_result_ids": [
+    "if-regev-short-vector-v3"
+  ]
+}

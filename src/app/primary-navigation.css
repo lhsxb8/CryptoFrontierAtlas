@@ -1,6 +1,6 @@
 .atlas-navigation { display: flex; align-self: stretch; margin-left: auto; min-width: 0; }
 .atlas-navigation-toggle { display: none; }
-@media (max-width: 1250px) {
+@media (max-width: 1350px) {
   .atlas-navigation { order: 3; flex: 0 0 100%; width: 100%; margin: 4px 0 0; }
   .atlas-navigation { flex-direction: column; }
   .atlas-navigation-toggle { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 46px; padding: 8px 0; border: 0; background: transparent; color: #c8e8df; text-align: left; font-size: 13px; }

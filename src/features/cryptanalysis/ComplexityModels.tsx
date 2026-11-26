@@ -117,7 +117,7 @@ export function ModelSuccess({ view, compact = false, display = false }: { view:
       : records.map(record => `Case ${view.records.indexOf(record) + 1}`).join(', ')}</p>}
       <SuccessValue record={records[0]} compact={compact} display={display} contextVisible={!sharedContext} />
     </div>;
-  })}</div>{!compact && view.family?.model && <details className="a-success-definition a-success-model"><summary>Success model and assumptions</summary><p><Formula expression={view.family.model.success} /></p></details>}</div>;
+  })}</div>{!compact && view.family?.model && <details className="a-success-definition a-success-model"><summary>Success Model and Assumptions</summary><p><Formula expression={view.family.model.success} /></p></details>}</div>;
 }
 
 export function ModelConditions({ view }: { view: ResultFamilyView }) {

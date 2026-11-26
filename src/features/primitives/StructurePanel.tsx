@@ -1,6 +1,7 @@
 import {useEffect, useId, useRef, useState} from 'react';
 import {ArrowDown, ChevronDown, ChevronUp, Download, Maximize2} from 'lucide-react';
 import {useLocale} from '../../app/locale';
+import {titleCaseLabel} from '../../app/interface-labels';
 import Modal from '../../components/Modal';
 import {MathText} from '../../components/MathText';
 import {primitiveCatalog, primitiveStructures} from './data';
@@ -9,11 +10,11 @@ import './structures.css';
 
 const copy = {
   en: {structure: 'Structure', expand: 'Enlarge', expandLabel: 'Enlarge diagram',
-    collapse: 'Collapse', collapseLabel: 'Collapse structure', show: 'Show', showLabel: 'Show structure', parameters: 'Instance parameters',
-    sources: 'Sources', specification: 'Specification', design: 'Design reference', close: 'Close diagram',
+    collapse: 'Collapse', collapseLabel: 'Collapse structure', show: 'Show', showLabel: 'Show structure', parameters: 'Instance Parameters',
+    sources: 'Sources', specification: 'Specification', design: 'Design Reference', close: 'Close diagram',
     svg: 'Download SVG', tex: 'Download LaTeX', jump: 'Results', jumpLabel: 'Jump to results', zoom: 'Zoom in', reset: 'Fit to view',
     pending: 'Diagram pending', error: 'Diagram unavailable',
-    gallery: 'Drawing conventions', instanceNote: 'Instance note', scroll: 'Scroll horizontally'},
+    gallery: 'Drawing Conventions', instanceNote: 'Instance Note', scroll: 'Scroll horizontally'},
   zh: {structure: '结构', expand: '放大', expandLabel: '放大结构图',
     collapse: '收起', collapseLabel: '收起结构', show: '显示', showLabel: '显示结构', parameters: '实例参数',
     sources: '来源', specification: '规范', design: '设计资料', close: '关闭结构图',
@@ -46,6 +47,7 @@ export function StructurePanel({familyId, instanceId, resultsId}: {familyId: str
   const binding = structureBinding(primitiveStructures, familyId, instanceId, viewId);
   if (!binding) return <aside className="atlas-structure-pending"><p>{t.pending}</p></aside>;
   const {definition, view, asset} = binding;
+  const viewLabel = locale === 'en' ? titleCaseLabel(view.label.en) : view.label.zh;
   const instance = primitiveCatalog.instances.find(i => i.id === instanceId && i.family_id === familyId);
   const family = primitiveCatalog.primitives.find(p => p.id === familyId)!;
   const target = instanceId ?? familyId;
@@ -59,22 +61,27 @@ export function StructurePanel({familyId, instanceId, resultsId}: {familyId: str
     destination?.focus({preventScroll: true}); destination?.scrollIntoView({block: 'start'});
   };
   const figure = <img src={url} width={asset.width} height={asset.height}
-    alt={`${name} · ${view.label[locale]}. ${view.caption[locale]}`} decoding="async"
+    alt={`${name} · ${viewLabel}. ${view.caption[locale]}`} decoding="async"
     onError={() => setFailedAsset(url)} />;
   const downloads = <><a href={url} download={`${target}-${view.id}.svg`}><Download size={14} aria-hidden="true" />{t.svg}</a>
     <a href={texUrl} download={`${target}-${view.id}.tex`}>{t.tex}</a></>;
-  return <section className="atlas-structure" aria-labelledby={`${id}-heading`} data-structure-target={target}>
+  const multipleViews = definition.views.length > 1;
+  const enlargeButton = <button type="button" className="atlas-structure-enlarge" aria-label={t.expandLabel} onClick={() => {setExpanded(true); setZoomed(false);}}>
+    <Maximize2 size={14} aria-hidden="true" /><span>{t.expand}</span>
+  </button>;
+  return <section className={`atlas-structure${multipleViews ? '' : ' is-single-view'}`} aria-labelledby={`${id}-heading`} data-structure-target={target}>
     <header className="atlas-structure-heading">
       <h2 id={`${id}-heading`}>{t.structure}</h2>
       <div className="atlas-structure-actions">
         {resultsId && <button type="button" onClick={jump} aria-label={t.jumpLabel}><ArrowDown size={14} aria-hidden="true" />{t.jump}</button>}
+        {!multipleViews && !collapsed && enlargeButton}
         <button type="button" aria-label={collapsed ? t.showLabel : t.collapseLabel} aria-expanded={!collapsed} aria-controls={`${id}-body`} onClick={() => setCollapsed(!collapsed)}>
           {collapsed ? <ChevronDown size={15} aria-hidden="true" /> : <ChevronUp size={15} aria-hidden="true" />}<span>{collapsed ? t.show : t.collapse}</span>
         </button>
       </div>
     </header>
     <div id={`${id}-body`} hidden={collapsed}>
-      <div className="atlas-structure-toolbar">
+      {multipleViews && <div className="atlas-structure-toolbar">
         <div role="tablist" aria-label={t.structure} className="atlas-structure-tabs">{definition.views.map((entry, index) =>
           <button type="button" role="tab" key={entry.id} id={`${id}-${entry.id}-tab`} aria-selected={entry.id === view.id}
             aria-controls={`${id}-${entry.id}-panel`} tabIndex={entry.id === view.id ? 0 : -1}
@@ -86,16 +93,14 @@ export function StructurePanel({familyId, instanceId, resultsId}: {familyId: str
                 : (index + direction + definition.views.length) % definition.views.length;
               setViewId(definition.views[next].id);
               document.getElementById(`${id}-${definition.views[next].id}-tab`)?.focus();
-            }}>{entry.label[locale]}</button>)}</div>
-        <button type="button" className="atlas-structure-enlarge" aria-label={t.expandLabel} onClick={() => {setExpanded(true); setZoomed(false);}}>
-          <Maximize2 size={14} aria-hidden="true" /><span>{t.expand}</span>
-        </button>
-      </div>
-      {definition.views.map(entry => <div key={entry.id} role="tabpanel" id={`${id}-${entry.id}-panel`}
-        aria-labelledby={`${id}-${entry.id}-tab`} tabIndex={0} hidden={entry.id !== view.id}>
+            }}>{locale === 'en' ? titleCaseLabel(entry.label.en) : entry.label.zh}</button>)}</div>
+        {enlargeButton}
+      </div>}
+      {definition.views.map(entry => <div key={entry.id} role={multipleViews ? 'tabpanel' : 'group'} id={`${id}-${entry.id}-panel`}
+        aria-labelledby={multipleViews ? `${id}-${entry.id}-tab` : `${id}-heading`} tabIndex={0} hidden={entry.id !== view.id}>
         {entry.id === view.id && <div className={`atlas-structure-layout${instance ? '' : ' is-family'}`}>
           <figure className={`atlas-structure-figure is-${view.id}`}>
-            <div ref={viewport} className="atlas-structure-image" tabIndex={view.id === 'detail' ? 0 : undefined} role="group" aria-label={view.label[locale]}>
+            <div ref={viewport} className="atlas-structure-image" tabIndex={view.id === 'detail' ? 0 : undefined} role="group" aria-label={viewLabel}>
               {failedAsset === url ? <p role="status">{t.error}</p> : compactAsset ? <picture>
                 <source media="(max-width: 760px)" srcSet={import.meta.env.BASE_URL + compactAsset.asset} />{figure}
               </picture> : figure}
@@ -123,7 +128,7 @@ export function StructurePanel({familyId, instanceId, resultsId}: {familyId: str
         <div className="atlas-structure-downloads">{downloads}</div>
       </details>
     </div>
-    {expanded && <Modal title={`${name} · ${view.label[locale]}`} description={view.caption[locale]} closeLabel={t.close}
+    {expanded && <Modal title={`${name} · ${viewLabel}`} description={view.caption[locale]} closeLabel={t.close}
       onClose={() => setExpanded(false)} footer={<div className="atlas-structure-downloads">{downloads}
         <button type="button" onClick={() => setZoomed(!zoomed)} aria-pressed={zoomed}>{zoomed ? t.reset : t.zoom}</button></div>}>
       <div className={`atlas-structure-zoom${zoomed ? ' is-zoomed' : ''}`} tabIndex={0} aria-label={t.structure}>{figure}</div>

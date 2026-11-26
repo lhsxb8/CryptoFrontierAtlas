@@ -1,0 +1,9 @@
+\begin{tikzpicture}[node distance=.55cm]
+  \node[phase] (title) {RSASSA-PSS};
+  \node[box,below=of title] (message) {Message $M$\\Hash and salt};
+  \node[accent,below=of message] (encode) {$\mathrm{EM}=\operatorname{EMSA\!-\!PSS}(M)$\\Salt: $\AtlasSaltBytes$ bytes};
+  \node[box,below=of encode] (rsa) {Private key $(n,d)$\\$m=\operatorname{OS2IP}(\mathrm{EM})$\\$s=m^d\bmod n$};
+  \node[accent,below=of rsa] (signature) {Signature $S=\operatorname{I2OSP}(s)$};
+  \draw[wire] (message) -- (encode); \draw[wire] (encode) -- (rsa); \draw[wire] (rsa) -- (signature);
+  \node[note,below=.5cm of signature,text width=6cm] {Verification: public exponentiation,\\then EMSA-PSS verification against $M$.\\Modulus: $\AtlasModulusBits$ bits;\quad hash: $\AtlasHash$.};
+\end{tikzpicture}

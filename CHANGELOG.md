@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Add source-backed Integer Factorization analyses from ten selected recent papers, with classical/quantum/computation sections, scoped details, source backlinks and no model tabs.
+- Add typed hard-problem targets to the shared analysis pipeline, preserving cipher contracts and separating algorithm, supporting-result and computation semantics.
+- Reuse resource, success, evidence and family contracts with independent field-publication permissions, provenance checks and conservative comparison.
+- Remove temporary public-snapshot rollback copies after successful exports; Git and the maintained corpus retain history and evidence.
+- Put Hard Problems first in the asymmetric directory, with nine source-backed definitions, symbolic parameters and bidirectional problem/scheme navigation.
+- Separate problem definitions from algorithm instances in directory contract v3; retain existing scientific records, routes and comparison boundaries.
+- Standardize authored English headings, navigation and category names in Title Case while preserving research text, paper titles and acronym spelling.
+- Add a persistent GitHub repository link to the global header.
+- Open the asymmetric directory with typed encryption, key-agreement, signature and KEM instances, source-bound diagrams and isolated routes.
+- Share directory rendering across symmetric and asymmetric collections without changing scientific analysis records or comparison semantics.
+- Defer application version increments to explicitly authorized remote-push batches; local edits, commits and builds retain the current version.
+
 ## 1.0.1
 
 - Separate classical and quantum algorithmic results on the unified analysis page, without model tabs or Q1/Q2 subgroups.

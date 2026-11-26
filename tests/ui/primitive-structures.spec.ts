@@ -1,23 +1,28 @@
 import {test, expect} from '@playwright/test';
 import catalog from '../../data/primitives/catalog.json' with {type: 'json'};
 import diagrams from '../../data/primitives/diagrams.json' with {type: 'json'};
+import {titleCaseLabel} from '../../src/app/interface-labels';
 
 test.use({locale: 'en-US'});
 
-test('all family and instance diagrams load both views with source and download metadata', async ({page, request}) => {
-  test.setTimeout(120_000);
+test('all family and instance diagrams load their registered views and metadata', async ({page, request}) => {
+  test.setTimeout(180_000);
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   for (const definition of diagrams.diagrams) {
     for (const target of [definition.family_id, ...definition.instance_ids]) {
       const suffix = target === definition.family_id ? '' : '/' + target;
-      await page.goto(`/#/cryptanalysis/ciphers/${definition.family_id}${suffix}`);
+      const family = catalog.primitives.find(p => p.id === definition.family_id)!;
+      const domain = catalog.categories.find(c => c.id === family.category)!.domain;
+      const prefix = domain === 'asymmetric' ? '/asymmetric-cryptanalysis/algorithms' : '/cryptanalysis/ciphers';
+      await page.goto(`/#${prefix}/${definition.family_id}${suffix}`);
       const panel = page.locator('.atlas-structure');
       // Families with analyses keep their existing default-instance route.
       const renderedTarget = target === 'aes' ? 'aes-128' : target;
       await expect(panel).toHaveAttribute('data-structure-target', renderedTarget);
       for (const view of definition.views) {
-        await panel.getByRole('tab', {name: view.label.en, exact: true}).click();
+        if (definition.views.length > 1) await panel.getByRole('tab', {name: titleCaseLabel(view.label.en), exact: true}).click({timeout: 10_000});
+        else await expect(panel.getByRole('tab')).toHaveCount(0);
         const image = panel.locator('.atlas-structure-image img');
         await expect(image).toHaveAttribute('src', new RegExp(`${renderedTarget}--${view.id}\.svg$`));
         await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth > 0)).toBe(true);
@@ -28,7 +33,8 @@ test('all family and instance diagrams load both views with source and download 
   }
   const response = await request.get('/atlas-diagrams.json');
   const metadata = await response.json();
-  expect(metadata.manifest.assets).toHaveLength(3 * (catalog.instances.length + catalog.primitives.length));
+  expect(metadata.manifest.assets).toHaveLength(diagrams.diagrams.reduce((sum, d) =>
+    sum + (d.instance_ids.length + 1) * (d.views.length + ('compact_template' in d ? 1 : 0)), 0));
   expect(errors).toEqual([]);
 });
 
@@ -37,8 +43,8 @@ test('structure tabs, collapse, modal, keyboard focus and downloads are usable',
   const panel = page.locator('.atlas-structure');
   await panel.getByRole('tab', {name: 'Encryption', exact: true}).focus();
   await page.keyboard.press('ArrowRight');
-  await expect(panel.getByRole('tab', {name: 'Round & key schedule'})).toBeFocused();
-  await expect(panel.getByRole('tab', {name: 'Round & key schedule'})).toHaveAttribute('aria-selected', 'true');
+  await expect(panel.getByRole('tab', {name: 'Round & Key Schedule'})).toBeFocused();
+  await expect(panel.getByRole('tab', {name: 'Round & Key Schedule'})).toHaveAttribute('aria-selected', 'true');
   await panel.getByRole('button', {name: 'Enlarge diagram'}).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
@@ -56,13 +62,31 @@ test('structure tabs, collapse, modal, keyboard focus and downloads are usable',
   await panel.getByRole('button', {name: 'Collapse structure'}).click();
   await expect(panel.getByRole('tab')).toHaveCount(0);
   await panel.getByRole('button', {name: 'Show structure'}).click();
-  await expect(panel.getByRole('tab', {name: 'Round & key schedule'})).toHaveAttribute('aria-selected', 'true');
+  await expect(panel.getByRole('tab', {name: 'Round & Key Schedule'})).toHaveAttribute('aria-selected', 'true');
   await panel.locator('summary').click();
   await expect(panel).toContainText(definitionLocator('aes'));
   await expect(panel.getByRole('link', {name: 'Daemen and Rijmen', exact: false})).toBeVisible();
 });
 
 function definitionLocator(id: string) { return diagrams.diagrams.find(d => d.family_id === id)!.locator; }
+
+test('single-view structures keep accessible enlargement in the heading without an empty toolbar', async ({page}) => {
+  await page.goto('/#/asymmetric-cryptanalysis/algorithms/xdh/x25519');
+  const panel = page.locator('.atlas-structure');
+  await expect(panel).toHaveClass(/is-single-view/);
+  await expect(panel.locator('.atlas-structure-toolbar, [role=tablist]')).toHaveCount(0);
+  const enlarge = panel.getByRole('button', {name: 'Enlarge diagram', exact: true});
+  await expect(panel.locator('.atlas-structure-heading').getByRole('button', {name: 'Enlarge diagram'})).toBeVisible();
+  await enlarge.click();
+  await expect(page.getByRole('dialog').locator('img')).toHaveAttribute('src', /x25519--overview\.svg$/);
+  await page.keyboard.press('Escape');
+  await expect(enlarge).toBeFocused();
+  await panel.getByRole('button', {name: 'Collapse structure', exact: true}).click();
+  await expect(enlarge).toHaveCount(0);
+  await panel.getByRole('button', {name: 'Show structure', exact: true}).click();
+  await expect(enlarge).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+});
 
 test('instance selection changes exact bindings and family views use one shared diagram', async ({page}) => {
   await page.goto('/#/cryptanalysis/ciphers/sha3');

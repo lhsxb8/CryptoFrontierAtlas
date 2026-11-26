@@ -1,5 +1,246 @@
 [
   {
+    "id": "harvey-hittmeir2026-large-order-v2",
+    "title": "Deterministic Methods for Finding Elements of Large Multiplicative Order",
+    "authors": [
+      "David Harvey",
+      "Markus Hittmeir"
+    ],
+    "year": 2026,
+    "citation_label": "HH26",
+    "publication": {
+      "venue": "arXiv",
+      "year": 2026,
+      "kind": "preprint",
+      "url": "https://arxiv.org/abs/2601.11131v2"
+    },
+    "inspected_version": "arXiv v2, June 5, 2026; uses the improved log D time factor, not v1's log N factor.",
+    "url": "https://arxiv.org/pdf/2601.11131v2",
+    "accessed_on": "2026-11-26",
+    "content_sha256": "0e957bacebc0b74f363436ab09b70085f4ad83c45dee93bda8aef19fbfdcbff0",
+    "hash_note": "SHA-256 of the exact inspected PDF bytes; targeted primary-text extraction, not an independent proof audit.",
+    "locators": [
+      "PDF/printed pp. 3–4, Theorem 1.1, Equation (1.2), small-D convention and space remark; Section 3 algorithm and proof."
+    ]
+  },
+  {
+    "id": "gao2025-rank-three-factoring-v1",
+    "title": "On Factoring and Power Divisor Problems via Rank-3 Lattices and the Second Vector",
+    "authors": [
+      "Yiming Gao",
+      "Yansong Feng",
+      "Honggang Hu",
+      "Yanbin Pan"
+    ],
+    "year": 2025,
+    "citation_label": "GFHP25",
+    "publication": {
+      "venue": "arXiv",
+      "year": 2025,
+      "kind": "preprint",
+      "url": "https://arxiv.org/abs/2512.19076v1"
+    },
+    "inspected_version": "arXiv v1, December 22, 2025. This extraction concerns Theorem 1.1 only, not power-divisor formulas from other editions.",
+    "url": "https://arxiv.org/pdf/2512.19076v1",
+    "accessed_on": "2026-11-26",
+    "content_sha256": "dd71520d86c5a6b0a3bfa8dad495fcf26dfabee64c8e2b580e50cb0a9dc57c51",
+    "hash_note": "SHA-256 of the exact inspected PDF bytes; targeted primary-text extraction, not an independent proof audit.",
+    "locators": [
+      "PDF/printed pp. 1–2, computational model and Theorem 1.1; Section 4, balanced-semiprime factorization."
+    ]
+  },
+  {
+    "id": "stanica2026-quadratic-image-v1",
+    "title": "Improved Deterministic Integer Factorization by Quadratic-Image Sieving",
+    "authors": [
+      "Pantelimon Stănică"
+    ],
+    "year": 2026,
+    "citation_label": "Sta26",
+    "publication": {
+      "venue": "arXiv",
+      "year": 2026,
+      "kind": "preprint",
+      "url": "https://arxiv.org/abs/2611.06580v1"
+    },
+    "inspected_version": "arXiv v1 submitted November 4, 2026; manuscript cover November 5, 2026.",
+    "url": "https://arxiv.org/pdf/2611.06580v1",
+    "accessed_on": "2026-11-26",
+    "content_sha256": "5633204bd418190a85b4b0affa00b47a99010ad73e3bb30f48fefbeeb2765d01",
+    "hash_note": "SHA-256 of the exact inspected PDF bytes; targeted primary-text extraction, not an independent proof audit.",
+    "locators": [
+      "PDF/printed pp. 20–22, Theorem 3.13, Equation (16) and its proof; p. 23, finite-size projection qualification."
+    ]
+  },
+  {
+    "id": "dabrowski2023-oracle-factoring-v4",
+    "title": "On Oracle Factoring of Integers",
+    "authors": [
+      "Andrzej Dąbrowski",
+      "Jacek Pomykała",
+      "Igor E. Shparlinski"
+    ],
+    "year": 2023,
+    "citation_label": "DPS23",
+    "publication": {
+      "venue": "arXiv",
+      "year": 2023,
+      "kind": "preprint",
+      "url": "https://arxiv.org/abs/1912.00345v4"
+    },
+    "inspected_version": "arXiv v4, January 25, 2023; first posted in 2019. Publication association here is the inspected preprint edition.",
+    "url": "https://arxiv.org/pdf/1912.00345v4",
+    "accessed_on": "2026-11-26",
+    "content_sha256": "c38fd6d6db6dd495ef1af221bda942f065fa0094b62e6f9b56198a432085bb04",
+    "hash_note": "SHA-256 of the exact inspected PDF bytes; targeted primary-text extraction, not an independent proof audit.",
+    "locators": [
+      "PDF/printed pp. 5–7, Definition 1.1, Theorem 1.2, Remark 1.5 and oracle-cost discussion; pp. 13–14, Algorithm 3.1."
+    ]
+  },
+  {
+    "id": "januszewski-heinrichs2026-cuda-mpqs-v1",
+    "title": "CUDA-MPQS: A GPU-Resident Self-Initializing Quadratic Sieve, and the Factorization of RSA-155",
+    "authors": [
+      "Fabian Januszewski",
+      "Christoph Heinrichs"
+    ],
+    "year": 2026,
+    "citation_label": "JH26",
+    "publication": {
+      "venue": "arXiv",
+      "year": 2026,
+      "kind": "preprint",
+      "url": "https://arxiv.org/abs/2610.07126v1"
+    },
+    "inspected_version": "arXiv v1, October 5, 2026; the selected RSA-155 computation is dated July 14, 2026 in Section V-G.",
+    "url": "https://arxiv.org/pdf/2610.07126v1",
+    "accessed_on": "2026-11-26",
+    "content_sha256": "12211bcfa96c4e46b496f29ed70a766cbbb9ab5a69c8fa259b485d0965a02b5e",
+    "hash_note": "SHA-256 of the exact inspected PDF bytes; targeted primary-text extraction, not an independent proof audit.",
+    "locators": [
+      "PDF pp. 8–9, Section V-G (RSA-155); PDF p. 3, Section IV-B host residuals; PDF p. 7, Table III."
+    ]
+  },
+  {
+    "id": "regev2024-quantum-factoring-v3",
+    "title": "An Efficient Quantum Factoring Algorithm",
+    "authors": [
+      "Oded Regev"
+    ],
+    "year": 2024,
+    "citation_label": "Reg24",
+    "publication": {
+      "venue": "arXiv",
+      "year": 2024,
+      "kind": "preprint",
+      "url": "https://arxiv.org/abs/2308.06572v3"
+    },
+    "inspected_version": "arXiv v3, January 7, 2024; first posted in 2023.",
+    "url": "https://arxiv.org/pdf/2308.06572v3",
+    "accessed_on": "2026-11-26",
+    "content_sha256": "d516aa3605dd56859bc84501b3d9a20dd6103565d775698f78ae6e0122a27bb9",
+    "hash_note": "SHA-256 of the exact inspected PDF bytes; targeted primary-text extraction, not an independent proof audit.",
+    "locators": [
+      "PDF/printed p. 3, Theorem 1.1; pp. 7–8, Corollary 4.5 and proof of Theorem 1.1."
+    ]
+  },
+  {
+    "id": "ragavan-vaikuntanathan2025-noise-robust-v5",
+    "title": "Space-Efficient and Noise-Robust Quantum Factoring",
+    "authors": [
+      "Seyoon Ragavan",
+      "Vinod Vaikuntanathan"
+    ],
+    "year": 2025,
+    "citation_label": "RV25",
+    "publication": {
+      "venue": "arXiv",
+      "year": 2025,
+      "kind": "preprint",
+      "url": "https://arxiv.org/abs/2310.00899v5"
+    },
+    "inspected_version": "arXiv v5 submitted April 30, 2025; manuscript cover May 2, 2025.",
+    "url": "https://arxiv.org/pdf/2310.00899v5",
+    "accessed_on": "2026-11-26",
+    "content_sha256": "a1dfb566b1102b574937872c2e09c1a16ec0ccd2dbfc164bd90ab603a5edf093",
+    "hash_note": "SHA-256 of the exact inspected PDF bytes; targeted primary-text extraction, not an independent proof audit.",
+    "locators": [
+      "PDF pp. 17–19 / printed pp. 14–16, Section 4.2, Lemma 4.4 and Theorem 4.5."
+    ]
+  },
+  {
+    "id": "pilatte2026-unconditional-factoring-v3",
+    "title": "Unconditional correctness of recent quantum algorithms for factoring and computing discrete logarithms",
+    "authors": [
+      "Cédric Pilatte"
+    ],
+    "year": 2026,
+    "citation_label": "Pil26",
+    "publication": {
+      "venue": "arXiv",
+      "year": 2026,
+      "kind": "preprint",
+      "url": "https://arxiv.org/abs/2404.16450v3"
+    },
+    "inspected_version": "arXiv v3, August 24, 2026; first posted in 2024.",
+    "url": "https://arxiv.org/pdf/2404.16450v3",
+    "accessed_on": "2026-11-26",
+    "content_sha256": "66dd9883d4b148e6bfee9419d3e35878ce89ee8ec6ec7800496bf6882f41450b",
+    "hash_note": "SHA-256 of the exact inspected PDF bytes; targeted primary-text extraction, not an independent proof audit.",
+    "locators": [
+      "PDF/printed p. 2, Theorem 1.1; pp. 5–6, Section 1.4; p. 23, proof of Theorem 1.1."
+    ]
+  },
+  {
+    "id": "ekera2024-order-finding-v2",
+    "title": "On the success probability of quantum order finding",
+    "authors": [
+      "Martin Ekerå"
+    ],
+    "year": 2024,
+    "citation_label": "Eke24",
+    "publication": {
+      "venue": "ACM Transactions on Quantum Computing",
+      "year": 2024,
+      "kind": "journal",
+      "url": "https://doi.org/10.1145/3655026"
+    },
+    "inspected_version": "Inspected arXiv v2, November 28, 2022 (cover November 29, 2022); associated ACM publication in 2024, not an inspected journal PDF.",
+    "url": "https://arxiv.org/pdf/2201.07791v2",
+    "accessed_on": "2026-11-26",
+    "content_sha256": "f30518c493386c3c7e7933e4a6643b922b974ae56bb2c5dfc48fe76dad8b3865",
+    "hash_note": "SHA-256 of the exact inspected PDF bytes; targeted primary-text extraction, not an independent proof audit.",
+    "locators": [
+      "PDF/printed pp. 22–24, Section 4.2.1, Corollaries 3.3–3.5; Equation (20)."
+    ]
+  },
+  {
+    "id": "kahanamoku-meyer2026-jacobi-v4",
+    "title": "The Jacobi Factoring Circuit: Quantum Factoring with Near-Linear Gates and Sublinear Space and Depth",
+    "authors": [
+      "Gregory D. Kahanamoku-Meyer",
+      "Seyoon Ragavan",
+      "Vinod Vaikuntanathan",
+      "Katherine Van Kirk"
+    ],
+    "year": 2026,
+    "citation_label": "KRV+26",
+    "publication": {
+      "venue": "arXiv",
+      "year": 2026,
+      "kind": "preprint",
+      "url": "https://arxiv.org/abs/2412.12558v4"
+    },
+    "inspected_version": "arXiv v4 submitted July 2, 2026; manuscript cover July 7, 2026. Both dates are retained as printed.",
+    "url": "https://arxiv.org/pdf/2412.12558v4",
+    "accessed_on": "2026-11-26",
+    "content_sha256": "36b68e39af42af283677c31fcade9d1b3c5de4f5b61fcd8f30ac9da442e7cf0c",
+    "hash_note": "SHA-256 of the exact inspected PDF bytes; targeted primary-text extraction, not an independent proof audit.",
+    "locators": [
+      "PDF pp. 33–36 / printed pp. 31–34, Definition 5.1, Lemma 5.2, Theorem 5.3, Algorithm 5.1 and Corollary 5.4."
+    ]
+  },
+  {
     "id": "dtcb2009-mitm-proceedings",
     "title": "Improved Meet-in-the-Middle Attacks on AES",
     "authors": [

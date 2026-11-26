@@ -1,0 +1,472 @@
+{
+  "schema_version": 1,
+  "problem_id": "integer-factorization",
+  "reviewed_on": "2026-11-26",
+  "records": [
+    "if-regev-short-vector-v3",
+    "if-rv-noise-robust-v5",
+    "if-pilatte-unconditional-v3",
+    "if-ekera-single-run-complete-v2",
+    "if-jacobi-special-integers-v4",
+    "if-harvey-hittmeir-large-order-v2",
+    "if-gao-balanced-semiprime-v1",
+    "if-stanica-quadratic-image-v1",
+    "if-dps-oracle-almost-all-v4",
+    "if-cuda-mpqs-rsa155-2026"
+  ],
+  "families": [
+    {
+      "id": "if-regev-short-vector-v3-family",
+      "title": "Regev: Short-Vector Factoring",
+      "construction": "Conditional nontrivial-factor algorithm using independent multidimensional quantum samples and lattice postprocessing.",
+      "representation": "table",
+      "parameters": [
+        {
+          "name": "n",
+          "meaning": "Input bit-length parameter",
+          "domain": "Positive integer; $2^{n-1}\\le N<2^n$."
+        },
+        {
+          "name": "d",
+          "meaning": "Lattice dimension",
+          "domain": "Theorem 1.1 choice, with integer rounding as in the source."
+        }
+      ],
+      "points": [
+        {
+          "result_id": "if-regev-short-vector-v3",
+          "values": {
+            "n": "n",
+            "d": "sqrt(n)"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "regev2024-quantum-factoring-v3",
+          "locator": "PDF/printed p. 3, Theorem 1.1; pp. 7–8, Corollary 4.5 and proof of Theorem 1.1."
+        }
+      ]
+    },
+    {
+      "id": "if-rv-noise-robust-v5-family",
+      "title": "Noise-Robust Factoring",
+      "construction": "Nontrivial-factor recovery from noisy quantum samples using the classical postprocessing of Theorem 4.5.",
+      "representation": "table",
+      "parameters": [
+        {
+          "name": "n",
+          "meaning": "Input bit-length parameter",
+          "domain": "Positive integer; $2^{n-1}\\le N<2^n$."
+        },
+        {
+          "name": "d",
+          "meaning": "Sample lattice dimension",
+          "domain": "Source Regev parameterization."
+        },
+        {
+          "name": "alpha",
+          "meaning": "Number of samples divided by dimension",
+          "domain": "Constant from Lemma 4.4."
+        },
+        {
+          "name": "gamma",
+          "meaning": "Retained-sample analysis parameter",
+          "domain": "Constant satisfying Lemma 4.4."
+        },
+        {
+          "name": "p",
+          "meaning": "Probability that a sample is corrupted",
+          "domain": "$0\\le p<1/70$."
+        },
+        {
+          "name": "C",
+          "meaning": "Short-vector hypothesis constant",
+          "domain": "Conjecture 3.1."
+        },
+        {
+          "name": "A",
+          "meaning": "Gaussian-radius parameter",
+          "domain": "Uniform-noise specialization: $A\\ge\\max(C+(\\gamma^2+\\gamma+2)/(2\\gamma),((\\alpha-\\gamma)(\\alpha-\\gamma+3)+2)/2)+o(1)$."
+        }
+      ],
+      "points": [
+        {
+          "result_id": "if-rv-noise-robust-v5",
+          "values": {
+            "n": "n",
+            "d": "sqrt(n)",
+            "alpha": 7,
+            "gamma": 5.9,
+            "p": "p",
+            "C": "C",
+            "A": "A"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "ragavan-vaikuntanathan2025-noise-robust-v5",
+          "locator": "PDF pp. 17–19 / printed pp. 14–16, Section 4.2, Lemma 4.4 and Theorem 4.5."
+        }
+      ]
+    },
+    {
+      "id": "if-pilatte-unconditional-v3-family",
+      "title": "Unconditional Modified Regev Factoring",
+      "construction": "Unconditional nontrivial-divisor algorithm with modified randomized base selection.",
+      "representation": "table",
+      "parameters": [
+        {
+          "name": "n",
+          "meaning": "Input-size upper bound",
+          "domain": "Positive integer with $N\\le 2^n$."
+        }
+      ],
+      "points": [
+        {
+          "result_id": "if-pilatte-unconditional-v3",
+          "values": {
+            "n": "n"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "pilatte2026-unconditional-factoring-v3",
+          "locator": "PDF/printed p. 2, Theorem 1.1; pp. 5–6, Section 1.4; p. 23, proof of Theorem 1.1."
+        }
+      ]
+    },
+    {
+      "id": "if-ekera-single-run-complete-v2-family",
+      "title": "Single-Run Order Finding: Complete Factorization",
+      "construction": "Complete factorization with overall success tending to one using one quantum order-finding run and polynomial classical postprocessing.",
+      "representation": "table",
+      "parameters": [
+        {
+          "name": "l",
+          "meaning": "Input bit length",
+          "domain": "Positive integer; $2^{l-1}\\le N<2^l$."
+        },
+        {
+          "name": "m",
+          "meaning": "Order bit-length upper bound",
+          "domain": "Corollary 3.3 choice."
+        },
+        {
+          "name": "ell",
+          "meaning": "Additional exponent-length parameter",
+          "domain": "Least integer such that $2^{m+\\ell}\\ge N^2/4$."
+        },
+        {
+          "name": "B",
+          "meaning": "Frequency search radius",
+          "domain": "Asymptotic choice in Corollary 3.5; satisfies Corollary 3.3's admissibility domain for sufficiently large inputs."
+        },
+        {
+          "name": "c",
+          "meaning": "Order postprocessing bound",
+          "domain": "Corollary 3.5 example."
+        },
+        {
+          "name": "zeta",
+          "meaning": "Classical factoring bound",
+          "domain": "Corollary 3.5 example."
+        },
+        {
+          "name": "k",
+          "meaning": "Number of classical factoring iterations",
+          "domain": "Corollary 3.5 example; logarithm convention of the source."
+        }
+      ],
+      "points": [
+        {
+          "result_id": "if-ekera-single-run-complete-v2",
+          "values": {
+            "l": "l",
+            "m": "l-1",
+            "ell": "least integer with 2^(m+ell)>=N^2/4",
+            "B": "m",
+            "c": 1,
+            "zeta": 1,
+            "k": "ceil(3 log_2 l)"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "ekera2024-order-finding-v2",
+          "locator": "PDF/printed pp. 22–24, Section 4.2.1, Corollaries 3.3–3.5; Equation (20)."
+        }
+      ]
+    },
+    {
+      "id": "if-jacobi-special-integers-v4-family",
+      "title": "Complete Factorization of Special Integers",
+      "construction": "Theorem 5.3 reduces complete factorization of special integers to amplified squarefree-part-or-prime extraction; Corollary 5.4 instantiates it quantumly.",
+      "representation": "table",
+      "parameters": [
+        {
+          "name": "N",
+          "meaning": "Special integer input",
+          "domain": "Positive integer with pairwise-distinct prime exponents."
+        },
+        {
+          "name": "T",
+          "meaning": "Amplification repetitions",
+          "domain": "$T=\\omega(\\log N)$; polynomially bounded choices give polynomial overhead."
+        }
+      ],
+      "points": [
+        {
+          "result_id": "if-jacobi-special-integers-v4",
+          "values": {
+            "N": "N",
+            "T": "T"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "kahanamoku-meyer2026-jacobi-v4",
+          "locator": "PDF pp. 33–36 / printed pp. 31–34, Definition 5.1, Lemma 5.2, Theorem 5.3, Algorithm 5.1 and Corollary 5.4."
+        }
+      ]
+    },
+    {
+      "id": "if-harvey-hittmeir-large-order-v2-family",
+      "title": "Large-Order Element or Factor",
+      "construction": "Deterministic output of either an invertible residue with order greater than D or a nontrivial divisor of N.",
+      "representation": "table",
+      "parameters": [
+        {
+          "name": "N",
+          "meaning": "Input integer",
+          "domain": "Integer $N\\ge3$."
+        },
+        {
+          "name": "D",
+          "meaning": "Required multiplicative-order threshold",
+          "domain": "Integer $1\\le D<N-1$."
+        }
+      ],
+      "points": [
+        {
+          "result_id": "if-harvey-hittmeir-large-order-v2",
+          "values": {
+            "N": "N",
+            "D": "D"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "harvey-hittmeir2026-large-order-v2",
+          "locator": "PDF/printed pp. 3–4, Theorem 1.1, Equation (1.2), small-D convention and space remark; Section 3 algorithm and proof."
+        }
+      ]
+    },
+    {
+      "id": "if-gao-balanced-semiprime-v1-family",
+      "title": "Balanced Semiprimes via Rank-3 Lattices",
+      "construction": "Theorem 1.1 recovers both prime factors of a balanced semiprime.",
+      "representation": "table",
+      "parameters": [
+        {
+          "name": "N",
+          "meaning": "Balanced semiprime input",
+          "domain": "$N=pq$; both factors have order $N^{1/2}$."
+        }
+      ],
+      "points": [
+        {
+          "result_id": "if-gao-balanced-semiprime-v1",
+          "values": {
+            "N": "N"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "gao2025-rank-three-factoring-v1",
+          "locator": "PDF/printed pp. 1–2, computational model and Theorem 1.1; Section 4, balanced-semiprime factorization."
+        }
+      ]
+    },
+    {
+      "id": "if-stanica-quadratic-image-v1-family",
+      "title": "Deterministic Quadratic-Image Sieving",
+      "construction": "Author-proved general deterministic factorization bound using quadratic-image restrictions and the large-order subroutine.",
+      "representation": "table",
+      "parameters": [
+        {
+          "name": "N",
+          "meaning": "Integer input",
+          "domain": "Positive integer; asymptotic bound as $N\\to\\infty$."
+        }
+      ],
+      "points": [
+        {
+          "result_id": "if-stanica-quadratic-image-v1",
+          "values": {
+            "N": "N"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "stanica2026-quadratic-image-v1",
+          "locator": "PDF/printed pp. 20–22, Theorem 3.13, Equation (16) and its proof; p. 23, finite-size projection qualification."
+        }
+      ]
+    },
+    {
+      "id": "if-dps-oracle-almost-all-v4-family",
+      "title": "Oracle-Assisted Factoring of Almost All Inputs",
+      "construction": "With the specified elliptic-curve point-count-multiple oracle, Theorem 1.2 deterministically finds a nontrivial factor for almost all inputs in the bounded population.",
+      "representation": "table",
+      "parameters": [
+        {
+          "name": "X",
+          "meaning": "Upper bound on the input population (source N)",
+          "domain": "Sufficiently large positive integer."
+        },
+        {
+          "name": "gamma",
+          "meaning": "Oracle-family size parameter",
+          "domain": "$2<\\gamma<2+(\\sqrt{257}-15)/16$."
+        },
+        {
+          "name": "delta",
+          "meaning": "Exceptional-set exponent",
+          "domain": "$0<\\delta<1/4$."
+        },
+        {
+          "name": "B",
+          "meaning": "Number of elliptic-curve indices",
+          "domain": "Theorem 1.2."
+        },
+        {
+          "name": "M",
+          "meaning": "Oracle response bound",
+          "domain": "$M=X^{O(1)}$."
+        }
+      ],
+      "points": [
+        {
+          "result_id": "if-dps-oracle-almost-all-v4",
+          "values": {
+            "X": "X",
+            "gamma": "gamma",
+            "delta": "delta",
+            "B": "floor((log X)^gamma)",
+            "M": "M"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "dabrowski2023-oracle-factoring-v4",
+          "locator": "PDF/printed pp. 5–7, Definition 1.1, Theorem 1.2, Remark 1.5 and oracle-cost discussion; pp. 13–14, Algorithm 3.1."
+        }
+      ]
+    },
+    {
+      "id": "if-cuda-mpqs-rsa155-2026-family",
+      "title": "RSA-155 with CUDA-MPQS",
+      "construction": "Reported complete factorization of RSA-155 with GPU-assisted self-initializing quadratic sieving.",
+      "representation": "table",
+      "parameters": [
+        {
+          "name": "n",
+          "meaning": "Modulus bit length",
+          "domain": "RSA-155 challenge."
+        },
+        {
+          "name": "F",
+          "meaning": "Factor-base cutoff",
+          "domain": "Section V-G(c)."
+        },
+        {
+          "name": "M",
+          "meaning": "Sieve interval parameter",
+          "domain": "Section V-G(c)."
+        },
+        {
+          "name": "L",
+          "meaning": "Large-prime bound",
+          "domain": "Section V-G(c)."
+        },
+        {
+          "name": "batch",
+          "meaning": "Polynomial batch size",
+          "domain": "Section V-G(c)."
+        },
+        {
+          "name": "unroll",
+          "meaning": "CUDA-graph unroll",
+          "domain": "Section V-G(c)."
+        }
+      ],
+      "points": [
+        {
+          "result_id": "if-cuda-mpqs-rsa155-2026",
+          "values": {
+            "n": 512,
+            "F": 600000000,
+            "M": 8388608,
+            "L": 80000000000000,
+            "batch": 16,
+            "unroll": 4
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "januszewski-heinrichs2026-cuda-mpqs-v1",
+          "locator": "PDF pp. 8–9, Section V-G (RSA-155); PDF p. 3, Section IV-B host residuals; PDF p. 7, Table III."
+        }
+      ]
+    }
+  ],
+  "standalone_result_ids": [],
+  "coverage": {
+    "search_cutoff": "2026-11-26",
+    "comparison_as_of": "2026-11-26",
+    "selection": "Ten selected papers with publication or inspected revisions in 2023–2026. Targeted theorem/algorithm/run extraction, not the ten globally newest papers or an exhaustive factorization survey. The 2024 Ekerå publication is represented by its explicitly dated 2022 preprint.",
+    "source_ids": [
+      "regev2024-quantum-factoring-v3",
+      "ragavan-vaikuntanathan2025-noise-robust-v5",
+      "pilatte2026-unconditional-factoring-v3",
+      "ekera2024-order-finding-v2",
+      "kahanamoku-meyer2026-jacobi-v4",
+      "harvey-hittmeir2026-large-order-v2",
+      "gao2025-rank-three-factoring-v1",
+      "stanica2026-quadratic-image-v1",
+      "dabrowski2023-oracle-factoring-v4",
+      "januszewski-heinrichs2026-cuda-mpqs-v1"
+    ],
+    "exhaustive": false,
+    "latest_or_best_known_claim": false,
+    "not_yet_covered": [
+      "Historical GNFS/SNFS, ECM, quadratic-sieve and Shor baselines are not a completed census.",
+      "No automatic frontier certification across symbolic bounds, auxiliary oracles, special inputs or hardware units.",
+      "No full-paper result inventories, formal proof audits, factor-witness replay or end-to-end reproductions.",
+      "Unselected parameter tradeoffs and secondary results in these papers require separate targeted extraction.",
+      "Regev v3 has an unresolved success-probability statement mismatch."
+    ],
+    "exclusions": [
+      {
+        "source_id": "ragavan-vaikuntanathan2025-noise-robust-v5",
+        "locator": "Sections 5–7, space-efficient arithmetic/circuit construction.",
+        "reason": "Standalone circuit/space optimizations are excluded; the algorithm-level noise-robust postprocessing result in Theorem 4.5 is included."
+      },
+      {
+        "source_id": "kahanamoku-meyer2026-jacobi-v4",
+        "locator": "Section 4, Jacobi-symbol circuit optimizations.",
+        "reason": "Standalone gate/depth/qubit optimization is excluded; the special-integer complete-factorization reduction in Section 5 is included."
+      }
+    ]
+  }
+}

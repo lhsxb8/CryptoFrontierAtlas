@@ -1,0 +1,9 @@
+\begin{tikzpicture}[node distance=.55cm]
+  \node[phase] (title) {ECDSA};
+  \node[box,below=of title] (digest) {$M \longrightarrow e$\\Hash, then the specified truncation};
+  \node[accent,below=of digest] (nonce) {Nonce $k$, private scalar $d$\\$R=[k]G,\quad r=x(R)\bmod n$};
+  \node[box,below=of nonce] (sign) {$s=k^{-1}(e+rd)\bmod n$\\Signature $(r,s)$};
+  \node[accent,below=of sign] (verify) {Public key $Q=[d]G$\\$R'=[e/s]G+[r/s]Q$};
+  \draw[wire] (digest) -- (nonce); \draw[wire] (nonce) -- (sign); \draw[wire] (sign) -- (verify);
+  \node[note,below=.5cm of verify,text width=6cm] {Verify $x(R')\bmod n=r$, with range and point checks.\\Curve: $\AtlasCurve$;\quad hash: $\AtlasHash$.};
+\end{tikzpicture}

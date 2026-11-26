@@ -4,10 +4,30 @@ import project from '../../project.config.json' with {type:'json'};
 test.use({ locale: 'en-US' });
 const publicBase = process.env.ATLAS_UI_BASE_URL || 'http://127.0.0.1:4173';
 
-test('three global tools are available, with one modal and restored focus', async ({ page }) => {
+test('repository navigation stays visible across page types and header breakpoints', async ({page}) => {
+  for (const width of [320, 375, 768, 1251, 1350, 1351, 1440]) {
+    await page.setViewportSize({width, height: 900});
+    await page.goto('/#/asymmetric-cryptanalysis');
+    for (const control of await page.locator('.atlas-header-tools > *').all()) await expect(control).toBeInViewport();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width + 1);
+  }
+  if (project.repository) for (const path of ['/questions', '/cryptanalysis/ciphers/aes/aes-128', '/asymmetric-cryptanalysis/algorithms/ml-kem/ml-kem-512']) {
+    await page.goto('/#' + path);
+    await expect(page.locator('.atlas-header-tools > a')).toHaveAttribute('href', project.repository);
+  }
+});
+
+test('three dialog tools and a repository link are available, with restored focus', async ({ page }) => {
   await page.goto('/#/');
   const tools = page.locator('.atlas-header-tools');
   await expect(tools.getByRole('button')).toHaveCount(3);
+  if (project.repository) {
+    const github = tools.getByRole('link', {name: 'GitHub repository (opens in a new tab)', exact: true});
+    await expect(github).toHaveAttribute('href', project.repository);
+    await expect(github).toHaveAttribute('target', '_blank');
+    await expect(github).toHaveAttribute('rel', 'noopener noreferrer');
+    await github.focus(); await expect(github).toBeFocused(); await expect(github).toBeInViewport();
+  }
   for (const name of ['Language', 'Help', 'Report']) {
     const trigger = tools.getByRole('button', { name, exact: true });
     await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
@@ -21,7 +41,7 @@ test('three global tools are available, with one modal and restored focus', asyn
     await expect(trigger).toHaveAttribute('aria-expanded', 'false');
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
-  const navigationToggle = page.getByRole('button', {name: 'Primary navigation', exact: true});
+  const navigationToggle = page.getByRole('button', {name: 'Primary Navigation', exact: true});
   if (await navigationToggle.isVisible()) await navigationToggle.click();
   for (const link of await page.locator('.atlas-primary-nav a').all()) {
     const box = await link.boundingBox();
@@ -41,7 +61,7 @@ test('language changes preserve the route and persist through reload', async ({ 
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('CryptoFrontierAtlas');
   const navigationToggle = page.getByRole('button', {name: '主导航', exact: true});
   if (await navigationToggle.isVisible()) await navigationToggle.click();
-  await expect(page.getByRole('navigation', { name: '主导航' }).getByRole('link')).toHaveText(['主页', '开放问题', '对称密码分析', '非对称密码分析TBD', '实现TBD']);
+  await expect(page.getByRole('navigation', { name: '主导航' }).getByRole('link')).toHaveText(['主页', '开放问题', '对称密码分析', '非对称密码分析', '实现TBD']);
   expect(page.url()).toBe(originalUrl);
   await page.reload();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('CryptoFrontierAtlas');
@@ -100,7 +120,7 @@ test('modal keyboard focus is contained and Help can open Report', async ({ page
   await dialog.locator('.atlas-dialog-body').evaluate(node => { node.scrollTop = node.scrollHeight; });
   await expect(dialog.getByRole('button', { name: 'Close dialog', exact: true })).toBeInViewport();
   await dialog.getByRole('button', { name: 'Report', exact: true }).click();
-  dialog = page.getByRole('dialog', { name: 'Contribute & report', exact: true });
+  dialog = page.getByRole('dialog', { name: 'Contribute & Report', exact: true });
   await expect(dialog).toBeVisible();
   await expect(page.locator('dialog[open]')).toHaveCount(1);
   await dialog.getByRole('button', { name: 'Close dialog', exact: true }).click();
@@ -121,7 +141,7 @@ test('public home offers reporting routes without exposing result tables on the 
 
 test('published analysis evidence routes expose sources and preserve scientific text when navigation changes language', async ({page}) => {
   await page.goto('/#/cryptanalysis/sources');
-  await expect(page.getByRole('heading', {level:1})).toHaveText('Analysis sources');
+  await expect(page.getByRole('heading', {level:1})).toHaveText('Analysis Sources');
   await expect(page.locator('.atlas-source-card').first()).toBeVisible();
   await page.getByRole('button', {name:'Language', exact:true}).click();
   await page.getByRole('button', {name:'简体中文', exact:true}).click();
@@ -148,7 +168,7 @@ test('compact layouts keep all three tools and both languages inside the viewpor
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto('/#/');
   await expect(page.locator('.atlas-header-tools > button')).toHaveCount(3);
-  for (const button of await page.locator('.atlas-header-tools > button').all()) await expect(button).toBeInViewport();
+  for (const control of await page.locator('.atlas-header-tools > *').all()) await expect(control).toBeInViewport();
   await page.getByRole('button', { name: 'Language', exact: true }).click();
   await page.getByRole('button', { name: '简体中文', exact: true }).click();
   await page.keyboard.press('Escape');

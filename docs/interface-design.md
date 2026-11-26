@@ -1,13 +1,27 @@
 # Interface design
 
+## Heading Case
+
+Authored English interface headings and navigation use Title Case: Open Questions,
+Symmetric Cryptanalysis, Hard Problems and Public-Key Encryption. Minor connecting
+words remain lowercase. Preserve original paper titles, research record text,
+formulas, identifiers and mixed-case names such as qRAM and ePrint. Do not apply a
+global CSS capitalization rule. Display-only formatting of taxonomy and structure
+view labels must not rewrite the underlying scientific records or figure sources.
+
+Hard Problems is the first asymmetric directory section. Its cards share the
+algorithm-card hierarchy but show available formulations instead of instance
+counts. Detail pages pair the definition with a parameter panel, stacked on small
+screens, followed by related entries and source references.
+
 The interface combines an editorial heading hierarchy with compact research
 controls. English page and chapter headings use the self-hosted Source Serif 4
 Semibold face. Primitive names, controls, metadata and scientific body text use
 the existing system sans-serif stack. Chinese headings use the system UI stack
 with a separate size scale. Mathematical typography remains unchanged.
 
-The home masthead contains only the project title and a divider, followed by two
-primary collection cards and two compact TBD entrances. Collection artwork is
+The home masthead contains only the project title and a divider, followed by three
+primary collection cards and an implementation entrance marked TBD. Collection artwork is
 decorative and hidden from assistive technology.
 The four locally bundled WebP illustrations in `src/assets/home/` share muted
 colors, fine contours and shallow, matte dimensionality. Open questions uses a
@@ -34,7 +48,11 @@ columns on wide screens and one on narrow screens. A singleton category uses a
 horizontal entry on desktop. Instance and result counts remain distinct; a
 withdrawal badge carries text and retains its full label as a title.
 
-Below 1251 CSS pixels the primary navigation becomes a labelled disclosure.
+The global header has a persistent external GitHub repository link beside the
+three dialog tools. It uses the same configured URL as the footer and remains
+keyboard-accessible with a descriptive name when its visible label is hidden.
+
+Below 1351 CSS pixels the primary navigation becomes a labelled disclosure.
 It retains the same links and supports keyboard activation, Escape, outside
 pointer dismissal, route changes and breakpoint changes. Secondary navigation
 can scroll horizontally, without widening the page. Scientific routes, query

@@ -1,13 +1,18 @@
 {
-  "schema_version": 1,
+  "schema_version": 3,
   "categories": [
-    {"id": "block_cipher", "en": "Block ciphers", "zh": "分组密码"},
-    {"id": "stream_cipher", "en": "Stream ciphers", "zh": "流密码"},
-    {"id": "hash_function", "en": "Hash functions", "zh": "哈希函数"},
-    {"id": "xof", "en": "Extendable-output functions", "zh": "可扩展输出函数"},
-    {"id": "permutation", "en": "Permutations", "zh": "置换"},
-    {"id": "aead", "en": "Authenticated encryption (AEAD)", "zh": "认证加密（AEAD）"},
-    {"id": "mac", "en": "Message authentication codes", "zh": "消息认证码"}
+    {"id": "block_cipher", "domain": "symmetric", "en": "Block Ciphers", "zh": "分组密码"},
+    {"id": "stream_cipher", "domain": "symmetric", "en": "Stream Ciphers", "zh": "流密码"},
+    {"id": "hash_function", "domain": "symmetric", "en": "Hash Functions", "zh": "哈希函数"},
+    {"id": "xof", "domain": "symmetric", "en": "Extendable-Output Functions", "zh": "可扩展输出函数"},
+    {"id": "permutation", "domain": "symmetric", "en": "Permutations", "zh": "置换"},
+    {"id": "aead", "domain": "symmetric", "en": "Authenticated Encryption (AEAD)", "zh": "认证加密（AEAD）"},
+    {"id": "mac", "domain": "symmetric", "en": "Message Authentication Codes", "zh": "消息认证码"},
+    {"id": "hard_problem", "domain": "asymmetric", "en": "Hard Problems", "zh": "困难问题"},
+    {"id": "public_key_encryption", "domain": "asymmetric", "en": "Public-Key Encryption", "zh": "公钥加密"},
+    {"id": "key_agreement", "domain": "asymmetric", "en": "Key Agreement", "zh": "密钥协商"},
+    {"id": "digital_signature", "domain": "asymmetric", "en": "Digital Signatures", "zh": "数字签名"},
+    {"id": "kem", "domain": "asymmetric", "en": "Key Encapsulation Mechanisms", "zh": "密钥封装机制"}
   ],
   "specifications": [
     {"id": "standard-fips-197-2023", "title": "FIPS 197 · AES", "edition": "May 2023 editorial update", "url": "https://csrc.nist.gov/pubs/fips/197/final", "status": "published", "status_note": "NIST standard; the 2023 update leaves the algorithms unchanged.", "checked_on": "2026-11-24"},
@@ -25,7 +30,488 @@
     {"id": "specification-present-2007", "title": "PRESENT · Original design specification", "edition": "CHES 2007, Section 3 and Appendix II", "url": "https://crypto.orange-labs.fr/papers/ches2007-450.pdf", "status": "published", "status_note": "Original research specification by Bogdanov et al., including both key schedules; not a claim about a current standards edition.", "checked_on": "2026-11-24"},
     {"id": "specification-salsa20-2005", "title": "Salsa20 · Original specification", "edition": "Bernstein, April 27, 2005", "url": "https://cr.yp.to/snuffle/spec.pdf", "status": "published", "status_note": "Original designer specification, not an RFC. Listed instances use the full 20-round cipher and original nonce layout.", "checked_on": "2026-11-24"},
     {"id": "standard-rfc-1321", "title": "RFC 1321 · MD5", "edition": "April 1992", "url": "https://www.rfc-editor.org/rfc/rfc1321", "status": "published", "status_note": "Historical Informational specification; its security considerations are updated by RFC 6151. Publication does not imply collision resistance.", "checked_on": "2026-11-24"},
-    {"id": "standard-rfc-6151", "title": "RFC 6151 · MD5 security considerations", "edition": "March 2011", "url": "https://www.rfc-editor.org/rfc/rfc6151", "status": "published", "status_note": "Updates RFC 1321 and RFC 2104. MD5 is not acceptable where collision resistance is required.", "checked_on": "2026-11-24"}
+    {"id": "standard-rfc-6151", "title": "RFC 6151 · MD5 security considerations", "edition": "March 2011", "url": "https://www.rfc-editor.org/rfc/rfc6151", "status": "published", "status_note": "Updates RFC 1321 and RFC 2104. MD5 is not acceptable where collision resistance is required.", "checked_on": "2026-11-24"},
+    {"id": "standard-rfc-8017", "title": "RFC 8017 · PKCS #1 v2.2", "edition": "November 2016", "url": "https://www.rfc-editor.org/rfc/rfc8017", "status": "published", "status_note": "Informational specification of RSA schemes. Directory profiles explicitly select the hash, mask-generation hash and encoding parameters.", "checked_on": "2026-11-26"},
+    {"id": "standard-rfc-7919", "title": "RFC 7919 · Negotiated finite-field DH groups", "edition": "August 2016", "url": "https://www.rfc-editor.org/rfc/rfc7919", "status": "published", "status_note": "Standards Track RFC. Only the named group definitions are catalogued here, not the complete TLS protocol.", "checked_on": "2026-11-26"},
+    {"id": "standard-sp-800-56a-r3", "title": "SP 800-56A Rev. 3 · Discrete-logarithm key establishment", "edition": "April 2018", "url": "https://csrc.nist.gov/pubs/sp/800/56/a/r3/final", "status": "published", "status_note": "Revision 3 definition of key-agreement primitives and schemes; listed ECDH entries identify the shared-secret primitive, not a complete authenticated protocol.", "checked_on": "2026-11-26"},
+    {"id": "standard-sp-800-186", "title": "SP 800-186 · Elliptic-curve domain parameters", "edition": "February 2023", "url": "https://csrc.nist.gov/pubs/sp/800/186/final", "status": "published", "status_note": "Published NIST domain-parameter recommendation. The listed prime-field curves are distinct from the algorithms that use them.", "checked_on": "2026-11-26"},
+    {"id": "standard-fips-186-5", "title": "FIPS 186-5 · Digital Signature Standard", "edition": "February 2023", "url": "https://csrc.nist.gov/pubs/fips/186-5/final", "status": "published", "status_note": "Published NIST signature standard. Instance definitions bind a curve and hash; signature encodings are protocol-dependent.", "checked_on": "2026-11-26"},
+    {"id": "standard-rfc-7748", "title": "RFC 7748 · Elliptic curves for security", "edition": "January 2016", "url": "https://www.rfc-editor.org/rfc/rfc7748", "status": "published", "status_note": "Informational RFC defining X25519 and X448, their encodings and Diffie–Hellman use.", "checked_on": "2026-11-26"},
+    {"id": "standard-rfc-8032", "title": "RFC 8032 · EdDSA", "edition": "January 2017", "url": "https://www.rfc-editor.org/rfc/rfc8032", "status": "published", "status_note": "Informational RFC. The initial directory includes pure Ed25519 and Ed448, not their prehash variants.", "checked_on": "2026-11-26"},
+    {"id": "standard-gbt-32918-2-2016", "title": "GB/T 32918.2-2016 · SM2 Digital signatures", "edition": "August 2016; effective March 2017", "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=6F1FAEB62F9668F25F38E0BF0291D4AC", "status": "published", "status_note": "Chinese national standard. Encryption, key exchange and signatures remain separate directory targets.", "checked_on": "2026-11-26"},
+    {"id": "standard-gbt-32918-3-2016", "title": "GB/T 32918.3-2016 · SM2 Key exchange", "edition": "August 2016; effective March 2017", "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=66A89DD6DA64F49C49456B757BA0624F", "status": "published", "status_note": "Chinese national standard. Encryption, key exchange and signatures remain separate directory targets.", "checked_on": "2026-11-26"},
+    {"id": "standard-gbt-32918-4-2016", "title": "GB/T 32918.4-2016 · SM2 Public-key encryption", "edition": "August 2016; effective March 2017", "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=370AF152CB5CA4A377EB4D1B21DECAE0", "status": "published", "status_note": "Chinese national standard. Encryption, key exchange and signatures remain separate directory targets.", "checked_on": "2026-11-26"},
+    {"id": "standard-gbt-32918-5-2017", "title": "GB/T 32918.5-2017 · SM2 Domain parameters", "edition": "May 2017; effective December 2017", "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=728DEA8B8BB32ACFB6EF4BF449BC3077", "status": "published", "status_note": "Chinese national standard. Encryption, key exchange and signatures remain separate directory targets.", "checked_on": "2026-11-26"},
+    {"id": "standard-fips-203", "title": "FIPS 203 · ML-KEM", "edition": "August 13, 2024", "url": "https://csrc.nist.gov/pubs/fips/203/final", "status": "published", "status_note": "Final NIST standard. Parameter-set names and encoded lengths identify ML-KEM, not pre-standard Kyber variants.", "checked_on": "2026-11-26"},
+    {"id": "standard-fips-204", "title": "FIPS 204 · ML-DSA", "edition": "August 13, 2024", "url": "https://csrc.nist.gov/pubs/fips/204/final", "status": "published", "status_note": "Final NIST standard. Listed instances use the pure external interface with an empty context, not HashML-DSA.", "checked_on": "2026-11-26"},
+    {"id": "standard-fips-205", "title": "FIPS 205 · SLH-DSA", "edition": "August 13, 2024", "url": "https://csrc.nist.gov/pubs/fips/205/final", "status": "published", "status_note": "Final NIST standard. The initial subset includes the SHA2/SHAKE 128s and 128f parameter sets with the pure external interface.", "checked_on": "2026-11-26"}
+  ],
+  "problem_sources": [
+    {
+      "id": "problem-source-rsa-1978",
+      "title": "A Method for Obtaining Digital Signatures and Public-Key Cryptosystems",
+      "authors": [
+        "Ronald L. Rivest",
+        "Adi Shamir",
+        "Leonard Adleman"
+      ],
+      "year": 1978,
+      "edition": "Communications of the ACM 21(2), February 1978, pp. 120–126; author-hosted scan.",
+      "url": "https://people.csail.mit.edu/rivest/pubs/RSA78.pdf"
+    },
+    {
+      "id": "problem-source-dh-1976",
+      "title": "New Directions in Cryptography",
+      "authors": [
+        "Whitfield Diffie",
+        "Martin E. Hellman"
+      ],
+      "year": 1976,
+      "edition": "IEEE Transactions on Information Theory 22(6), November 1976, pp. 644–654.",
+      "url": "https://www-ee.stanford.edu/~hellman/publications/24.pdf"
+    },
+    {
+      "id": "problem-source-nist-56a-r3",
+      "title": "Recommendation for Pair-Wise Key-Establishment Schemes Using Discrete Logarithm Cryptography",
+      "authors": [
+        "Elaine Barker",
+        "Lily Chen",
+        "Allen Roginsky",
+        "Apostol Vassilev",
+        "Richard Davis"
+      ],
+      "year": 2018,
+      "edition": "NIST SP 800-56A Revision 3, April 2018.",
+      "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-56Ar3.pdf"
+    },
+    {
+      "id": "problem-source-regev-lwe",
+      "title": "On Lattices, Learning with Errors, Random Linear Codes, and Cryptography",
+      "authors": [
+        "Oded Regev"
+      ],
+      "year": 2009,
+      "edition": "Author manuscript dated May 2, 2009; journal version of the STOC 2005 work.",
+      "url": "https://cims.nyu.edu/~regev/papers/qcrypto.pdf"
+    },
+    {
+      "id": "problem-source-lpr-ring-lwe",
+      "title": "On Ideal Lattices and Learning with Errors Over Rings",
+      "authors": [
+        "Vadim Lyubashevsky",
+        "Chris Peikert",
+        "Oded Regev"
+      ],
+      "year": 2012,
+      "edition": "Author manuscript dated April 24, 2012; expanded version of the EUROCRYPT 2010 work.",
+      "url": "https://cims.nyu.edu/~regev/papers/ideal-lwe.pdf"
+    },
+    {
+      "id": "problem-source-ls-module",
+      "title": "Worst-Case to Average-Case Reductions for Module Lattices",
+      "authors": [
+        "Adeline Langlois",
+        "Damien Stehlé"
+      ],
+      "year": 2015,
+      "edition": "Author-hosted manuscript of the Designs, Codes and Cryptography article (2015).",
+      "url": "https://perso.ens-lyon.fr/damien.stehle/downloads/MSIS.pdf"
+    }
+  ],
+  "hard_problems": [
+    {
+      "id": "integer-factorization",
+      "name": "Integer Factorization",
+      "category": "hard_problem",
+      "aliases": [
+        "Factoring",
+        "IFP",
+        "大整数分解",
+        "整数分解"
+      ],
+      "description": "Recover factors of a composite integer.",
+      "statement": "Given a composite integer $N$, find a divisor $d$ with $1<d<N$. Repeated splitting yields the prime factorization.",
+      "parameters": {
+        "type": "integer_factorization",
+        "modulus": "Composite $N$; the RSA setting uses $N=pq$ for distinct primes.",
+        "size": "Bit length $\\lceil\\log_2(N+1)\\rceil$.",
+        "input_distribution": "Specify how the prime factors and their sizes are sampled."
+      },
+      "formulations": [
+        {
+          "kind": "search",
+          "description": "Find a nontrivial factor of the supplied composite integer."
+        }
+      ],
+      "qualifications": [
+        "RSA moduli are one input family, not all composite integers. Factoring enables RSA inversion; the converse is not assumed."
+      ],
+      "references": [
+        {
+          "source_id": "problem-source-rsa-1978",
+          "locator": "Sections VI and IX.A–D: modulus construction, factoring and alternative approaches."
+        }
+      ],
+      "related_scheme_ids": [
+        "rsa-oaep",
+        "rsa-pss"
+      ],
+      "related_problem_ids": [
+        "rsa-problem"
+      ]
+    },
+    {
+      "id": "rsa-problem",
+      "name": "RSA Problem",
+      "category": "hard_problem",
+      "aliases": [
+        "RSA inversion",
+        "RSA求逆",
+        "RSA问题"
+      ],
+      "description": "Invert public-exponent modular exponentiation.",
+      "statement": "Given $N=pq$, an exponent $e$ coprime to $\\varphi(N)$, and $y\\in\\mathbb{Z}_N^*$, recover $x\\in\\mathbb{Z}_N^*$ such that $x^e\\equiv y\\pmod N$.",
+      "parameters": {
+        "type": "rsa_inversion",
+        "modulus": "RSA modulus $N=pq$ with hidden distinct prime factors.",
+        "exponent": "Public $e>1$ with $\\gcd(e,\\varphi(N))=1$.",
+        "input_distribution": "Specify modulus generation and the distribution of $y$ (usually uniform in $\\mathbb{Z}_N^*$)."
+      },
+      "formulations": [
+        {
+          "kind": "search",
+          "description": "Recover an e-th root modulo the public RSA modulus."
+        }
+      ],
+      "qualifications": [
+        "This is the RSA inversion problem, not OAEP decryption or PSS forgery. Factoring is sufficient to solve it, but general equivalence is not claimed."
+      ],
+      "references": [
+        {
+          "source_id": "problem-source-rsa-1978",
+          "locator": "Sections VI and IX.D: exponentiation, decryption and direct recovery without factoring."
+        }
+      ],
+      "related_scheme_ids": [
+        "rsa-oaep",
+        "rsa-pss"
+      ],
+      "related_problem_ids": [
+        "integer-factorization"
+      ]
+    },
+    {
+      "id": "discrete-logarithm",
+      "name": "Discrete Logarithm",
+      "category": "hard_problem",
+      "aliases": [
+        "DLP",
+        "Discrete logarithm problem",
+        "离散对数"
+      ],
+      "description": "Recover an exponent in a specified cyclic group.",
+      "statement": "Given a cyclic group $G=\\langle g\\rangle$ of order $r$ and $h\\in G$, find $x\\in\\mathbb{Z}_r$ such that $g^x=h$.",
+      "parameters": {
+        "type": "discrete_logarithm",
+        "group": "Specify $G$, its encoding and generator $g$; finite-field subgroups are one family.",
+        "order": "Order $r$ and its factorization.",
+        "input_distribution": "Specify the distribution of $x$ (commonly uniform in $\\mathbb{Z}_r$)."
+      },
+      "formulations": [
+        {
+          "kind": "search",
+          "description": "Recover the exponent modulo the order of the generator."
+        }
+      ],
+      "qualifications": [
+        "Group structure and representation affect algorithms. DLP, computational Diffie–Hellman and decisional Diffie–Hellman are distinct tasks."
+      ],
+      "references": [
+        {
+          "source_id": "problem-source-dh-1976",
+          "locator": "Section III, equations (4)–(8), p. 649: finite-field logarithms and key exchange."
+        }
+      ],
+      "related_scheme_ids": [
+        "ffdhe"
+      ],
+      "related_problem_ids": [
+        "elliptic-curve-discrete-logarithm"
+      ]
+    },
+    {
+      "id": "elliptic-curve-discrete-logarithm",
+      "name": "Elliptic-Curve Discrete Logarithm",
+      "category": "hard_problem",
+      "aliases": [
+        "ECDLP",
+        "Elliptic curve discrete logarithm problem",
+        "椭圆曲线离散对数"
+      ],
+      "description": "Recover a scalar in an elliptic-curve subgroup.",
+      "statement": "Given an elliptic curve $E/\\mathbb{F}_q$, a point $P$ of order $r$, and $Q\\in\\langle P\\rangle$, find $x\\in\\mathbb{Z}_r$ such that $[x]P=Q$.",
+      "parameters": {
+        "type": "elliptic_curve_discrete_logarithm",
+        "curve": "Field $\\mathbb{F}_q$, curve equation and point encoding.",
+        "group": "Subgroup $\\langle P\\rangle$ and curve cofactor.",
+        "order": "Point order $r$.",
+        "input_distribution": "Specify how $x$ and hence $Q$ are sampled."
+      },
+      "formulations": [
+        {
+          "kind": "search",
+          "description": "Recover the scalar modulo the subgroup order."
+        }
+      ],
+      "qualifications": [
+        "This is a DLP family, not a complete security model for ECDH or signatures. Curve choice, subgroup membership and protocol assumptions remain explicit."
+      ],
+      "references": [
+        {
+          "source_id": "problem-source-nist-56a-r3",
+          "locator": "Sections 5.5.1.2 and 5.6.1.2: elliptic-curve domain parameters and the relation Q = dG."
+        }
+      ],
+      "related_scheme_ids": [
+        "ecdh",
+        "xdh",
+        "ecdsa",
+        "eddsa",
+        "sm2-encryption",
+        "sm2-signature",
+        "sm2-key-exchange"
+      ],
+      "related_problem_ids": [
+        "discrete-logarithm"
+      ]
+    },
+    {
+      "id": "lwe",
+      "name": "LWE",
+      "category": "hard_problem",
+      "aliases": [
+        "Learning with Errors",
+        "Learning With Errors",
+        "带误差学习"
+      ],
+      "description": "Noisy linear equations over modular vector spaces.",
+      "statement": "In the discrete formulation, sample $A\\leftarrow\\mathbb{Z}_q^{m\\times n}$ uniformly, a secret $s\\in\\mathbb{Z}_q^n$ and an error vector $e$. The observations are $(A,b)$ with $b=As+e\\bmod q$.",
+      "parameters": {
+        "type": "lwe",
+        "dimension": "Secret dimension $n$.",
+        "modulus": "Integer modulus $q\\ge 2$.",
+        "sample_count": "Number of equations $m$, or a stated sample-oracle budget.",
+        "secret_distribution": "Distribution of $s$, e.g. uniform or an explicitly specified small-secret distribution.",
+        "error_distribution": "Distribution and scale of $e$, including independence between samples."
+      },
+      "formulations": [
+        {
+          "kind": "search",
+          "description": "Recover $s$ from the noisy samples."
+        },
+        {
+          "kind": "decision",
+          "description": "Distinguish $(A,As+e)$ from uniformly sampled $(A,u)$ with the same dimensions."
+        }
+      ],
+      "qualifications": [
+        "Hardness and search-to-decision reductions require parameter and distribution conditions; small-secret, binary-secret and noise-free cases are not interchangeable."
+      ],
+      "references": [
+        {
+          "source_id": "problem-source-regev-lwe",
+          "locator": "Section 2: LWE distributions and search task; Section 4: decision variants."
+        }
+      ],
+      "related_scheme_ids": [],
+      "related_problem_ids": [
+        "ring-lwe",
+        "module-lwe",
+        "sis"
+      ]
+    },
+    {
+      "id": "ring-lwe",
+      "name": "Ring-LWE",
+      "category": "hard_problem",
+      "aliases": [
+        "RLWE",
+        "R-LWE",
+        "Ring Learning with Errors",
+        "环上带误差学习"
+      ],
+      "description": "Noisy ring products with an explicit embedding and error distribution.",
+      "statement": "In the dual formulation, let $R=\\mathcal{O}_K$, let $R^\\vee$ be its codifferent, and set $T=K_{\\mathbb{R}}/R^\\vee$. For fixed $s\\in R^\\vee/qR^\\vee$, samples have uniform $a\\in R/qR$ and $b=as/q+e\\bmod R^\\vee$.",
+      "parameters": {
+        "type": "ring_lwe",
+        "ring": "Number field $K$ and ring of integers $R$.",
+        "modulus": "Integer modulus $q\\ge 2$.",
+        "sample_count": "Number of independent ring samples or oracle budget.",
+        "secret_distribution": "Distribution on $R^\\vee/qR^\\vee$; state the search or average-case convention.",
+        "error_distribution": "Distribution on $K_{\\mathbb{R}}$, including scale and embedding.",
+        "representation": "Dual/codifferent formulation above; a polynomial or discrete encoding requires an explicit conversion and error distribution."
+      },
+      "formulations": [
+        {
+          "kind": "search",
+          "description": "Recover $s$ from samples sharing that secret."
+        },
+        {
+          "kind": "decision",
+          "description": "Distinguish secret-and-error samples from uniform samples over $(R/qR)\\times T$."
+        }
+      ],
+      "qualifications": [
+        "The cited decision problem samples both the secret and an error distribution. Search/decision equivalence and hardness guarantees depend on the field, error family and parameters."
+      ],
+      "references": [
+        {
+          "source_id": "problem-source-lpr-ring-lwe",
+          "locator": "Section 3, Definitions 3.1–3.5; discussion following Definition 3.3 on dual and non-dual representations."
+        }
+      ],
+      "related_scheme_ids": [],
+      "related_problem_ids": [
+        "lwe",
+        "module-lwe"
+      ]
+    },
+    {
+      "id": "module-lwe",
+      "name": "Module-LWE",
+      "category": "hard_problem",
+      "aliases": [
+        "MLWE",
+        "M-LWE",
+        "Module Learning with Errors",
+        "模上带误差学习"
+      ],
+      "description": "Noisy linear equations over a module of a number ring.",
+      "statement": "Let $R=\\mathcal{O}_K$, $T=K_{\\mathbb{R}}/R^\\vee$ and $s\\in(R^\\vee/qR^\\vee)^k$. Samples consist of uniform $a\\in(R/qR)^k$ and $b=\\langle a,s\\rangle/q+e\\bmod R^\\vee$.",
+      "parameters": {
+        "type": "module_lwe",
+        "ring": "Number field $K$ and its ring of integers $R$.",
+        "module_rank": "Module rank $k$ over $R$, separate from the degree of $K$.",
+        "modulus": "Integer modulus $q\\ge 2$.",
+        "sample_count": "Number of independent samples or oracle budget.",
+        "secret_distribution": "Distribution of the shared module secret $s$.",
+        "error_distribution": "Error family, scale and embedding.",
+        "representation": "Dual formulation above; scheme-specific discrete module equations must state their ring, basis and distributions."
+      },
+      "formulations": [
+        {
+          "kind": "search",
+          "description": "Recover the module secret $s$."
+        },
+        {
+          "kind": "decision",
+          "description": "Distinguish the noisy samples from uniform samples over $(R/qR)^k\\times T$."
+        }
+      ],
+      "qualifications": [
+        "ML-KEM uses a particular discrete Module-LWE setting, not every parameter choice in this problem family. Ring degree and module rank are different parameters."
+      ],
+      "references": [
+        {
+          "source_id": "problem-source-ls-module",
+          "locator": "Section 4.1, Definition 4.6: search and decision M-LWE; Theorem 4.7: parameter conditions."
+        }
+      ],
+      "related_scheme_ids": [
+        "ml-kem",
+        "ml-dsa"
+      ],
+      "related_problem_ids": [
+        "lwe",
+        "ring-lwe",
+        "module-sis"
+      ]
+    },
+    {
+      "id": "sis",
+      "name": "SIS",
+      "category": "hard_problem",
+      "aliases": [
+        "Short Integer Solution",
+        "Short integer solutions",
+        "短整数解"
+      ],
+      "description": "Find a short nonzero vector in a random modular kernel.",
+      "statement": "Given uniform $A\\in\\mathbb{Z}_q^{n\\times m}$, find $z\\in\\mathbb{Z}^m$ with $Az\\equiv0\\pmod q$ and $0<\\lVert z\\rVert\\le\\beta$.",
+      "parameters": {
+        "type": "sis",
+        "dimension": "Number of rows $n$.",
+        "column_count": "Number of columns $m$.",
+        "modulus": "Integer modulus $q\\ge 2$.",
+        "norm": "Specify the norm, e.g. $\\ell_2$ or $\\ell_\\infty$.",
+        "bound": "Upper bound $\\beta$ on the integer-vector norm."
+      },
+      "formulations": [
+        {
+          "kind": "search",
+          "description": "Produce a nonzero integer solution satisfying both the modular equation and the norm bound."
+        }
+      ],
+      "qualifications": [
+        "Parameters must allow a solution without making the task trivial; changing the norm or bound changes the problem. This is not inhomogeneous SIS."
+      ],
+      "references": [
+        {
+          "source_id": "problem-source-ls-module",
+          "locator": "Section 3.1, Definition 3.1: SIS; Theorem 3.2: a parameter-dependent hardness reduction."
+        }
+      ],
+      "related_scheme_ids": [],
+      "related_problem_ids": [
+        "lwe",
+        "module-sis"
+      ]
+    },
+    {
+      "id": "module-sis",
+      "name": "Module-SIS",
+      "category": "hard_problem",
+      "aliases": [
+        "MSIS",
+        "M-SIS",
+        "Module Short Integer Solution",
+        "模上短整数解"
+      ],
+      "description": "Find a short nonzero module vector in a modular kernel.",
+      "statement": "For $R=\\mathcal{O}_K$ and uniform $A\\in(R/qR)^{k\\times m}$, find $z\\in R^m$ with $Az=0\\bmod qR$ and $0<\\lVert z\\rVert\\le\\beta$.",
+      "parameters": {
+        "type": "module_sis",
+        "ring": "Number field $K$ and ring of integers $R$.",
+        "module_rank": "Number of module rows $k$.",
+        "column_count": "Number of module columns $m$.",
+        "modulus": "Integer modulus $q\\ge 2$.",
+        "norm": "Specify the norm and its embedding or coefficient basis.",
+        "bound": "Shortness bound $\\beta$.",
+        "representation": "The cited reduction uses the canonical embedding; coefficient norms require a stated basis and conversion."
+      },
+      "formulations": [
+        {
+          "kind": "search",
+          "description": "Produce a nonzero short module vector satisfying the homogeneous modular equation."
+        }
+      ],
+      "qualifications": [
+        "The ML-DSA association does not identify generic Module-SIS with all of its security assumptions, including self-target variants."
+      ],
+      "references": [
+        {
+          "source_id": "problem-source-ls-module",
+          "locator": "Section 3.1, Definition 3.5: M-SIS; Section 2.1: canonical embedding and norms."
+        }
+      ],
+      "related_scheme_ids": [
+        "ml-dsa"
+      ],
+      "related_problem_ids": [
+        "sis",
+        "module-lwe"
+      ]
+    }
   ],
   "primitives": [
     {"id": "aes", "name": "AES", "category": "block_cipher", "aliases": ["Advanced Encryption Standard", "Rijndael with 128-bit blocks"], "description": "Standardized Rijndael instances with a 128-bit block and three key sizes.", "specification_ids": ["standard-fips-197-2023"], "uses": []},
@@ -43,10 +529,23 @@
     {"id": "sha1", "name": "SHA-1", "category": "hash_function", "aliases": ["SHA1"], "description": "Historical 160-bit hash retained for cryptanalysis; distinct from SHA-0 and the SHA-2 family.", "specification_ids": ["standard-fips-180-4-2015"], "uses": []},
     {"id": "md5", "name": "MD5", "category": "hash_function", "aliases": ["Message-Digest Algorithm 5", "MD5-128"], "description": "Historical 128-bit hash retained for cryptanalysis, not for applications requiring collision resistance.", "specification_ids": ["standard-rfc-1321", "standard-rfc-6151"], "uses": []},
     {"id": "shake", "name": "SHAKE", "category": "xof", "aliases": ["SHAKE128", "SHAKE256"], "description": "Keccak-based functions with caller-selected output length and XOF-specific domain separation.", "specification_ids": ["standard-fips-202-2015"], "uses": ["keccak"]},
-    {"id": "keccak", "name": "Keccak permutations", "category": "permutation", "aliases": ["Keccak-f", "Keccak-p"], "description": "Unkeyed state permutations underlying SHA-3 and SHAKE; each instance fixes its width and round schedule.", "specification_ids": ["standard-fips-202-2015"], "uses": []},
+    {"id": "keccak", "name": "Keccak Permutations", "category": "permutation", "aliases": ["Keccak-f", "Keccak-p"], "description": "Unkeyed state permutations underlying SHA-3 and SHAKE; each instance fixes its width and round schedule.", "specification_ids": ["standard-fips-202-2015"], "uses": []},
     {"id": "ascon-aead", "name": "Ascon AEAD", "category": "aead", "aliases": ["Ascon-AEAD128"], "description": "Authenticated encryption from the final Ascon-based lightweight cryptography standard.", "specification_ids": ["standard-sp-800-232-2025"], "uses": []},
     {"id": "chacha20-poly1305", "name": "ChaCha20-Poly1305", "category": "aead", "aliases": ["AEAD_CHACHA20_POLY1305"], "description": "Authenticated encryption combining the IETF ChaCha20 instance with Poly1305.", "specification_ids": ["standard-rfc-8439"], "uses": ["chacha20"]},
-    {"id": "cmac", "name": "CMAC", "category": "mac", "aliases": ["AES-CMAC"], "description": "Block-cipher-based message authentication; registered instances use AES with full tags.", "specification_ids": ["standard-sp-800-38b-2016", "standard-fips-197-2023"], "uses": ["aes"]}
+    {"id": "cmac", "name": "CMAC", "category": "mac", "aliases": ["AES-CMAC"], "description": "Block-cipher-based message authentication; registered instances use AES with full tags.", "specification_ids": ["standard-sp-800-38b-2016", "standard-fips-197-2023"], "uses": ["aes"]},
+    {"id": "rsa-oaep", "name": "RSAES-OAEP", "category": "public_key_encryption", "aliases": ["RSA", "RSA encryption", "PKCS #1", "RSA-OAEP"], "description": "RSA encryption with OAEP encoding. Profiles fix the modulus length, message hash, MGF1 hash and label.", "specification_ids": ["standard-rfc-8017"], "uses": ["sha2"]},
+    {"id": "sm2-encryption", "name": "SM2 Encryption", "category": "public_key_encryption", "aliases": ["SM2", "国密SM2", "国密 SM2", "SM2公钥加密"], "description": "SM2 public-key encryption on the recommended prime-field curve, using SM3 for the KDF and integrity digest.", "specification_ids": ["standard-gbt-32918-4-2016", "standard-gbt-32918-5-2017", "standard-gbt-32905-2016"], "uses": ["sm3"]},
+    {"id": "ffdhe", "name": "Finite-Field DH", "category": "key_agreement", "aliases": ["Diffie–Hellman", "Diffie-Hellman", "FFDHE", "DHE"], "description": "Finite-field Diffie–Hellman over the RFC 7919 named safe-prime groups. Group registration does not specify authentication or a key-derivation protocol.", "specification_ids": ["standard-rfc-7919"], "uses": []},
+    {"id": "ecdh", "name": "ECDH", "category": "key_agreement", "aliases": ["Elliptic-curve Diffie–Hellman", "Elliptic curve Diffie-Hellman", "P-256", "P-384", "P-521"], "description": "Elliptic-curve shared-secret computation over the NIST prime-field curves; authentication and key derivation belong to the enclosing protocol.", "specification_ids": ["standard-sp-800-56a-r3", "standard-sp-800-186"], "uses": []},
+    {"id": "xdh", "name": "X25519 / X448", "category": "key_agreement", "aliases": ["XDH", "Curve25519", "Curve448"], "description": "RFC 7748 Montgomery-coordinate Diffie–Hellman functions with fixed scalar and coordinate encodings.", "specification_ids": ["standard-rfc-7748"], "uses": []},
+    {"id": "sm2-key-exchange", "name": "SM2 Key Exchange", "category": "key_agreement", "aliases": ["SM2", "国密SM2", "SM2密钥交换"], "description": "SM2 key exchange combines static and ephemeral key pairs, identity digests and a KDF. It is not plain ECDH.", "specification_ids": ["standard-gbt-32918-3-2016", "standard-gbt-32918-5-2017", "standard-gbt-32905-2016"], "uses": ["sm3"]},
+    {"id": "rsa-pss", "name": "RSASSA-PSS", "category": "digital_signature", "aliases": ["RSA", "RSA signature", "RSA-PSS", "PKCS #1"], "description": "RSA signatures with PSS encoding. Profiles fix the message hash, MGF1 hash and salt length independently of OAEP.", "specification_ids": ["standard-rfc-8017"], "uses": ["sha2"]},
+    {"id": "ecdsa", "name": "ECDSA", "category": "digital_signature", "aliases": ["Elliptic Curve Digital Signature Algorithm"], "description": "Elliptic-curve digital signatures with a specified prime-field curve and message hash.", "specification_ids": ["standard-fips-186-5", "standard-sp-800-186"], "uses": ["sha2"]},
+    {"id": "eddsa", "name": "EdDSA", "category": "digital_signature", "aliases": ["Ed25519", "Ed448", "Edwards-curve signatures"], "description": "Pure EdDSA instances from RFC 8032. Ed25519/Ed448 signature encodings are distinct from X25519/X448 key-agreement encodings.", "specification_ids": ["standard-rfc-8032"], "uses": ["sha2", "shake"]},
+    {"id": "sm2-signature", "name": "SM2 Signatures", "category": "digital_signature", "aliases": ["SM2", "国密SM2", "SM2数字签名"], "description": "SM2 digital signatures bind an identity digest and the message with SM3; the signing equation is distinct from ECDSA.", "specification_ids": ["standard-gbt-32918-2-2016", "standard-gbt-32918-5-2017", "standard-gbt-32905-2016"], "uses": ["sm3"]},
+    {"id": "ml-dsa", "name": "ML-DSA", "category": "digital_signature", "aliases": ["Module-lattice digital signatures", "Dilithium-derived standard"], "description": "Standardized module-lattice signatures. Directory instances identify FIPS 204 parameter sets, not pre-standard Dilithium variants.", "specification_ids": ["standard-fips-204"], "uses": ["shake"]},
+    {"id": "slh-dsa", "name": "SLH-DSA", "category": "digital_signature", "aliases": ["Stateless hash-based signatures", "SPHINCS+-derived standard"], "description": "Stateless hash-based signatures combining FORS and an XMSS hypertree. The directory initially includes four FIPS 205 parameter sets.", "specification_ids": ["standard-fips-205"], "uses": ["sha2", "shake"]},
+    {"id": "ml-kem", "name": "ML-KEM", "category": "kem", "aliases": ["Module-lattice KEM", "Kyber-derived standard"], "description": "Standardized module-lattice key encapsulation with re-encryption checks and implicit rejection, distinct from its internal public-key encryption component.", "specification_ids": ["standard-fips-203"], "uses": ["sha3", "shake"]}
   ],
   "instances": [
     {"id": "aes-128", "family_id": "aes", "name": "AES-128", "specification_ids": ["standard-fips-197-2023"], "locator": "Section 5, Table 3", "parameters": {"type": "block_cipher", "key_bits": 128, "block_bits": 128, "rounds": 10}},
@@ -87,6 +586,38 @@
     {"id": "chacha20-poly1305-ietf", "family_id": "chacha20-poly1305", "name": "ChaCha20-Poly1305 (IETF)", "specification_ids": ["standard-rfc-8439"], "locator": "Section 2.8", "parameters": {"type": "aead", "key_bits": 256, "nonce_bits": 96, "tag_bits": 128}},
     {"id": "cmac-aes-128", "family_id": "cmac", "name": "CMAC-AES-128 (full tag)", "specification_ids": ["standard-sp-800-38b-2016", "standard-fips-197-2023"], "locator": "SP 800-38B Sections 5.2, 5.5 and 6.2; FIPS 197 Table 3", "parameters": {"type": "mac", "key_bits": 128, "block_bits": 128, "tag_bits": 128, "cipher_instance_id": "aes-128"}},
     {"id": "cmac-aes-192", "family_id": "cmac", "name": "CMAC-AES-192 (full tag)", "specification_ids": ["standard-sp-800-38b-2016", "standard-fips-197-2023"], "locator": "SP 800-38B Sections 5.2, 5.5 and 6.2; FIPS 197 Table 3", "parameters": {"type": "mac", "key_bits": 192, "block_bits": 128, "tag_bits": 128, "cipher_instance_id": "aes-192"}},
-    {"id": "cmac-aes-256", "family_id": "cmac", "name": "CMAC-AES-256 (full tag)", "specification_ids": ["standard-sp-800-38b-2016", "standard-fips-197-2023"], "locator": "SP 800-38B Sections 5.2, 5.5 and 6.2; FIPS 197 Table 3", "parameters": {"type": "mac", "key_bits": 256, "block_bits": 128, "tag_bits": 128, "cipher_instance_id": "aes-256"}}
+    {"id": "cmac-aes-256", "family_id": "cmac", "name": "CMAC-AES-256 (full tag)", "specification_ids": ["standard-sp-800-38b-2016", "standard-fips-197-2023"], "locator": "SP 800-38B Sections 5.2, 5.5 and 6.2; FIPS 197 Table 3", "parameters": {"type": "mac", "key_bits": 256, "block_bits": 128, "tag_bits": 128, "cipher_instance_id": "aes-256"}},
+    {"id": "rsa-oaep-2048-sha256", "family_id": "rsa-oaep", "name": "RSAES-OAEP-2048 / SHA-256", "specification_ids": ["standard-rfc-8017"], "locator": "RFC 8017, Sections 7.1 and B.2.1", "note": "Directory profile: MGF1 with SHA-256 and an empty label. Modulus size is not a security-strength estimate; the public exponent is not fixed by this profile.", "parameters": {"type": "public_key_encryption", "scheme": "rsaes_oaep", "modulus_bits": 2048, "hash": "SHA-256", "mgf_hash": "SHA-256", "label_hex": ""}},
+    {"id": "rsa-pss-2048-sha256", "family_id": "rsa-pss", "name": "RSASSA-PSS-2048 / SHA-256", "specification_ids": ["standard-rfc-8017"], "locator": "RFC 8017, Sections 8.1, 9.1 and B.2.1", "note": "Directory profile: MGF1 with SHA-256, a 32-byte salt and the standard 0xbc trailer. The public exponent is not fixed by this profile.", "parameters": {"type": "digital_signature", "scheme": "rsassa_pss", "modulus_bits": 2048, "hash": "SHA-256", "mgf_hash": "SHA-256", "salt_bytes": 32}},
+    {"id": "rsa-oaep-3072-sha256", "family_id": "rsa-oaep", "name": "RSAES-OAEP-3072 / SHA-256", "specification_ids": ["standard-rfc-8017"], "locator": "RFC 8017, Sections 7.1 and B.2.1", "note": "Directory profile: MGF1 with SHA-256 and an empty label. Modulus size is not a security-strength estimate; the public exponent is not fixed by this profile.", "parameters": {"type": "public_key_encryption", "scheme": "rsaes_oaep", "modulus_bits": 3072, "hash": "SHA-256", "mgf_hash": "SHA-256", "label_hex": ""}},
+    {"id": "rsa-pss-3072-sha256", "family_id": "rsa-pss", "name": "RSASSA-PSS-3072 / SHA-256", "specification_ids": ["standard-rfc-8017"], "locator": "RFC 8017, Sections 8.1, 9.1 and B.2.1", "note": "Directory profile: MGF1 with SHA-256, a 32-byte salt and the standard 0xbc trailer. The public exponent is not fixed by this profile.", "parameters": {"type": "digital_signature", "scheme": "rsassa_pss", "modulus_bits": 3072, "hash": "SHA-256", "mgf_hash": "SHA-256", "salt_bytes": 32}},
+    {"id": "rsa-oaep-4096-sha256", "family_id": "rsa-oaep", "name": "RSAES-OAEP-4096 / SHA-256", "specification_ids": ["standard-rfc-8017"], "locator": "RFC 8017, Sections 7.1 and B.2.1", "note": "Directory profile: MGF1 with SHA-256 and an empty label. Modulus size is not a security-strength estimate; the public exponent is not fixed by this profile.", "parameters": {"type": "public_key_encryption", "scheme": "rsaes_oaep", "modulus_bits": 4096, "hash": "SHA-256", "mgf_hash": "SHA-256", "label_hex": ""}},
+    {"id": "rsa-pss-4096-sha256", "family_id": "rsa-pss", "name": "RSASSA-PSS-4096 / SHA-256", "specification_ids": ["standard-rfc-8017"], "locator": "RFC 8017, Sections 8.1, 9.1 and B.2.1", "note": "Directory profile: MGF1 with SHA-256, a 32-byte salt and the standard 0xbc trailer. The public exponent is not fixed by this profile.", "parameters": {"type": "digital_signature", "scheme": "rsassa_pss", "modulus_bits": 4096, "hash": "SHA-256", "mgf_hash": "SHA-256", "salt_bytes": 32}},
+    {"id": "ffdhe2048", "family_id": "ffdhe", "name": "ffdhe2048", "specification_ids": ["standard-rfc-7919"], "locator": "RFC 7919, Appendix A.1", "note": "The subgroup order is (p−1)/2. Exponent selection, peer validation, authentication and key derivation must be specified by a concrete protocol.", "parameters": {"type": "key_agreement", "scheme": "ffdhe", "group": "ffdhe2048", "modulus_bits": 2048, "generator": 2}},
+    {"id": "ffdhe3072", "family_id": "ffdhe", "name": "ffdhe3072", "specification_ids": ["standard-rfc-7919"], "locator": "RFC 7919, Appendix A.2", "note": "The subgroup order is (p−1)/2. Exponent selection, peer validation, authentication and key derivation must be specified by a concrete protocol.", "parameters": {"type": "key_agreement", "scheme": "ffdhe", "group": "ffdhe3072", "modulus_bits": 3072, "generator": 2}},
+    {"id": "ffdhe4096", "family_id": "ffdhe", "name": "ffdhe4096", "specification_ids": ["standard-rfc-7919"], "locator": "RFC 7919, Appendix A.3", "note": "The subgroup order is (p−1)/2. Exponent selection, peer validation, authentication and key derivation must be specified by a concrete protocol.", "parameters": {"type": "key_agreement", "scheme": "ffdhe", "group": "ffdhe4096", "modulus_bits": 4096, "generator": 2}},
+    {"id": "ecdh-p256", "family_id": "ecdh", "name": "ECDH P-256", "specification_ids": ["standard-sp-800-56a-r3", "standard-sp-800-186"], "locator": "SP 800-56A Rev. 3, Section 5.7.1.2; SP 800-186, Section 3.2.1", "note": "Shared-secret primitive with cofactor-one NIST curves; no authentication or KDF is implied.", "parameters": {"type": "key_agreement", "scheme": "ecdh", "curve": "P-256", "field_bits": 256}},
+    {"id": "ecdsa-p256-sha256", "family_id": "ecdsa", "name": "ECDSA P-256 / SHA-256", "specification_ids": ["standard-fips-186-5", "standard-sp-800-186"], "locator": "FIPS 186-5, Section 6; SP 800-186, Section 3.2.1", "note": "Signature consists of integers (r, s); byte length depends on the enclosing encoding. No fixed signature size or nonce-generation mode is inferred.", "parameters": {"type": "digital_signature", "scheme": "ecdsa", "curve": "P-256", "field_bits": 256, "hash": "SHA-256"}},
+    {"id": "ecdh-p384", "family_id": "ecdh", "name": "ECDH P-384", "specification_ids": ["standard-sp-800-56a-r3", "standard-sp-800-186"], "locator": "SP 800-56A Rev. 3, Section 5.7.1.2; SP 800-186, Section 3.2.1", "note": "Shared-secret primitive with cofactor-one NIST curves; no authentication or KDF is implied.", "parameters": {"type": "key_agreement", "scheme": "ecdh", "curve": "P-384", "field_bits": 384}},
+    {"id": "ecdsa-p384-sha384", "family_id": "ecdsa", "name": "ECDSA P-384 / SHA-384", "specification_ids": ["standard-fips-186-5", "standard-sp-800-186"], "locator": "FIPS 186-5, Section 6; SP 800-186, Section 3.2.1", "note": "Signature consists of integers (r, s); byte length depends on the enclosing encoding. No fixed signature size or nonce-generation mode is inferred.", "parameters": {"type": "digital_signature", "scheme": "ecdsa", "curve": "P-384", "field_bits": 384, "hash": "SHA-384"}},
+    {"id": "ecdh-p521", "family_id": "ecdh", "name": "ECDH P-521", "specification_ids": ["standard-sp-800-56a-r3", "standard-sp-800-186"], "locator": "SP 800-56A Rev. 3, Section 5.7.1.2; SP 800-186, Section 3.2.1", "note": "Shared-secret primitive with cofactor-one NIST curves; no authentication or KDF is implied.", "parameters": {"type": "key_agreement", "scheme": "ecdh", "curve": "P-521", "field_bits": 521}},
+    {"id": "ecdsa-p521-sha512", "family_id": "ecdsa", "name": "ECDSA P-521 / SHA-512", "specification_ids": ["standard-fips-186-5", "standard-sp-800-186"], "locator": "FIPS 186-5, Section 6; SP 800-186, Section 3.2.1", "note": "Signature consists of integers (r, s); byte length depends on the enclosing encoding. No fixed signature size or nonce-generation mode is inferred.", "parameters": {"type": "digital_signature", "scheme": "ecdsa", "curve": "P-521", "field_bits": 521, "hash": "SHA-512"}},
+    {"id": "x25519", "family_id": "xdh", "name": "X25519", "specification_ids": ["standard-rfc-7748"], "locator": "RFC 7748, Sections 5 and 6.1", "note": "Raw shared-secret encoding before a protocol KDF; peer validation and all-zero handling must follow the enclosing protocol.", "parameters": {"type": "key_agreement", "scheme": "xdh", "function": "X25519", "field_bits": 255, "public_key_bytes": 32, "shared_secret_bytes": 32}},
+    {"id": "x448", "family_id": "xdh", "name": "X448", "specification_ids": ["standard-rfc-7748"], "locator": "RFC 7748, Sections 5 and 6.2", "note": "Raw shared-secret encoding before a protocol KDF; peer validation and all-zero handling must follow the enclosing protocol.", "parameters": {"type": "key_agreement", "scheme": "xdh", "function": "X448", "field_bits": 448, "public_key_bytes": 56, "shared_secret_bytes": 56}},
+    {"id": "ed25519", "family_id": "eddsa", "name": "Ed25519", "specification_ids": ["standard-rfc-8032"], "locator": "RFC 8032, Sections 4 and 5.1", "note": "Pure EdDSA, with no prehash; Ed448 uses the empty context. This is not Ed25519ctx, Ed25519ph or Ed448ph.", "parameters": {"type": "digital_signature", "scheme": "eddsa", "variant": "Ed25519", "field_bits": 255, "hash": "SHA-512", "public_key_bytes": 32, "signature_bytes": 64, "context_hex": ""}},
+    {"id": "ed448", "family_id": "eddsa", "name": "Ed448", "specification_ids": ["standard-rfc-8032"], "locator": "RFC 8032, Sections 4 and 5.2", "note": "Pure EdDSA, with no prehash; Ed448 uses the empty context. This is not Ed25519ctx, Ed25519ph or Ed448ph.", "parameters": {"type": "digital_signature", "scheme": "eddsa", "variant": "Ed448", "field_bits": 448, "hash": "SHAKE256", "public_key_bytes": 57, "signature_bytes": 114, "context_hex": ""}},
+    {"id": "sm2-encryption-sm3", "family_id": "sm2-encryption", "name": "SM2 Encryption / SM3", "specification_ids": ["standard-gbt-32918-4-2016", "standard-gbt-32918-5-2017", "standard-gbt-32905-2016"], "locator": "GB/T 32918.4-2016, Sections 5–7; GB/T 32918.5-2017, Section 3", "note": "Uses the recommended 256-bit prime-field curve; C1 point encoding and outer serialization are not assigned a fixed ciphertext byte length.", "parameters": {"type": "public_key_encryption", "scheme": "sm2_encryption", "curve": "curveSM2", "field_bits": 256, "hash": "SM3", "ciphertext_order": "C1C3C2"}},
+    {"id": "sm2-signature-sm3", "family_id": "sm2-signature", "name": "SM2 Signatures / SM3", "specification_ids": ["standard-gbt-32918-2-2016", "standard-gbt-32918-5-2017", "standard-gbt-32905-2016"], "locator": "GB/T 32918.2-2016, Sections 5–7; GB/T 32918.5-2017, Section 3", "note": "The identity is an explicit input to ZA and is not fixed to a TLS default. Signature serialization is not fixed by this directory profile.", "parameters": {"type": "digital_signature", "scheme": "sm2_signature", "curve": "curveSM2", "field_bits": 256, "hash": "SM3"}},
+    {"id": "sm2-key-exchange-sm3-256", "family_id": "sm2-key-exchange", "name": "SM2 Key Exchange / SM3 / 256-Bit Output", "specification_ids": ["standard-gbt-32918-3-2016", "standard-gbt-32918-5-2017", "standard-gbt-32905-2016"], "locator": "GB/T 32918.3-2016, Sections 5–6; GB/T 32918.5-2017, Section 3", "note": "Directory profile selects klen = 256. Both identities and static/ephemeral keys are inputs; confirmation is a separately specified protocol step.", "parameters": {"type": "key_agreement", "scheme": "sm2_key_exchange", "curve": "curveSM2", "field_bits": 256, "hash": "SM3", "shared_secret_bits": 256}},
+    {"id": "ml-kem-512", "family_id": "ml-kem", "name": "ML-KEM-512", "specification_ids": ["standard-fips-203"], "locator": "FIPS 203, Sections 7–8, Tables 2–3", "note": "NIST security category is the standard's parameter-set classification, not an observed attack complexity. Sizes refer to the standard expanded key encodings.", "parameters": {"type": "kem", "scheme": "ml_kem", "parameter_set": "ML-KEM-512", "security_category": 1, "module_rank": 2, "public_key_bytes": 800, "secret_key_bytes": 1632, "ciphertext_bytes": 768, "shared_secret_bytes": 32}},
+    {"id": "ml-kem-768", "family_id": "ml-kem", "name": "ML-KEM-768", "specification_ids": ["standard-fips-203"], "locator": "FIPS 203, Sections 7–8, Tables 2–3", "note": "NIST security category is the standard's parameter-set classification, not an observed attack complexity. Sizes refer to the standard expanded key encodings.", "parameters": {"type": "kem", "scheme": "ml_kem", "parameter_set": "ML-KEM-768", "security_category": 3, "module_rank": 3, "public_key_bytes": 1184, "secret_key_bytes": 2400, "ciphertext_bytes": 1088, "shared_secret_bytes": 32}},
+    {"id": "ml-kem-1024", "family_id": "ml-kem", "name": "ML-KEM-1024", "specification_ids": ["standard-fips-203"], "locator": "FIPS 203, Sections 7–8, Tables 2–3", "note": "NIST security category is the standard's parameter-set classification, not an observed attack complexity. Sizes refer to the standard expanded key encodings.", "parameters": {"type": "kem", "scheme": "ml_kem", "parameter_set": "ML-KEM-1024", "security_category": 5, "module_rank": 4, "public_key_bytes": 1568, "secret_key_bytes": 3168, "ciphertext_bytes": 1568, "shared_secret_bytes": 32}},
+    {"id": "ml-dsa-44", "family_id": "ml-dsa", "name": "ML-DSA-44", "specification_ids": ["standard-fips-204"], "locator": "FIPS 204, Sections 5 and 8, Tables 1–2", "note": "Pure ML-DSA with an empty context. Sizes refer to the standard expanded key encodings; HashML-DSA is a separate profile.", "parameters": {"type": "digital_signature", "scheme": "ml_dsa", "parameter_set": "ML-DSA-44", "security_category": 2, "matrix_rows": 4, "matrix_columns": 4, "public_key_bytes": 1312, "secret_key_bytes": 2560, "signature_bytes": 2420, "context_hex": ""}},
+    {"id": "ml-dsa-65", "family_id": "ml-dsa", "name": "ML-DSA-65", "specification_ids": ["standard-fips-204"], "locator": "FIPS 204, Sections 5 and 8, Tables 1–2", "note": "Pure ML-DSA with an empty context. Sizes refer to the standard expanded key encodings; HashML-DSA is a separate profile.", "parameters": {"type": "digital_signature", "scheme": "ml_dsa", "parameter_set": "ML-DSA-65", "security_category": 3, "matrix_rows": 6, "matrix_columns": 5, "public_key_bytes": 1952, "secret_key_bytes": 4032, "signature_bytes": 3309, "context_hex": ""}},
+    {"id": "ml-dsa-87", "family_id": "ml-dsa", "name": "ML-DSA-87", "specification_ids": ["standard-fips-204"], "locator": "FIPS 204, Sections 5 and 8, Tables 1–2", "note": "Pure ML-DSA with an empty context. Sizes refer to the standard expanded key encodings; HashML-DSA is a separate profile.", "parameters": {"type": "digital_signature", "scheme": "ml_dsa", "parameter_set": "ML-DSA-87", "security_category": 5, "matrix_rows": 8, "matrix_columns": 7, "public_key_bytes": 2592, "secret_key_bytes": 4896, "signature_bytes": 4627, "context_hex": ""}},
+    {"id": "slh-dsa-sha2-128s", "family_id": "slh-dsa", "name": "SLH-DSA-SHA2-128s", "specification_ids": ["standard-fips-205"], "locator": "FIPS 205, Sections 9–11, Table 2", "note": "Pure SLH-DSA with an empty context. The s/f suffix selects the standard size/speed parameter tradeoff, not an attack setting.", "parameters": {"type": "digital_signature", "scheme": "slh_dsa", "parameter_set": "SLH-DSA-SHA2-128s", "hash_family": "SHA2", "security_category": 1, "hash_bytes": 16, "hypertree_height": 63, "hypertree_layers": 7, "fors_height": 12, "fors_trees": 14, "public_key_bytes": 32, "secret_key_bytes": 64, "signature_bytes": 7856, "context_hex": ""}},
+    {"id": "slh-dsa-sha2-128f", "family_id": "slh-dsa", "name": "SLH-DSA-SHA2-128f", "specification_ids": ["standard-fips-205"], "locator": "FIPS 205, Sections 9–11, Table 2", "note": "Pure SLH-DSA with an empty context. The s/f suffix selects the standard size/speed parameter tradeoff, not an attack setting.", "parameters": {"type": "digital_signature", "scheme": "slh_dsa", "parameter_set": "SLH-DSA-SHA2-128f", "hash_family": "SHA2", "security_category": 1, "hash_bytes": 16, "hypertree_height": 66, "hypertree_layers": 22, "fors_height": 6, "fors_trees": 33, "public_key_bytes": 32, "secret_key_bytes": 64, "signature_bytes": 17088, "context_hex": ""}},
+    {"id": "slh-dsa-shake-128s", "family_id": "slh-dsa", "name": "SLH-DSA-SHAKE-128s", "specification_ids": ["standard-fips-205"], "locator": "FIPS 205, Sections 9–11, Table 2", "note": "Pure SLH-DSA with an empty context. The s/f suffix selects the standard size/speed parameter tradeoff, not an attack setting.", "parameters": {"type": "digital_signature", "scheme": "slh_dsa", "parameter_set": "SLH-DSA-SHAKE-128s", "hash_family": "SHAKE", "security_category": 1, "hash_bytes": 16, "hypertree_height": 63, "hypertree_layers": 7, "fors_height": 12, "fors_trees": 14, "public_key_bytes": 32, "secret_key_bytes": 64, "signature_bytes": 7856, "context_hex": ""}},
+    {"id": "slh-dsa-shake-128f", "family_id": "slh-dsa", "name": "SLH-DSA-SHAKE-128f", "specification_ids": ["standard-fips-205"], "locator": "FIPS 205, Sections 9–11, Table 2", "note": "Pure SLH-DSA with an empty context. The s/f suffix selects the standard size/speed parameter tradeoff, not an attack setting.", "parameters": {"type": "digital_signature", "scheme": "slh_dsa", "parameter_set": "SLH-DSA-SHAKE-128f", "hash_family": "SHAKE", "security_category": 1, "hash_bytes": 16, "hypertree_height": 66, "hypertree_layers": 22, "fors_height": 6, "fors_trees": 33, "public_key_bytes": 32, "secret_key_bytes": 64, "signature_bytes": 17088, "context_hex": ""}}
   ]
 }

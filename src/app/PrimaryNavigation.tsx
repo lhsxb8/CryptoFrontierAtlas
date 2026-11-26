@@ -14,7 +14,7 @@ export default function PrimaryNavigation({entries, routeKey}: {entries: Entry[]
   const nav = useRef<HTMLElement>(null);
   useEffect(() => {setOpen(false);}, [routeKey]);
   useEffect(() => {
-    const media = window.matchMedia('(min-width: 1251px)');
+    const media = window.matchMedia('(min-width: 1351px)');
     const restoreFocus = (focused: EventTarget | null) => {
       if (!media.matches && focused instanceof Node && nav.current?.contains(focused)) toggle.current?.focus();
       if (media.matches && focused === toggle.current) nav.current?.querySelector<HTMLElement>('[aria-current="page"]')?.focus();

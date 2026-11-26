@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "id": "if-pilatte-unconditional-v3",
+  "title": "Unconditional Modified Regev Factoring",
+  "method": "multidimensional-period-finding",
+  "result_kind": "algorithm",
+  "goal": "nontrivial_factor",
+  "statement": "Unconditional nontrivial-divisor algorithm with modified randomized base selection.",
+  "target": {
+    "kind": "hard_problem",
+    "problem_id": "integer-factorization",
+    "input_class": "composite_integer",
+    "description": "Any composite $N\\le 2^n$; even integers and prime powers are handled by classical preliminary steps.",
+    "parameters": [
+      {
+        "name": "n",
+        "meaning": "Input-size upper bound",
+        "domain": "Positive integer with $N\\le 2^n$.",
+        "value": "n"
+      }
+    ],
+    "modulus_bits": null,
+    "instance_name": null
+  },
+  "setting": {
+    "computation": "quantum",
+    "model": "quantum",
+    "basis": "proved",
+    "input_access": "public_integer",
+    "assumptions": [
+      "The algorithm samples small primes together with one uniform element of $(\\mathbb Z/N\\mathbb Z)^\\times$; it is not Regev's original fixed-small-prime construction."
+    ],
+    "auxiliary_information": []
+  },
+  "resources": {
+    "time": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No total bound is extracted for this coordinate in the checked result."
+    },
+    "memory": {
+      "status": "not_reported",
+      "reported": null,
+      "unit": null,
+      "log2": null,
+      "qualifier": "unspecified",
+      "note": "No total classical/quantum memory bound is extracted for this result."
+    },
+    "classical_time": {
+      "status": "reported",
+      "reported": "$\\operatorname{poly}(n)$",
+      "unit": "bit-operations",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Randomized classical sampling and lattice postprocessing; excludes the quantum calls."
+    },
+    "quantum_calls": {
+      "status": "reported",
+      "reported": "$O(\\sqrt n)$",
+      "unit": "circuit-calls",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Total calls to the circuit in Theorem 1.1."
+    },
+    "gates_per_call": {
+      "status": "reported",
+      "reported": "$O(n^{3/2}\\log^3 n)$",
+      "unit": "quantum-gates-per-call",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Algorithmic per-call circuit bound in Theorem 1.1; not a total runtime."
+    },
+    "logical_qubits": {
+      "status": "reported",
+      "reported": "$O(n\\log^3 n)$",
+      "unit": "logical-qubits",
+      "log2": null,
+      "qualifier": "upper_bound",
+      "note": "Theorem 1.1 statement; the unproved-in-this-paper logarithmic refinement in Remark 1.3 is not substituted."
+    }
+  },
+  "success": {
+    "status": "reported",
+    "metric": "nontrivial-factor",
+    "value": null,
+    "expression": "$\\Theta(1)$",
+    "basis": "source_proof",
+    "description": "Theorem 1.1 and its proof establish constant overall probability, including the randomized base selection.",
+    "review": {
+      "status": "verified",
+      "reviewed_on": "2026-11-26",
+      "scope": "Checked the stated event and bound in the cited theorem/corollary and its surrounding argument; not a proof reproduction."
+    }
+  },
+  "evidence": [
+    {
+      "source_id": "pilatte2026-unconditional-factoring-v3",
+      "locator": "PDF/printed p. 2, Theorem 1.1; pp. 5–6, Section 1.4; p. 23, proof of Theorem 1.1.",
+      "fields": [
+        "/statement",
+        "/target",
+        "/setting",
+        "/resources",
+        "/success",
+        "/success/review"
+      ],
+      "interpretation": "Targeted transcription of this result's input, output, cost accounting and success event; not a full-paper audit."
+    }
+  ],
+  "assessment": {
+    "claim_status": "author_reported",
+    "review_scope": "targeted_primary_text",
+    "reproduction": "not_attempted",
+    "reviewed_on": "2026-11-26",
+    "frontier_status": "not_assessed"
+  },
+  "limitations": [
+    "Does not remove the hypothesis for the original deterministic first-small-primes choice; see Section 1.4 and Remark 1.6.",
+    "Discrete-logarithm results from the same paper are not included in this factorization batch."
+  ],
+  "related_result_ids": [
+    "if-regev-short-vector-v3",
+    "if-rv-noise-robust-v5"
+  ]
+}

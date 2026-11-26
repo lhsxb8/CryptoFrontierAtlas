@@ -7,10 +7,10 @@ import { countLabel } from './copy';
 import { isCostResult, methodLabel, methodLabels, publicationsForResult, RESULT_PAGE_SIZE, resultFilterKeys, type AttackSurface, type ResultFamilyView } from './model';
 
 const collections = [
-  { id: 'algorithmic', surface: 'algorithmic', label: 'Classical cryptanalysis' },
-  { id: 'quantum', surface: 'algorithmic', label: 'Quantum cryptanalysis' },
-  { id: 'side_channel', surface: 'side_channel', label: 'Side-channel analysis' },
-  { id: 'fault_injection', surface: 'fault_injection', label: 'Fault-injection analysis' },
+  { id: 'algorithmic', surface: 'algorithmic', label: 'Classical Cryptanalysis' },
+  { id: 'quantum', surface: 'algorithmic', label: 'Quantum Cryptanalysis' },
+  { id: 'side_channel', surface: 'side_channel', label: 'Side-Channel Analysis' },
+  { id: 'fault_injection', surface: 'fault_injection', label: 'Fault-Injection Analysis' },
 ] as const;
 type ResultCollection = typeof collections[number]['id'];
 
@@ -42,7 +42,7 @@ export function resultSections(views: ResultFamilyView[], query = ''): ResultSec
     const id = `${collection}-${physicalQuantum ? 'quantum-' : ''}${category}`;
     const section = sections.get(id) ?? {
       id, surface, collection, category, structural,
-      label: `${physicalQuantum ? 'Quantum · ' : ''}${structural ? 'Structural properties & bounds' : methodLabel(method, surface)}`, rows: [],
+      label: `${physicalQuantum ? 'Quantum · ' : ''}${structural ? 'Structural Properties & Bounds' : methodLabel(method, surface)}`, rows: [],
     };
     section.rows.push(row);
     sections.set(id, section);
