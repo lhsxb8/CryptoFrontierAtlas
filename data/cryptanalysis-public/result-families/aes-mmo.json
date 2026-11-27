@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "cipher_family_id": "aes-mmo",
+  "reviewed_on": "2026-11-27",
+  "families": [],
+  "standalone_result_ids": [
+    "aes128-7r-fixed-key-preimage-dds2025",
+    "aes128-7r-mmo-collision-cglsz2025",
+    "aes128-7r-mmo-preimage-cglsz2025"
+  ],
+  "excluded_results": []
+}

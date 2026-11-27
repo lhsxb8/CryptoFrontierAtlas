@@ -10,7 +10,7 @@
   "goal": "compression_collision",
   "target": {
     "variant_ids": [
-      "aes-128"
+      "aes-mmo-128"
     ],
     "rounds": 7,
     "full_round": false,

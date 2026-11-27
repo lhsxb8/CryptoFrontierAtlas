@@ -9,6 +9,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { resultFixture } from '../helpers/result-model-fixtures.mjs';
 import { catalogFixture, asymmetricCatalogFixture, hardProblemCatalogFixture } from '../helpers/primitive-catalog-fixtures.mjs';
 import { surfaceResult } from '../helpers/attack-surface-fixtures.mjs';
+import {standardizationFixture} from '../helpers/standardization-fixtures.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 // Entirely synthetic rendering data. No production corpus is read or changed.
@@ -76,7 +77,7 @@ const fixture = { analysisEnabled: true, ciphers, variants, results, resultPoint
 const componentProviders = new WeakMap();
 async function bundleFixture(fixture) {
   const catalog = fixture.publicCatalog ?? {
-    schema_version: 3, hard_problems: [], problem_sources: [], categories: [{id: 'block_cipher', domain: 'symmetric', en: 'Block Ciphers', zh: '分组密码'}],
+    schema_version: 4, hard_problems: [], problem_sources: [], categories: [{id: 'block_cipher', domain: 'symmetric', en: 'Block Ciphers', zh: '分组密码'}],
     specifications: [{id: 'fixture-specification', title: 'Synthetic specification', edition: 'Fixture edition', url: 'https://example.invalid/spec', status: 'published', status_note: 'Synthetic fixture.', checked_on: '2026-01-01'}],
     primitives: fixture.ciphers.map(c => ({id: c.id, name: c.name, category: c.primitive_type, aliases: c.aliases, description: c.description, specification_ids: ['fixture-specification'], uses: []})),
     instances: fixture.variants.map(v => ({id: v.id, family_id: v.family, name: v.name ?? v.id.toUpperCase(), specification_ids: ['fixture-specification'], locator: 'Synthetic location', parameters: {type: 'block_cipher', key_bits: v.key_bits, block_bits: v.block_bits, rounds: v.full_rounds}})),
@@ -132,6 +133,104 @@ const noLedger = html => {
   assert.doesNotMatch(html, /AES (?:audit selection|review process|issue evidence|issue action|pending literature|coverage gap|ingestion batch|verification scope) sentinel/);
   assert.doesNotMatch(html, /Ledger Totals/);
 };
+
+test('standard badges, source disclosure, partial coverage and priority agree across directory and instance pages', async () => {
+  const publicCatalog = standardizationFixture();
+  // Put the unverified family first to exercise sorting even in small directories.
+  publicCatalog.primitives = [...publicCatalog.primitives].reverse();
+  const pages = await bundleFixture({...fixture, ciphers: [], variants: [], results: [], resultPoints: [], publicCatalog});
+  const html = render(pages.PrimitiveDirectory);
+  assert.match(html, /data-standard-kind="international"/);
+  assert.match(html, /aria-label="International Standard: Synthetic International Standard; covers 1\/2 instances"/);
+  assert.match(html, /data-standard-kind="recommendation"/);
+  assert.match(html, /data-standard-kind="historical"/);
+  assert.match(html, /aria-label="Withdrawn Standard: Synthetic Withdrawn Standard"/);
+  for (const badge of html.matchAll(/<span class="atlas-standard-badge [^>]*>([\s\S]*?)<\/span>/g)) {
+    assert.match(badge[0], /role="img"/);
+    assert.match(badge[1], /<svg /);
+    assert.equal(plainText(badge[1]), '');
+  }
+  for (const card of html.matchAll(/<a class="atlas-family-card"[^>]*>([\s\S]*?)<\/a>/g)) assert.doesNotMatch(card[1], /<a /);
+  const family = render(pages.PrimitivePage, {cipherId: 'fixture-block'});
+  assert(family.indexOf('>Fixture Block 128</a>') < family.indexOf('>Fixture Block 256</a>'));
+  assert.match(family, /Standardization Evidence/);
+  assert.match(family, /https:\/\/example.invalid\/specification/);
+  assert.match(family, /Covered Instances: Fixture Block 128/);
+  const instance = render(pages.PrimitivePage, {cipherId: 'fixture-block', variantId: 'fixture-block-256'});
+  assert.doesNotMatch(instance, /atlas-standard-panel|data-standard-kind=/);
+  const dependent = render(pages.PrimitivePage, {cipherId: 'fixture-xof', variantId: 'fixture-xof-128'});
+  assert.doesNotMatch(dependent, /atlas-standard-panel|data-standard-kind=/);
+  const component = render(pages.PrimitivePage, {cipherId: 'fixture-permutation', variantId: 'fixture-permutation-256'});
+  assert.match(component, /Standardized Component/);
+  const historic = render(pages.PrimitivePage, {cipherId: 'fixture-mac', variantId: 'fixture-mac-128'});
+  assert.match(plainText(historic), /Withdrawn 2025-01-01/);
+
+  publicCatalog.standardization.standards[2].bindings.push({instance_ids: ['fixture-block-128'], locator: 'Synthetic withdrawn adoption.', role: 'algorithm'});
+  const mixedPages = await bundleFixture({...fixture, ciphers: [], variants: [], results: [], resultPoints: [], publicCatalog});
+  const mixedCard = [...render(mixedPages.PrimitiveDirectory).matchAll(/<a class="atlas-family-card"[^>]*>([\s\S]*?)<\/a>/g)]
+    .find(card => card[1].includes('Fixture Block'))[1];
+  assert.match(mixedCard, /data-standard-kind="international"/);
+  assert.match(mixedCard, /data-standard-kind="historical"/);
+  assert.doesNotMatch(mixedCard, /atlas-status-warning/);
+});
+
+test('compression pages isolate records, link the exact dependency and normalize legacy result context', async () => {
+  const point = resultFixture({id: 'synthetic-compression-result', source: sources[0].id});
+  const compression = {mode: 'dm', cipher_variant_id: 'aes-128', ...point.experiment.construction};
+  delete compression.type;
+  const variant = {id: 'synthetic-dm-128', family: 'synthetic-dm', name: 'Synthetic DM 128', full_rounds: 10, specification_source: sources[0].id, compression};
+  point.target.variant_ids = [variant.id];
+  const cipher = {id: variant.family, name: compression.name, primitive_type: 'hash_function', aliases: [], description: 'Synthetic compression only.'};
+  const publicCatalog = catalogFixture();
+  publicCatalog.categories.push({id: 'hash_function', domain: 'symmetric', en: 'Hash', zh: '哈希'});
+  publicCatalog.primitives[0] = {...publicCatalog.primitives[0], id: 'aes', name: 'AES'};
+  publicCatalog.instances[0] = {...publicCatalog.instances[0], id: 'aes-128', family_id: 'aes', name: 'AES-128'};
+  publicCatalog.primitives.push({id: cipher.id, name: cipher.name, category: 'hash_function', aliases: [], description: cipher.description, specification_ids: ['fixture-spec'], uses: ['aes']});
+  publicCatalog.instances.push({id: variant.id, family_id: cipher.id, name: variant.name, specification_ids: ['fixture-spec'], locator: 'Synthetic compression definition.',
+    parameters: {type: 'hash_function', construction: 'block_cipher_compression', mode: 'dm', cipher_instance_id: 'aes-128', chaining_bits: 128, message_bits: 128, output_bits: 128, cipher_rounds: 10}});
+  const pages = await bundleFixture({...fixture, ciphers: [...ciphers, cipher], variants: [...variants, variant],
+    results: [...results, point], resultPoints: [...results, point], publicCatalog});
+  const aes = render(pages.ResultsPage, {cipherId: 'aes', variantId: 'aes-128', searchParams: new URLSearchParams({q: point.id})});
+  assert.doesNotMatch(aes, /data-record-id="synthetic-compression-result"/);
+  assert.match(aes, /Related Compression Functions/);
+  const hash = render(pages.ResultsPage, {cipherId: cipher.id, variantId: variant.id});
+  assert.match(hash, /Compression Function/);
+  assert.match(hash, /href="#\/cryptanalysis\/ciphers\/aes\/aes-128">AES-128/);
+  assert.match(hash, /role="status">1 result<\/span>/);
+  assert.doesNotMatch(hash, /128-bit key|data-record-id="aes-only-fixture"/);
+  const detail = render(pages.ResultDetail, {id: point.id, searchParams: new URLSearchParams({variant: 'aes-128', ids: results[0].id, q: 'preserved'})});
+  assert.match(detail, /a-back-link" href="#\/cryptanalysis\/ciphers\/synthetic-dm\/synthetic-dm-128\?q=preserved/);
+  assert.doesNotMatch(detail, /requested instance does not apply/);
+  assert.match(detail, /do not apply to Synthetic DM 128 and were excluded/);
+  const scope = pages.routeScopeParams({page: 'result', id: point.id, params: new URLSearchParams({variant: 'aes-128'})}, [...ciphers, cipher], [...variants, variant], [point]);
+  assert.equal(scope.get('variant'), variant.id);
+});
+
+test('large synthetic directories bound previews and paginate without losing hidden search matches', async () => {
+  const publicCatalog = catalogFixture();
+  const family = publicCatalog.primitives[0], instance = publicCatalog.instances[0];
+  for (let n = 1; n <= 57; n++) {
+    const id = `synthetic-block-${String(n).padStart(2, '0')}`;
+    publicCatalog.primitives.push({...family, id, name: `Synthetic Block ${n}`, aliases: [`fixture-alias-${n}`]});
+    publicCatalog.instances.push({...instance, id: `${id}-instance`, family_id: id, name: `Unique Profile ${n}`});
+  }
+  const pages = await bundleFixture({...fixture, ciphers: [], variants: [], results: [], resultPoints: [], publicCatalog});
+  const directory = params => render(pages.PrimitiveDirectory, {searchParams: new URLSearchParams(params)});
+  const cards = html => [...html.matchAll(/class="atlas-family-card" href="([^"]+)"/g)].map(match => match[1]);
+  const overview = directory('');
+  assert.equal(cards(overview).length, 9); // Six blocks and three singleton categories.
+  assert.match(overview, /Browse Categories/);
+  assert.doesNotMatch(overview, /role="tab|No Catalogued Results/);
+  const allPages = [1, 2, 3].map(page => cards(directory(`primitive=block_cipher&page=${page}`)));
+  assert.deepEqual(allPages.map(page => page.length), [24, 24, 10]);
+  assert.equal(new Set(allPages.flat()).size, 58);
+  assert.deepEqual(cards(directory('primitive=block_cipher&page=9999')), allPages[2]);
+  assert.deepEqual(cards(directory('primitive=block_cipher&page=invalid')), allPages[0]);
+  for (const q of ['fixture-alias-57', 'Unique Profile 57']) {
+    assert.deepEqual(cards(directory(new URLSearchParams({q}))), ['#/cryptanalysis/ciphers/synthetic-block-57']);
+  }
+  assert.match(directory('q=not-a-fixture-family'), /No Matching Primitives/);
+});
 
 const surfaceRecords = ['algorithmic', 'side_channel', 'fault_injection'].flatMap(surface =>
   [surfaceResult({surface, method: surface === 'fault_injection' ? 'fault' : 'differential', source: sources[0].id}), surfaceResult({surface, source: sources[0].id, structural: true})]);
@@ -539,7 +638,8 @@ const problemPages = await bundleFixture({...fixture, publicCatalog: hardCatalog
 
 test('hard problems share the directory hierarchy without becoming algorithms or scientific targets', () => {
   const html = render(problemPages.PrimitiveDirectory, {domain: 'asymmetric'});
-  assert.equal((html.match(/class="atlas-family-card"/g) ?? []).length, 22);
+  assert.equal((html.match(/class="atlas-family-card"/g) ?? []).length, 19);
+  assert.match(html, /View All Hard Problems/);
   assert(html.indexOf('<h2>Hard Problems</h2>') < html.indexOf('<h2>Public-Key Encryption</h2>'));
   assert.equal(problemPages.directoryRoutes(hardCatalog, variants, 'asymmetric').length, 13);
   const filtered = render(problemPages.PrimitiveDirectory, {domain: 'asymmetric', searchParams: new URLSearchParams({primitive: 'hard_problem'})});

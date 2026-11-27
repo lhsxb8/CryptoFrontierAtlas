@@ -5,7 +5,8 @@
   "additionalProperties": false,
   "required": ["schema_version", "categories", "specifications", "primitives", "instances", "problem_sources", "hard_problems"],
   "properties": {
-    "schema_version": {"const": 3},
+    "schema_version": {"const": 4},
+    "standardization": {"$ref": "#/$defs/standardization"},
     "problem_sources": {"type": "array", "items": {"$ref": "#/$defs/problemSource"}},
     "hard_problems": {"type": "array", "items": {"$ref": "#/$defs/hardProblem"}},
     "categories": {"type": "array", "minItems": 1, "items": {
@@ -22,7 +23,10 @@
         "id": {"$ref": "#/$defs/id"}, "title": {"$ref": "#/$defs/text"}, "edition": {"$ref": "#/$defs/text"},
         "url": {"type": "string", "format": "uri", "pattern": "^https://"},
         "status": {"enum": ["published", "withdrawn"]}, "status_note": {"$ref": "#/$defs/text"},
-        "checked_on": {"type": "string", "format": "date"}, "withdrawn_on": {"type": "string", "format": "date"}
+        "checked_on": {"type": "string", "format": "date"}, "withdrawn_on": {"type": "string", "format": "date"},
+        "kind": {"enum": ["standard", "rfc", "design_paper", "submission", "designer_specification"]},
+        "doi": {"type": "string", "pattern": "^10\\.[0-9]{4,9}/\\S+$"},
+        "citation_observations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/citationObservation"}}
       },
       "if": {"properties": {"status": {"const": "withdrawn"}}},
       "then": {"properties": {"withdrawn_on": {}}, "required": ["withdrawn_on"]},
@@ -35,7 +39,9 @@
         "id": {"$ref": "#/$defs/id"}, "name": {"$ref": "#/$defs/text"}, "category": {"$ref": "#/$defs/primitiveCategory"},
         "aliases": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
         "description": {"$ref": "#/$defs/text"}, "specification_ids": {"$ref": "#/$defs/references"},
-        "uses": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
+        "uses": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "inclusion": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/inclusion"}},
+        "parameter_scope": {"$ref": "#/$defs/text"}
       }
     }},
     "instances": {"type": "array", "items": {
@@ -48,7 +54,9 @@
         "parameters": {"oneOf": [
           {"type": "object", "additionalProperties": false, "required": ["type", "key_bits", "block_bits", "rounds"], "properties": {
             "type": {"const": "block_cipher"}, "key_bits": {"$ref": "#/$defs/positive"}, "block_bits": {"$ref": "#/$defs/positive"},
-            "rounds": {"$ref": "#/$defs/positive"}, "stages": {"$ref": "#/$defs/positive"}, "key_encoding_bits": {"$ref": "#/$defs/positive"}
+            "rounds": {"$ref": "#/$defs/positive"}, "stages": {"$ref": "#/$defs/positive"}, "key_encoding_bits": {"$ref": "#/$defs/positive"},
+            "tweak_bits": {"type": "integer", "minimum": 0}, "tweakey_bits": {"$ref": "#/$defs/positive"},
+            "sboxes_per_round": {"$ref": "#/$defs/positive"}
           }},
           {"type": "object", "additionalProperties": false, "required": ["type", "key_bits", "nonce_bits", "counter_bits", "state_bits", "rounds", "keystream_block_bits"], "properties": {
             "type": {"const": "stream_cipher"}, "key_bits": {"$ref": "#/$defs/positive"}, "nonce_bits": {"$ref": "#/$defs/positive"},
@@ -58,7 +66,7 @@
           {"type": "object", "additionalProperties": false, "required": ["type", "output_bits", "state_bits"], "properties": {
             "type": {"const": "hash_function"}, "output_bits": {"$ref": "#/$defs/positive"}, "state_bits": {"$ref": "#/$defs/positive"},
             "block_bits": {"$ref": "#/$defs/positive"}, "compression_steps": {"$ref": "#/$defs/positive"},
-            "rate_bits": {"$ref": "#/$defs/positive"}, "capacity_bits": {"$ref": "#/$defs/positive"}
+            "rate_bits": {"$ref": "#/$defs/positive"}, "capacity_bits": {"$ref": "#/$defs/positive"}, "squeeze_bits": {"$ref": "#/$defs/positive"}
           }, "oneOf": [
             {"properties": {"block_bits": {}, "compression_steps": {}, "rate_bits": false, "capacity_bits": false}, "required": ["block_bits", "compression_steps"]},
             {"properties": {"rate_bits": {}, "capacity_bits": {}, "block_bits": false, "compression_steps": false}, "required": ["rate_bits", "capacity_bits"]}
@@ -78,6 +86,19 @@
             "type": {"const": "mac"}, "key_bits": {"$ref": "#/$defs/positive"}, "block_bits": {"$ref": "#/$defs/positive"},
             "tag_bits": {"$ref": "#/$defs/positive"}, "cipher_instance_id": {"$ref": "#/$defs/id"}
           }},
+          {"$ref": "#/$defs/feedbackStream"},
+          {"$ref": "#/$defs/bytePermutationStream"},
+          {"$ref": "#/$defs/compressionHash"},
+          {"$ref": "#/$defs/blockCipherCompression"},
+          {"$ref": "#/$defs/treeXof"},
+          {"$ref": "#/$defs/steppedPermutation"},
+          {"$ref": "#/$defs/fieldBlock"},
+          {"$ref": "#/$defs/fieldHash"},
+          {"$ref": "#/$defs/hmac"},
+          {"$ref": "#/$defs/universalMac"},
+          {"$ref": "#/$defs/arxMac"},
+          {"$ref": "#/$defs/spongeMac"},
+          {"$ref": "#/$defs/deterministicAead"},
           {"$ref": "#/$defs/rsaOaep"},
           {"$ref": "#/$defs/rsaPss"},
           {"$ref": "#/$defs/ffdhe"},
@@ -90,12 +111,191 @@
           {"$ref": "#/$defs/sm2KeyExchange"},
           {"$ref": "#/$defs/mlKem"},
           {"$ref": "#/$defs/mlDsa"},
-          {"$ref": "#/$defs/slhDsa"}
+          {"$ref": "#/$defs/slhDsa"},
+              {"$ref":"#/$defs/scmacAead"},
+              {"$ref":"#/$defs/namedKemhqc"},
+              {"$ref":"#/$defs/namedKemfrodokem"},
+              {"$ref":"#/$defs/namedKemclassicmceliece"},
+              {"$ref":"#/$defs/namedKemsaber"},
+              {"$ref":"#/$defs/namedKemntru"},
+              {"$ref":"#/$defs/namedKemntruprime"},
+              {"$ref":"#/$defs/namedKembike"},
+              {"$ref":"#/$defs/dsa"},
+              {"$ref":"#/$defs/rsaPkcs1Signature"},
+              {"$ref":"#/$defs/bip340"},
+              {"$ref":"#/$defs/falcon"},
+              {"$ref":"#/$defs/xmss"},
+              {"$ref":"#/$defs/xmssmt"},
+              {"$ref":"#/$defs/lms"},
+              {"$ref":"#/$defs/hss"}
         ]}
       }
     }}
   },
   "$defs": {
+    "standardization": {
+      "type": "object", "additionalProperties": false,
+      "required": ["checked_on", "reviewed_instance_ids", "standards"],
+      "properties": {
+        "checked_on": {"type": "string", "format": "date"},
+        "reviewed_instance_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "standards": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["specification_id", "designation", "authority", "level", "document_type", "bindings"],
+          "properties": {
+            "specification_id": {"$ref": "#/$defs/id"}, "designation": {"$ref": "#/$defs/text"},
+            "authority": {"$ref": "#/$defs/text"}, "level": {"enum": ["international", "national"]},
+            "document_type": {"enum": ["standard", "recommendation"]},
+            "jurisdiction": {"type": "string", "pattern": "^[A-Z]{2}$"},
+            "bindings": {"type": "array", "minItems": 1, "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["instance_ids", "locator", "role"],
+              "properties": {
+                "instance_ids": {"$ref": "#/$defs/references"},
+                "locator": {"$ref": "#/$defs/text"}, "role": {"enum": ["algorithm", "component"]},
+                "note": {"$ref": "#/$defs/text"}
+              }
+            }}
+          },
+          "if": {"properties": {"level": {"const": "national"}}},
+          "then": {"properties": {"jurisdiction": {}}, "required": ["jurisdiction"]},
+          "else": {"properties": {"jurisdiction": false, "document_type": {"const": "standard"}}}
+        }}
+      }
+    },
+    "blockCipherCompression": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "construction", "mode", "cipher_instance_id", "chaining_bits", "message_bits", "output_bits", "cipher_rounds"],
+      "properties": {
+        "type": {"const": "hash_function"}, "construction": {"const": "block_cipher_compression"},
+        "mode": {"enum": ["dm", "mmo", "mp"]}, "cipher_instance_id": {"$ref": "#/$defs/id"},
+        "chaining_bits": {"$ref": "#/$defs/positive"}, "message_bits": {"$ref": "#/$defs/positive"},
+        "output_bits": {"$ref": "#/$defs/positive"}, "cipher_rounds": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "https": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "citationObservation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["provider", "work_id", "title", "cited_by_count", "checked_on", "url"],
+      "properties": {
+        "provider": {"enum": ["openalex", "semantic_scholar", "google_scholar"]},
+        "work_id": {"$ref": "#/$defs/text"}, "title": {"$ref": "#/$defs/text"},
+        "cited_by_count": {"type": "integer", "minimum": 0},
+        "checked_on": {"type": "string", "format": "date"}, "url": {"$ref": "#/$defs/https"}
+      }
+    },
+    "inclusion": {
+      "type": "object", "additionalProperties": false, "required": ["reason", "specification_id", "note"],
+      "properties": {
+        "reason": {"enum": ["high_citation", "standard", "competition", "historical", "research_design", "recent_design", "maintainer_request"]},
+        "specification_id": {"$ref": "#/$defs/id"}, "note": {"$ref": "#/$defs/text"}
+      }
+    },
+    "feedbackStream": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "construction", "key_bits", "nonce_bits", "state_bits", "output_bits_per_step"],
+      "properties": {
+        "type": {"const": "stream_cipher"}, "construction": {"enum": ["feedback", "word_oriented"]},
+        "key_bits": {"$ref": "#/$defs/positive"}, "nonce_bits": {"$ref": "#/$defs/positive"},
+        "state_bits": {"$ref": "#/$defs/positive"}, "output_bits_per_step": {"$ref": "#/$defs/positive"},
+        "initialization_steps": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "bytePermutationStream": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "construction", "key_bits", "permutation_entries", "word_bits", "output_bits_per_step"],
+      "properties": {
+        "type": {"const": "stream_cipher"}, "construction": {"const": "byte_permutation"},
+        "key_bits": {"$ref": "#/$defs/positive"}, "permutation_entries": {"const": 256},
+        "word_bits": {"const": 8}, "output_bits_per_step": {"const": 8}
+      }
+    },
+    "compressionHash": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "construction", "output_bits", "chaining_bits", "block_bits", "compression_rounds"],
+      "properties": {
+        "type": {"const": "hash_function"}, "construction": {"enum": ["compression", "tree"]},
+        "output_bits": {"$ref": "#/$defs/positive"}, "chaining_bits": {"$ref": "#/$defs/positive"},
+        "block_bits": {"$ref": "#/$defs/positive"}, "compression_rounds": {"$ref": "#/$defs/positive"},
+        "working_state_bits": {"$ref": "#/$defs/positive"}, "chunk_bytes": {"$ref": "#/$defs/positive"}
+      },
+      "if": {"properties": {"construction": {"const": "tree"}}},
+      "then": {"properties": {"chunk_bytes": {}}, "required": ["chunk_bytes"]}, "else": {"properties": {"chunk_bytes": false}}
+    },
+    "treeXof": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "construction", "output", "state_bits", "rate_bits", "capacity_bits", "permutation_rounds", "chunk_bytes"],
+      "properties": {
+        "type": {"const": "xof"}, "construction": {"const": "tree_sponge"}, "output": {"const": "variable"},
+        "state_bits": {"$ref": "#/$defs/positive"}, "rate_bits": {"$ref": "#/$defs/positive"},
+        "capacity_bits": {"$ref": "#/$defs/positive"}, "permutation_rounds": {"$ref": "#/$defs/positive"},
+        "chunk_bytes": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "fieldModulus": {"type": "string", "pattern": "^[1-9][0-9]{0,154}$"},
+    "steppedPermutation": {
+      "type": "object", "additionalProperties": false, "required": ["type", "state_bits", "steps"],
+      "properties": {"type": {"const": "permutation"}, "state_bits": {"$ref": "#/$defs/positive"}, "steps": {"$ref": "#/$defs/positive"}}
+    },
+    "fieldBlock": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "construction", "field_modulus", "block_elements", "key_elements", "rounds", "sbox_exponent"],
+      "properties": {
+        "type": {"const": "block_cipher"}, "construction": {"const": "prime_field"}, "field_modulus": {"$ref": "#/$defs/fieldModulus"},
+        "block_elements": {"$ref": "#/$defs/positive"}, "key_elements": {"$ref": "#/$defs/positive"},
+        "rounds": {"$ref": "#/$defs/positive"}, "sbox_exponent": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "fieldHash": {
+      "type": "object", "additionalProperties": false,
+      "required": ["type", "construction", "field_modulus", "state_elements", "rate_elements", "capacity_elements", "output_elements", "full_rounds", "partial_rounds", "sbox_exponent"],
+      "properties": {
+        "type": {"const": "hash_function"}, "construction": {"const": "prime_field_sponge"}, "field_modulus": {"$ref": "#/$defs/fieldModulus"},
+        "state_elements": {"$ref": "#/$defs/positive"}, "rate_elements": {"$ref": "#/$defs/positive"},
+        "capacity_elements": {"$ref": "#/$defs/positive"}, "output_elements": {"$ref": "#/$defs/positive"},
+        "full_rounds": {"$ref": "#/$defs/positive"}, "partial_rounds": {"type": "integer", "minimum": 0}, "sbox_exponent": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "hmac": {
+      "type": "object", "additionalProperties": false, "required": ["type", "construction", "key_input", "hash_instance_id", "block_bits", "tag_bits"],
+      "properties": {
+        "type": {"const": "mac"}, "construction": {"const": "hmac"}, "key_input": {"const": "variable"},
+        "hash_instance_id": {"$ref": "#/$defs/id"}, "block_bits": {"$ref": "#/$defs/positive"}, "tag_bits": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "universalMac": {
+      "type": "object", "additionalProperties": false, "required": ["type", "construction", "key_bits", "tag_bits", "key_use"],
+      "properties": {
+        "type": {"const": "mac"}, "construction": {"const": "universal_hash"},
+        "key_bits": {"$ref": "#/$defs/positive"}, "tag_bits": {"$ref": "#/$defs/positive"},
+        "key_use": {"enum": ["one_time", "nonce_based"]}, "nonce_bits": {"$ref": "#/$defs/positive"}, "block_bits": {"$ref": "#/$defs/positive"}
+      },
+      "if": {"properties": {"key_use": {"const": "nonce_based"}}},
+      "then": {"properties": {"nonce_bits": {}}, "required": ["nonce_bits"]}, "else": {"properties": {"nonce_bits": false}}
+    },
+    "arxMac": {
+      "type": "object", "additionalProperties": false, "required": ["type", "construction", "key_bits", "tag_bits", "block_bits", "compression_rounds", "finalization_rounds"],
+      "properties": {
+        "type": {"const": "mac"}, "construction": {"const": "arx_prf"}, "key_bits": {"$ref": "#/$defs/positive"},
+        "tag_bits": {"$ref": "#/$defs/positive"}, "block_bits": {"$ref": "#/$defs/positive"},
+        "compression_rounds": {"$ref": "#/$defs/positive"}, "finalization_rounds": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "spongeMac": {
+      "type": "object", "additionalProperties": false, "required": ["type", "construction", "key_input", "tag_bits", "state_bits", "rate_bits", "capacity_bits"],
+      "properties": {
+        "type": {"const": "mac"}, "construction": {"const": "sponge"}, "key_input": {"const": "variable"},
+        "tag_bits": {"$ref": "#/$defs/positive"}, "state_bits": {"$ref": "#/$defs/positive"},
+        "rate_bits": {"$ref": "#/$defs/positive"}, "capacity_bits": {"$ref": "#/$defs/positive"}
+      }
+    },
+    "deterministicAead": {
+      "type": "object", "additionalProperties": false, "required": ["type", "nonce_mode", "key_bits", "tag_bits"],
+      "properties": {
+        "type": {"const": "aead"}, "nonce_mode": {"const": "deterministic"},
+        "key_bits": {"$ref": "#/$defs/positive"}, "tag_bits": {"$ref": "#/$defs/positive"}
+      }
+    },
     "problemSource": {
       "type": "object",
       "additionalProperties": false,
@@ -654,13 +854,37 @@
       "required": ["type", "scheme", "parameter_set", "hash_family", "security_category", "hash_bytes", "hypertree_height", "hypertree_layers", "fors_height", "fors_trees", "public_key_bytes", "secret_key_bytes", "signature_bytes", "context_hex"],
       "properties": {
         "type": {"const": "digital_signature"}, "scheme": {"const": "slh_dsa"},
-        "parameter_set": {"enum": ["SLH-DSA-SHA2-128s", "SLH-DSA-SHA2-128f", "SLH-DSA-SHAKE-128s", "SLH-DSA-SHAKE-128f"]},
-        "hash_family": {"enum": ["SHA2", "SHAKE"]}, "security_category": {"const": 1}, "hash_bytes": {"const": 16},
+        "parameter_set": {"enum": ["SLH-DSA-SHA2-128s", "SLH-DSA-SHA2-128f", "SLH-DSA-SHA2-192s", "SLH-DSA-SHA2-192f",
+            "SLH-DSA-SHA2-256s",
+            "SLH-DSA-SHA2-256f",
+            "SLH-DSA-SHAKE-128s",
+            "SLH-DSA-SHAKE-128f",
+            "SLH-DSA-SHAKE-192s",
+            "SLH-DSA-SHAKE-192f",
+            "SLH-DSA-SHAKE-256s",
+            "SLH-DSA-SHAKE-256f"]},
+        "hash_family": {"enum": ["SHA2", "SHAKE"]}, "security_category": {"enum":[1,3,5]}, "hash_bytes": {"enum":[16,24,32]},
         "hypertree_height": {"$ref": "#/$defs/positive"}, "hypertree_layers": {"$ref": "#/$defs/positive"},
         "fors_height": {"$ref": "#/$defs/positive"}, "fors_trees": {"$ref": "#/$defs/positive"},
         "public_key_bytes": {"$ref": "#/$defs/positive"}, "secret_key_bytes": {"$ref": "#/$defs/positive"},
         "signature_bytes": {"$ref": "#/$defs/positive"}, "context_hex": {"$ref": "#/$defs/context"}
       }
-    }
+    },
+    "scmacAead": {"type":"object","additionalProperties":false,"required":["type","construction","stream_instance_id","key_bits","nonce_bits","tag_bits","state_bits","stream_state_bits","mac_state_bits","rate_bits","initialization_steps"],"properties":{"type":{"const":"aead"},"construction":{"const":"scmac"},"stream_instance_id":{"$ref":"#/$defs/id"},"key_bits":{"$ref":"#/$defs/positive"},"nonce_bits":{"$ref":"#/$defs/positive"},"tag_bits":{"$ref":"#/$defs/positive"},"state_bits":{"$ref":"#/$defs/positive"},"stream_state_bits":{"$ref":"#/$defs/positive"},"mac_state_bits":{"$ref":"#/$defs/positive"},"rate_bits":{"$ref":"#/$defs/positive"},"initialization_steps":{"$ref":"#/$defs/positive"}}},
+    "namedKemhqc": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","security_category","code_length","secret_weight","ephemeral_weight","public_key_bytes","secret_key_bytes","secret_key_representation","ciphertext_bytes","shared_secret_bytes"],"properties":{"type":{"const":"kem"},"scheme":{"const":"hqc"},"parameter_set":{"enum":["HQC-1","HQC-3","HQC-5"]},"security_category":{"enum":[1,3,5]},"code_length":{"$ref":"#/$defs/positive"},"secret_weight":{"$ref":"#/$defs/positive"},"ephemeral_weight":{"$ref":"#/$defs/positive"},"public_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_representation":{"enum":["seed"]},"ciphertext_bytes":{"$ref":"#/$defs/positive"},"shared_secret_bytes":{"$ref":"#/$defs/positive"}}},
+    "namedKemfrodokem": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","security_category","lattice_dimension","matrix_generator","public_key_bytes","secret_key_bytes","secret_key_representation","ciphertext_bytes","shared_secret_bytes"],"properties":{"type":{"const":"kem"},"scheme":{"const":"frodo_kem"},"parameter_set":{"enum":["FrodoKEM-640-AES","FrodoKEM-640-SHAKE","FrodoKEM-976-AES","FrodoKEM-976-SHAKE","FrodoKEM-1344-AES","FrodoKEM-1344-SHAKE"]},"security_category":{"enum":[1,3,5]},"lattice_dimension":{"$ref":"#/$defs/positive"},"matrix_generator":{"enum":["AES-128","SHAKE128"]},"public_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_representation":{"enum":["encoded"]},"ciphertext_bytes":{"$ref":"#/$defs/positive"},"shared_secret_bytes":{"$ref":"#/$defs/positive"}}},
+    "namedKemclassicmceliece": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","security_category","code_length","field_degree","error_capacity","public_key_bytes","secret_key_bytes","secret_key_representation","ciphertext_bytes","shared_secret_bytes"],"properties":{"type":{"const":"kem"},"scheme":{"const":"classic_mceliece"},"parameter_set":{"enum":["mceliece348864","mceliece348864f","mceliece460896","mceliece460896f","mceliece6688128","mceliece6688128f","mceliece6960119","mceliece6960119f","mceliece8192128","mceliece8192128f"]},"security_category":{"enum":[1,3,5]},"code_length":{"$ref":"#/$defs/positive"},"field_degree":{"$ref":"#/$defs/positive"},"error_capacity":{"$ref":"#/$defs/positive"},"public_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_representation":{"enum":["encoded"]},"ciphertext_bytes":{"$ref":"#/$defs/positive"},"shared_secret_bytes":{"$ref":"#/$defs/positive"}}},
+    "namedKemsaber": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","security_category","module_rank","polynomial_degree","modulus","public_key_bytes","secret_key_bytes","secret_key_representation","ciphertext_bytes","shared_secret_bytes"],"properties":{"type":{"const":"kem"},"scheme":{"const":"saber"},"parameter_set":{"enum":["LightSaber","Saber","FireSaber"]},"security_category":{"enum":[1,3,5]},"module_rank":{"$ref":"#/$defs/positive"},"polynomial_degree":{"$ref":"#/$defs/positive"},"modulus":{"$ref":"#/$defs/positive"},"public_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_representation":{"enum":["encoded"]},"ciphertext_bytes":{"$ref":"#/$defs/positive"},"shared_secret_bytes":{"$ref":"#/$defs/positive"}}},
+    "namedKemntru": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","security_category","polynomial_degree","modulus","public_key_bytes","secret_key_bytes","secret_key_representation","ciphertext_bytes","shared_secret_bytes"],"properties":{"type":{"const":"kem"},"scheme":{"const":"ntru"},"parameter_set":{"enum":["ntruhps2048509","ntruhps2048677","ntruhps4096821","ntruhrss701"]},"security_category":{"enum":[1,3,5]},"polynomial_degree":{"$ref":"#/$defs/positive"},"modulus":{"$ref":"#/$defs/positive"},"public_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_representation":{"enum":["encoded"]},"ciphertext_bytes":{"$ref":"#/$defs/positive"},"shared_secret_bytes":{"$ref":"#/$defs/positive"}}},
+    "namedKemntruprime": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","security_category","polynomial_degree","modulus","secret_weight","public_key_bytes","secret_key_bytes","secret_key_representation","ciphertext_bytes","shared_secret_bytes"],"properties":{"type":{"const":"kem"},"scheme":{"const":"ntru_prime"},"parameter_set":{"enum":["sntrup653","sntrup761","sntrup857","sntrup953","sntrup1013","sntrup1277"]},"security_category":{"enum":[1,2,3,4,5]},"polynomial_degree":{"$ref":"#/$defs/positive"},"modulus":{"$ref":"#/$defs/positive"},"secret_weight":{"$ref":"#/$defs/positive"},"public_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_bytes":{"$ref":"#/$defs/positive"},"secret_key_representation":{"enum":["encoded"]},"ciphertext_bytes":{"$ref":"#/$defs/positive"},"shared_secret_bytes":{"$ref":"#/$defs/positive"}}},
+    "namedKembike": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","security_category","ring_degree","secret_weight","error_weight","public_key_bytes","ciphertext_bytes","shared_secret_bytes"],"properties":{"type":{"const":"kem"},"scheme":{"const":"bike"},"parameter_set":{"enum":["BIKE-L1-R4","BIKE-L3-R4","BIKE-L5-R4"]},"security_category":{"enum":[1,3,5]},"ring_degree":{"$ref":"#/$defs/positive"},"secret_weight":{"$ref":"#/$defs/positive"},"error_weight":{"$ref":"#/$defs/positive"},"public_key_bytes":{"$ref":"#/$defs/positive"},"ciphertext_bytes":{"$ref":"#/$defs/positive"},"shared_secret_bytes":{"$ref":"#/$defs/positive"}}},
+    "dsa": {"type":"object","additionalProperties":false,"required":["type","scheme","modulus_bits","subgroup_bits","hash"],"properties":{"type":{"const":"digital_signature"},"scheme":{"const":"dsa"},"modulus_bits":{"$ref":"#/$defs/positive"},"subgroup_bits":{"$ref":"#/$defs/positive"},"hash":{"$ref":"#/$defs/hash"}}},
+    "rsaPkcs1Signature": {"type":"object","additionalProperties":false,"required":["type","scheme","modulus_bits","hash"],"properties":{"type":{"const":"digital_signature"},"scheme":{"const":"rsassa_pkcs1_v1_5"},"modulus_bits":{"$ref":"#/$defs/positive"},"hash":{"$ref":"#/$defs/hash"}}},
+    "bip340": {"type":"object","additionalProperties":false,"required":["type","scheme","curve","field_bits","hash","public_key_bytes","signature_bytes"],"properties":{"type":{"const":"digital_signature"},"scheme":{"const":"bip340"},"curve":{"const":"secp256k1"},"field_bits":{"const":256},"hash":{"const":"SHA-256"},"public_key_bytes":{"const":32},"signature_bytes":{"const":64}}},
+    "falcon": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","polynomial_degree","modulus","security_category","public_key_bytes","signature_bytes","signature_encoding"],"properties":{"type":{"const":"digital_signature"},"scheme":{"const":"falcon"},"parameter_set":{"enum":["Falcon-512","Falcon-1024"]},"polynomial_degree":{"$ref":"#/$defs/positive"},"modulus":{"const":12289},"security_category":{"enum":[1,5]},"public_key_bytes":{"$ref":"#/$defs/positive"},"signature_bytes":{"$ref":"#/$defs/positive"},"signature_encoding":{"const":"padded"}}},
+    "xmss": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","stateful","hash","hash_bytes","tree_height","tree_layers","winternitz_base"],"properties":{"type":{"const":"digital_signature"},"scheme":{"const":"xmss"},"parameter_set":{"enum":["XMSS-SHA2_10_256","XMSS-SHA2_16_256","XMSS-SHA2_20_256"]},"stateful":{"const":true},"hash":{"const":"SHA-256"},"hash_bytes":{"const":32},"tree_height":{"enum":[10,16,20]},"tree_layers":{"enum":[1]},"winternitz_base":{"const":16}}},
+    "xmssmt": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","stateful","hash","hash_bytes","tree_height","tree_layers","winternitz_base"],"properties":{"type":{"const":"digital_signature"},"scheme":{"const":"xmssmt"},"parameter_set":{"enum":["XMSSMT-SHA2_20/2_256","XMSSMT-SHA2_40/4_256","XMSSMT-SHA2_60/6_256"]},"stateful":{"const":true},"hash":{"const":"SHA-256"},"hash_bytes":{"const":32},"tree_height":{"enum":[20,40,60]},"tree_layers":{"enum":[2,4,6]},"winternitz_base":{"const":16}}},
+    "lms": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","stateful","hash","hash_bytes","tree_height","tree_layers","winternitz_width"],"properties":{"type":{"const":"digital_signature"},"scheme":{"const":"lms"},"parameter_set":{"enum":["LMS_SHA256_M32_H5+LMOTS_SHA256_N32_W8","LMS_SHA256_M32_H10+LMOTS_SHA256_N32_W8","LMS_SHA256_M32_H15+LMOTS_SHA256_N32_W8","LMS_SHA256_M32_H20+LMOTS_SHA256_N32_W8","LMS_SHA256_M32_H25+LMOTS_SHA256_N32_W8"]},"stateful":{"const":true},"hash":{"const":"SHA-256"},"hash_bytes":{"const":32},"tree_height":{"enum":[5,10,15,20,25]},"tree_layers":{"enum":[1]},"winternitz_width":{"const":8}}},
+    "hss": {"type":"object","additionalProperties":false,"required":["type","scheme","parameter_set","stateful","hash","hash_bytes","tree_height","tree_layers","winternitz_width"],"properties":{"type":{"const":"digital_signature"},"scheme":{"const":"hss"},"parameter_set":{"enum":["HSS-L2-LMS_SHA256_M32_H10+LMOTS_SHA256_N32_W8","HSS-L2-LMS_SHA256_M32_H15+LMOTS_SHA256_N32_W8"]},"stateful":{"const":true},"hash":{"const":"SHA-256"},"hash_bytes":{"const":32},"tree_height":{"enum":[10,15]},"tree_layers":{"enum":[2]},"winternitz_width":{"const":8}}}
   }
 }

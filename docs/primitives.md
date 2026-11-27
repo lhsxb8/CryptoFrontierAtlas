@@ -6,7 +6,7 @@ It is available even when the selected release contains no analysis results.
 
 ## Contract
 
-`schemas/primitives/catalog.schema.json` defines the version-3 closed contract: unknown fields
+`schemas/primitives/catalog.schema.json` defines the version-4 closed contract: unknown fields
 are rejected. `lib/node/primitive-catalog.cjs` also checks unique IDs, references,
 acyclic construction dependencies, matching categories and parameter consistency.
 Every category declares exactly one domain, `symmetric` or `asymmetric`. Families
@@ -24,12 +24,21 @@ the cited specification and has a check date. A withdrawn standard remains usefu
 for historical research; registration is not deployment advice or a security claim.
 The initial collection separates Keccak permutations, SHA-3 hashes and SHAKE XOFs.
 
-The symmetric directory registers 19 families and 39 instances. In addition to
-AES, TDEA and the initial hash/construction entries, it includes SM3, SM4,
-Camellia, ARIA, SEED, PRESENT and full-round Salsa20. SHA-1 and MD5 are retained
-as historical research targets with visible collision-resistance warnings.
-Their published specifications are not incorrectly marked withdrawn. This is a
-curated directory, not an exhaustive list of symmetric primitives.
+Explicit instance-level standardization bindings drive evidence-backed badges and
+standard-first, withdrawn-last directory ordering. A citation, shared family or dependency never
+grants adoption automatically. International standards, national standards,
+national recommendations and withdrawn historical evidence remain distinct. See
+[Primitive standardization](primitive-standardization.md) for the dated review,
+scope rules and maintenance workflow.
+
+The symmetric directory registers 144 families and 309 instances across seven
+categories. It covers historical ciphers, AES candidates, lightweight designs,
+stream ciphers, hashes, XOFs, permutations, AEAD constructions and MACs, including
+ARADI. Six arithmetic-oriented families remain definition-only until exact
+field/constant profiles are selected. See [Symmetric catalog coverage](symmetric-catalog-coverage.md)
+for the dated inventory, inclusion policy and outstanding work. SHA-1 and MD5
+retain visible collision-resistance warnings; their published specifications
+are not incorrectly marked withdrawn.
 
 Key-size variants have separate instance IDs. Camellia's FL layers do not count
 as Feistel rounds; PRESENT's final key addition is not another SP round; MD5's
@@ -37,13 +46,72 @@ four rounds contain 64 compression steps. Salsa20 retains its original 64-bit
 nonce/counter layout rather than inheriting the IETF ChaCha20 parameters. The
 Chinese aliases for SM3 and SM4 are searchable.
 
-The asymmetric directory adds 13 families and 32 instances across public-key
+Hash includes complete hashes and explicitly tagged **Compression Function**
+entries; its stable category ID remains `hash_function`. AES-DM has AES-128/192/256
+instances; AES-MMO and AES-MP currently bind AES-128. These are single compression
+steps, not complete variable-length hashes: no iteration, padding rule or secret
+key is implied. The `block_cipher_compression` contract records mode, exact cipher
+instance, message/chaining/output widths and underlying cipher rounds. MMO/MP
+with unequal key/block widths require a separately defined mapping and are not
+silently generated. HMAC accepts complete hashes, not compression components.
+
+Scientific targets bind the same dependency and construction definition. Explicit
+compression experiments belong to that construction; chosen-key/known-key cipher
+analyses remain under AES even when their discussion mentions hashing. Dependency
+links connect pages without copying results or combining counts. An old result
+URL with an underlying AES instance normalizes only when the record has one
+matching compression target; ordinary AES pages and ambiguous/mismatched contexts
+are not redirected.
+
+Version 4 preserves native units and construction boundaries. Public tweaks and
+total tweakeys are separate from secret keys. Feedback and word-oriented stream
+ciphers record state sizes, output per step and initialization steps without
+inventing counter fields or block-cipher rounds. RC4 profiles have no implicit
+nonce. Compression hashes distinguish chaining values, internal working states,
+rounds and tree chunks; sponge input/output rates remain separate when necessary.
+Permutation steps are not silently converted to rounds. HMAC binds an actual
+hash instance and accepts variable-length keys; one-time MAC keys and
+nonce-based MACs are distinct. Deterministic SIV has no fabricated nonce length.
+Prime-field contracts use exact decimal modulus strings and field-element units,
+with probable-prime and exponent-invertibility checks. These structural checks
+do not certify a parameter set's security.
+
+Source metadata can identify a standard, RFC, design paper, competition submission
+or designer specification. Optional citation observations retain the provider,
+work identity, title, count, evidence URL and observation date. Family-level
+inclusion reasons are independent of standardization and analysis coverage.
+The `high_citation` reason requires an identified source with a recorded count
+strictly above 300. Neither a shared schema nor a citation threshold creates an
+analysis target or a security endorsement.
+
+The asymmetric directory registers 41 families and 100 instances across public-key
 encryption, key agreement, digital signatures and key encapsulation. RSA-OAEP and
 RSA-PSS have separate families and explicit SHA-256/MGF1 profiles. SM2 encryption,
 signatures and key exchange also have distinct identities. ECDH and X25519/X448
 are separate from ECDSA and EdDSA, even where their mathematical foundations are
 related. ML-KEM, ML-DSA and SLH-DSA use the final FIPS parameter-set names rather
 than treating pre-standard proposals as identical algorithms.
+
+The expansion includes classical encryption and authenticated key-agreement
+definitions, SM9's three distinct purposes, additional signature schemes and
+code-/lattice-based KEMs. Thirteen generic families have source-backed definitions
+and explicit parameter scopes rather than arbitrary numerical profiles. SLH-DSA
+now includes all twelve FIPS sets. See [Asymmetric catalog coverage](asymmetric-catalog-coverage.md)
+for the inventory, pinned source editions and remaining profile work.
+
+LOL2.0 includes Mini and Double LFSR2 stream profiles and separate 128-bit-tag
+SCMAC AEAD profiles; original LOL is not registered. The SCMAC contract binds the
+exact stream instance and checks its key, IV, output rate, initialization steps
+and separate stream/authentication state sizes. uBlock includes its three
+original block/key profiles.
+
+Named KEM encodings are checked against the source-edition tables in
+`lib/node/primitive-parameter-sets.cjs`. HQC v5.1's seed key, salted FrodoKEM's
+ciphertexts and the selected NTRU/NTRU Prime submission editions remain distinct.
+BIKE does not acquire a fictitious fixed private-key encoding from a bit-storage
+bound. Stateful signature contracts require signing state and distinguish WOTS+
+Winternitz bases from LM-OTS digit widths. Falcon's padded signature length is not
+an average compressed length.
 
 Hard Problems is the first asymmetric category, at the same level as Public-Key
 Encryption. Its initial nine entries are Integer Factorization, RSA Problem,
@@ -96,8 +164,13 @@ use the dedicated hard-problem branch of the shared corpus and export pipeline.
 2. Add a stable family ID in the appropriate domain category, and concrete instances
    with the appropriate parameters. Keep different schemes in separate families.
 3. Link underlying families through `uses`; retain distinct construction identities.
-4. Register explicit structure bindings and source locations in `diagrams.json`,
-   then run `npm run diagrams:build`. See [Structure diagrams](structure-diagrams.md).
+   Review each new instance for standardization, updating the explicit review
+   inventory and any source-backed adoption bindings; no binding means unverified.
+4. Register explicit structure bindings and source locations in `diagrams.json`.
+   A not-yet-drawn instance needs an explicit `pending` binding with empty views,
+   not a generic or guessed diagram. Definition-only families have no instance
+   binding. Run `npm run diagrams:build` after registry changes; see
+   [Structure diagrams](structure-diagrams.md).
 5. Run `npm run check:catalog`, `npm run check:diagrams`, `npm test` and affected browser tests.
 
 For a hard problem, add a `problem_sources` entry and a `hard_problems` definition
@@ -118,6 +191,9 @@ Existing analysis instance IDs and deep links are preserved. A compatibility
 adapter checks overlapping definitions, including AES key sizes, block sizes and
 round counts. It rejects conflicting definitions rather than silently overriding
 them. Directory-only instances never enter the cost comparator or audit totals.
+New parameter constructions require a dedicated scientific adapter before they
+can overlap with the existing analysis registry; the validator rejects implicit
+reinterpretation of their fields as the old key/block/round contract.
 
 The public build reads public definitions, questions and the validated public
 analysis snapshot. It exports a
@@ -131,3 +207,6 @@ Family and instance pages share a structure panel with analysis pages. Family
 views use one symbolic drawing and an instance comparison; instance views use
 exact catalog parameters. Attack filters do not change the primitive diagram.
 Research variants without an explicitly checked binding show a pending notice.
+Instances awaiting a drawing expose their parameter table directly. Definition-only
+families expose the source and parameter scope without manufacturing a numeric
+instance or figure.

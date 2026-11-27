@@ -94,5 +94,75 @@
     "block_bits": 128,
     "full_rounds": 12,
     "specification_source": "gr2017-known-key-limits"
+  },
+  {
+    "id": "aes-dm-128",
+    "family": "aes-dm",
+    "name": "AES-128-DM",
+    "full_rounds": 10,
+    "specification_source": "cglsz2025-aes-hashing-owf",
+    "compression": {
+      "mode": "dm",
+      "cipher_variant_id": "aes-128",
+      "name": "AES-DM",
+      "definition": "CF(h,m)=AES_m(h) xor h",
+      "output_bits": 128
+    }
+  },
+  {
+    "id": "aes-dm-192",
+    "family": "aes-dm",
+    "name": "AES-192-DM",
+    "full_rounds": 12,
+    "specification_source": "cglsz2025-aes-hashing-owf",
+    "compression": {
+      "mode": "dm",
+      "cipher_variant_id": "aes-192",
+      "name": "AES-DM",
+      "definition": "CF(h,m)=AES_m(h) xor h",
+      "output_bits": 128
+    }
+  },
+  {
+    "id": "aes-dm-256",
+    "family": "aes-dm",
+    "name": "AES-256-DM",
+    "full_rounds": 14,
+    "specification_source": "cglsz2025-aes-hashing-owf",
+    "compression": {
+      "mode": "dm",
+      "cipher_variant_id": "aes-256",
+      "name": "AES-DM",
+      "definition": "CF(h,m)=AES_m(h) xor h",
+      "output_bits": 128
+    }
+  },
+  {
+    "id": "aes-mmo-128",
+    "family": "aes-mmo",
+    "name": "AES-128-MMO",
+    "full_rounds": 10,
+    "specification_source": "cglsz2025-aes-hashing-owf",
+    "compression": {
+      "mode": "mmo",
+      "cipher_variant_id": "aes-128",
+      "name": "AES-MMO",
+      "definition": "CF(h,m)=AES_h(m) xor m",
+      "output_bits": 128
+    }
+  },
+  {
+    "id": "aes-mp-128",
+    "family": "aes-mp",
+    "name": "AES-128-MP",
+    "full_rounds": 10,
+    "specification_source": "cglsz2025-aes-hashing-owf",
+    "compression": {
+      "mode": "mp",
+      "cipher_variant_id": "aes-128",
+      "name": "AES-MP",
+      "definition": "CF(h,m)=AES_h(m) xor m xor h",
+      "output_bits": 128
+    }
   }
 ]

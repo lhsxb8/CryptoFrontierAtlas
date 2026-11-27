@@ -24,6 +24,11 @@ export function primitivePath(domain: PrimitiveDomain, familyId: string, instanc
 
 export const hardProblemPath = (id: string) => `/asymmetric-cryptanalysis/problems/${id}`;
 
+export function isCompressionFamily(catalog: PrimitiveCatalog, familyId: string) {
+  const instances = catalog.instances.filter(i => i.family_id === familyId);
+  return instances.length > 0 && instances.every(i => 'construction' in i.parameters && i.parameters.construction === 'block_cipher_compression');
+}
+
 export function directoryEntries(catalog: PrimitiveCatalog, ciphers: readonly CipherFamily[], domain: PrimitiveDomain = 'symmetric') {
   const publicIds = new Set(catalog.primitives.map(p => p.id));
   return [...(domain === 'asymmetric' ? catalog.hard_problems.map(p => ({...p, kind: 'hard_problem' as const})) : []),
@@ -58,7 +63,32 @@ export function hardProblemParameterRows(problem: HardProblemDefinition, locale:
   }));
 }
 
-const labels: Record<Exclude<ParameterKey<PrimitiveParameters>, 'type' | 'scheme'>, [string, string]> = {
+const labels: Record<Exclude<ParameterKey<PrimitiveParameters>, 'type' | 'scheme' | 'construction' | 'mode'>, [string, string]> = {
+  stream_instance_id: ['Underlying Stream Instance', '底层流密码实例'], stream_state_bits: ['Stream State', '流密码状态'], mac_state_bits: ['Authentication State', '认证状态'],
+  code_length: ['Code Length (n)', '码长（n）'], field_degree: ['Extension Degree (m)', '扩域次数（m）'], error_capacity: ['Error-Correction Capacity (t)', '纠错能力（t）'],
+  secret_weight: ['Secret Weight', '秘密向量重量'], ephemeral_weight: ['Ephemeral Weight', '临时向量重量'],
+  lattice_dimension: ['Lattice Dimension (n)', '格维数（n）'], matrix_generator: ['Matrix Generator', '矩阵生成器'],
+  polynomial_degree: ['Polynomial Degree (n)', '多项式次数（n）'], modulus: ['Modulus (q)', '模数（q）'],
+  ring_degree: ['Cyclic Ring Degree (r)', '循环环次数（r）'], error_weight: ['Error Weight (t)', '错误重量（t）'],
+  secret_key_representation: ['Secret-Key Representation', '私钥表示'], signature_encoding: ['Signature Encoding Mode', '签名编码方式'],
+  subgroup_bits: ['Subgroup Order Size', '子群阶长度'], stateful: ['Signing State', '签名状态'],
+  tree_height: ['Tree Height (h)', '树高度（h）'], tree_layers: ['Tree Layers', '树层数'],
+  winternitz_base: ['Winternitz Base (w)', 'Winternitz 基数（w）'], winternitz_width: ['Winternitz Digit Width (bits)', 'Winternitz 数位宽度（比特）'],
+  message_bits: ['Message Input', '消息输入'], cipher_rounds: ['Underlying Cipher Rounds', '底层分组密码轮数'],
+  tweak_bits: ['Public Tweak', '公开 Tweak'], tweakey_bits: ['Total Tweakey', 'Tweakey 总长'], sboxes_per_round: ['S-Boxes per Round', '每轮 S 盒数'],
+  steps: ['Permutation Steps', '置换步数'], squeeze_bits: ['Output Rate', '输出速率'],
+  initialization_steps: ['Initialization Steps', '初始化步数'], output_bits_per_step: ['Output per Step (bits)', '每步输出（比特）'],
+  permutation_entries: ['Permutation Entries', '置换元素数'], word_bits: ['Word Size', '字长'],
+  chaining_bits: ['Chaining Value', '链接值'], working_state_bits: ['Compression State', '压缩函数状态'],
+  compression_rounds: ['Compression Rounds', '压缩轮数'], finalization_rounds: ['Finalization Rounds', '终结轮数'],
+  permutation_rounds: ['Permutation Rounds', '置换轮数'], chunk_bytes: ['Chunk Size', '分块大小'],
+  field_modulus: ['Field Modulus', '有限域模数'], block_elements: ['Block (field elements)', '分组（域元素）'],
+  key_elements: ['Key (field elements)', '密钥（域元素）'], state_elements: ['State (field elements)', '状态（域元素）'],
+  rate_elements: ['Rate (field elements)', '速率（域元素）'], capacity_elements: ['Capacity (field elements)', '容量（域元素）'],
+  output_elements: ['Output (field elements)', '输出（域元素）'], full_rounds: ['Full Rounds', '完整轮数'],
+  partial_rounds: ['Partial Rounds', '部分轮数'], sbox_exponent: ['S-Box Exponent', 'S 盒指数'],
+  key_input: ['Key Length', '密钥长度'], hash_instance_id: ['Underlying Hash Instance', '底层哈希实例'],
+  key_use: ['Key Use', '密钥使用方式'], nonce_mode: ['Nonce Mode', 'Nonce 模式'],
   key_bits: ['Key material', '密钥材料'], key_encoding_bits: ['Key encoding (including parity)', '密钥编码（含校验位）'],
   block_bits: ['Block size', '分组大小'], nonce_bits: ['Nonce', 'Nonce'], counter_bits: ['Counter', '计数器'],
   state_bits: ['State size', '状态大小'], keystream_block_bits: ['Keystream block', '密钥流块'],
@@ -83,11 +113,16 @@ const labels: Record<Exclude<ParameterKey<PrimitiveParameters>, 'type' | 'scheme
 };
 
 export function parameterRows(instance: PrimitiveInstance, locale: 'en' | 'zh' = 'en') {
-  return Object.entries(instance.parameters).filter(([key]) => key !== 'type' && key !== 'scheme').map(([key, value]) => ({
+  return Object.entries(instance.parameters).filter(([key]) => !['type', 'scheme', 'construction', 'mode'].includes(key)).map(([key, value]) => ({
     key,
     label: key === 'rounds' && 'stages' in instance.parameters
       ? (locale === 'zh' ? '每阶段 DES 轮数' : 'DES Rounds per stage') : labels[key as keyof typeof labels][locale === 'zh' ? 1 : 0],
-    value: key === 'output' ? (locale === 'zh' ? '可变' : 'Variable')
+    value: key === 'stateful' ? (locale === 'zh' ? '有状态（不得重复使用一次性密钥）' : 'Stateful (Never Reuse One-Time Keys)')
+      : key === 'secret_key_representation' ? (value === 'seed' ? (locale === 'zh' ? '种子' : 'Seed') : (locale === 'zh' ? '规范编码' : 'Specified Encoding'))
+      : key === 'signature_encoding' ? (locale === 'zh' ? '填充至固定长度' : 'Padded to Fixed Length')
+      : key === 'output' || key === 'key_input' ? (locale === 'zh' ? '可变' : 'Variable')
+      : key === 'key_use' ? (value === 'one_time' ? (locale === 'zh' ? '一次性密钥' : 'One-Time Key') : (locale === 'zh' ? '依赖唯一 Nonce' : 'Nonce-Based'))
+      : key === 'nonce_mode' ? (locale === 'zh' ? '确定性（无 Nonce）' : 'Deterministic (No Nonce)')
       : key.endsWith('_hex') && value === '' ? (locale === 'zh' ? '空' : 'Empty')
         : String(value) + (key.endsWith('_bits') ? (locale === 'zh' ? ' 比特' : ' bits')
           : key.endsWith('_bytes') ? (locale === 'zh' ? ' 字节' : ' bytes') : ''),

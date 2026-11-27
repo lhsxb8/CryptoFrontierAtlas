@@ -1,0 +1,26 @@
+.atlas-standard-badges { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 5px; min-width: 0; }
+.atlas-standard-badge { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; box-sizing: border-box; width: 26px; height: 26px; border: 1px solid #e0d4b3; border-radius: 5px; color: #72591e; background: #faf6eb; }
+.atlas-standard-badge > svg { flex: 0 0 auto; }
+.atlas-standard-badge.is-national { color: #365e73; background: #f0f5f8; border-color: #d1dfe7; }
+.atlas-standard-badge.is-recommendation { color: #426964; background: #eef5f3; border-color: #d3e2dd; }
+.atlas-standard-badge.is-historical { color: #805a4d; background: #f8f1ed; border-color: #e6d7ce; }
+.atlas-family-card .atlas-standard-badges { margin-top: 7px; }
+.atlas-standard-panel { margin: -8px 0 20px; max-width: 100%; }
+.atlas-standard-panel > summary { display: flex; align-items: center; gap: 8px; width: fit-content; min-height: 36px; max-width: 100%; cursor: pointer; list-style: none; color: var(--muted); border-radius: 4px; }
+.atlas-standard-panel > summary::-webkit-details-marker { display: none; }
+.atlas-standard-panel > summary > svg { flex: 0 0 auto; }
+.atlas-standard-panel[open] > summary > svg { transform: rotate(180deg); }
+.atlas-standard-panel > summary:focus-visible { outline: 2px solid var(--teal); outline-offset: 4px; }
+.atlas-standard-evidence { margin-top: 12px; padding: 16px 20px; background: #fbfcfb; border: 1px solid var(--line); border-radius: 5px; }
+.atlas-standard-evidence article + article { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+.atlas-standard-evidence h2 { margin: 0 0 5px; font: 600 13px/1.5 var(--font-ui, sans-serif); }
+.atlas-standard-evidence h2 a { display: inline-flex; gap: 5px; align-items: center; color: var(--teal); }
+.atlas-standard-evidence p { margin: 4px 0; font-size: 12px; line-height: 1.65; overflow-wrap: anywhere; color: var(--muted); }
+.atlas-standard-component { font-size: 10px; font-weight: 600; color: #426964; }
+.atlas-standard-evidence .atlas-standard-check { margin-top: 15px; font-size: 11px; }
+.atlas-instance-table .atlas-standard-badges { display: flex; margin-top: 5px; }
+@media (max-width: 600px) {
+  .atlas-standard-panel { margin-top: -4px; }
+  .atlas-standard-panel > summary { min-height: 44px; }
+  .atlas-standard-evidence { padding: 12px; }
+}

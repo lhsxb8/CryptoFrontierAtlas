@@ -36,10 +36,29 @@ under `schemas/primitives/`. The catalog build adapter validates them independen
 of analysis availability. Public catalog instances carry type-specific parameters;
 they are not synthesized into scientific analysis targets. Where IDs overlap,
 both build profiles check target parameters against the public definitions.
-The version-3 directory assigns symmetric/asymmetric domains at the category
+Block-cipher-based compression functions are separate Hash targets, bound to
+exact cipher instances through explicit dependency descriptors. Shared semantic
+checks reject compression experiments attached to the underlying block cipher.
+Dependencies supply navigation, not duplicated results or combined rankings.
+The version-4 directory assigns symmetric/asymmetric domains at the category
 level. One shared directory/detail UI uses domain-scoped routes and counts.
 Asymmetric parameter contracts are purpose- and scheme-specific; no asymmetric
 entry is injected into the symmetric scientific result model or comparator.
+Symmetric contracts preserve construction-specific units, including feedback
+steps, tweakeys, hash working states and field elements. Source-level citation
+observations and family inclusion reasons describe directory selection, not
+attack coverage. Large directories use bounded category previews and URL-backed
+pagination; a category with more than six entries triggers the compact overview
+in either domain. Category browsing and global search paginate at 24 entries,
+preserving category order and indexing every registered instance, including
+hidden cards. Hard-problem order remains curated rather than alphabetical.
+Named asymmetric profiles have source-edition parameter tables checked by the
+Node validator; stateful signatures and SCMAC dependencies have closed native
+contracts. These do not extend or populate scientific attack schemas.
+Instance-scoped standardization bindings in the same public catalog drive badges,
+source disclosure and standard-first, withdrawn-last ordering. The Node validator checks source
+classification, exact binding identity and complete review coverage. The shared
+browser projection never inherits adoption through family or construction links.
 Hard-problem definitions have separate closed contracts and references within the
 same catalog. The shared directory projects algorithms and problems as distinct
 entry kinds; dedicated problem routes show symbolic definitions without inventing
@@ -55,6 +74,9 @@ The same adapter validates parameter-bound TikZ/SVG structure assets and their
 explicit instance registry. Figures are compiled offline, committed and checked
 without TeX in ordinary builds. The frontend shares one structure panel across
 directory and analysis views; see [Structure diagrams](structure-diagrams.md).
+The version-2 drawing registry distinguishes reviewed assets from explicit pending
+bindings with no views. Pending entries produce no assets; their instance pages
+still show parameters. Every concrete instance must have a registry binding.
 `schemas/` defines the question and cryptanalysis contracts. Result records bind
 targets, settings, parameters, costs, success events and source evidence; see
 [Cryptanalysis data](cryptanalysis.md).

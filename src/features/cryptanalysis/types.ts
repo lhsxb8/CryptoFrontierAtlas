@@ -241,6 +241,9 @@ export interface CipherVariant {
   block_bits?: number;
   full_rounds: number;
   specification_source: string;
+  compression?: {
+    mode: 'dm' | 'mmo' | 'mp'; cipher_variant_id: string; name: string; definition: string; output_bits: number;
+  };
 }
 
 export interface AnalysisCoverageIssue {

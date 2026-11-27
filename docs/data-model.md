@@ -28,6 +28,28 @@ Retain optional coordinates such as preprocessing or quantum resources during
 comparison. Each comparison uses a complete source-supported assignment and
 matching settings.
 
+## Compression targets
+
+Compression analyses have distinct `hash_function` families and scientific
+variants with an explicit `compression` descriptor: mode, underlying cipher
+variant, construction name/definition and output width. Their full-round count
+refers to the underlying cipher; they do not carry cipher `key_bits`/`block_bits`
+as if a message or chaining value were a secret key. Directory instances retain
+the separate message and chaining widths.
+
+`lib/cryptanalysis/compression.cjs` checks the dependency and experiment identity.
+Both detailed and compact records must target the registered construction, not
+its underlying cipher. Compression records preserve their source-defined input
+control, success event, round convention and resource accounting. Merely citing
+a compression application does not turn a cipher result into a compression result.
+Different construction targets remain incomparable; classical/quantum and
+attack-surface separation applies within each target as before.
+
+The optional descriptor and each nested field require independent publication
+classification. Public validation enforces the same scientific identity without
+access to the maintained corpus. Migration changes target IDs only, retains
+stable result IDs and source evidence, and records a scoped internal receipt.
+
 ## Quantum models
 
 Keep `setting.computation` independent of `setting.attack_surface`. Algorithmic

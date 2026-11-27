@@ -31,13 +31,25 @@
           "key_bits": {"type": "integer", "minimum": 1},
           "block_bits": {"type": "integer", "minimum": 1},
           "full_rounds": {"type": "integer", "minimum": 1},
-          "specification_source": {"$ref": "#/$defs/id"}
-        }
+          "specification_source": {"$ref": "#/$defs/id"},
+          "compression": {"$ref": "#/$defs/compression"}
+        },
+        "if": {"properties": {"compression": {}}, "required": ["compression"]},
+        "then": {"properties": {"key_bits": false, "block_bits": false}}
       }
     },
     "coverage_family_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
   },
   "$defs": {
+    "compression": {
+      "type": "object", "additionalProperties": false,
+      "required": ["mode", "cipher_variant_id", "name", "definition", "output_bits"],
+      "properties": {
+        "mode": {"enum": ["dm", "mmo", "mp"]}, "cipher_variant_id": {"$ref": "#/$defs/id"},
+        "name": {"$ref": "#/$defs/text"}, "definition": {"$ref": "#/$defs/text"},
+        "output_bits": {"type": "integer", "minimum": 1}
+      }
+    },
     "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
     "text": {"type": "string", "minLength": 1, "pattern": "\\S"}
   }

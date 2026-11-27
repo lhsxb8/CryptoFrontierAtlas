@@ -26,7 +26,7 @@ sources, explicit assumptions and verifiable conclusions.
 
 ## Current scope
 
-The application version is **v1.0.1**; the initial release was v1.0.0.
+The application version is **v1.0.2**; the initial release was v1.0.0.
 Open questions currently focus on
 symmetric cryptography. The symmetric directory includes block and stream
 ciphers, hashes, XOFs, permutations, AEAD and MACs, including entries with no

@@ -41,6 +41,12 @@
 .atlas-primitive-navigation { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0; }
 .atlas-primitive-navigation a { padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px; font-size: 12px; text-decoration: none; background: #fff; }
 .atlas-primitive-navigation [aria-current=page] { color: var(--teal); border-color: #7eb0a9; background: #eaf4f2; }
+.atlas-instance-select { min-width: 0; max-width: 100%; }
+.atlas-instance-select select { max-width: 100%; min-height: 40px; border: 1px solid var(--line); border-radius: 4px; padding: 8px 32px 8px 12px; background: white; color: var(--teal); font: inherit; font-size: 13px; }
+.atlas-parameter-fallback { margin: 18px 0; padding: 20px; border: 1px solid var(--line); border-radius: 6px; background: #f9fbfa; }
+.atlas-parameter-fallback h2 { margin: 0 0 16px; font-family: var(--font-heading); font-size: 24px; }
+.atlas-parameter-fallback dd, .atlas-instance-table td { overflow-wrap: anywhere; }
+.atlas-parameter-fallback p { font-size: 13px; line-height: 1.7; color: var(--muted); }
 .atlas-instance-details { border: 1px solid var(--line); background: #fff; border-radius: 6px; margin: 18px 0; }
 .atlas-instance-details > summary { cursor: pointer; padding: 14px 18px; font-size: 13px; color: var(--teal); }
 .atlas-instance-details .atlas-source-card { border: 0; margin: 0; }

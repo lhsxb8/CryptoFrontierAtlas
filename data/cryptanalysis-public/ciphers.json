@@ -7,5 +7,32 @@
       "Advanced Encryption Standard"
     ],
     "description": "The standardized 128-bit-block cipher family with AES-128, AES-192 and AES-256 instances."
+  },
+  {
+    "id": "aes-dm",
+    "name": "AES-DM",
+    "primitive_type": "hash_function",
+    "aliases": [
+      "Davies–Meyer"
+    ],
+    "description": "Davies–Meyer compression function instantiated with AES. The message and chaining value are public inputs; this entry defines one compression call, without a hash padding or iteration rule."
+  },
+  {
+    "id": "aes-mmo",
+    "name": "AES-MMO",
+    "primitive_type": "hash_function",
+    "aliases": [
+      "Matyas–Meyer–Oseas"
+    ],
+    "description": "Matyas–Meyer–Oseas compression function instantiated with AES. The message and chaining value are public inputs; this entry defines one compression call, without a hash padding or iteration rule."
+  },
+  {
+    "id": "aes-mp",
+    "name": "AES-MP",
+    "primitive_type": "hash_function",
+    "aliases": [
+      "Miyaguchi–Preneel"
+    ],
+    "description": "Miyaguchi–Preneel compression function instantiated with AES. The message and chaining value are public inputs; this entry defines one compression call, without a hash padding or iteration rule."
   }
 ]

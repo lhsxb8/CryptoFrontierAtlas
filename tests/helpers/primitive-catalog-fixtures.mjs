@@ -1,7 +1,7 @@
 /** Synthetic definitions only; no corpus or scientific source is copied. */
 export function catalogFixture() {
   return {
-    schema_version: 3,
+    schema_version: 4,
     hard_problems: [],
     problem_sources: [],
     categories: [

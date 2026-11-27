@@ -6,6 +6,9 @@ test.use({locale: 'en-US'});
 const symmetricCategories = catalog.categories.filter(c => c.domain === 'symmetric');
 const symmetricFamilies = catalog.primitives.filter(p => symmetricCategories.some(c => c.id === p.category));
 const asymmetricFamilies = catalog.primitives.filter(p => !symmetricFamilies.includes(p));
+const symmetricOverviewCount = symmetricCategories.reduce((sum,c) => sum + Math.min(6, symmetricFamilies.filter(p=>p.category===c.id).length),0);
+const asymmetricOverviewCount = catalog.categories.filter(c=>c.domain==='asymmetric').reduce((sum,c)=>sum+Math.min(6,
+  c.id==='hard_problem'?catalog.hard_problems.length:asymmetricFamilies.filter(p=>p.category===c.id).length),0);
 const instancePath = (instance: typeof catalog.instances[number]) => asymmetricFamilies.some(p => p.id === instance.family_id)
   ? `/asymmetric-cryptanalysis/algorithms/${instance.family_id}/${instance.id}`
   : `/cryptanalysis/ciphers/${instance.family_id}/${instance.id}`;
@@ -35,7 +38,7 @@ test('home has four usable entrances and planned collections have accessible TBD
 test('public directory exposes all categories and empty results without misleading comparisons', async ({page}) => {
   await page.goto('/#/cryptanalysis');
   await expect(page.getByRole('heading', {level: 1})).toHaveText('Primitive & Construction Directory');
-  await expect(page.locator('.atlas-family-card')).toHaveCount(symmetricFamilies.length);
+  await expect(page.locator('.atlas-family-card')).toHaveCount(symmetricOverviewCount);
   for (const category of symmetricCategories) await expect(page.getByRole('heading', {name: category.en, exact: true})).toBeVisible();
   await page.getByRole('combobox', {name: 'Primitive Type', exact: true}).selectOption('stream_cipher');
   await expect(page.locator('.atlas-family-card')).toHaveCount(catalog.primitives.filter(p => p.category === 'stream_cipher').length);
@@ -43,10 +46,10 @@ test('public directory exposes all categories and empty results without misleadi
   await page.getByRole('searchbox', {name: 'Search primitives and instances'}).fill('nonexistent fixture');
   await expect(page.getByRole('heading', {name: 'No Matching Primitives'})).toBeVisible();
   await page.getByRole('button', {name: 'Reset filters'}).click();
-  await expect(page.locator('.atlas-family-card')).toHaveCount(symmetricFamilies.length);
+  await expect(page.locator('.atlas-family-card')).toHaveCount(symmetricOverviewCount);
   await page.getByRole('searchbox', {name: 'Search primitives and instances'}).fill('Triple DES');
   await expect(page.locator('.atlas-family-card')).toHaveCount(1);
-  await expect(page.locator('.atlas-family-card')).toContainText('Withdrawn');
+  await expect(page.locator('.atlas-family-card').getByRole('img', {name: /^Withdrawn Standard:/})).toBeVisible();
   await page.locator('.atlas-family-card').click();
   await expect(page.getByRole('heading', {level: 1})).toHaveText('3DES / TDEA');
   await expect(page.locator('main')).toContainText('2024-01-01');
@@ -55,13 +58,13 @@ test('public directory exposes all categories and empty results without misleadi
 });
 
 test('every public instance deep link resolves, including hash, XOF and permutation parameters', async ({page}) => {
-  test.setTimeout(90_000);
+  test.setTimeout(Math.max(90_000, catalog.instances.length * 700));
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   for (const instance of catalog.instances) {
     await page.goto('/#' + instancePath(instance));
     await expect(page.getByRole('heading', {level: 1})).toHaveText(instance.name);
-    if (instance.family_id === 'aes') {
+    if (['aes', 'aes-dm', 'aes-mmo', 'aes-mp'].includes(instance.family_id)) {
       await expect(page.getByRole('searchbox', {name: 'Search analysis results', exact:true})).toBeVisible();
       await expect(page.locator('.atlas-structure')).toHaveAttribute('data-structure-target',instance.id);
     } else {
@@ -97,7 +100,7 @@ test('Chinese directory and narrow navigation remain usable with all four collec
   await page.keyboard.press('Escape');
   await expect(page.getByRole('heading', {level: 1})).toHaveText('原语与构造目录');
   await expect(page.getByRole('heading', {name: '可扩展输出函数', exact: true})).toBeVisible();
-  await expect(page.locator('.atlas-family-card')).toContainText('尚未收录结果');
+  await expect(page.locator('.atlas-family-card').first()).toContainText('个实例');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
   const nav = page.getByRole('navigation', {name: '主导航'});
   await page.getByRole('button', {name: '主导航', exact: true}).click();
@@ -105,17 +108,19 @@ test('Chinese directory and narrow navigation remain usable with all four collec
   await nav.getByRole('link', {name: /非对称密码分析/}).click();
   await expect(page.getByRole('heading', {level: 1})).toHaveText('非对称密码分析');
   await expect(page.locator('main')).not.toContainText('TBD');
-  await expect(page.locator('.atlas-family-card')).toHaveCount(asymmetricFamilies.length + catalog.hard_problems.length);
+  await expect(page.locator('.atlas-family-card')).toHaveCount(asymmetricOverviewCount);
 });
 
 test('asymmetric directory exposes scoped categories, search and family overviews without analysis controls', async ({page}) => {
   await page.goto('/#/');
   await page.locator('.atlas-portal-card.is-asymmetric').click();
   await expect(page.getByRole('heading', {level: 1})).toHaveText('Asymmetric Cryptanalysis');
-  await expect(page.locator('.atlas-family-card')).toHaveCount(asymmetricFamilies.length + catalog.hard_problems.length);
+  await expect(page.locator('.atlas-family-card')).toHaveCount(asymmetricOverviewCount);
   await expect(page.locator('main')).not.toContainText('Block Ciphers');
   await expect(page.getByRole('tab')).toHaveCount(0);
   await page.getByRole('combobox', {name: 'Category', exact: true}).selectOption('kem');
+  await expect(page.locator('.atlas-family-card')).toHaveCount(catalog.primitives.filter(p=>p.category==='kem').length);
+  await page.getByRole('searchbox').fill('ML-KEM-768');
   await expect(page.locator('.atlas-family-card h3')).toHaveText(['ML-KEM']);
   await page.locator('.atlas-family-card').click();
   await expect(page.getByRole('heading', {level: 1})).toHaveText('ML-KEM');

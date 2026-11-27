@@ -64,6 +64,37 @@ test('failed export preserves the last valid snapshot, and raw edits require exp
   assert.equal(fingerprint(f.output),before);
 });
 
+test('compression targets survive independent public validation and reject wrong-target records',t=>{
+  const f=fixture(t),read=file=>JSON.parse(readFileSync(join(f.directory,file),'utf8'));
+  const variant={id:'synthetic-dm-128',family:'synthetic-dm',name:'Synthetic DM',full_rounds:10,specification_source:f.source.id,
+    compression:{mode:'dm',cipher_variant_id:'aes-128',name:'Synthetic DM',definition:'F(h,m)=E_m(h) xor h',output_bits:128}};
+  f.write('ciphers.json',[...read('ciphers.json'),{id:variant.family,name:variant.name,primitive_type:'hash_function',aliases:[],description:'Synthetic compression target.'}]);
+  f.write('variants.json',[...read('variants.json'),variant]);
+  const convert=r=>{r.goal='compression_collision';r.result_kind='collision_construction';r.target.variant_ids=[variant.id];r.experiment.construction={type:'compression_function',name:variant.compression.name,definition:variant.compression.definition,output_bits:128};return r;};
+  const compressionRecord=convert(structuredClone(f.record));
+  compressionRecord.id='synthetic-compression-point';compressionRecord.assessment.reproduction='not_attempted';
+  f.write('results/'+compressionRecord.id+'.json',compressionRecord);
+  const manifest=read('manifest.json');manifest.records.push(compressionRecord.id);manifest.record_count++;
+  f.write('manifest.json',manifest);
+  const entries=readFileSync(join(f.directory,'entries/aes.jsonl'),'utf8').trim().split('\n').map(JSON.parse);
+  for(const e of entries) {
+    if(e.record_id===null)convert(e);
+    else {e.id=compressionRecord.id;e.record_id=compressionRecord.id;}
+  }
+  renameSync(join(f.directory,'entries/aes.jsonl'),join(f.directory,'entries/synthetic-dm.jsonl'));
+  f.write('entries/synthetic-dm.jsonl',entries.map(JSON.stringify).join('\n')+'\n');
+  const catalog=read('result-families/aes.json');catalog.cipher_family_id=variant.family;
+  catalog.families[0].points[0].result_id=compressionRecord.id;
+  f.write('result-families/synthetic-dm.json',catalog);
+  f.write('result-families/aes.json',{schema_version:1,cipher_family_id:'aes',reviewed_on:'2026-10-09',families:[],standalone_result_ids:[f.record.id],excluded_results:[]});
+  exportPublishedDataset(f.root);
+  renameSync(f.directory,join(f.root,'private-research-away'));
+  const {data}=validatePublishedDataset(f.root);
+  assert.deepEqual(data.variants.find(v=>v.id===variant.id).compression,variant.compression);
+  editPublic(f.output,'results/'+compressionRecord.id+'.json',r=>{r.target.variant_ids=['aes-128'];});
+  assert.throws(()=>validatePublishedDataset(f.root),/compression-function target/);
+});
+
 test('source fingerprint changes, unknown fields and scientific tampering fail independently',async t=>{
   for(const [name, mutate, message]of [
     ['unknown coverage metadata',f=>editPublic(f.output,'coverage.json',x=>x.private_task='Synthetic task'),/unapproved field/],

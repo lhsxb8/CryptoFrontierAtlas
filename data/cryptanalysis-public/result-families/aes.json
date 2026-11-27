@@ -13004,16 +13004,7 @@
     "aes128-5r-free-tpkc-nllw2025",
     "aes192-7r-free-tpkc-nllw2025",
     "aes256-6r-fixed-tpkc-nllw2025",
-    "aes128-7r-mmo-collision-cglsz2025",
-    "aes128-7r-mmo-preimage-cglsz2025",
-    "aes128-7r-mp-collision-cglsz2025",
-    "aes128-7r-mp-preimage-cglsz2025",
-    "aes128-4r-dm-collision-cglsz2025",
-    "aes128-4r-dm-preimage-skp-cglsz2025",
-    "aes128-5r-dm-preimage-skp-cglsz2025",
-    "aes192-7r-dm-preimage-skp-cglsz2025",
     "aes192-7r-two-block-owf-key-recovery-cglsz2025",
-    "aes256-8r-dm-preimage-skp-cglsz2025",
     "aes256-8r-two-block-owf-key-recovery-cglsz2025",
     "aes192-6r-low-data-d4-kara2024",
     "aes256-6r-low-data-d4-kara2024",
@@ -13038,14 +13029,7 @@
     "aes192-12r-8plus4-known-key-gr2017",
     "aes192-12r-uniform-known-key-gr2017",
     "aes256-12r-8plus4-known-key-gr2017",
-    "aes256-12r-uniform-known-key-gr2017",
-    "aes128-7r-fixed-key-preimage-dds2025",
-    "aes128-8r-pseudo-preimage-dds2025",
-    "aes256-10r-pseudo-preimage-dds2025",
-    "aes192-9r-pseudo-preimage-dds2025",
-    "aes192-9r-quantum-pseudo-preimage-dds2025",
-    "aes128-7r-quantum-pseudo-preimage-dds2025",
-    "aes256-9r-quantum-pseudo-preimage-dds2025"
+    "aes256-12r-uniform-known-key-gr2017"
   ],
   "excluded_results": [
     {
