@@ -26,6 +26,19 @@ test('registry requires exact instances, sources and closed metadata', async t =
   });
 });
 
+test('pending drawings retain exact coverage but cannot carry fabricated views or compiled assets', t => {
+  const {root,catalog,registry,write}=diagramFixture(t);
+  registry.diagrams[0].review.status='pending';registry.diagrams[0].views=[];
+  write('data/primitives/diagrams.json',registry);
+  loadDiagramRegistry(root,catalog);
+  assert(!diagramJobs(root,catalog,registry).some(j=>j.family_id===registry.diagrams[0].family_id));
+  registry.diagrams[0].views=[{id:'overview',template:'fixture.tex',label:{en:'Fake',zh:'测试'},caption:{en:'Fake',zh:'测试'}}];
+  write('data/primitives/diagrams.json',registry);
+  assert.throws(()=>loadDiagramRegistry(root,catalog));
+  registry.diagrams[0].views=[];registry.diagrams[0].review.status='source_checked';write('data/primitives/diagrams.json',registry);
+  assert.throws(()=>loadDiagramRegistry(root,catalog));
+});
+
 test('stale parameters, templates, metadata and generated assets are rejected', async t => {
   for (const mutate of [
     f => {f.catalog.instances[0].parameters.rounds++;},

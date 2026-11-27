@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "cipher_family_id": "aes-mp",
+  "reviewed_on": "2026-11-27",
+  "families": [],
+  "standalone_result_ids": [
+    "aes128-7r-mp-collision-cglsz2025",
+    "aes128-7r-mp-preimage-cglsz2025"
+  ],
+  "excluded_results": []
+}

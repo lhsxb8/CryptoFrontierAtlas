@@ -102,7 +102,7 @@ export function routeScopeParams(route: AtlasRoute, ciphers: readonly CipherFami
   else if (route.page === 'cipher' && ciphers.some(cipher => cipher.id === route.cipherId)) params.set('family', route.cipherId!);
   else if (route.page === 'result') {
     const record = records.find(item => item.id === route.id);
-    const requested = route.params.get('variant');
+    const requested = canonicalResultParams(record, route.params, variants).get('variant');
     const id = requested || (record?.target.variant_ids.length === 1 ? record.target.variant_ids[0] : undefined);
     if (id && record?.target.variant_ids.includes(id)) variant = variants.find(item => item.id === id);
   } else if (route.page === 'analysis-sources' || route.page === 'coverage') {
@@ -146,11 +146,25 @@ export function instanceGroups(variants: readonly CipherVariant[]) {
 }
 
 export function variantParameters(variant: CipherVariant): string {
+  if (variant.compression) return `${variant.compression.output_bits}-bit compression output · ${variant.full_rounds} underlying cipher rounds`;
   const parameters = [];
   if (variant.key_bits !== undefined) parameters.push(`${variant.key_bits}-bit key`);
   if (variant.block_bits !== undefined) parameters.push(`${variant.block_bits}-bit block`);
   parameters.push(`${variant.full_rounds} full rounds`);
   return parameters.join(' · ');
+}
+
+/** Only a moved compression result can translate its old dependency context. */
+export function canonicalResultParams(record: AnalysisResult | undefined, params: URLSearchParams, variants: readonly CipherVariant[]) {
+  const next = new URLSearchParams(params), requested = params.get('variant');
+  if (!record || !requested || record.target.variant_ids.includes(requested)) return next;
+  const matches = variants.filter(v => record.target.variant_ids.includes(v.id) && v.compression?.cipher_variant_id === requested
+    && v.compression.name === record.experiment?.construction.name && record.experiment?.construction.type === 'compression_function');
+  if (matches.length === 1) {
+    next.set('variant', matches[0].id);
+    if (next.has('family')) next.set('family', matches[0].family);
+  }
+  return next;
 }
 
 export function routeHref(path: string, params?: URLSearchParams): string {

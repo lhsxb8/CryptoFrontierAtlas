@@ -28,9 +28,11 @@ test('chapter headings and primitive names have distinct type roles in a respons
       expect(typography.chapterSize).toBeGreaterThan(typography.entrySize);
       expect(await page.evaluate(() => [...document.fonts].some(font => font.family.includes('Atlas Source Serif') && font.status === 'loaded'))).toBe(true);
       await expect(page.locator('.atlas-directory-toolbar [role=status] strong')).toHaveText(String(entryCount));
-      await expect(page.locator('.atlas-family-card')).toHaveCount(entryCount);
-      const single = page.locator('.atlas-family-grid.is-single').first();
-      expect(await single.evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(1);
+      const visibleCount = categories.reduce((sum, category) => sum + Math.min(6,
+        category.id === 'hard_problem' ? catalog.hard_problems.length
+          : families.filter(family => family.category === category.id).length), 0);
+      await expect(page.locator('.atlas-family-card')).toHaveCount(visibleCount);
+      for(const single of await page.locator('.atlas-family-grid.is-single').all()) expect(await single.evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(1);
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width + 1);
     }
   }
@@ -85,7 +87,10 @@ test('Chinese narrow headings, status badges and long primitive names retain rea
   await expect(page.getByRole('heading', {name: '分组密码', exact: true})).toBeVisible();
   const sizes = await page.locator('.atlas-family-group').first().evaluate(element => ['h2','h3'].map(tag => parseFloat(getComputedStyle(element.querySelector(tag)!).fontSize)));
   expect(sizes[0]).toBeGreaterThan(sizes[1]);
-  await expect(page.locator('.atlas-family-card .atlas-status-warning')).toHaveText('已撤回');
+  await page.getByRole('searchbox').fill('Triple DES');
+  await expect(page.locator('.atlas-family-card').getByRole('img', {name: /^已撤销标准:/})).toBeVisible();
+  await expect(page.locator('.atlas-family-card .atlas-standard-badge')).toHaveText(['', '']);
+  await page.getByRole('searchbox').fill('ChaCha20-Poly1305');
   const longName = page.getByRole('heading', {name: 'ChaCha20-Poly1305', exact: true});
   await expect(longName).toBeVisible();
   expect(await longName.evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);

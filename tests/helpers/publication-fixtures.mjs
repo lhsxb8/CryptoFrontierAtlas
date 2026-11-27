@@ -19,10 +19,12 @@ export function writePublicationFixture(root) {
     inspected_version:'Synthetic version, not a literature claim', url:'https://example.invalid/reports/synthetic.pdf',
     accessed_on:'2026-10-09', content_sha256:'a'.repeat(64), hash_note:'Synthetic test hash, not a real paper.',
     locators:['Synthetic page 1; reports/synthetic-local.md']};
-  const record = resultFixture({id:'synthetic-detailed-point', goal:'compression_collision', kind:'collision_construction'});
+  const record = resultFixture({id:'synthetic-detailed-point', goal:'differential_q_multicollision', kind:'multicollision_construction'});
+  record.experiment.construction = {type:'block_cipher', name:'Synthetic cipher', definition:'Synthetic cipher experiment', output_bits:128};
   record.evidence[0].locator = 'Synthetic page 2; reports/synthetic-local.md';
   record.assessment.reproduction = 'collision_witness_only';
-  const compact = resultFixture({id:'synthetic-compact-point', goal:'compression_collision', kind:'collision_construction', q:4});
+  const compact = resultFixture({id:'synthetic-compact-point', goal:'differential_q_multicollision', kind:'multicollision_construction', q:4});
+  compact.experiment.construction = {...record.experiment.construction};
   compact.resources.time.reported = '2^9'; compact.resources.time.log2 = 9;
   const review = {scope:'targeted_primary_text', decision:'keep_candidate', reviewed_on:'2026-10-09',
     next_action:'Read reports/synthetic-local.md', issue_ids:['synthetic-source-issue']};

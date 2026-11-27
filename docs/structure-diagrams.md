@@ -24,6 +24,16 @@ visual conventions; these are original Atlas drawings, not copied paper figures.
 No gallery source, custom package or paper PDF is vendored. Specifications take
 precedence where an original design differs from the catalog's edition.
 
+Registry version 2 permits explicit `pending` bindings with `views: []` and no
+compact template. These bindings record the exact family, instances and sources
+but do not generate or expose downloadable figures. `source_checked` bindings
+require an overview and usable templates. Every concrete catalog instance still
+needs a binding; omission is a validation error. Definition-only families do not
+need a figure. Parameter tables remain visible for instances awaiting drawings.
+The expanded symmetric collection has pending drawings rather than copies of
+unrelated cipher structures. Changing the registry requires regenerating the
+manifest even when the existing SVG and TeX bytes are unchanged.
+
 The library covers AES, TDEA, IETF ChaCha20, SHA-2, SHA-3, SHAKE, Keccak,
 standardized Ascon-AEAD128, IETF ChaCha20-Poly1305 and AES-CMAC. Overall structure
 and internal detail remain separate. Important distinctions include AES's final
@@ -49,6 +59,12 @@ widths without a second layout asset. A single-view binding puts enlargement in
 the heading, without a redundant tab strip or toolbar row. Detailed validity
 checks remain in the cited specifications and captions;
 the drawings are explanatory, not executable protocol implementations.
+
+AES-DM/MMO/MP use a dedicated parameter-bound
+overview with the source-defined AES input/key roles, feed-forward XORs and
+construction equation. Captions distinguish a compression step from an iterated
+hash. DM binds all three standard AES key sizes; MMO/MP bind AES-128 only, without
+inventing a key-expansion mapping. One view needs no redundant diagram tab strip.
 
 Only explicit catalog bindings are eligible. Standard AES diagrams are never
 inferred for research variants. Filtering reduced-round attacks does not redefine

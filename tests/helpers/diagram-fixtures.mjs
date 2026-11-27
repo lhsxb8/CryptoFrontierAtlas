@@ -17,7 +17,7 @@ export function diagramFixture(t) {
   };
   const catalog = catalogFixture();
   const registry = {
-    schema_version: 1,
+    schema_version: 2,
     style_reference: {title: 'Synthetic style', author: 'Fixture', url: 'https://example.invalid/style', note: 'Test-only drawing'},
     design_sources: [],
     diagrams: catalog.primitives.map(family => ({

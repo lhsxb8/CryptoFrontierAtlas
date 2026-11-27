@@ -5,10 +5,13 @@ import { ArrowLeft, ArrowRight, BookOpen, Check, Columns3, ExternalLink, Filter,
 import { analysisEnabled, ciphers, resultPoints, familyCatalogs, sources, variants, comparability, compareReportedCosts } from './data';
 import type { AnalysisResult, AnalysisSource, CipherVariant } from './types';
 import { problems } from '../questions/data';
-import { variantLabel as variantName, variantParameters } from '../../app/atlas/model';
+import { variantLabel as variantName, variantParameters, canonicalResultParams } from '../../app/atlas/model';
 import { InstanceNavigation } from '../../app/atlas/InstanceNavigation';
 import { StructurePanel } from '../primitives/StructurePanel';
-import { primitiveStructures } from '../primitives/data';
+import {PrimitiveRelations} from '../primitives/PrimitiveRelations';
+import {PrimitiveStandards} from '../primitives/PrimitiveStandards';
+import {standardInstanceOrder} from '../primitives/standards';
+import { primitiveStructures, primitiveCatalog } from '../primitives/data';
 import { structureBinding } from '../primitives/model';
 import { citationLabel, comparisonHref, comparisonSelection, filterResults, goalLabels, humanize, instanceHref, isCostResult, keyModelLabels, methodLabels, MAX_COMPARISON_RECORDS, publicationLabel, resolveInstance, resultCitationLabel, resultFilterKeys, resultHref, resultsForVariant, sourceHref, sourcesForResult, switchInstanceParams, uniqueResults, updateResultFilter, withSelectedResults, withVariantContext } from './model';
 import type { ComparisonSelection } from './model';
@@ -154,9 +157,11 @@ export function ResultsPage({ cipherId, variantId, searchParams, onParamsChange 
   const oracles = [...new Set(applicable.flatMap((record) => record.setting.oracle_access))].sort();
   const select = (key: string, label: string, options: { value: string; label: string }[], any?: string) => <SelectFilter label={label} value={searchParams.get(key) || ''} onChange={(value) => changeFilter(key, value)} options={options} any={any} />;
   return <section className="a-page" aria-labelledby="a-results-heading">
-    <div className="a-breadcrumbs"><a href="#/cryptanalysis">Cipher Directory</a><span>/</span><span>{cipher.name}</span><span>/</span><span>{variantName(variant)}</span></div>
-    <header className="a-page-heading"><div><h1 id="a-results-heading" tabIndex={-1}>{variantName(variant)}</h1>{!structureBinding(primitiveStructures, cipher.id, variant.id) && <p>{variantParameters(variant)}</p>}</div></header>
-    <InstanceNavigation variants={variants.filter(entry => entry.family === cipher.id)} activeId={variant.id}
+    <div className="a-breadcrumbs"><a href="#/cryptanalysis">Primitive Directory</a>{variant.compression && <><span>/</span><a href="#/cryptanalysis?primitive=hash_function">Hash</a></>}<span>/</span><span>{cipher.name}</span><span>/</span><span>{variantName(variant)}</span></div>
+    <header className="a-page-heading"><div><h1 id="a-results-heading" tabIndex={-1}>{variantName(variant)}</h1>{variant.compression && <span className="atlas-construction-kind">Compression Function</span>}{!structureBinding(primitiveStructures, cipher.id, variant.id) && <p>{variantParameters(variant)}</p>}</div></header>
+    <PrimitiveStandards familyId={cipher.id} instanceId={variant.id} />
+    <PrimitiveRelations familyId={cipher.id} instanceId={variant.id} />
+    <InstanceNavigation variants={standardInstanceOrder(primitiveCatalog, variants.filter(entry => entry.family === cipher.id))} activeId={variant.id}
       href={entry => instanceHref(cipher.id, entry.id, entry.id === variant.id ? contextParams : switchInstanceParams(contextParams))} />
     <StructurePanel key={`structure:${variant.id}`} familyId={cipher.id} instanceId={variant.id} resultsId="a-analysis-results" />
     <div className="a-results-intro" id="a-analysis-results" tabIndex={-1}><h2>Analysis Results</h2><div className="a-result-actions">
@@ -219,6 +224,7 @@ export function ResultDetail({ id, searchParams }: { id: string; searchParams: U
   if (!analysisEnabled) return <AnalysisUnavailable />;
   const record = registryResults.find((entry) => entry.id === id);
   if (!record) return <section className="a-page a-empty"><h1 tabIndex={-1}>Analysis Record Not Found</h1><a className="a-button" href="#/cryptanalysis">Cipher Directory</a></section>;
+  searchParams = canonicalResultParams(record, searchParams, variants);
   const applicable = variants.filter((variant) => record.target.variant_ids.includes(variant.id));
   const requestedVariant = searchParams.get('variant');
   const current = requestedVariant ? applicable.find((variant) => variant.id === requestedVariant) : applicable.length === 1 ? applicable[0] : undefined;

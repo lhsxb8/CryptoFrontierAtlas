@@ -271,7 +271,8 @@ test('adding a compatible goal uses the same schema generator and comparator wit
   const record = resultFixture({ goal: extra }); assert(check(record), ajv.errorsText(check.errors));
   assert(projected.typescript.includes(extra));
   const modelModule = { exports: {} };
-  new Function('require', 'module', readFileSync(new URL(base + 'lib/cryptanalysis/result-model.cjs', import.meta.url), 'utf8'))(() => extended, modelModule);
+  new Function('require', 'module', readFileSync(new URL(base + 'lib/cryptanalysis/result-model.cjs', import.meta.url), 'utf8'))(
+    id => id.endsWith('result-taxonomy.json') ? extended : require('../../lib/cryptanalysis/' + id), modelModule);
   const comparisonModule = { exports: {} };
   new Function('require', 'module', readFileSync(new URL(base + 'lib/cryptanalysis/compare.cjs', import.meta.url), 'utf8'))(() => modelModule.exports, comparisonModule);
   assert.equal(comparisonModule.exports.compareReportedCosts(record, record).relation, 'equal');

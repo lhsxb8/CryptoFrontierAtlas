@@ -11,7 +11,7 @@ export interface StructureAsset {
 }
 export interface StructureData {
   registry: {
-    schema_version: 1;
+    schema_version: 2;
     style_reference: {title: string; author: string; url: string; note: string};
     design_sources: {id: string; title: string; url: string; locator: string}[];
     diagrams: StructureDefinition[];

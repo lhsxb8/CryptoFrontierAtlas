@@ -88,7 +88,7 @@ test('directory and definitions retain standards and parameters without repeated
   await page.goto('/#/cryptanalysis');
   await expect(page.locator('.atlas-page-heading p, .atlas-family-card p, .atlas-section-bar > span')).toHaveCount(0);
   await page.getByRole('searchbox', {name: 'Search primitives and instances'}).fill('Triple DES');
-  await expect(page.locator('.atlas-family-card')).toContainText('Withdrawn');
+  await expect(page.locator('.atlas-family-card').getByRole('img', {name: /^Withdrawn Standard:/})).toBeVisible();
   await page.locator('.atlas-family-card').click();
   await expect(page.locator('.atlas-primitive-specs .atlas-status-warning')).toBeVisible();
   await expect(page.locator('.atlas-primitive-specs .atlas-status-warning')).toContainText('2024-01-01');

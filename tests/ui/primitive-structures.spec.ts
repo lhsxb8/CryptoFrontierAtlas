@@ -9,7 +9,7 @@ test('all family and instance diagrams load their registered views and metadata'
   test.setTimeout(180_000);
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  for (const definition of diagrams.diagrams) {
+  for (const definition of diagrams.diagrams.filter(d => d.review.status === 'source_checked')) {
     for (const target of [definition.family_id, ...definition.instance_ids]) {
       const suffix = target === definition.family_id ? '' : '/' + target;
       const family = catalog.primitives.find(p => p.id === definition.family_id)!;
@@ -18,7 +18,8 @@ test('all family and instance diagrams load their registered views and metadata'
       await page.goto(`/#${prefix}/${definition.family_id}${suffix}`);
       const panel = page.locator('.atlas-structure');
       // Families with analyses keep their existing default-instance route.
-      const renderedTarget = target === 'aes' ? 'aes-128' : target;
+      const analysisFamilies = ['aes', 'aes-dm', 'aes-mmo', 'aes-mp'];
+      const renderedTarget = analysisFamilies.includes(target) ? definition.instance_ids[0] : target;
       await expect(panel).toHaveAttribute('data-structure-target', renderedTarget);
       for (const view of definition.views) {
         if (definition.views.length > 1) await panel.getByRole('tab', {name: titleCaseLabel(view.label.en), exact: true}).click({timeout: 10_000});

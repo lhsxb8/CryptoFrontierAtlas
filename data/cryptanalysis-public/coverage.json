@@ -1,7 +1,10 @@
 {
   "reviewed_on": "2026-11-10",
   "family_ids": [
-    "aes"
+    "aes",
+    "aes-dm",
+    "aes-mmo",
+    "aes-mp"
   ],
   "coverage_kind": "version-locked-primary-source-atlas-in-progress",
   "exhaustive": false,

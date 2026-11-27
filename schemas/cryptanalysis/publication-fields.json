@@ -463,7 +463,13 @@
         "/key_bits",
         "/block_bits",
         "/full_rounds",
-        "/specification_source"
+        "/specification_source",
+        "/compression",
+        "/compression/mode",
+        "/compression/cipher_variant_id",
+        "/compression/name",
+        "/compression/definition",
+        "/compression/output_bits"
       ],
       "internal": [],
       "transforms": {}

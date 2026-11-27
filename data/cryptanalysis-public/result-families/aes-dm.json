@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "cipher_family_id": "aes-dm",
+  "reviewed_on": "2026-11-27",
+  "families": [],
+  "standalone_result_ids": [
+    "aes128-4r-dm-collision-cglsz2025",
+    "aes128-4r-dm-preimage-skp-cglsz2025",
+    "aes128-5r-dm-preimage-skp-cglsz2025",
+    "aes128-7r-quantum-pseudo-preimage-dds2025",
+    "aes128-8r-pseudo-preimage-dds2025",
+    "aes192-7r-dm-preimage-skp-cglsz2025",
+    "aes192-9r-pseudo-preimage-dds2025",
+    "aes192-9r-quantum-pseudo-preimage-dds2025",
+    "aes256-10r-pseudo-preimage-dds2025",
+    "aes256-8r-dm-preimage-skp-cglsz2025",
+    "aes256-9r-quantum-pseudo-preimage-dds2025"
+  ],
+  "excluded_results": []
+}

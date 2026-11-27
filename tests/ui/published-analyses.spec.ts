@@ -4,6 +4,8 @@ import {readFileSync} from 'node:fs';
 import {expect, test, type Page} from '@playwright/test';
 import publication from '../../data/cryptanalysis-public/publication.json' with {type:'json'};
 import manifest from '../../data/cryptanalysis-public/manifest.json' with {type:'json'};
+import coverage from '../../data/cryptanalysis-public/coverage.json' with {type:'json'};
+import families from '../../data/cryptanalysis-public/ciphers.json' with {type:'json'};
 import type {AnalysisResult} from '../../src/features/cryptanalysis/types';
 
 const {assertPublicText} = createRequire(import.meta.url)('../../lib/node/publication-safety.cjs');
@@ -93,7 +95,8 @@ test('public coverage and conflict details retain qualifications without ingesti
   await page.goto('/#/cryptanalysis/coverage?variant=aes-128');
   await expect(page.getByRole('heading', {level:1})).toHaveText('Coverage & Audit');
   await expect(page.locator('.atlas-coverage-matrix a').first()).toBeVisible();
-  await expect(page.getByRole('heading', {name:'Coverage Gaps · AES', exact:true})).toBeVisible();
+  const ledgerNames = coverage.family_ids.map(id => families.find(f => f.id === id)!.name).join(', ');
+  await expect(page.getByRole('heading', {name:'Coverage Gaps · ' + ledgerNames, exact:true})).toBeVisible();
   await expect(page.locator('.atlas-source-list .atlas-source-card').first()).toBeVisible();
   await expect(page.locator('summary').filter({hasText:'Ingestion Batch'})).toHaveCount(0);
   await page.getByText('Review Scope', {exact:true}).click();

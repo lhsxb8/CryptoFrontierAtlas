@@ -11,7 +11,7 @@ import { HardProblemPage } from '../features/primitives/HardProblemPage';
 import { primitiveCatalog } from '../features/primitives/data';
 import { directoryRoutes, primitiveDomain } from '../features/primitives/model';
 import { appVersion } from './version';
-import { parseHash, routeHref, routeScopeParams, variantLabel } from './atlas/model';
+import { parseHash, routeHref, routeScopeParams, variantLabel, canonicalResultParams } from './atlas/model';
 import HeaderTools from './HeaderTools';
 import PrimaryNavigation from './PrimaryNavigation';
 import { useLocale } from './locale';
@@ -27,7 +27,11 @@ const navigation = [
   { path: '/implementation', label: 'implementation', section: 'implementation' },
 ] as const;
 const routeInstances = directoryRoutes(primitiveCatalog, variants);
-const parseRoute = (hash: string) => parseHash(hash, routeInstances, variants);
+const parseRoute = (hash: string) => {
+  const route = parseHash(hash, routeInstances, variants);
+  if (route.page === 'result') route.params = canonicalResultParams(resultPoints.find(r => r.id === route.id), route.params, variants);
+  return route;
+};
 
 export default function App() {
   const { text } = useLocale();

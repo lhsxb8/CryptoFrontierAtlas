@@ -48,6 +48,22 @@ columns on wide screens and one on narrow screens. A singleton category uses a
 horizontal entry on desktop. Instance and result counts remain distinct; a
 withdrawal badge carries text and retains its full label as a title.
 
+Directories with more than 48 entries use a compact layout. The unfiltered
+overview shows at most six families per category, a quiet category index and
+explicit View All links. Category views show 24 families per page with URL-backed
+pagination; query/category changes reset the page. Families with recorded results
+come first, followed by name order. This is a navigation order, not a security
+ranking. Small directories retain their full category layout and authored order,
+including Hard Problems first.
+
+Search covers all family aliases and instance names, not only the current cards.
+Filtered overviews keep the six-per-category limit and link to any remaining
+matches. The selected category and query survive pagination and reloads. Large
+families use an instance select instead of an unbounded navigation strip. Empty
+result counts and bibliometric badges are omitted from the compact cards;
+citation observations remain available in specification disclosures. No new tabs,
+hero copy or attack filters are introduced into the directory.
+
 The global header has a persistent external GitHub repository link beside the
 three dialog tools. It uses the same configured URL as the footer and remains
 keyboard-accessible with a descriptive name when its visible label is hidden.
